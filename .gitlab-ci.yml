@@ -1,0 +1,68 @@
+variables:
+  # This will suppress any download for dependencies and plugins or upload messages which would clutter the console log.
+  # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
+  MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+  # As of Maven 3.3.0 instead of this you may define these options in `.mvn/maven.config` so the same config is used
+  # when running from the command line.
+  # `installAtEnd` and `deployAtEnd` are only effective with recent version of the corresponding plugins.
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  # https://reset.inso.tuwien.ac.at/repo/help/ci/runners/configure_runners.md#git-strategy
+  GIT_STRATEGY: clone
+
+# Cache downloaded dependencies and plugins between builds.
+# To keep cache across branches add 'key: "$CI_JOB_NAME"'
+cache:
+  paths:
+    - .m2/repository
+
+# run Java unit and integration tests
+test-server:
+  image: maven:3.8-openjdk-15
+  stage: test
+  script:
+    - 'cd server'
+    - 'mvn $MAVEN_CLI_OPTS clean verify'
+
+# execute Flutter unit tests
+test-client:
+  image: cirrusci/flutter:2.2.3
+  script:
+    - 'cd client'
+    - 'flutter doctor --verbose'
+    - 'flutter pub get'
+    - 'flutter clean'
+    - 'flutter test --coverage'
+    - 'lcov --summary coverage/lcov.info > client-coverage.txt'
+  artifacts:
+    paths:
+      - './client/client-coverage.txt'
+      
+# execute Flutter integration tests
+integration-test-client:
+  image: raffaelfoidl/flutter-integration-test:latest
+  script:
+    - 'cd client'
+    - 'chromedriver --port=4444 &'
+    - 'flutter doctor --verbose'
+    - 'flutter pub get'
+    - 'flutter clean'
+    - 'exit 0'
+    # unfortunately, the integration test step does not quite work yet, see #6
+    # - 'flutter drive --driver=test_driver/integration_test.dart --target=integration_test/main_test.dart -d web-server'
+
+# execute maven checkstyle plugin
+check-server:
+  image: maven:3.8-openjdk-15
+  stage: test
+  script:
+    - 'cd server'
+    - 'mvn $MAVEN_CLI_OPTS checkstyle:check'
+
+# check codestyle of frontend code with dartfmt
+# applies code formatting to project. if there have been formatting changes, 
+# then exit code is 1, making the build fail
+check-client:
+  image: cirrusci/flutter:2.2.3
+  script:
+    - 'cd client'
+    - 'dart format ./ --line-length 150 --set-exit-if-changed'
