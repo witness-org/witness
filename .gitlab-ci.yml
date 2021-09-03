@@ -15,7 +15,7 @@ cache:
   paths:
     - .m2/repository
 
-# run Java unit and integration tests
+# Run Java unit and integration tests
 test-server:
   image: maven:3.8-openjdk-15
   stage: test
@@ -23,7 +23,7 @@ test-server:
     - 'cd server'
     - 'mvn $MAVEN_CLI_OPTS clean verify'
 
-# execute Flutter unit tests
+# Execute Flutter unit tests
 test-client:
   image: cirrusci/flutter:2.5.0
   script:
@@ -37,7 +37,7 @@ test-client:
     paths:
       - './client/client-coverage.txt'
       
-# execute Flutter integration tests
+# Execute Flutter integration tests
 integration-test-client:
   image: raffaelfoidl/flutter-integration-test:chrome-v93-driver-v93
   script:
@@ -48,7 +48,7 @@ integration-test-client:
     - 'flutter clean'
     - 'flutter drive --driver=test_driver/integration_test.dart --target=integration_test/main_test.dart --release -d web-server'
 
-# execute maven checkstyle plugin
+# Execute maven checkstyle plugin
 check-server:
   image: maven:3.8-openjdk-15
   stage: test
@@ -56,11 +56,20 @@ check-server:
     - 'cd server'
     - 'mvn $MAVEN_CLI_OPTS checkstyle:check'
 
-# check codestyle of frontend code with dartfmt
-# applies code formatting to project. if there have been formatting changes, 
-# then exit code is 1, making the build fail
+# Check codestyle, linting and static analysis of client code with dartfmt
 check-client:
   image: cirrusci/flutter:2.5.0
   script:
     - 'cd client'
+
+    # Applies code formatting to project using dartfmt. If this causes formatting changes, then exit with
+    # code 1, making the job fail.
     - 'dart format ./ --line-length 150 --set-exit-if-changed'
+
+    # The 'flutter analyze' may print parts of its output to stderr. Therefore, redirect stderr (2) to
+    # stdout (1) and send it to a file. Finally, grep it for a positive outcome ("No issues found"). If this string
+    # is not found (i.e. there are issues), grep exits with code 1, making the job fail. The " || true" part makes
+    # that a potential non-zero exit code produced by the flutter analyze command does not make the job fail prematurely.
+    - 'flutter analyze > analysisResult.txt 2>&1 || true'
+    - 'cat analysisResult.txt'
+    - 'grep "No issues found" analysisResult.txt'
