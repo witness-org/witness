@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 void main() => runApp(const CounterApp());
 
 class CounterApp extends StatelessWidget {
-  const CounterApp({Key? key}) : super(key: key);
+  const CounterApp({final Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return const MaterialApp(
       title: 'Counter App',
       home: CounterAppPage(title: 'Counter App Home Page'),
@@ -23,16 +23,17 @@ class CountHolder {
 }
 
 class CounterAppPage extends StatefulWidget {
-  const CounterAppPage({Key? key, required this.title}) : super(key: key);
+  const CounterAppPage({final Key? key, required final this.title}) : super(key: key);
 
   final String title;
 
   @override
+  // ignore: library_private_types_in_public_api
   _CounterAppPageState createState() => _CounterAppPageState();
 }
 
 class _CounterAppPageState extends State<CounterAppPage> {
-  CountHolder _counter = CountHolder();
+  final CountHolder _counter = CountHolder();
 
   void _incrementCounter() {
     setState(() {
@@ -41,7 +42,7 @@ class _CounterAppPageState extends State<CounterAppPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -50,9 +51,7 @@ class _CounterAppPageState extends State<CounterAppPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
+            const Text('You have pushed the button this many times:'),
             Text(
               '${_counter.value}',
               // Provide a Key to this specific Text widget. This allows
