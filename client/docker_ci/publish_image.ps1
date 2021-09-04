@@ -1,1 +1,0 @@
-docker push raffaelfoidl/flutter-integration-test:latest

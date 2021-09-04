@@ -25,7 +25,7 @@ test-server:
 
 # execute Flutter unit tests
 test-client:
-  image: cirrusci/flutter:2.2.3
+  image: cirrusci/flutter:2.5.0
   script:
     - 'cd client'
     - 'flutter doctor --verbose'
@@ -39,16 +39,14 @@ test-client:
       
 # execute Flutter integration tests
 integration-test-client:
-  image: raffaelfoidl/flutter-integration-test:latest
+  image: raffaelfoidl/flutter-integration-test:chrome-v93-driver-v93
   script:
     - 'cd client'
-    - 'chromedriver --port=4444 &'
+    - '/app/chromedriver --whitelisted-ips --port=4444 &'
     - 'flutter doctor --verbose'
     - 'flutter pub get'
     - 'flutter clean'
-    - 'exit 0'
-    # unfortunately, the integration test step does not quite work yet, see #6
-    # - 'flutter drive --driver=test_driver/integration_test.dart --target=integration_test/main_test.dart -d web-server'
+    - 'flutter drive --driver=test_driver/integration_test.dart --target=integration_test/main_test.dart --release -d web-server'
 
 # execute maven checkstyle plugin
 check-server:
@@ -62,7 +60,7 @@ check-server:
 # applies code formatting to project. if there have been formatting changes, 
 # then exit code is 1, making the build fail
 check-client:
-  image: cirrusci/flutter:2.2.3
+  image: cirrusci/flutter:2.5.0
   script:
     - 'cd client'
     - 'dart format ./ --line-length 150 --set-exit-if-changed'
