@@ -1,1 +1,0 @@
-docker build -t raffaelfoidl/flutter-integration-test:latest .
