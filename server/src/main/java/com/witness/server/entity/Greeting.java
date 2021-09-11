@@ -1,4 +1,4 @@
-package cspr.fitnessapp.server.entity;
+package com.witness.server.entity;
 
 public class Greeting {
   private static final String TEMPLATE = "Hello, %s!";

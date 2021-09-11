@@ -1,4 +1,4 @@
-package cspr.fitnessapp.server;
+package com.witness.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

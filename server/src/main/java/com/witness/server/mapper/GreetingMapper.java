@@ -1,7 +1,7 @@
-package cspr.fitnessapp.server.mapper;
+package com.witness.server.mapper;
 
-import cspr.fitnessapp.server.dto.GreetingDto;
-import cspr.fitnessapp.server.entity.Greeting;
+import com.witness.server.dto.GreetingDto;
+import com.witness.server.entity.Greeting;
 import org.mapstruct.Mapper;
 
 @Mapper

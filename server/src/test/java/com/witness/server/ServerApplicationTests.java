@@ -1,8 +1,8 @@
-package cspr.fitnessapp.server;
+package com.witness.server;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cspr.fitnessapp.server.web.GreetingController;
+import com.witness.server.web.GreetingController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

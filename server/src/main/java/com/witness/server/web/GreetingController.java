@@ -1,8 +1,8 @@
-package cspr.fitnessapp.server.web;
+package com.witness.server.web;
 
-import cspr.fitnessapp.server.dto.GreetingDto;
-import cspr.fitnessapp.server.entity.Greeting;
-import cspr.fitnessapp.server.mapper.GreetingMapper;
+import com.witness.server.dto.GreetingDto;
+import com.witness.server.entity.Greeting;
+import com.witness.server.mapper.GreetingMapper;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

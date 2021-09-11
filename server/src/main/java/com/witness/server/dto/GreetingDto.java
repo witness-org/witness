@@ -1,4 +1,4 @@
-package cspr.fitnessapp.server.dto;
+package com.witness.server.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

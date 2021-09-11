@@ -1,4 +1,4 @@
-package cspr.fitnessapp.client.client
+package com.witness.client
 
 import io.flutter.embedding.android.FlutterActivity
 
