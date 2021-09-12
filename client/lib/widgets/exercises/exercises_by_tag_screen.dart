@@ -126,6 +126,7 @@ class _ExerciseByTagItem extends StatelessWidget {
     return ListTile(
       title: Text(_exercise.title),
       leading: const CircleAvatar(
+        backgroundColor: Colors.transparent,
         foregroundImage: AssetImage('assets/images/flutter_logo.png'),
       ),
       onTap: () {

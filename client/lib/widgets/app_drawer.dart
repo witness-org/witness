@@ -3,7 +3,7 @@ import 'package:client/widgets/exercises/exercises_screen.dart';
 import 'package:client/widgets/programs/programs_screen.dart';
 import 'package:client/widgets/settings/settings_screen.dart';
 import 'package:client/widgets/statistics/statistics_screen.dart';
-import 'package:client/widgets/workout_overview/workout_overview_screen.dart';
+import 'package:client/widgets/workouts/workout_overview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

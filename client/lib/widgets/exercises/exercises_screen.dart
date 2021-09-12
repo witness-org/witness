@@ -108,9 +108,11 @@ class _ExerciseOverviewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _logger.v('$runtimeType.build()');
     return ListTile(
       title: Text(_exerciseTag.name),
       leading: const CircleAvatar(
+        backgroundColor: Colors.transparent,
         foregroundImage: AssetImage('assets/images/flutter_logo.png'),
       ),
       onTap: () {
