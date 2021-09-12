@@ -1,3 +1,4 @@
+import 'package:client/logging/logger_factory.dart';
 import 'package:client/widgets/exercises/exercises_screen.dart';
 import 'package:client/widgets/programs/programs_screen.dart';
 import 'package:client/widgets/settings/settings_screen.dart';
@@ -5,6 +6,8 @@ import 'package:client/widgets/statistics/statistics_screen.dart';
 import 'package:client/widgets/workout_overview/workout_overview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+final _logger = getLogger('app_drawer');
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -19,6 +22,7 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _logger.v('$runtimeType.build()');
     return Drawer(
       child: Column(
         children: [
@@ -31,11 +35,10 @@ class AppDrawer extends StatelessWidget {
             child: Center(
               child: Text(
                 AppLocalizations.of(context)!.appTitle,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.white),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26, color: Theme.of(context).colorScheme.onPrimary),
               ),
             ),
           ),
-          //SizedBox(height: 20),
           _buildListTile('Workout Overview', Icons.date_range, () => Navigator.of(context).pushReplacementNamed(WorkoutOverviewScreen.routeName)),
           _buildListTile('Exercises', Icons.fitness_center, () => Navigator.of(context).pushReplacementNamed(ExercisesScreen.routeName)),
           _buildListTile('Programs', Icons.article_outlined, () => Navigator.of(context).pushReplacementNamed(ProgramsScreen.routeName)),
