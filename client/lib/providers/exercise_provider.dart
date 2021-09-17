@@ -1,9 +1,9 @@
 import 'package:client/logging/logger_factory.dart';
-import 'package:client/models/exercise.dart';
-import 'package:client/models/exercise_tag.dart';
+import 'package:client/models/exercises/exercise.dart';
+import 'package:client/models/exercises/exercise_tag.dart';
 import 'package:client/services/exercise_service.dart';
 import 'package:collection/collection.dart' as collection;
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import 'auth_provider.dart';
 

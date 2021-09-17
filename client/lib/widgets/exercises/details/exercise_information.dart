@@ -1,6 +1,6 @@
 import 'package:client/extensions/enum_extensions.dart';
 import 'package:client/logging/logger_factory.dart';
-import 'package:client/models/exercise.dart';
+import 'package:client/models/exercises/exercise.dart';
 import 'package:client/widgets/exercises/editing/edit_exercise_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -42,26 +42,27 @@ class ExerciseInformation extends StatelessWidget {
 
   Widget _buildExerciseInformation(BuildContext context) {
     _logger.v('$runtimeType._buildExerciseInformation()');
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildHeading('Description'),
-        Text(_exercise.description),
+        Text(_exercise.description ?? ''),
         SizedBox(height: 15),
         _buildHeading('Tags'),
         _buildBadgeList(
           context,
           _exercise.tags.map((tag) => tag.name),
-          Theme.of(context).primaryColor,
-          Theme.of(context).colorScheme.onPrimary,
+          theme.primaryColor,
+          theme.colorScheme.onPrimary,
         ),
         SizedBox(height: 15),
         _buildHeading('Attributes'),
         _buildBadgeList(
           context,
           _exercise.attributes.map((attribute) => attribute.toUiString()),
-          Theme.of(context).colorScheme.secondary,
-          Theme.of(context).colorScheme.onSecondary,
+          theme.colorScheme.secondary,
+          theme.colorScheme.onSecondary,
         ),
         SizedBox(height: 15),
       ],

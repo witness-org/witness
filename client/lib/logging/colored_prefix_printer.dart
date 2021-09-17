@@ -43,7 +43,7 @@ class ColoredPrefixPrinter extends LogPrinter {
       Level.error: error,
     };
 
-    var len = _longestPrefixLength();
+    final len = _longestPrefixLength();
     _prefixMap.forEach((k, v) => _prefixMap[k] = '${v.padLeft(len)} ');
   }
 

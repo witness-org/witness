@@ -1,7 +1,7 @@
 import 'package:client/extensions/async_snapshot_extensions.dart';
 import 'package:client/logging/logger_factory.dart';
-import 'package:client/models/exercise.dart';
-import 'package:client/models/exercise_tag.dart';
+import 'package:client/models/exercises/exercise.dart';
+import 'package:client/models/exercises/exercise_tag.dart';
 import 'package:client/providers/exercise_provider.dart';
 import 'package:client/widgets/exercises/details/exercise_detail_screen.dart';
 import 'package:client/widgets/exercises/editing/edit_exercise_screen.dart';

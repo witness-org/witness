@@ -17,6 +17,7 @@ dependencies:
   flutter_speed_dial: ^4.3.0
   logger: ^1.1.0
   provider: ^6.0.0
+  progress_loader_overlay: ^3.0.1
 
 dev_dependencies:
   flutter_driver:

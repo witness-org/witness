@@ -38,19 +38,17 @@ class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButt
   var _isOpened = false;
 
   set isOpened(bool isOpened) {
-    setState(() {
-      _isOpened = isOpened;
-    });
+    setState(() => _isOpened = isOpened);
   }
 
   bool get isOpened {
     return _isOpened;
   }
 
-  SpeedDialChild _buildSpeedDialChild(IconData icon, String label, void Function() onTap) {
+  SpeedDialChild _buildSpeedDialChild(ThemeData theme, IconData icon, String label, void Function() onTap) {
     return SpeedDialChild(
-      backgroundColor: Theme.of(context).colorScheme.secondary,
-      foregroundColor: Theme.of(context).colorScheme.onSecondary,
+      backgroundColor: theme.colorScheme.secondary,
+      foregroundColor: theme.colorScheme.onSecondary,
       child: Icon(icon),
       label: label,
       onTap: onTap,
@@ -59,9 +57,10 @@ class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButt
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SpeedDial(
-      backgroundColor: Theme.of(context).colorScheme.secondary,
-      foregroundColor: Theme.of(context).colorScheme.onSecondary,
+      backgroundColor: theme.colorScheme.secondary,
+      foregroundColor: theme.colorScheme.onSecondary,
       renderOverlay: false,
       isOpenOnStart: false,
       onOpen: () => isOpened = true,
@@ -69,11 +68,11 @@ class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButt
       icon: isOpened ? Icons.close : Icons.add,
       spacing: 2,
       children: [
-        _buildSpeedDialChild(Icons.app_registration, "Log Exercise", () {}),
-        _buildSpeedDialChild(Icons.copy, "Copy Exercise", () {}),
-        _buildSpeedDialChild(Icons.article_outlined, "New Training program", () {}),
-        _buildSpeedDialChild(Icons.menu_book, "New Workout", () {}),
-        _buildSpeedDialChild(Icons.fitness_center, "New Exercise", () {}),
+        _buildSpeedDialChild(theme, Icons.app_registration, "Log Exercise", () {}),
+        _buildSpeedDialChild(theme, Icons.copy, "Copy Exercise", () {}),
+        _buildSpeedDialChild(theme, Icons.article_outlined, "New Training program", () {}),
+        _buildSpeedDialChild(theme, Icons.menu_book, "New Workout", () {}),
+        _buildSpeedDialChild(theme, Icons.fitness_center, "New Exercise", () {}),
       ],
     );
   }

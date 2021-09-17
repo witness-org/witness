@@ -1,5 +1,5 @@
 import 'package:client/logging/logger_factory.dart';
-import 'package:client/models/exercise.dart';
+import 'package:client/models/exercises/exercise.dart';
 import 'package:client/widgets/exercises/details/exercise_history.dart';
 import 'package:client/widgets/exercises/details/exercise_information.dart';
 import 'package:client/widgets/exercises/details/exercise_statistics.dart';

@@ -1,6 +1,6 @@
 import 'package:client/extensions/async_snapshot_extensions.dart';
 import 'package:client/logging/logger_factory.dart';
-import 'package:client/models/exercise_tag.dart';
+import 'package:client/models/exercises/exercise_tag.dart';
 import 'package:client/providers/exercise_provider.dart';
 import 'package:client/widgets/app_drawer.dart';
 import 'package:client/widgets/exercises/editing/edit_exercise_screen.dart';
@@ -37,7 +37,6 @@ class ExercisesScreen extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: exerciseData.exerciseTags.length,
                     itemBuilder: (_, index) {
-                      // TODO caching of tags (and exercises per tag) in ExerciseProvider
                       final exerciseTag = exerciseData.exerciseTags[index];
                       return Column(
                         children: [

@@ -1,5 +1,5 @@
 import 'package:client/logging/logger_factory.dart';
-import 'package:client/models/exercise.dart';
+import 'package:client/models/exercises/exercise.dart';
 import 'package:client/widgets/main_app_bar.dart';
 import 'package:flutter/material.dart';
 
