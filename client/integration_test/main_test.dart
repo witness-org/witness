@@ -10,23 +10,23 @@ import 'package:integration_test/integration_test.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  T getWidgetByKey<T extends Widget>(String key, WidgetTester tester) {
+  T getWidgetByKey<T extends Widget>(final String key, final WidgetTester tester) {
     final Finder cnt = find.byKey(Key(key));
     return tester.firstWidget<T>(cnt);
   }
 
   group('end-to-end test', () {
-    testWidgets('counter starts at 0', (WidgetTester tester) async {
+    testWidgets('counter starts at 0', (final WidgetTester tester) async {
       app.main();
       await tester.pumpAndSettle();
 
       // find the counter Text widget by its key
-      var counterText = getWidgetByKey<Text>("counter", tester);
+      final counterText = getWidgetByKey<Text>("counter", tester);
 
       expect(counterText.data, "0");
     });
 
-    testWidgets('increments counter on tapping floating button', (WidgetTester tester) async {
+    testWidgets('increments counter on tapping floating button', (final WidgetTester tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -42,7 +42,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // find the counter Text widget by its key
-      var counterText = getWidgetByKey<Text>("counter", tester);
+      final counterText = getWidgetByKey<Text>("counter", tester);
 
       expect(counterText.data, "2");
     });
