@@ -1,0 +1,100 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  # excludes files or folders from static analysis
+  # suppressing rules for a file in code: https://dart.dev/guides/language/analysis-options#suppressing-rules-for-a-file
+  # suppressing rules for a line of code: https://dart.dev/guides/language/analysis-options#suppressing-rules-for-a-line-of-code
+  exclude:
+    - build/**
+
+  language:
+    # stricter analysis of generic arguments and raw type inference to change ensuing runtime errors to compile-time errors
+    # more info: https://github.com/dart-lang/language/blob/master/resources/type-system/strict-raw-types.md
+    strict-raw-types: true
+
+  strong-mode:
+    # "false" ensures that the type inference engine never implicitly casts from dynamic to a more specific type.
+    # An implicit downcast like "dynamic o = ...; String s = o" would be caught by this flag.
+    implicit-casts: false
+
+    # "false" ensures that the type inference engine never chooses the dynamic type when it can’t determine a static type.
+    implicit-dynamic: false
+
+  # changing the severity of rules:
+  # https://dart.dev/guides/language/analysis-options#changing-the-severity-of-rules
+  errors:
+    missing_return: error
+
+linter:
+  rules:
+    # for complete list, see here: https://dart-lang.github.io/linter/lints/index.html
+    # everything in "core", "recommended", "flutter", "pedantic" or "effective dart" is already included (see L1 of this file)
+
+    # error rules
+    always_use_package_imports: true
+    avoid_dynamic_calls: true
+    avoid_returning_null_for_future: true
+    avoid_slow_async_io: true
+    avoid_type_to_string: true
+    cancel_subscriptions: true
+    close_sinks: true
+    comment_references: true
+    invariant_booleans: true
+    literal_only_boolean_expressions: true
+    no_adjacent_strings_in_list: false
+    test_types_in_equals: true
+    throw_in_finally: true
+    unnecessary_statements: true
+    use_build_context_synchronously: true
+
+    # style rules
+    always_put_control_body_on_new_line: true
+    avoid_double_and_int_checks: true
+    avoid_escaping_inner_quotes: true
+    avoid_js_rounded_ints: true
+    avoid_unused_constructor_parameters: true
+    avoid_void_async: true
+    cascade_invocations: true
+    cast_nullable_to_non_nullable: true
+    deprecated_consistency: true
+    eol_at_end_of_file: true
+    flutter_style_todos: true
+    join_return_with_assignment: false
+    library_private_types_in_public_api: true
+    missing_whitespace_between_adjacent_strings: true
+    no_runtimeType_toString: true
+    noop_primitive_operations: true
+    null_check_on_nullable_type_parameter: true
+    only_throw_errors: true
+    parameter_assignments: true
+    prefer_asserts_in_initializer_lists: true
+    prefer_asserts_with_message: true
+    prefer_constructors_over_static_methods: true
+    prefer_expression_function_bodies: false
+    prefer_final_in_for_each: true
+    prefer_final_locals: true
+    prefer_final_parameters: true
+    prefer_foreach: false
+    prefer_if_elements_to_conditional_expressions: true
+    prefer_null_aware_method_calls: true
+    sort_constructors_first: true
+    sort_unnamed_constructors_first: true
+    tighten_type_of_initializing_formals: true
+    unnecessary_await_in_return: true
+    unnecessary_null_aware_assignments: true
+    unnecessary_null_checks: true
+    unnecessary_nullable_for_final_variable_declarations: true
+    unnecessary_parenthesis: true
+    unnecessary_raw_strings: true
+    use_if_null_to_convert_nulls_to_bools: true
+    use_is_even_rather_than_modulo: true
+    use_named_constants: true
+    use_raw_strings: true
+    use_string_buffers: true
+    use_test_throws_matchers: true
+
+    # pub rules
+    depend_on_referenced_packages: true
+    sort_pub_dependencies: true
+
+

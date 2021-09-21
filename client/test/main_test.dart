@@ -5,16 +5,14 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'dart:developer';
-
 import 'package:client/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Counter increments', (WidgetTester tester) async {
+  testWidgets('Counter increments', (final WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(CounterApp());
+    await tester.pumpWidget(const CounterApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
@@ -37,7 +35,7 @@ void main() {
     test('value should be incremented', () {
       final counter = CountHolder();
 
-      counter.increment();
+      counter.increment(); // ignore: cascade_invocations
 
       expect(counter.value, 1);
     });
@@ -45,7 +43,7 @@ void main() {
     test('value should be decremented', () {
       final counter = CountHolder();
 
-      counter.decrement();
+      counter.decrement(); // ignore: cascade_invocations
 
       expect(counter.value, -1);
     });
