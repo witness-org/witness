@@ -11,6 +11,29 @@ import 'package:logger/logger.dart';
 ///
 /// would prepend "[[]DEBUG][] testClass:" to every line in a debug log. You can supply parameters for a custom message for a specific log level.
 class ColoredPrefixPrinter extends LogPrinter {
+  ColoredPrefixPrinter(
+    this._realPrinter,
+    this._loggerName, {
+    final String debug = '[DEBUG]',
+    final String verbose = '[VERBOSE]',
+    final String wtf = '[WTF]',
+    final String info = '[INFO]',
+    final String warning = '[WARNING]',
+    final String error = '[ERROR]',
+  }) {
+    _prefixMap = {
+      Level.debug: debug,
+      Level.verbose: verbose,
+      Level.wtf: wtf,
+      Level.info: info,
+      Level.warning: warning,
+      Level.error: error,
+    };
+
+    final len = _longestPrefixLength();
+    _prefixMap.forEach((final k, final v) => _prefixMap[k] = '${v.padLeft(len)} ');
+  }
+
   final LogPrinter _realPrinter;
   final String _loggerName;
   late Map<Level, String> _prefixMap;
@@ -24,43 +47,20 @@ class ColoredPrefixPrinter extends LogPrinter {
     Level.wtf: AnsiColor.fg(199),
   };
 
-  ColoredPrefixPrinter(
-    this._realPrinter,
-    this._loggerName, {
-    String debug = '[DEBUG]',
-    String verbose = '[VERBOSE]',
-    String wtf = '[WTF]',
-    String info = '[INFO]',
-    String warning = '[WARNING]',
-    String error = '[ERROR]',
-  }) {
-    _prefixMap = {
-      Level.debug: debug,
-      Level.verbose: verbose,
-      Level.wtf: wtf,
-      Level.info: info,
-      Level.warning: warning,
-      Level.error: error,
-    };
-
-    final len = _longestPrefixLength();
-    _prefixMap.forEach((k, v) => _prefixMap[k] = '${v.padLeft(len)} ');
-  }
-
   @override
-  List<String> log(LogEvent event) {
+  List<String> log(final LogEvent event) {
     final realLogs = _realPrinter.log(event);
     final color = _getLevelColor(event.level);
     final level = _prefixMap[event.level]!;
-    return realLogs.map((logLine) => '${color(level)}${color(_loggerName + ':')} $logLine').toList();
+    return realLogs.map((final logLine) => '${color(level)}${color(_loggerName + ':')} $logLine').toList();
   }
 
   int _longestPrefixLength() {
-    var compFunc = (String a, String b) => a.length > b.length ? a : b;
+    compFunc(final String a, final String b) => a.length > b.length ? a : b;
     return _prefixMap.values.reduce(compFunc).length;
   }
 
-  AnsiColor _getLevelColor(Level level) {
+  AnsiColor _getLevelColor(final Level level) {
     return levelColors[level] ?? AnsiColor.none();
   }
 }

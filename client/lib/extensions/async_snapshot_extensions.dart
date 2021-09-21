@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 extension AsyncSnapshotExtensions<T> on AsyncSnapshot<T> {
   /// Returns a widget that depends on [AsyncSnapshot.connectionState]. If the [AsyncSnapshot.connectionState] property of
   /// the current instance is [ConnectionState.waiting], the widget represented by the [waiting] parameter is returned. If
-  /// [waiting] is [null],
+  /// [waiting] is null,
   ///
   /// ```
   /// Center(
@@ -15,11 +15,11 @@ extension AsyncSnapshotExtensions<T> on AsyncSnapshot<T> {
   ///
   /// is used instead. If the [AsyncSnapshot.connectionState] property of the current instance is NOT [ConnectionState.waiting], the
   /// widget represented by the [defaultWidget] parameter is returned.
-  Widget waitSwitch(Widget defaultWidget, {Widget? waiting}) {
-    waiting ??= Center(
+  Widget waitSwitch(final Widget defaultWidget, {Widget? waiting}) {
+    waiting ??= const Center(
       child: CircularProgressIndicator(),
     );
 
-    return this.connectionState == ConnectionState.waiting ? waiting : defaultWidget;
+    return connectionState == ConnectionState.waiting ? waiting : defaultWidget;
   }
 }

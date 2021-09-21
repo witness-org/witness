@@ -4,34 +4,34 @@ import 'package:client/widgets/training_programs/days/workout_expander_item_head
 import 'package:flutter/material.dart';
 
 class WorkoutExpanderView extends StatefulWidget {
+  const WorkoutExpanderView(this._workouts, {final Key? key}) : super(key: key);
+
   final List<Workout> _workouts;
 
-  const WorkoutExpanderView(this._workouts, {Key? key}) : super(key: key);
-
   @override
-  _WorkoutExpanderViewState createState() => _WorkoutExpanderViewState();
+  _WorkoutExpanderViewState createState() => _WorkoutExpanderViewState(); // ignore: library_private_types_in_public_api
 }
 
 class _WorkoutExpanderViewState extends State<WorkoutExpanderView> {
   // The initializer of late variable that are initialized at declaration runs the first time the variable is used (lazy initialization).
   // This way, we do not need to override initState().
-  late List<_ExpanderPanelItem> _expanderItems = widget._workouts.map((e) => _ExpanderPanelItem(e)).toList();
+  late final List<_ExpanderPanelItem> _expanderItems = widget._workouts.map((final e) => _ExpanderPanelItem(e)).toList();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Expanded(
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: ExpansionPanelList(
-            expandedHeaderPadding: EdgeInsets.all(0),
-            expansionCallback: (index, isExpanded) {
+            expandedHeaderPadding: EdgeInsets.zero,
+            expansionCallback: (final index, final isExpanded) {
               setState(() => _expanderItems[index].isExpanded = !isExpanded);
             },
-            children: _expanderItems.map((item) {
+            children: _expanderItems.map((final item) {
               return ExpansionPanel(
                 canTapOnHeader: true,
-                headerBuilder: (_, __) => WorkoutExpanderItemHeader(item.workout),
+                headerBuilder: (final _, final __) => WorkoutExpanderItemHeader(item.workout),
                 body: WorkoutExpanderItemBody(item.workout),
                 isExpanded: item.isExpanded,
               );
@@ -44,7 +44,7 @@ class _WorkoutExpanderViewState extends State<WorkoutExpanderView> {
 }
 
 class _ExpanderPanelItem {
-  _ExpanderPanelItem(this.workout, {this.isExpanded = false});
+  _ExpanderPanelItem(final this.workout, {final this.isExpanded = false});
 
   Workout workout;
   bool isExpanded;

@@ -11,47 +11,47 @@ class TrainingProgramService {
   Future<List<TrainingProgramOverview>> getTrainingProgramsOverview() async {
     _logger.i('GET https://api.my-service.at/training-programs-overview');
 
-    await Future.delayed(
+    await Future<void>.delayed(
       const Duration(seconds: 1),
     );
 
     return [...mock_training_programs.getOverview()];
   }
 
-  Future<void> deleteTrainingProgram(int trainingProgramId) async {
+  Future<void> deleteTrainingProgram(final int trainingProgramId) async {
     _logger.i('DELETE https://api.my-service.at/training-programs/$trainingProgramId');
 
-    await Future.delayed(
+    await Future<void>.delayed(
       const Duration(seconds: 1),
     );
 
     return mock_training_programs.deleteProgram(trainingProgramId);
   }
 
-  Future<List<TrainingWeekOverview>> getWeeksOverviewOfProgram(int programId) async {
+  Future<List<TrainingWeekOverview>> getWeeksOverviewOfProgram(final int programId) async {
     _logger.i('GET https://api.my-service.at/training-programs/$programId/weeks-overview');
 
-    await Future.delayed(
+    await Future<void>.delayed(
       const Duration(seconds: 1),
     );
 
     return [...mock_training_programs.getWeeksOverview(programId)];
   }
 
-  Future<List<TrainingDayOverview>> getDaysOfWeek(int weekId) async {
+  Future<List<TrainingDayOverview>> getDaysOfWeek(final int weekId) async {
     _logger.i('GET https://api.my-service.at/training-weeks/$weekId/days-overview');
 
-    await Future.delayed(
+    await Future<void>.delayed(
       const Duration(seconds: 1),
     );
 
     return [...mock_training_programs.getDays(weekId)];
   }
 
-  Future<List<Workout>> getWorkoutsOfDay(int dayId) async {
+  Future<List<Workout>> getWorkoutsOfDay(final int dayId) async {
     _logger.i('GET https://api.my-service.at/training-days/$dayId/workouts');
 
-    await Future.delayed(
+    await Future<void>.delayed(
       const Duration(seconds: 1),
     );
 

@@ -1,5 +1,6 @@
 import 'package:client/extensions/cast_extensions.dart';
 import 'package:client/extensions/date_time_extensions.dart';
+import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/exercise_tag.dart';
@@ -18,14 +19,14 @@ import 'package:client/widgets/training_programs/training_programs_overview_scre
 import 'package:client/widgets/training_programs/weeks/training_week_detail_screen.dart';
 import 'package:client/widgets/workouts/workout_overview_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // ignore: depend_on_referenced_packages
 
 final _logger = getLogger('app');
 
 class WitnessClient extends StatefulWidget {
-  const WitnessClient({Key? key}) : super(key: key);
+  const WitnessClient({final Key? key}) : super(key: key);
 
-  static ColorScheme _getLightColorTheme(MaterialColor primaryColor, MaterialColor secondaryColor) {
+  static ColorScheme _getLightColorTheme(final MaterialColor primaryColor, final MaterialColor secondaryColor) {
     final primarySwatch = primaryColor;
     final accentColor = secondaryColor;
 
@@ -53,28 +54,28 @@ class WitnessClient extends StatefulWidget {
   State<WitnessClient> createState() => _WitnessClientState();
 }
 
-class _WitnessClientState extends State<WitnessClient> {
+class _WitnessClientState extends State<WitnessClient> with LogMessagePreparer {
   final ColorScheme colorScheme = WitnessClient._getLightColorTheme(Colors.purple, Colors.amber);
 
   @override
-  Widget build(BuildContext context) {
-    _logger.v('$runtimeType.build()');
+  Widget build(final BuildContext context) {
+    _logger.v(prepare('build()'));
     return MaterialApp(
-      // TODO: think of naming convention for keys app_en.arb that makes life easy for us
+      // TODO(raffaelfoidl-leabrugger): Think of naming convention for keys app_en.arb that makes life easy for us
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
+      onGenerateTitle: (final BuildContext context) => AppLocalizations.of(context)!.appTitle,
       theme: ThemeData(
         primarySwatch: Colors.purple,
         colorScheme: colorScheme,
       ),
-      // TODO maybe define dark theme analogously to light theme
+      // TODO(raffaelfoidl-leabrugger): maybe define dark theme analogously to light theme
       darkTheme: ThemeData.dark(),
       themeMode: ThemeMode.system,
-      onGenerateRoute: (RouteSettings routeSettings) {
+      onGenerateRoute: (final RouteSettings routeSettings) {
         return MaterialPageRoute<void>(
           settings: routeSettings,
-          builder: (_) {
+          builder: (final _) {
             switch (routeSettings.name) {
               // home
               case '/':
@@ -84,7 +85,7 @@ class _WitnessClientState extends State<WitnessClient> {
               case WorkoutOverviewScreen.routeName:
                 return WorkoutOverviewScreen(routeSettings.arguments.castOrFallback<DateTime>(DateTime.now().dateOnly()));
               case ExercisesScreen.routeName:
-                return ExercisesScreen();
+                return const ExercisesScreen();
 
               // exercises
               case ExercisesByTagScreen.routeName:
@@ -96,7 +97,7 @@ class _WitnessClientState extends State<WitnessClient> {
 
               // training programs
               case TrainingProgramsOverviewScreen.routeName:
-                return TrainingProgramsOverviewScreen();
+                return const TrainingProgramsOverviewScreen();
               case TrainingProgramDetailScreen.routeName:
                 return TrainingProgramDetailScreen(routeSettings.arguments.castOrNull<TrainingProgramOverview>());
               case TrainingDayDetailScreen.routeName:
@@ -108,15 +109,15 @@ class _WitnessClientState extends State<WitnessClient> {
 
               // statistics
               case StatisticsScreen.routeName:
-                return StatisticsScreen();
+                return const StatisticsScreen();
 
               // settings
               case SettingsScreen.routeName:
-                return SettingsScreen();
+                return const SettingsScreen();
 
               // fallback
               default:
-                throw Exception("Unknown route \"${routeSettings.name}\".");
+                throw Exception('Unknown route "${routeSettings.name}".');
             }
           },
         );

@@ -1,4 +1,5 @@
 import 'package:client/extensions/async_snapshot_extensions.dart';
+import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/exercise_tag.dart';
@@ -10,75 +11,75 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('exercises_by_tag_screen');
 
-class ExercisesByTagScreen extends StatelessWidget {
+class ExercisesByTagScreen extends StatelessWidget with LogMessagePreparer {
+  const ExercisesByTagScreen(this._tag, {final Key? key}) : super(key: key);
+
   static const routeName = '/exercises-by-tag';
   final ExerciseTag? _tag;
 
-  const ExercisesByTagScreen(this._tag, {Key? key}) : super(key: key);
-
-  Future<void> _fetchExercisesByTag(BuildContext context, ExerciseTag tag) async {
-    _logger.v('$runtimeType._fetchExercisesByTag()');
+  Future<void> _fetchExercisesByTag(final BuildContext context, final ExerciseTag tag) async {
+    _logger.v(prepare('_fetchExercisesByTag()'));
     await Provider.of<ExerciseProvider>(context, listen: false).fetchExercisesByTag(tag);
   }
 
   Widget _buildFallbackScreen() {
-    _logger.v('$runtimeType._buildFallbackScreen()');
+    _logger.v(prepare('_buildFallbackScreen()'));
     return Scaffold(
       appBar: AppBar(
-        title: Text('No Tag selected'),
+        title: const Text('No Tag selected'),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context, ExerciseTag tag) {
+  Widget _buildHeader(final BuildContext context, final ExerciseTag tag) {
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            // TODO fix UI when text too long
-            'Exercises with Tag \"${tag.name}\"',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            // TODO(raffaelfoidl): fix UI when text too long
+            'Exercises with Tag "${tag.name}"',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          Spacer(),
+          const Spacer(),
           IconButton(
             tooltip: 'Search Exercises',
             onPressed: () {},
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
           ),
           IconButton(
             tooltip: 'Create new Exercise',
             onPressed: () => Navigator.of(context).pushNamed(EditExerciseScreen.routeName),
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildExerciseList(BuildContext context, ExerciseTag tag) {
-    _logger.v('$runtimeType._buildExerciseList()');
+  Widget _buildExerciseList(final BuildContext context, final ExerciseTag tag) {
+    _logger.v(prepare('_buildExerciseList()'));
     return Expanded(
       child: FutureBuilder<void>(
         future: _fetchExercisesByTag(context, tag),
-        builder: (_, snapshot) {
+        builder: (final _, final snapshot) {
           return snapshot.waitSwitch(
             RefreshIndicator(
               onRefresh: () => _fetchExercisesByTag(context, tag),
               child: Consumer<ExerciseProvider>(
-                builder: (_, exerciseData, __) {
-                  _logger.v('$runtimeType._buildExerciseList.Consumer.builder()');
+                builder: (final _, final exerciseData, final __) {
+                  _logger.v(prepare('_buildExerciseList.Consumer.builder()'));
                   return Scrollbar(
                     isAlwaysShown: true,
                     child: ListView.builder(
                       itemCount: exerciseData.getExercisesByTags(tag).length,
-                      itemBuilder: (_, index) {
+                      itemBuilder: (final _, final index) {
                         final exercise = exerciseData.getExercisesByTags(tag)[index];
                         return Column(
                           children: [
                             _ExerciseByTagItem(exercise),
-                            Divider(),
+                            const Divider(),
                           ],
                         );
                       },
@@ -93,8 +94,8 @@ class ExercisesByTagScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildScreen(BuildContext context, ExerciseTag tag) {
-    _logger.v('$runtimeType._buildScreen()');
+  Widget _buildScreen(final BuildContext context, final ExerciseTag tag) {
+    _logger.v(prepare('_buildScreen()'));
     return Scaffold(
       appBar: AppBar(
         title: Text(tag.name),
@@ -110,19 +111,19 @@ class ExercisesByTagScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return _tag == null ? _buildFallbackScreen() : _buildScreen(context, _tag!);
   }
 }
 
-class _ExerciseByTagItem extends StatelessWidget {
+class _ExerciseByTagItem extends StatelessWidget with LogMessagePreparer {
+  const _ExerciseByTagItem(this._exercise, {final Key? key}) : super(key: key);
+
   final Exercise _exercise;
 
-  const _ExerciseByTagItem(this._exercise, {Key? key}) : super(key: key);
-
   @override
-  Widget build(BuildContext context) {
-    _logger.v('$runtimeType.build()');
+  Widget build(final BuildContext context) {
+    _logger.v(prepare('build()'));
     return ListTile(
       title: Text(_exercise.title),
       leading: const CircleAvatar(

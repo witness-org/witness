@@ -47,6 +47,6 @@ final data = [
   ),
 ];
 
-Workout byId(int id) {
-  return data.where((workout) => workout.id == id).first;
+Workout byId(final int id) {
+  return data.where((final workout) => workout.id == id).first;
 }

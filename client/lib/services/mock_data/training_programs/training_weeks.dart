@@ -83,6 +83,6 @@ final data = [
   )
 ];
 
-TrainingWeek byId(int id) {
-  return data.where((week) => week.id == id).first;
+TrainingWeek byId(final int id) {
+  return data.where((final week) => week.id == id).first;
 }

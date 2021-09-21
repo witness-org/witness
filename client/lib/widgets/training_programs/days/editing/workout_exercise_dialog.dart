@@ -1,3 +1,4 @@
+import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/training_programs/workout_exercise.dart';
 import 'package:client/widgets/training_programs/common/segmented_text.dart';
@@ -7,26 +8,26 @@ import 'package:flutter/material.dart';
 
 final _logger = getLogger('workout_exercise_dialog');
 
-// TODO we might need to discuss whether we want to be able to save changes made to a specific set independently or (as it is right now)
-// just save (or discard) all changes made to all sets at once
+// TODO(raffaelfoidl-leabrugger): We might need to discuss whether we want to be able to save changes made to a specific set independently or
+//  (as it is right now) just save (or discard) all changes made to all sets at once
 
-// TODO add new attributes, remove attributes (currently, only attribute values are displayed to edit)
-class WorkoutExerciseDialog extends StatelessWidget {
+// TODO(raffaelfoidl-leabrugger): Add new attributes, remove attributes (currently, only attribute values are displayed to edit)
+class WorkoutExerciseDialog extends StatelessWidget with LogMessagePreparer {
+  const WorkoutExerciseDialog(final this._exercise, {final Key? key}) : super(key: key);
+
   final WorkoutExercise _exercise;
 
-  const WorkoutExerciseDialog(this._exercise, {Key? key}) : super(key: key);
-
   @override
-  Widget build(BuildContext context) {
-    _logger.v('$runtimeType.build()');
+  Widget build(final BuildContext context) {
+    _logger.v(prepare('build()'));
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exercise Detail View'),
+        title: const Text('Exercise Detail View'),
         actions: [
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(Icons.save),
+            icon: const Icon(Icons.save),
             tooltip: 'Save',
           )
         ],
@@ -47,7 +48,7 @@ class WorkoutExerciseDialog extends StatelessWidget {
                 ),
                 if (_exercise.comment != null) Text(_exercise.comment!),
                 if (_exercise.exercise.description != null) Text(_exercise.exercise.description!), // show both comment and description? or only one?
-                SizedBox(height: 3),
+                const SizedBox(height: 3),
               ],
             ),
           ),

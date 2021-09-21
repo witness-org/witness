@@ -10,14 +10,15 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  collection: ^1.15.0
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
   flutter_speed_dial: ^4.3.0
   logger: ^1.1.0
-  provider: ^6.0.0
   progress_loader_overlay: ^3.0.1
+  provider: ^6.0.0
 
 dev_dependencies:
   flutter_driver:
@@ -27,6 +28,7 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
+  matcher: ^0.12.10 # do not upgrade to ^0.12.11 because integration_test strictly depends on ^0.12.10
 
 
 flutter:

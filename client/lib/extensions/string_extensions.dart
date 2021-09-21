@@ -8,8 +8,8 @@ extension StringExtensions on String {
   /// StringExtensions.join([], separator: ' ') == ''
   /// StringExtensions.join([null, null, null], separator: '-') == ''
   /// ```
-  static String join(List<String?> strings, {String? separator}) {
-    final buffer = new StringBuffer();
+  static String join(final List<String?> strings, {final String? separator}) {
+    final buffer = StringBuffer();
 
     for (var i = 0; i < strings.length; i++) {
       if (strings[i] != null) {

@@ -7,7 +7,7 @@ extension NumberExtensions on int {
   /// 1.toNumberString('house') => '1 house'
   /// 3.toNumberString('house') => '3 houses'
   /// ```
-  String toNumberString(String word) {
+  String toNumberString(final String word) {
     return '$this $word${this != 1 ? 's' : ''}';
   }
 }

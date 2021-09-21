@@ -1,4 +1,5 @@
 import 'package:client/extensions/enum_extensions.dart';
+import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/widgets/exercises/editing/edit_exercise_screen.dart';
@@ -6,22 +7,22 @@ import 'package:flutter/material.dart';
 
 final _logger = getLogger('exercise_information');
 
-class ExerciseInformation extends StatelessWidget {
+class ExerciseInformation extends StatelessWidget with LogMessagePreparer {
+  const ExerciseInformation(this._exercise, {final Key? key}) : super(key: key);
+
   final Exercise _exercise;
 
-  const ExerciseInformation(this._exercise, {Key? key}) : super(key: key);
-
-  Widget _buildHeading(String text) {
+  Widget _buildHeading(final String text) {
     return Container(
-      margin: EdgeInsets.only(bottom: 4),
+      margin: const EdgeInsets.only(bottom: 4),
       child: Text(
         text,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
     );
   }
 
-  Widget _buildBadge(BuildContext context, String text, Color backgroundColor, Color textColor) {
+  Widget _buildBadge(final BuildContext context, final String text, final Color backgroundColor, final Color textColor) {
     return Chip(
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       label: Text(
@@ -32,75 +33,75 @@ class ExerciseInformation extends StatelessWidget {
     );
   }
 
-  Widget _buildBadgeList(BuildContext context, Iterable<String> badgeTexts, Color backgroundColor, Color textColor) {
+  Widget _buildBadgeList(final BuildContext context, final Iterable<String> badgeTexts, final Color backgroundColor, final Color textColor) {
     return Wrap(
       spacing: 6,
       runSpacing: 6,
-      children: badgeTexts.map((text) => _buildBadge(context, text, backgroundColor, textColor)).toList(),
+      children: badgeTexts.map((final text) => _buildBadge(context, text, backgroundColor, textColor)).toList(),
     );
   }
 
-  Widget _buildExerciseInformation(BuildContext context) {
-    _logger.v('$runtimeType._buildExerciseInformation()');
+  Widget _buildExerciseInformation(final BuildContext context) {
+    _logger.v(prepare('_buildExerciseInformation()'));
     final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildHeading('Description'),
         Text(_exercise.description ?? ''),
-        SizedBox(height: 15),
+        const SizedBox(height: 15),
         _buildHeading('Tags'),
         _buildBadgeList(
           context,
-          _exercise.tags.map((tag) => tag.name),
+          _exercise.tags.map((final tag) => tag.name),
           theme.primaryColor,
           theme.colorScheme.onPrimary,
         ),
-        SizedBox(height: 15),
+        const SizedBox(height: 15),
         _buildHeading('Attributes'),
         _buildBadgeList(
           context,
-          _exercise.attributes.map((attribute) => attribute.toUiString()),
+          _exercise.attributes.map((final attribute) => attribute.toUiString()),
           theme.colorScheme.secondary,
           theme.colorScheme.onSecondary,
         ),
-        SizedBox(height: 15),
+        const SizedBox(height: 15),
       ],
     );
   }
 
-  Widget _buildStickyFooter(BuildContext context) {
-    _logger.v('$runtimeType._buildStickyFooter()');
+  Widget _buildStickyFooter(final BuildContext context) {
+    _logger.v(prepare('_buildStickyFooter()'));
     return Padding(
-      padding: EdgeInsets.only(left: 15, right: 15, bottom: 7),
+      padding: const EdgeInsets.only(left: 15, right: 15, bottom: 7),
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton.icon(
           onPressed: () => Navigator.of(context).pushNamed(EditExerciseScreen.routeName, arguments: _exercise),
-          icon: Icon(Icons.edit),
-          label: Text('Edit'),
+          icon: const Icon(Icons.edit),
+          label: const Text('Edit'),
         ),
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context) {
-    _logger.v('$runtimeType.build()');
+  Widget build(final BuildContext context) {
+    _logger.v(prepare('build()'));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+              padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
               child: _buildExerciseInformation(context),
             ),
           ),
         ),
         Column(
           children: [
-            Divider(),
+            const Divider(),
             _buildStickyFooter(context),
           ],
         ),

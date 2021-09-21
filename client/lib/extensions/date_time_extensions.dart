@@ -8,12 +8,12 @@ extension DateTimeExtensions on DateTime {
   }
 
   /// Adds [years] years to the current instance, leaving the time components untouched.
-  DateTime addYears(int years) {
-    return DateTime(this.year + years, this.month, this.day, this.hour, this.minute, this.second, this.millisecond, this.microsecond);
+  DateTime addYears(final int years) {
+    return DateTime(year + years, month, day, hour, minute, second, millisecond, microsecond);
   }
 
   /// Subtracts [years] years from the current instance, leaving the time components untouched.
-  DateTime subtractYears(int years) {
-    return this.addYears(-years);
+  DateTime subtractYears(final int years) {
+    return addYears(-years);
   }
 }

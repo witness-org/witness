@@ -10,7 +10,7 @@ import 'package:client/services/mock_data/training_programs/training_weeks.dart'
 final data = [
   TrainingProgram(
     id: 1,
-    name: 'Skill-Up: Master\'s Program',
+    name: "Skill-Up: Master's Program",
     description: 'Go farther with Skill-Up.',
     isPublished: true,
     weeks: [
@@ -24,7 +24,7 @@ final data = [
     name: 'Disruptor Training: ' + ('Test ' * 15),
     isPublished: true,
     description:
-        'You\'ve Always Got Time For Disruptor Training. Apart from that, for UI testing, it is very important to have at least one very long description to test the wrapping capabilities.',
+        "You've Always Got Time For Disruptor Training. Apart from that, for UI testing, it is very important to have at least one very long description to test the wrapping capabilities.",
     weeks: [
       training_weeks.byId(1),
       training_weeks.byId(6),
@@ -45,7 +45,7 @@ final data = [
     id: 4,
     name: 'Practice to Perfection',
     isPublished: true,
-    description: 'Life\'s beautiful with Practice to Perfection.',
+    description: "Life's beautiful with Practice to Perfection.",
     weeks: [
       training_weeks.byId(6),
       training_weeks.byId(2),
@@ -103,7 +103,7 @@ final data = [
     id: 9,
     name: 'Top Cruncher Program',
     isPublished: false,
-    description: 'You Can\'t Top a Top Cruncher.',
+    description: "You Can't Top a Top Cruncher.",
     weeks: [
       training_weeks.byId(4),
       training_weeks.byId(2),
@@ -127,7 +127,7 @@ final data = [
 List<TrainingProgramOverview> getOverview() {
   return data
       .map(
-        (program) => TrainingProgramOverview(
+        (final program) => TrainingProgramOverview(
           id: program.id,
           name: program.name,
           isPublished: program.isPublished,
@@ -138,20 +138,20 @@ List<TrainingProgramOverview> getOverview() {
       .toList();
 }
 
-void deleteProgram(int programId) {
-  data.removeWhere((program) => program.id == programId);
+void deleteProgram(final int programId) {
+  data.removeWhere((final program) => program.id == programId);
 }
 
-List<TrainingWeek> getWeeks(int programId) {
-  return data.firstWhere((program) => program.id == programId).weeks;
+List<TrainingWeek> getWeeks(final int programId) {
+  return data.firstWhere((final program) => program.id == programId).weeks;
 }
 
-List<TrainingWeekOverview> getWeeksOverview(int programId) {
+List<TrainingWeekOverview> getWeeksOverview(final int programId) {
   return data
-      .firstWhere((program) => program.id == programId)
+      .firstWhere((final program) => program.id == programId)
       .weeks
       .map(
-        (week) => TrainingWeekOverview(
+        (final week) => TrainingWeekOverview(
           id: week.id,
           number: week.number,
           numberOfDays: week.days.length,
@@ -162,12 +162,12 @@ List<TrainingWeekOverview> getWeeksOverview(int programId) {
       .toList();
 }
 
-List<TrainingDayOverview> getDays(int weekId) {
+List<TrainingDayOverview> getDays(final int weekId) {
   return training_weeks
       .byId(weekId)
       .days
       .map(
-        (day) => TrainingDayOverview(
+        (final day) => TrainingDayOverview(
           id: day.id,
           number: day.number,
           numberOfWorkouts: day.workouts.length,
@@ -178,10 +178,10 @@ List<TrainingDayOverview> getDays(int weekId) {
       .toList();
 }
 
-List<Workout> getWorkouts(int dayId) {
+List<Workout> getWorkouts(final int dayId) {
   return training_days.byId(dayId).workouts;
 }
 
-int _getTotalNumberOfWorkouts(TrainingWeek week) {
-  return week.days.fold(0, (previousValue, element) => previousValue + element.workouts.length);
+int _getTotalNumberOfWorkouts(final TrainingWeek week) {
+  return week.days.fold(0, (final previousValue, final element) => previousValue + element.workouts.length);
 }

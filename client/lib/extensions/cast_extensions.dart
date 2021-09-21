@@ -8,7 +8,7 @@ extension CastExtensions on Object? {
   }
 
   /// Tries to cast to ```T```. If the cast is not possible, [fallback] is returned.
-  T castOrFallback<T>(T fallback) {
+  T castOrFallback<T>(final T fallback) {
     return this is T ? (this as T) : fallback;
   }
 

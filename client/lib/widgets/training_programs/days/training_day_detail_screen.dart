@@ -1,3 +1,4 @@
+import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/training_programs/overview/training_day_overview.dart';
 import 'package:client/models/training_programs/workout.dart';
@@ -10,17 +11,17 @@ import 'package:provider/provider.dart';
 final _logger = getLogger('training_day_detail_screen');
 
 class TrainingDayDetailScreen extends StatefulWidget {
+  const TrainingDayDetailScreen(this._day, this._weekNumber, {final Key? key}) : super(key: key);
+
   static const routeName = '/training-day-details';
   final TrainingDayOverview? _day;
   final int? _weekNumber;
-
-  const TrainingDayDetailScreen(this._day, this._weekNumber, {Key? key}) : super(key: key);
 
   @override
   State<TrainingDayDetailScreen> createState() => _TrainingDayDetailScreenState();
 }
 
-class _TrainingDayDetailScreenState extends State<TrainingDayDetailScreen> {
+class _TrainingDayDetailScreenState extends State<TrainingDayDetailScreen> with LogMessagePreparer {
   List<Workout>? _items;
 
   bool get hasInputData {
@@ -33,28 +34,28 @@ class _TrainingDayDetailScreenState extends State<TrainingDayDetailScreen> {
     _fetchWorkouts(context);
   }
 
-  Future<void> _fetchWorkouts(BuildContext context) async {
-    _logger.v('$runtimeType._fetchWorkouts()');
+  Future<void> _fetchWorkouts(final BuildContext context) async {
+    _logger.v(prepare('_fetchWorkouts()'));
     if (!hasInputData) {
       return;
     }
 
     final provider = Provider.of<TrainingProgramProvider>(context, listen: false);
-    provider.fetchWorkouts(widget._day!.id).then((value) {
+    provider.fetchWorkouts(widget._day!.id).then((final value) {
       setState(() => _items = provider.workoutsOfDay(widget._day!.id));
     });
   }
 
   Widget _buildFallbackScreen() {
-    _logger.v('$runtimeType._buildFallbackScreen()');
+    _logger.v(prepare('_buildFallbackScreen()'));
     return Scaffold(
       appBar: AppBar(
-        title: Text('No Day selected'),
+        title: const Text('No Day selected'),
       ),
     );
   }
 
-  Widget _buildBody(TrainingDayOverview day, List<Workout> items) {
+  Widget _buildBody(final TrainingDayOverview day, final List<Workout> items) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -67,22 +68,22 @@ class _TrainingDayDetailScreenState extends State<TrainingDayDetailScreen> {
     );
   }
 
-  Widget _buildScreen(BuildContext context, TrainingDayOverview day, int weekNumber) {
-    _logger.v('$runtimeType._buildScreen()');
+  Widget _buildScreen(final BuildContext context, final TrainingDayOverview day, final int weekNumber) {
+    _logger.v(prepare('_buildScreen()'));
     return Scaffold(
       appBar: AppBar(
         title: Text('Week $weekNumber - Day ${day.number}'),
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add Exercise to Workout',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
-          // TODO select workout and exercise
+          // TODO(raffaelfoidl-leabrugger): select workout and exercise
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: _items == null
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : _buildBody(day, _items!),
@@ -90,8 +91,8 @@ class _TrainingDayDetailScreenState extends State<TrainingDayDetailScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    _logger.v('$runtimeType.build()');
+  Widget build(final BuildContext context) {
+    _logger.v(prepare('build()'));
     return hasInputData ? _buildScreen(context, widget._day!, widget._weekNumber!) : _buildFallbackScreen();
   }
 }

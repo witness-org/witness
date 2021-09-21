@@ -10,13 +10,13 @@ import 'package:integration_test/integration_test.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  T getWidgetByKey<T extends Widget>(String key, WidgetTester tester) {
+  T getWidgetByKey<T extends Widget>(final String key, final WidgetTester tester) {
     final Finder cnt = find.byKey(Key(key));
     return tester.firstWidget<T>(cnt);
   }
 
   group('end-to-end test: ', () {
-    testWidgets('root element exists', (WidgetTester tester) async {
+    testWidgets('root element exists', (final WidgetTester tester) async {
       app.main();
       await tester.pumpAndSettle();
 

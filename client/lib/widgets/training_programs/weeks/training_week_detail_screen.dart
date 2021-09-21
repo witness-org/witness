@@ -1,4 +1,5 @@
 import 'package:client/extensions/async_snapshot_extensions.dart';
+import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/training_programs/overview/training_week_overview.dart';
 import 'package:client/providers/training_program_provider.dart';
@@ -9,39 +10,39 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('day_detail_screen');
 
-class TrainingWeekDetailScreen extends StatelessWidget {
+class TrainingWeekDetailScreen extends StatelessWidget with LogMessagePreparer {
+  const TrainingWeekDetailScreen(this._trainingWeek, this._trainingProgramName, {final Key? key}) : super(key: key);
+
   static const routeName = '/training-week-details';
   final TrainingWeekOverview? _trainingWeek;
   final String? _trainingProgramName;
 
-  const TrainingWeekDetailScreen(this._trainingWeek, this._trainingProgramName, {Key? key}) : super(key: key);
-
   Widget _buildFallbackScreen() {
-    _logger.v('$runtimeType._buildFallbackScreen()');
+    _logger.v(prepare('_buildFallbackScreen()'));
     return Scaffold(
       appBar: AppBar(
-        title: Text('No Training Week selected'),
+        title: const Text('No Training Week selected'),
       ),
     );
   }
 
-  Future<void> _fetchTrainingDays(BuildContext context, int weekId) async {
-    _logger.v('$runtimeType._fetchTrainingDays()');
+  Future<void> _fetchTrainingDays(final BuildContext context, final int weekId) async {
+    _logger.v(prepare('_fetchTrainingDays()'));
     await Provider.of<TrainingProgramProvider>(context, listen: false).fetchTrainingDays(weekId);
   }
 
-  Widget _buildWeekView(BuildContext context, TrainingWeekOverview week) {
-    _logger.v('$runtimeType._buildWeekView()');
+  Widget _buildWeekView(final BuildContext context, final TrainingWeekOverview week) {
+    _logger.v(prepare('_buildWeekView()'));
     return Expanded(
       child: FutureBuilder(
         future: _fetchTrainingDays(context, week.id),
-        builder: (_, snapshot) => snapshot.waitSwitch(
+        builder: (final _, final snapshot) => snapshot.waitSwitch(
           Consumer<TrainingProgramProvider>(
-            builder: (_, providerData, __) => Scrollbar(
+            builder: (final _, final providerData, final __) => Scrollbar(
               isAlwaysShown: true,
               child: ListView.builder(
                 itemCount: providerData.trainingDaysOfWeek(week.id).length,
-                itemBuilder: (_, index) => Column(
+                itemBuilder: (final _, final index) => Column(
                   children: [
                     TrainingDayCard(providerData.trainingDaysOfWeek(week.id)[index], week.number),
                   ],
@@ -54,17 +55,17 @@ class TrainingWeekDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildScreen(BuildContext context, TrainingWeekOverview week, String programName) {
-    _logger.v('$runtimeType._buildScreen()');
+  Widget _buildScreen(final BuildContext context, final TrainingWeekOverview week, final String programName) {
+    _logger.v(prepare('_buildScreen()'));
     return Scaffold(
       appBar: AppBar(
         title: Text('Week ${week.number}'),
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add Day to Training Program',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
-          // TODO go to workout creation screen
+          // TODO(raffaelfoidl-leabrugger): Go to day/workout creation screen
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -82,8 +83,8 @@ class TrainingWeekDetailScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    _logger.v('$runtimeType.build()');
+  Widget build(final BuildContext context) {
+    _logger.v(prepare('build()'));
     return _trainingWeek == null || _trainingProgramName == null
         ? _buildFallbackScreen()
         : _buildScreen(context, _trainingWeek!, _trainingProgramName!);

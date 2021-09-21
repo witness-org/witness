@@ -1,4 +1,5 @@
 import 'package:client/extensions/async_snapshot_extensions.dart';
+import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/training_programs/overview/training_program_overview.dart';
 import 'package:client/providers/training_program_provider.dart';
@@ -9,37 +10,37 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('training_program_detail_screen');
 
-class TrainingProgramDetailScreen extends StatelessWidget {
+class TrainingProgramDetailScreen extends StatelessWidget with LogMessagePreparer {
+  const TrainingProgramDetailScreen(this._program, {final Key? key}) : super(key: key);
+
   static const routeName = '/training-program-details';
   final TrainingProgramOverview? _program;
 
-  const TrainingProgramDetailScreen(this._program, {Key? key}) : super(key: key);
-
   Widget _buildFallbackScreen() {
-    _logger.v('$runtimeType._buildFallbackScreen()');
+    _logger.v(prepare('_buildFallbackScreen()'));
     return Scaffold(
       appBar: AppBar(
-        title: Text('No Training Program selected'),
+        title: const Text('No Training Program selected'),
       ),
     );
   }
 
-  Future<void> _fetchTrainingWeeks(BuildContext context, int programId) async {
-    _logger.v('$runtimeType._fetchTrainingWeeks()');
+  Future<void> _fetchTrainingWeeks(final BuildContext context, final int programId) async {
+    _logger.v(prepare('_fetchTrainingWeeks()'));
     await Provider.of<TrainingProgramProvider>(context, listen: false).fetchTrainingWeeks(programId);
   }
 
-  Widget _buildScreen(BuildContext context, TrainingProgramOverview program) {
-    _logger.v('$runtimeType._buildScreen()');
+  Widget _buildScreen(final BuildContext context, final TrainingProgramOverview program) {
+    _logger.v(prepare('_buildScreen()'));
     return Scaffold(
       appBar: AppBar(
         title: Text(program.name),
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add Week to Program',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
-          // TODO go to week creation screen
+          // TODO(raffaelfoidl-leabrugger): Go to week creation screen
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -50,13 +51,13 @@ class TrainingProgramDetailScreen extends StatelessWidget {
           Expanded(
             child: FutureBuilder<void>(
               future: _fetchTrainingWeeks(context, program.id),
-              builder: (_, snapshot) => snapshot.waitSwitch(
+              builder: (final _, final snapshot) => snapshot.waitSwitch(
                 Consumer<TrainingProgramProvider>(
-                  builder: (_, providerData, __) => Scrollbar(
+                  builder: (final _, final providerData, final __) => Scrollbar(
                     isAlwaysShown: true,
                     child: ListView.builder(
                       itemCount: providerData.trainingWeeksOfProgram(program.id).length,
-                      itemBuilder: (_, index) => TrainingWeekCard(providerData.trainingWeeksOfProgram(program.id)[index], program.name),
+                      itemBuilder: (final _, final index) => TrainingWeekCard(providerData.trainingWeeksOfProgram(program.id)[index], program.name),
                     ),
                   ),
                 ),
@@ -69,8 +70,8 @@ class TrainingProgramDetailScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    _logger.v('$runtimeType.build()');
+  Widget build(final BuildContext context) {
+    _logger.v(prepare('build()'));
     return _program == null ? _buildFallbackScreen() : _buildScreen(context, _program!);
   }
 }

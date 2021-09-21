@@ -149,9 +149,9 @@ final data = [
       ExerciseAttribute.weight,
     ],
   ),
-  // TODO do we want to allow Exercises to not have tags and/or attributes?
-  // e.g. allow during creation and server automatically assigns tag "other"?
-  Exercise(
+  // TODO(raffaelfoidl-leabrugger): Do we want to allow Exercises to not have tags and/or attributes? E.g. allow during creation and server
+  //  automatically assigns tag "other"?
+  const Exercise(
     id: 12,
     title: 'Special Exercise',
     description: 'I will not tell you how it works.',
@@ -160,10 +160,10 @@ final data = [
   )
 ];
 
-List<Exercise> byTagId(int tagId) {
-  return data.where((exercise) => exercise.tags.any((tag) => tag.id == tagId)).toList();
+List<Exercise> byTagId(final int tagId) {
+  return data.where((final exercise) => exercise.tags.any((final tag) => tag.id == tagId)).toList();
 }
 
-Exercise byId(int id) {
-  return data.where((exercise) => exercise.id == id).first;
+Exercise byId(final int id) {
+  return data.where((final exercise) => exercise.id == id).first;
 }

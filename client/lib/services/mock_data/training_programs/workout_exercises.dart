@@ -23,7 +23,7 @@ final data = [
       ExerciseSet(id: 4, number: 1, attributes: {ExerciseAttribute.reps: 25, ExerciseAttribute.weight: 20}, rpe: 1, restSeconds: 15),
       ExerciseSet(id: 5, number: 2, attributes: {ExerciseAttribute.reps: 20, ExerciseAttribute.weight: 15}, rpe: 8, restSeconds: 30),
     ],
-    comment: 'I want it in this workout because it\'s cool.',
+    comment: "I want it in this workout because it's cool.",
   ),
   WorkoutExercise(
     id: 3,
@@ -62,7 +62,7 @@ final data = [
     sets: [
       ExerciseSet(id: 10, number: 1, attributes: {ExerciseAttribute.distance: 4}, rpe: 6, restSeconds: 45),
     ],
-    comment: 'I don\'t know how this came exercise into this workout.',
+    comment: "I don't know how this came exercise into this workout.",
   ),
   WorkoutExercise(
     id: 6,
@@ -130,6 +130,6 @@ final data = [
   ),
 ];
 
-WorkoutExercise byId(int id) {
-  return data.where((exercise) => exercise.id == id).first;
+WorkoutExercise byId(final int id) {
+  return data.where((final exercise) => exercise.id == id).first;
 }

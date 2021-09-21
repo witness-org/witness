@@ -1,4 +1,5 @@
 import 'package:client/extensions/date_time_extensions.dart';
+import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/widgets/app_drawer.dart';
 import 'package:client/widgets/main_app_bar.dart';
@@ -7,19 +8,19 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 final _logger = getLogger('workout_overview_screen');
 
-class WorkoutOverviewScreen extends StatelessWidget {
+class WorkoutOverviewScreen extends StatelessWidget with LogMessagePreparer {
+  const WorkoutOverviewScreen(this._workoutDay, {final Key? key}) : super(key: key);
+
   static const routeName = '/workout-overview';
   final DateTime _workoutDay;
 
-  const WorkoutOverviewScreen(this._workoutDay, {Key? key}) : super(key: key);
-
   @override
-  Widget build(BuildContext context) {
-    _logger.v('$runtimeType.build()');
+  Widget build(final BuildContext context) {
+    _logger.v(prepare('build()'));
     return Scaffold(
       appBar: MainAppBar(currentlyViewedDate: _workoutDay.dateOnly()),
-      drawer: AppDrawer(),
-      floatingActionButton: _WorkoutFloatingActionButton(),
+      drawer: const AppDrawer(),
+      floatingActionButton: const _WorkoutFloatingActionButton(),
       body: Center(
         child: Text('Workout overview for $_workoutDay'),
       ),
@@ -28,7 +29,7 @@ class WorkoutOverviewScreen extends StatelessWidget {
 }
 
 class _WorkoutFloatingActionButton extends StatefulWidget {
-  const _WorkoutFloatingActionButton({Key? key}) : super(key: key);
+  const _WorkoutFloatingActionButton({final Key? key}) : super(key: key);
 
   @override
   _WorkoutFloatingActionButtonState createState() => _WorkoutFloatingActionButtonState();
@@ -37,7 +38,7 @@ class _WorkoutFloatingActionButton extends StatefulWidget {
 class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButton> {
   var _isOpened = false;
 
-  set isOpened(bool isOpened) {
+  set isOpened(final bool isOpened) {
     setState(() => _isOpened = isOpened);
   }
 
@@ -45,7 +46,7 @@ class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButt
     return _isOpened;
   }
 
-  SpeedDialChild _buildSpeedDialChild(ThemeData theme, IconData icon, String label, void Function() onTap) {
+  SpeedDialChild _buildSpeedDialChild(final ThemeData theme, final IconData icon, final String label, final void Function() onTap) {
     return SpeedDialChild(
       backgroundColor: theme.colorScheme.secondary,
       foregroundColor: theme.colorScheme.onSecondary,
@@ -56,7 +57,7 @@ class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButt
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     return SpeedDial(
       backgroundColor: theme.colorScheme.secondary,

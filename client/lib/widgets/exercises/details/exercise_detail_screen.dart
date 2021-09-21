@@ -1,3 +1,4 @@
+import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/widgets/exercises/details/exercise_history.dart';
@@ -7,26 +8,26 @@ import 'package:flutter/material.dart';
 
 final _logger = getLogger('exercise_detail_screen');
 
-class ExerciseDetailScreen extends StatelessWidget {
+class ExerciseDetailScreen extends StatelessWidget with LogMessagePreparer {
+  const ExerciseDetailScreen(this._exercise, {final Key? key}) : super(key: key);
+
   static const routeName = '/exercise-details';
   final Exercise? _exercise;
 
-  const ExerciseDetailScreen(this._exercise, {Key? key}) : super(key: key);
-
   Widget _buildFallbackScreen() {
-    _logger.v('$runtimeType._buildFallbackScreen()');
+    _logger.v(prepare('_buildFallbackScreen()'));
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exercise Details'),
+        title: const Text('Exercise Details'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('No exercise selected'),
       ),
     );
   }
 
-  Widget _buildScreen(BuildContext context, Exercise exercise) {
-    _logger.v('$runtimeType._buildScreen()');
+  Widget _buildScreen(final BuildContext context, final Exercise exercise) {
+    _logger.v(prepare('_buildScreen()'));
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -61,8 +62,8 @@ class ExerciseDetailScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    _logger.v('$runtimeType.build()');
+  Widget build(final BuildContext context) {
+    _logger.v(prepare('build()'));
     return _exercise == null ? _buildFallbackScreen() : _buildScreen(context, _exercise!);
   }
 }

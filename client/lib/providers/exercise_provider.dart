@@ -1,21 +1,15 @@
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/exercise_tag.dart';
+import 'package:client/providers/auth_provider.dart';
 import 'package:client/services/exercise_service.dart';
 import 'package:collection/collection.dart' as collection;
 import 'package:flutter/material.dart';
 
-import 'auth_provider.dart';
-
 final _logger = getLogger('exercise_provider');
 
 class ExerciseProvider with ChangeNotifier {
-  final _exerciseService = ExerciseService();
-  List<ExerciseTag> _exerciseTags;
-  Map<ExerciseTag, List<Exercise>> _exercises;
-  final String? _userId;
-  final String? _authToken;
-  final bool _isAuthenticated;
+  ExerciseProvider(this._userId, this._authToken, this._isAuthenticated, this._exerciseTags, this._exercises);
 
   ExerciseProvider.empty()
       : this(
@@ -26,7 +20,7 @@ class ExerciseProvider with ChangeNotifier {
           <ExerciseTag, List<Exercise>>{},
         );
 
-  ExerciseProvider.fromProviders(AuthProvider auth, ExerciseProvider? instance)
+  ExerciseProvider.fromProviders(final AuthProvider auth, final ExerciseProvider? instance)
       : this(
           auth.userId,
           auth.token,
@@ -35,7 +29,12 @@ class ExerciseProvider with ChangeNotifier {
           instance?._exercises ?? <ExerciseTag, List<Exercise>>{},
         );
 
-  ExerciseProvider(this._userId, this._authToken, this._isAuthenticated, this._exerciseTags, this._exercises);
+  final _exerciseService = ExerciseService();
+  List<ExerciseTag> _exerciseTags;
+  Map<ExerciseTag, List<Exercise>> _exercises;
+  final String? _userId; // ignore: unused_field
+  final String? _authToken; // ignore: unused_field
+  final bool _isAuthenticated; // ignore: unused_field
 
   List<ExerciseTag> get exerciseTags {
     return collection.UnmodifiableListView(_exerciseTags);
@@ -45,7 +44,7 @@ class ExerciseProvider with ChangeNotifier {
     return collection.UnmodifiableMapView(_exercises);
   }
 
-  List<Exercise> getExercisesByTags(ExerciseTag tag) {
+  List<Exercise> getExercisesByTags(final ExerciseTag tag) {
     return collection.UnmodifiableListView(_exercises[tag] ?? <Exercise>[]);
   }
 
@@ -58,8 +57,8 @@ class ExerciseProvider with ChangeNotifier {
     _logger.i('Received ${_exerciseTags.length} exercise tags');
   }
 
-  Future<void> fetchExercisesByTag(ExerciseTag tag) async {
-    _logger.i('Fetching exercises that contain tag "${tag.name}" (id \"${tag.id}\")');
+  Future<void> fetchExercisesByTag(final ExerciseTag tag) async {
+    _logger.i('Fetching exercises that contain tag "${tag.name}" (id "${tag.id}")');
 
     final fetchedExercises = await _exerciseService.getExercisesByTag(tag.id);
     notifyListeners();

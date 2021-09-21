@@ -13,7 +13,7 @@ import 'package:logger/logger.dart';
 ///
 /// prints the message '[[]ERROR][] MyService: No network connection.' in a color that indicates an error.
 ///
-Logger getLogger(String loggerName) {
+Logger getLogger(final String loggerName) {
   return Logger(
     printer: ColoredPrefixPrinter(
       PrettyPrinter(

@@ -11,21 +11,15 @@ import 'package:flutter/material.dart';
 final _logger = getLogger('training_program_provider');
 
 class TrainingProgramProvider with ChangeNotifier {
-  final _trainingProgramService = TrainingProgramService();
-  List<TrainingProgramOverview> _trainingPrograms;
-
-  /* TODO instead of the Map-approach, one could. opt for creating separate Providers (TrainingWeekProvider, TrainingDayProvider, WorkoutProvider)
-   This heavily depends on the underlying Domain Model, e.g. if TrainingDays and TrainingWeeks have their own primary key IDs.
-   I did it like this for the sake of creating mockups more quickly. However, there would be two main benefits in creating separate providers:
-   Firstly, accessing the data in the widgets a bit nicer (no need for maps and map lookups, can directly define getters). Secondly, the scope of
-   the providers is narrowed down, which is important for change notifications: In the current form, when calling notifyListeners(), all
-   training-program-related widgets may be rebuilt instead of only the affected one (i.e. TrainingWeekDetailScreen).*/
-  Map<int, List<TrainingWeekOverview>> _trainingWeeks;
-  Map<int, List<TrainingDayOverview>> _trainingDays;
-  Map<int, List<Workout>> _workouts;
-  final String? _userId;
-  final String? _authToken;
-  final bool _isAuthenticated;
+  TrainingProgramProvider(
+    this._userId,
+    this._authToken,
+    this._isAuthenticated,
+    this._trainingPrograms,
+    this._trainingWeeks,
+    this._trainingDays,
+    this._workouts,
+  );
 
   TrainingProgramProvider.empty()
       : this(
@@ -38,7 +32,7 @@ class TrainingProgramProvider with ChangeNotifier {
           <int, List<Workout>>{},
         );
 
-  TrainingProgramProvider.fromProviders(AuthProvider auth, TrainingProgramProvider? instance)
+  TrainingProgramProvider.fromProviders(final AuthProvider auth, final TrainingProgramProvider? instance)
       : this(
           auth.userId,
           auth.token,
@@ -49,29 +43,35 @@ class TrainingProgramProvider with ChangeNotifier {
           instance?._workouts ?? <int, List<Workout>>{},
         );
 
-  TrainingProgramProvider(
-    this._userId,
-    this._authToken,
-    this._isAuthenticated,
-    this._trainingPrograms,
-    this._trainingWeeks,
-    this._trainingDays,
-    this._workouts,
-  );
+  final _trainingProgramService = TrainingProgramService();
+  List<TrainingProgramOverview> _trainingPrograms;
+
+  /* TODO instead of the Map-approach, one could opt for creating separate Providers (TrainingWeekProvider, TrainingDayProvider, WorkoutProvider)
+   This heavily depends on the underlying Domain Model, e.g. if TrainingDays and TrainingWeeks have their own primary key IDs.
+   I did it like this for the sake of creating mockups more quickly. However, there would be two main benefits in creating separate providers:
+   Firstly, accessing the data in the widgets a bit nicer (no need for maps and map lookups, can directly define getters). Secondly, the scope of
+   the providers is narrowed down, which is important for change notifications: In the current form, when calling notifyListeners(), all
+   training-program-related widgets may be rebuilt instead of only the affected one (i.e. TrainingWeekDetailScreen).*/
+  Map<int, List<TrainingWeekOverview>> _trainingWeeks;
+  Map<int, List<TrainingDayOverview>> _trainingDays;
+  Map<int, List<Workout>> _workouts;
+  final String? _userId; // ignore: unused_field
+  final String? _authToken; // ignore: unused_field
+  final bool _isAuthenticated; // ignore: unused_field
 
   List<TrainingProgramOverview> get trainingPrograms {
     return collection.UnmodifiableListView(_trainingPrograms);
   }
 
-  List<TrainingWeekOverview> trainingWeeksOfProgram(int programId) {
+  List<TrainingWeekOverview> trainingWeeksOfProgram(final int programId) {
     return collection.UnmodifiableListView(_trainingWeeks[programId] ?? []);
   }
 
-  List<TrainingDayOverview> trainingDaysOfWeek(int weekId) {
+  List<TrainingDayOverview> trainingDaysOfWeek(final int weekId) {
     return collection.UnmodifiableListView(_trainingDays[weekId] ?? []);
   }
 
-  List<Workout> workoutsOfDay(int dayId) {
+  List<Workout> workoutsOfDay(final int dayId) {
     return collection.UnmodifiableListView(_workouts[dayId] ?? []);
   }
 
@@ -84,10 +84,10 @@ class TrainingProgramProvider with ChangeNotifier {
     _logger.i('Received ${_trainingPrograms.length} training programs');
   }
 
-  Future<void> deleteTrainingProgram(int programId) async {
+  Future<void> deleteTrainingProgram(final int programId) async {
     _logger.i('Deleting training program with id "$programId"');
 
-    final programToDeleteIndex = _trainingPrograms.indexWhere((program) => program.id == programId);
+    final programToDeleteIndex = _trainingPrograms.indexWhere((final program) => program.id == programId);
 
     if (programToDeleteIndex == -1) {
       _logger.d('There is no program with id "$programId", aborting delete');
@@ -98,10 +98,10 @@ class TrainingProgramProvider with ChangeNotifier {
     _trainingPrograms.removeAt(programToDeleteIndex);
     notifyListeners();
 
-    _logger.i('Successfully deleted training program with id"$programId"');
+    _logger.i('Successfully deleted training program with id" $programId"');
   }
 
-  Future<void> fetchTrainingWeeks(int programId) async {
+  Future<void> fetchTrainingWeeks(final int programId) async {
     _logger.i('Fetching training weeks of program with id "$programId"');
 
     final fetchedWeeks = await _trainingProgramService.getWeeksOverviewOfProgram(programId);
@@ -111,7 +111,7 @@ class TrainingProgramProvider with ChangeNotifier {
     _logger.i('Received ${fetchedWeeks.length} training weeks');
   }
 
-  Future<void> fetchTrainingDays(int weekId) async {
+  Future<void> fetchTrainingDays(final int weekId) async {
     _logger.i('Fetching training days of week with id "$weekId"');
 
     final fetchedDays = await _trainingProgramService.getDaysOfWeek(weekId);
@@ -121,7 +121,7 @@ class TrainingProgramProvider with ChangeNotifier {
     _logger.i('Received ${fetchedDays.length} training days');
   }
 
-  Future<void> fetchWorkouts(int dayId) async {
+  Future<void> fetchWorkouts(final int dayId) async {
     _logger.i('Fetching workouts of day with id "$dayId"');
 
     final fetchedWorkouts = await _trainingProgramService.getWorkoutsOfDay(dayId);

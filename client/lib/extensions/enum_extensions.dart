@@ -4,7 +4,7 @@ import 'package:client/models/exercises/exercise_attribute.dart';
 
 extension ExerciseAttributeExtensions on ExerciseAttribute {
   String toUiString() {
-    // TODO also localize enum representations
+    // TODO(raffaelfoidl-leabrugger): also localize enum representations
     switch (this) {
       case ExerciseAttribute.band:
         return 'band';
@@ -21,22 +21,22 @@ extension ExerciseAttributeExtensions on ExerciseAttribute {
     }
   }
 
-  String toValueString(Object value) {
+  String toValueString(final Object value) {
     switch (this) {
       case ExerciseAttribute.band:
-        return '$value ${this.toUiString()}';
+        return '$value ${toUiString()}';
       case ExerciseAttribute.distance:
         final typedValue = value.castOrThrow<num>();
-        return '${this.toUiString()}: $typedValue';
+        return '${toUiString()}: $typedValue';
       case ExerciseAttribute.reps:
         final typedValue = value.castOrThrow<int>();
-        return '${typedValue.toNumberString('rep')}';
+        return typedValue.toNumberString('rep');
       case ExerciseAttribute.time:
         final typedValue = value.castOrThrow<num>();
-        return '${this.toUiString()}: $typedValue';
+        return '${toUiString()}: $typedValue';
       case ExerciseAttribute.weight:
         final typedValue = value.castOrThrow<num>();
-        return '${this.toUiString()}: $typedValue';
+        return '${toUiString()}: $typedValue';
       default:
         throw Exception('No UI representation for enum member "${this}" available.');
     }

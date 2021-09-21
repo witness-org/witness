@@ -72,6 +72,6 @@ final data = [
   ),
 ];
 
-TrainingDay byId(int id) {
-  return data.where((day) => day.id == id).first;
+TrainingDay byId(final int id) {
+  return data.where((final day) => day.id == id).first;
 }

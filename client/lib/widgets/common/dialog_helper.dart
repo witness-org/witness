@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
 abstract class DialogHelper {
+  DialogHelper._();
+
   static Future<bool?> getBool(
-    BuildContext context, {
-    String? title,
-    required String content,
-    required String falseOption,
-    required String trueOption,
-    TextStyle? falseOptionStyle,
-    TextStyle? trueOptionStyle,
+    final BuildContext context, {
+    final String? title,
+    required final String content,
+    required final String falseOption,
+    required final String trueOption,
+    final TextStyle? falseOptionStyle,
+    final TextStyle? trueOptionStyle,
   }) {
     return showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
+      builder: (final ctx) => AlertDialog(
         title: title != null ? Text(title) : null,
         content: Text(content),
         actions: [

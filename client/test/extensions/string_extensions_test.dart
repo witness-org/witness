@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('join', () {
     test('should join strings with given separator', () {
-      final strings = ['string1', 'string2'];
-      final String? separator = ' ';
+      const strings = ['string1', 'string2'];
+      const String? separator = ' '; // ignore: unnecessary_nullable_for_final_variable_declarations
       expect(StringExtensions.join(strings, separator: separator), 'string1 string2');
     });
 
@@ -15,8 +15,8 @@ void main() {
     });
 
     test('should join strings with given separator, skipping the null-value', () {
-      final strings = ['string1', null, 'string2'];
-      final String? separator = ' ';
+      const strings = ['string1', null, 'string2'];
+      const String? separator = ' '; // ignore: unnecessary_nullable_for_final_variable_declarations
       expect(StringExtensions.join(strings, separator: separator), 'string1 string2');
     });
 

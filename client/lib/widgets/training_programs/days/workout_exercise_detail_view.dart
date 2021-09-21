@@ -7,31 +7,29 @@ import 'package:client/widgets/training_programs/days/editing/workout_exercise_d
 import 'package:flutter/material.dart';
 
 class WorkoutExerciseDetailView extends StatelessWidget {
+  const WorkoutExerciseDetailView(this._workoutExercise, {final Key? key}) : super(key: key);
+
   final WorkoutExercise _workoutExercise;
 
-  const WorkoutExerciseDetailView(this._workoutExercise, {Key? key}) : super(key: key);
-
-  Widget _buildAttributeValues(BuildContext context, Map<ExerciseAttribute, Object> attributes) {
-    var segments = <TextSegment>[];
-    var attributeList = attributes.entries.toList();
+  Widget _buildAttributeValues(final BuildContext context, final Map<ExerciseAttribute, Object> attributes) {
+    final segments = <TextSegment>[];
+    final attributeList = attributes.entries.toList();
     for (int i = 0; i < attributeList.length; i++) {
       final attribute = attributeList[i];
-      var text = attribute.key.toValueString(attribute.value);
+      final text = attribute.key.toValueString(attribute.value);
       segments.add(TextSegment(text, suffix: i != attributeList.length - 1 ? ', ' : null));
     }
 
-    return Container(
-      child: Expanded(
-        child: SegmentedText(
-          baseStyle: Theme.of(context).textTheme.bodyText2,
-          segments: segments,
-        ),
+    return Expanded(
+      child: SegmentedText(
+        baseStyle: Theme.of(context).textTheme.bodyText2,
+        segments: segments,
       ),
     );
   }
 
-  Widget _buildSet(BuildContext context, ExerciseSet set) {
-    // TODO does not look nice yet
+  Widget _buildSet(final BuildContext context, final ExerciseSet set) {
+    // TODO(raffaelfoidl-leabrugger): does not look nice yet
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -41,19 +39,19 @@ class WorkoutExerciseDetailView extends StatelessWidget {
     );
   }
 
-  void _openExerciseDialog(BuildContext context) {
+  void _openExerciseDialog(final BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (ctx) => WorkoutExerciseDialog(_workoutExercise),
+        builder: (final ctx) => WorkoutExerciseDialog(_workoutExercise),
         fullscreenDialog: true,
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 10),
       child: InkWell(
         onTap: () => _openExerciseDialog(context),
         child: Container(
@@ -67,9 +65,9 @@ class WorkoutExerciseDetailView extends StatelessWidget {
                 Text(
                   _workoutExercise.exercise.title,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                ..._workoutExercise.sets.map((set) => _buildSet(context, set)),
+                ..._workoutExercise.sets.map((final set) => _buildSet(context, set)),
               ],
             ),
           ),

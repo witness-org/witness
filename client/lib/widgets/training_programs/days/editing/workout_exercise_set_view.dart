@@ -4,15 +4,15 @@ import 'package:client/models/training_programs/exercise_set.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutExerciseSetView extends StatelessWidget {
+  const WorkoutExerciseSetView(this._set, {final Key? key}) : super(key: key);
+
   final ExerciseSet _set;
 
-  const WorkoutExerciseSetView(this._set, {Key? key}) : super(key: key);
-
-  Widget _buildAttributeValues(BuildContext context, Map<ExerciseAttribute, Object> attributes) {
+  Widget _buildAttributeValues(final BuildContext context, final Map<ExerciseAttribute, Object> attributes) {
     return Column(
       children: attributes.entries
           .map(
-            (attribute) => TextFormField(
+            (final attribute) => TextFormField(
               initialValue: attribute.value.toString(),
               decoration: InputDecoration(
                 labelText: attribute.key.toUiString(),
@@ -24,7 +24,7 @@ class WorkoutExerciseSetView extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(10)),
@@ -35,10 +35,10 @@ class WorkoutExerciseSetView extends StatelessWidget {
           children: [
             Text(
               'Set ${_set.number}: ',
-              style: Theme.of(context).textTheme.subtitle1?.merge(TextStyle(fontWeight: FontWeight.bold)),
+              style: Theme.of(context).textTheme.subtitle1?.merge(const TextStyle(fontWeight: FontWeight.bold)),
             ),
             _buildAttributeValues(context, _set.attributes),
-            Divider(),
+            const Divider(),
           ],
         ),
       ),

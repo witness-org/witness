@@ -10,17 +10,17 @@ class ExerciseService {
   Future<List<ExerciseTag>> getExerciseTags() async {
     _logger.i('GET https://api.my-service.at/exercise-tags');
 
-    await Future.delayed(
+    await Future<void>.delayed(
       const Duration(seconds: 1),
     );
 
     return [...mock_tags.data];
   }
 
-  Future<List<Exercise>> getExercisesByTag(int tagId) async {
+  Future<List<Exercise>> getExercisesByTag(final int tagId) async {
     _logger.i('GET https://api.my-service.at/exercises/byTag?id=$tagId');
 
-    await Future.delayed(
+    await Future<void>.delayed(
       const Duration(seconds: 1),
     );
 

@@ -28,12 +28,12 @@ class AuthProvider with ChangeNotifier {
     return DateTime.now().isBefore(_expirationDate!);
   }
 
-  Future<void> signUp(String email, String password) async {
+  Future<void> signUp(final String email, final String password) async {
     _logger.i('Signing up new user "$email"');
     return _authenticate(email, password, 'https://api.my-service.at/sign-up');
   }
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(final String email, final String password) async {
     _logger.i('Logging user "$email" in');
     return _authenticate(email, password, 'https://api.my-service.at/login');
   }
@@ -47,10 +47,10 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _authenticate(String email, String password, String url) async {
+  Future<void> _authenticate(final String email, final String password, final String url) async {
     _logger.d('Authenticating user "$email" with password "$password"');
 
-    await Future.delayed(const Duration(seconds: 1));
+    await Future<void>.delayed(const Duration(seconds: 1));
 
     _token = 'fake-token';
     _userId = 'stub-user';

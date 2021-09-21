@@ -1,4 +1,5 @@
 import 'package:client/extensions/async_snapshot_extensions.dart';
+import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/providers/training_program_provider.dart';
 import 'package:client/widgets/app_drawer.dart';
@@ -9,32 +10,32 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('training_programs_overview_screen');
 
-class TrainingProgramsOverviewScreen extends StatelessWidget {
+class TrainingProgramsOverviewScreen extends StatelessWidget with LogMessagePreparer {
+  const TrainingProgramsOverviewScreen({final Key? key}) : super(key: key);
+
   static const routeName = '/training-programs-overview';
 
-  const TrainingProgramsOverviewScreen({Key? key}) : super(key: key);
-
-  Future<void> _fetchTrainingPrograms(BuildContext context) async {
-    _logger.v('$runtimeType._fetchTrainingPrograms');
+  Future<void> _fetchTrainingPrograms(final BuildContext context) async {
+    _logger.v(prepare('_fetchTrainingPrograms'));
     await Provider.of<TrainingProgramProvider>(context, listen: false).fetchTrainingPrograms();
   }
 
-  Widget _buildTrainingProgramView(BuildContext context) {
-    _logger.v('$runtimeType._buildTrainingProgramView()');
+  Widget _buildTrainingProgramView(final BuildContext context) {
+    _logger.v(prepare('_buildTrainingProgramView()'));
     return Expanded(
       child: FutureBuilder<void>(
         future: _fetchTrainingPrograms(context),
-        builder: (_, snapshot) => snapshot.waitSwitch(
+        builder: (final _, final snapshot) => snapshot.waitSwitch(
           RefreshIndicator(
             onRefresh: () => _fetchTrainingPrograms(context),
             child: Consumer<TrainingProgramProvider>(
-              builder: (_, providerData, __) {
-                _logger.v('$runtimeType._buildTrainingProgramView.Consumer.builder()');
+              builder: (final _, final providerData, final __) {
+                _logger.v(prepare('_buildTrainingProgramView.Consumer.builder()'));
                 return Scrollbar(
                   isAlwaysShown: true,
                   child: ListView.builder(
                     itemCount: providerData.trainingPrograms.length,
-                    itemBuilder: (_, index) => TrainingProgramCard(providerData.trainingPrograms[index]),
+                    itemBuilder: (final _, final index) => TrainingProgramCard(providerData.trainingPrograms[index]),
                   ),
                 );
               },
@@ -46,16 +47,16 @@ class TrainingProgramsOverviewScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    _logger.v('$runtimeType.build()');
+  Widget build(final BuildContext context) {
+    _logger.v(prepare('build()'));
     return Scaffold(
-      appBar: MainAppBar(),
-      drawer: AppDrawer(),
+      appBar: const MainAppBar(),
+      drawer: const AppDrawer(),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Create new Training Program',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
-          // TODO go to training program creation screen
+          // TODO(raffaelfoidl-leabrugger): Go to training program creation screen
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

@@ -7,13 +7,13 @@ import 'package:logger/logger.dart';
 /// This filter can be used to specify a minimum log level as well as exclude certain log levels from being displayed. For example,
 /// this can be useful to quickly have a debug session where ONLY verbose log statements are interesting - as to reduce output cluttering.
 class FineGrainedDebugFilter extends LogFilter {
+  FineGrainedDebugFilter({required final this.minLevel, required final this.allowedLevels});
+
   final Set<Level> allowedLevels;
   final Level minLevel;
 
-  FineGrainedDebugFilter({required this.minLevel, required this.allowedLevels});
-
   @override
-  bool shouldLog(LogEvent event) {
+  bool shouldLog(final LogEvent event) {
     // only log in release mode
     if (kReleaseMode) {
       return false;
