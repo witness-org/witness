@@ -1,0 +1,15 @@
+{
+  "@@locale": "en",
+  "appTitle": "witness",
+  "@appTitle": {
+    "description": "The title of the application."
+  },
+  "mainAppBar_overview": "Go to Day",
+  "@mainAppBar_overview": {
+    "description": "Textual description of the \"Workout Overview\" floating icon in the training logs screen."
+  },
+  "mainAppBar_settings": "Account Settings",
+  "@mainAppBar_settings": {
+    "description": "Textual description of the \"Account Settings\" icon in the main app bar."
+  }
+}
