@@ -31,8 +31,8 @@ test-client:
     - 'flutter doctor --verbose'
     - 'flutter pub get'
     - 'flutter clean'
-    - 'flutter test --coverage'
-    - 'lcov --summary coverage/lcov.info > client-coverage.txt'
+    - 'flutter test --reporter expanded --coverage'
+    - 'lcov --summary coverage/lcov.info > client-coverage.txt || true'
   artifacts:
     paths:
       - './client/client-coverage.txt'
