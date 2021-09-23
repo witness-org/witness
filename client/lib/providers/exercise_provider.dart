@@ -1,6 +1,6 @@
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
-import 'package:client/models/exercises/exercise_tag.dart';
+import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/providers/auth_provider.dart';
 import 'package:client/services/exercise_service.dart';
 import 'package:collection/collection.dart' as collection;
@@ -9,15 +9,15 @@ import 'package:flutter/material.dart';
 final _logger = getLogger('exercise_provider');
 
 class ExerciseProvider with ChangeNotifier {
-  ExerciseProvider(this._userId, this._authToken, this._isAuthenticated, this._exerciseTags, this._exercises);
+  ExerciseProvider(this._userId, this._authToken, this._isAuthenticated, this._muscleGroups, this._exercises);
 
   ExerciseProvider.empty()
       : this(
           null,
           null,
           false,
-          <ExerciseTag>[],
-          <ExerciseTag, List<Exercise>>{},
+          <MuscleGroup>[],
+          <MuscleGroup, List<Exercise>>{},
         );
 
   ExerciseProvider.fromProviders(final AuthProvider auth, final ExerciseProvider? instance)
@@ -25,45 +25,45 @@ class ExerciseProvider with ChangeNotifier {
           auth.userId,
           auth.token,
           auth.isAuthenticated,
-          instance?._exerciseTags ?? <ExerciseTag>[],
-          instance?._exercises ?? <ExerciseTag, List<Exercise>>{},
+          instance?._muscleGroups ?? <MuscleGroup>[],
+          instance?._exercises ?? <MuscleGroup, List<Exercise>>{},
         );
 
   final _exerciseService = ExerciseService();
-  List<ExerciseTag> _exerciseTags;
-  Map<ExerciseTag, List<Exercise>> _exercises;
+  List<MuscleGroup> _muscleGroups;
+  Map<MuscleGroup, List<Exercise>> _exercises;
   final String? _userId; // ignore: unused_field
   final String? _authToken; // ignore: unused_field
   final bool _isAuthenticated; // ignore: unused_field
 
-  List<ExerciseTag> get exerciseTags {
-    return collection.UnmodifiableListView(_exerciseTags);
+  List<MuscleGroup> get muscleGroups {
+    return collection.UnmodifiableListView(_muscleGroups);
   }
 
-  Map<ExerciseTag, List<Exercise>> get exercises {
+  Map<MuscleGroup, List<Exercise>> get exercises {
     return collection.UnmodifiableMapView(_exercises);
   }
 
-  List<Exercise> getExercisesByTags(final ExerciseTag tag) {
-    return collection.UnmodifiableListView(_exercises[tag] ?? <Exercise>[]);
+  List<Exercise> getExercisesByMuscleGroup(final MuscleGroup group) {
+    return collection.UnmodifiableListView(_exercises[group] ?? <Exercise>[]);
   }
 
-  Future<void> fetchTags() async {
-    _logger.i('Fetching exercise tags');
+  Future<void> fetchMuscleGroups() async {
+    _logger.i('Fetching muscle groups');
 
-    _exerciseTags = await _exerciseService.getExerciseTags();
+    _muscleGroups = await _exerciseService.getMuscleGroups();
     notifyListeners();
 
-    _logger.i('Received ${_exerciseTags.length} exercise tags');
+    _logger.i('Received ${_muscleGroups.length} muscle groups');
   }
 
-  Future<void> fetchExercisesByTag(final ExerciseTag tag) async {
-    _logger.i('Fetching exercises that contain tag "${tag.name}" (id "${tag.id}")');
+  Future<void> fetchExercisesByMuscleGroup(final MuscleGroup group) async {
+    _logger.i('Fetching exercises that affect muscle group "${group.name}" (id "${group.id}")');
 
-    final fetchedExercises = await _exerciseService.getExercisesByTag(tag.id);
+    final fetchedExercises = await _exerciseService.getExercisesByMuscleGroup(group.id);
     notifyListeners();
 
-    _exercises[tag] = fetchedExercises;
+    _exercises[group] = fetchedExercises;
 
     _logger.i('Received ${fetchedExercises.length} exercises');
   }

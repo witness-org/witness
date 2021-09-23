@@ -3,8 +3,8 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/widgets/exercises/exercises_screen.dart';
 import 'package:client/widgets/settings/settings_screen.dart';
 import 'package:client/widgets/statistics/statistics_screen.dart';
+import 'package:client/widgets/training_logs/training_log_screen.dart';
 import 'package:client/widgets/training_programs/training_programs_overview_screen.dart';
-import 'package:client/widgets/workouts/workout_overview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // ignore: depend_on_referenced_packages
 
@@ -41,7 +41,7 @@ class AppDrawer extends StatelessWidget with LogMessagePreparer {
               ),
             ),
           ),
-          _buildListTile('Workout Overview', Icons.date_range, () => Navigator.of(context).pushReplacementNamed(WorkoutOverviewScreen.routeName)),
+          _buildListTile('Training Log', Icons.date_range, () => Navigator.of(context).pushReplacementNamed(TrainingLogScreen.routeName)),
           _buildListTile('Exercises', Icons.fitness_center, () => Navigator.of(context).pushReplacementNamed(ExercisesScreen.routeName)),
           _buildListTile(
               'Programs', Icons.article_outlined, () => Navigator.of(context).pushReplacementNamed(TrainingProgramsOverviewScreen.routeName)),

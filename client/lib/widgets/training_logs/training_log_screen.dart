@@ -4,23 +4,51 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/widgets/app_drawer.dart';
 import 'package:client/widgets/main_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // ignore: depend_on_referenced_packages
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-final _logger = getLogger('workout_overview_screen');
+final _logger = getLogger('training_log_screen');
 
-class WorkoutOverviewScreen extends StatelessWidget with LogMessagePreparer {
-  const WorkoutOverviewScreen(this._workoutDay, {final Key? key}) : super(key: key);
+class TrainingLogScreen extends StatelessWidget with LogMessagePreparer {
+  const TrainingLogScreen(this._workoutDay, {final Key? key}) : super(key: key);
 
-  static const routeName = '/workout-overview';
+  static const routeName = '/training-log';
   final DateTime _workoutDay;
+
+  void _selectDate(final BuildContext context) {
+    final referenceDate = _workoutDay;
+    showDatePicker(
+      context: context,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      initialDate: referenceDate,
+      firstDate: referenceDate.subtractYears(1),
+      lastDate: referenceDate.addYears(1),
+    ).then((final pickedDate) {
+      if (pickedDate != null) {
+        Navigator.of(context).pushReplacementNamed(TrainingLogScreen.routeName, arguments: pickedDate.dateOnly());
+      }
+    });
+  }
 
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
+    final uiStrings = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: MainAppBar(currentlyViewedDate: _workoutDay.dateOnly()),
       drawer: const AppDrawer(),
-      floatingActionButton: const _WorkoutFloatingActionButton(),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          const _WorkoutFloatingActionButton(),
+          const SizedBox(height: 15),
+          FloatingActionButton(
+            tooltip: uiStrings.mainAppBar_overview,
+            child: const Icon(Icons.calendar_today),
+            onPressed: () => _selectDate(context),
+          ),
+        ],
+      ),
       body: Center(
         child: Text('Workout overview for $_workoutDay'),
       ),
@@ -69,11 +97,9 @@ class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButt
       icon: isOpened ? Icons.close : Icons.add,
       spacing: 2,
       children: [
-        _buildSpeedDialChild(theme, Icons.app_registration, "Log Exercise", () {}),
-        _buildSpeedDialChild(theme, Icons.copy, "Copy Exercise", () {}),
-        _buildSpeedDialChild(theme, Icons.article_outlined, "New Training program", () {}),
-        _buildSpeedDialChild(theme, Icons.menu_book, "New Workout", () {}),
-        _buildSpeedDialChild(theme, Icons.fitness_center, "New Exercise", () {}),
+        _buildSpeedDialChild(theme, Icons.fitness_center, "Log Exercise", () {}),
+        _buildSpeedDialChild(theme, Icons.copy, "Copy Workout", () {}),
+        _buildSpeedDialChild(theme, Icons.content_paste, "Log Workout", () {}),
       ],
     );
   }

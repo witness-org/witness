@@ -1,13 +1,13 @@
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/exercise_attribute.dart';
-import 'package:client/services/mock_data/exercises/exercise_tags.dart' as tags;
+import 'package:client/services/mock_data/exercises/muscle_groups.dart' as muscle_groups;
 
 final data = [
   Exercise(
     id: 1,
     title: 'Overhead Press',
     description: 'A very nice exercise',
-    tags: [tags.byId(1)],
+    muscleGroups: [muscle_groups.byId(1)],
     attributes: [
       ExerciseAttribute.weight,
       ExerciseAttribute.reps,
@@ -18,21 +18,21 @@ final data = [
     title: 'Plank',
     description:
         'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet.',
-    tags: [
-      tags.byId(1),
-      tags.byId(2),
-      tags.byId(3),
-      tags.byId(5),
-      tags.byId(6),
-      tags.byId(7),
-      tags.byId(8),
-      tags.byId(1),
-      tags.byId(2),
-      tags.byId(3),
-      tags.byId(5),
-      tags.byId(6),
-      tags.byId(7),
-      tags.byId(8),
+    muscleGroups: [
+      muscle_groups.byId(1),
+      muscle_groups.byId(2),
+      muscle_groups.byId(3),
+      muscle_groups.byId(5),
+      muscle_groups.byId(6),
+      muscle_groups.byId(7),
+      muscle_groups.byId(8),
+      muscle_groups.byId(1),
+      muscle_groups.byId(2),
+      muscle_groups.byId(3),
+      muscle_groups.byId(5),
+      muscle_groups.byId(6),
+      muscle_groups.byId(7),
+      muscle_groups.byId(8),
     ],
     attributes: [
       ExerciseAttribute.band,
@@ -61,7 +61,7 @@ final data = [
     id: 3,
     title: 'Barbell Curl',
     description: 'Another nice exercise!',
-    tags: [tags.byId(3)],
+    muscleGroups: [muscle_groups.byId(3)],
     attributes: [
       ExerciseAttribute.weight,
       ExerciseAttribute.reps,
@@ -71,7 +71,7 @@ final data = [
     id: 4,
     title: 'Jump Squats',
     description: 'Another nice exercise!',
-    tags: [tags.byId(4)],
+    muscleGroups: [muscle_groups.byId(4)],
     attributes: [
       ExerciseAttribute.weight,
       ExerciseAttribute.reps,
@@ -82,7 +82,7 @@ final data = [
     id: 5,
     title: 'Running',
     description: 'Very refreshing',
-    tags: [tags.byId(4)],
+    muscleGroups: [muscle_groups.byId(4)],
     attributes: [
       ExerciseAttribute.distance,
       ExerciseAttribute.time,
@@ -92,7 +92,7 @@ final data = [
     id: 6,
     title: 'Bench Dips',
     description: 'Nice Nice Nice Nice Nice Nice Nice Nice Nice Nice Nice Nice Nice Nice',
-    tags: [tags.byId(5)],
+    muscleGroups: [muscle_groups.byId(5)],
     attributes: [
       ExerciseAttribute.weight,
       ExerciseAttribute.reps,
@@ -102,7 +102,7 @@ final data = [
     id: 7,
     title: 'Band Curl',
     description: 'Choose the right one',
-    tags: [tags.byId(3)],
+    muscleGroups: [muscle_groups.byId(3)],
     attributes: [
       ExerciseAttribute.reps,
       ExerciseAttribute.weight,
@@ -113,7 +113,7 @@ final data = [
     id: 8,
     title: 'Hyperextension',
     description: 'Better than superman',
-    tags: [tags.byId(6)],
+    muscleGroups: [muscle_groups.byId(6)],
     attributes: [
       ExerciseAttribute.reps,
       ExerciseAttribute.weight,
@@ -123,7 +123,7 @@ final data = [
     id: 9,
     title: 'Superman',
     description: 'Better than nothing',
-    tags: [tags.byId(6)],
+    muscleGroups: [muscle_groups.byId(6)],
     attributes: [
       ExerciseAttribute.reps,
       ExerciseAttribute.weight,
@@ -133,7 +133,7 @@ final data = [
     id: 10,
     title: 'Push Up',
     description: 'That is something one can do',
-    tags: [tags.byId(7)],
+    muscleGroups: [muscle_groups.byId(7)],
     attributes: [
       ExerciseAttribute.reps,
       ExerciseAttribute.weight,
@@ -143,25 +143,25 @@ final data = [
     id: 11,
     title: 'Leg Press',
     description: 'Do not bend your knees in the wrong direction!',
-    tags: [tags.byId(8)],
+    muscleGroups: [muscle_groups.byId(8)],
     attributes: [
       ExerciseAttribute.reps,
       ExerciseAttribute.weight,
     ],
   ),
-  // TODO(raffaelfoidl-leabrugger): Do we want to allow Exercises to not have tags and/or attributes? E.g. allow during creation and server
-  //  automatically assigns tag "other"?
+  // TODO(raffaelfoidl-leabrugger): Do we want to allow Exercises to not have muscle groups and/or attributes? E.g. allow during creation and server
+  //  automatically assigns group "other"?
   const Exercise(
     id: 12,
     title: 'Special Exercise',
     description: 'I will not tell you how it works.',
-    tags: [],
+    muscleGroups: [],
     attributes: [],
   )
 ];
 
-List<Exercise> byTagId(final int tagId) {
-  return data.where((final exercise) => exercise.tags.any((final tag) => tag.id == tagId)).toList();
+List<Exercise> byGroupId(final int groupId) {
+  return data.where((final exercise) => exercise.muscleGroups.any((final group) => group.id == groupId)).toList();
 }
 
 Exercise byId(final int id) {

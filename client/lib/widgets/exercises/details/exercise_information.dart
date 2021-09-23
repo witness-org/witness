@@ -50,10 +50,10 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer {
         _buildHeading('Description'),
         Text(_exercise.description ?? ''),
         const SizedBox(height: 15),
-        _buildHeading('Tags'),
+        _buildHeading('Muscle Groups'),
         _buildBadgeList(
           context,
-          _exercise.tags.map((final tag) => tag.name),
+          _exercise.muscleGroups.map((final group) => group.name),
           theme.primaryColor,
           theme.colorScheme.onPrimary,
         ),
