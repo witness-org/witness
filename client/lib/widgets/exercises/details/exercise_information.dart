@@ -2,12 +2,13 @@ import 'package:client/extensions/enum_extensions.dart';
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/exercises/editing/edit_exercise_screen.dart';
 import 'package:flutter/material.dart';
 
 final _logger = getLogger('exercise_information');
 
-class ExerciseInformation extends StatelessWidget with LogMessagePreparer {
+class ExerciseInformation extends StatelessWidget with LogMessagePreparer, StringLocalizer {
   const ExerciseInformation(this._exercise, {final Key? key}) : super(key: key);
 
   final Exercise _exercise;
@@ -41,16 +42,16 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer {
     );
   }
 
-  Widget _buildExerciseInformation(final BuildContext context) {
+  Widget _buildExerciseInformation(final BuildContext context, final StringLocalizations uiStrings) {
     _logger.v(prepare('_buildExerciseInformation()'));
     final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildHeading('Description'),
+        _buildHeading(uiStrings.exerciseInformation_body_heading_description),
         Text(_exercise.description ?? ''),
         const SizedBox(height: 15),
-        _buildHeading('Muscle Groups'),
+        _buildHeading(uiStrings.exerciseInformation_body_heading_muscleGroups),
         _buildBadgeList(
           context,
           _exercise.muscleGroups.map((final group) => group.name),
@@ -58,7 +59,7 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer {
           theme.colorScheme.onPrimary,
         ),
         const SizedBox(height: 15),
-        _buildHeading('Attributes'),
+        _buildHeading(uiStrings.exerciseInformation_body_heading_attributes),
         _buildBadgeList(
           context,
           _exercise.attributes.map((final attribute) => attribute.toUiString()),
@@ -70,7 +71,7 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer {
     );
   }
 
-  Widget _buildStickyFooter(final BuildContext context) {
+  Widget _buildStickyFooter(final BuildContext context, final StringLocalizations uiStrings) {
     _logger.v(prepare('_buildStickyFooter()'));
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, bottom: 7),
@@ -79,7 +80,7 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer {
         child: ElevatedButton.icon(
           onPressed: () => Navigator.of(context).pushNamed(EditExerciseScreen.routeName, arguments: _exercise),
           icon: const Icon(Icons.edit),
-          label: const Text('Edit'),
+          label: Text(uiStrings.exerciseInformation_footer_editButton_text),
         ),
       ),
     );
@@ -88,6 +89,7 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer {
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
+    final uiStrings = getLocalizedStrings(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -95,14 +97,14 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-              child: _buildExerciseInformation(context),
+              child: _buildExerciseInformation(context, uiStrings),
             ),
           ),
         ),
         Column(
           children: [
             const Divider(),
-            _buildStickyFooter(context),
+            _buildStickyFooter(context, uiStrings),
           ],
         ),
       ],

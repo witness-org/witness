@@ -3,6 +3,7 @@ import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/training_programs/overview/training_program_overview.dart';
 import 'package:client/providers/training_program_provider.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/training_programs/training_programs/training_program_header.dart';
 import 'package:client/widgets/training_programs/training_programs/training_week_card.dart';
 import 'package:flutter/material.dart';
@@ -10,17 +11,17 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('training_program_detail_screen');
 
-class TrainingProgramDetailScreen extends StatelessWidget with LogMessagePreparer {
+class TrainingProgramDetailScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
   const TrainingProgramDetailScreen(this._program, {final Key? key}) : super(key: key);
 
   static const routeName = '/training-program-details';
   final TrainingProgramOverview? _program;
 
-  Widget _buildFallbackScreen() {
+  Widget _buildFallbackScreen(final StringLocalizations uiStrings) {
     _logger.v(prepare('_buildFallbackScreen()'));
     return Scaffold(
       appBar: AppBar(
-        title: const Text('No Training Program selected'),
+        title: Text(uiStrings.trainingProgramDetailScreen_fallback_appBar_title),
       ),
     );
   }
@@ -30,14 +31,14 @@ class TrainingProgramDetailScreen extends StatelessWidget with LogMessagePrepare
     await Provider.of<TrainingProgramProvider>(context, listen: false).fetchTrainingWeeks(programId);
   }
 
-  Widget _buildScreen(final BuildContext context, final TrainingProgramOverview program) {
+  Widget _buildScreen(final BuildContext context, final StringLocalizations uiStrings, final TrainingProgramOverview program) {
     _logger.v(prepare('_buildScreen()'));
     return Scaffold(
       appBar: AppBar(
         title: Text(program.name),
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Add Week to Program',
+        tooltip: uiStrings.trainingProgramDetailScreen_action_addWeek,
         child: const Icon(Icons.add),
         onPressed: () {
           // TODO(raffaelfoidl-leabrugger): Go to week creation screen
@@ -72,6 +73,7 @@ class TrainingProgramDetailScreen extends StatelessWidget with LogMessagePrepare
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
-    return _program == null ? _buildFallbackScreen() : _buildScreen(context, _program!);
+    final uiStrings = getLocalizedStrings(context);
+    return _program == null ? _buildFallbackScreen(uiStrings) : _buildScreen(context, uiStrings, _program!);
   }
 }

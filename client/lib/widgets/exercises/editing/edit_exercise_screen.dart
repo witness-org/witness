@@ -1,12 +1,13 @@
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/main_app_bar.dart';
 import 'package:flutter/material.dart';
 
 final _logger = getLogger('edit_exercise_screen');
 
-class EditExerciseScreen extends StatelessWidget with LogMessagePreparer {
+class EditExerciseScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
   const EditExerciseScreen(this._exercise, {final Key? key}) : super(key: key);
 
   static const routeName = '/edit-exercise';
@@ -16,7 +17,8 @@ class EditExerciseScreen extends StatelessWidget with LogMessagePreparer {
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
     // TODO(raffaelfoidl-leabrugger): implement according to mockups
-    final title = _exercise == null ? 'Create Exercise' : 'Edit Exercise';
+    final uiStrings = getLocalizedStrings(context);
+    final title = _exercise == null ? uiStrings.editExerciseScreen_appBar_title_create : uiStrings.editExerciseScreen_appBar_title_edit;
     return Scaffold(
       appBar: MainAppBar(
         preferredTitle: title,

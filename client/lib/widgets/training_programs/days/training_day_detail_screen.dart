@@ -3,6 +3,7 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/training_programs/overview/training_day_overview.dart';
 import 'package:client/models/training_programs/workout.dart';
 import 'package:client/providers/training_program_provider.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/training_programs/days/training_day_header.dart';
 import 'package:client/widgets/training_programs/days/workout_expander_view.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class TrainingDayDetailScreen extends StatefulWidget {
   State<TrainingDayDetailScreen> createState() => _TrainingDayDetailScreenState();
 }
 
-class _TrainingDayDetailScreenState extends State<TrainingDayDetailScreen> with LogMessagePreparer {
+class _TrainingDayDetailScreenState extends State<TrainingDayDetailScreen> with LogMessagePreparer, StringLocalizer {
   List<Workout>? _items;
 
   bool get hasInputData {
@@ -46,11 +47,11 @@ class _TrainingDayDetailScreenState extends State<TrainingDayDetailScreen> with 
     });
   }
 
-  Widget _buildFallbackScreen() {
+  Widget _buildFallbackScreen(final StringLocalizations uiStrings) {
     _logger.v(prepare('_buildFallbackScreen()'));
     return Scaffold(
       appBar: AppBar(
-        title: const Text('No Day selected'),
+        title: Text(uiStrings.trainingDayDetailScreen_fallback_appBar_title),
       ),
     );
   }
@@ -68,14 +69,15 @@ class _TrainingDayDetailScreenState extends State<TrainingDayDetailScreen> with 
     );
   }
 
-  Widget _buildScreen(final BuildContext context, final TrainingDayOverview day, final int weekNumber) {
+  Widget _buildScreen(final BuildContext context, final StringLocalizations uiStrings, final TrainingDayOverview day, final int weekNumber) {
     _logger.v(prepare('_buildScreen()'));
     return Scaffold(
       appBar: AppBar(
-        title: Text('Week $weekNumber - Day ${day.number}'),
+        title: Text('${uiStrings.trainingDayDetailScreen_appBar_weekNumber_prefix} $weekNumber - '
+            '${uiStrings.trainingDayDetailScreen_appBar_dayNumber_prefix} ${day.number}'),
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Add Exercise to Workout',
+        tooltip: uiStrings.trainingDayDetailScreen_action_addExercise,
         child: const Icon(Icons.add),
         onPressed: () {
           // TODO(raffaelfoidl-leabrugger): select workout and exercise
@@ -93,6 +95,7 @@ class _TrainingDayDetailScreenState extends State<TrainingDayDetailScreen> with 
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
-    return hasInputData ? _buildScreen(context, widget._day!, widget._weekNumber!) : _buildFallbackScreen();
+    final uiStrings = getLocalizedStrings(context);
+    return hasInputData ? _buildScreen(context, uiStrings, widget._day!, widget._weekNumber!) : _buildFallbackScreen(uiStrings);
   }
 }

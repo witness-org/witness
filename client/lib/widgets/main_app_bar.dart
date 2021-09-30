@@ -1,12 +1,12 @@
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // ignore: depend_on_referenced_packages
 
 final _logger = getLogger('main_app_bar');
 
-class MainAppBar extends StatelessWidget with LogMessagePreparer implements PreferredSizeWidget {
+class MainAppBar extends StatelessWidget with LogMessagePreparer, StringLocalizer implements PreferredSizeWidget {
   const MainAppBar({final Key? key, final this.preferredHeight = kToolbarHeight, final this.preferredTitle, final this.currentlyViewedDate})
       : super(key: key);
 
@@ -22,7 +22,7 @@ class MainAppBar extends StatelessWidget with LogMessagePreparer implements Pref
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
-    final uiStrings = AppLocalizations.of(context)!;
+    final uiStrings = getLocalizedStrings(context);
     return AppBar(
       title: Text(preferredTitle ?? uiStrings.appTitle),
       actions: [

@@ -7,6 +7,8 @@ extension NumberExtensions on int {
   /// 1.toNumberString('house') => '1 house'
   /// 3.toNumberString('house') => '3 houses'
   /// ```
+  ///
+  /// Note: This method is only suitable for English locales.
   String toNumberString(final String word) {
     return '$this $word${this != 1 ? 's' : ''}';
   }

@@ -4,6 +4,7 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/providers/exercise_provider.dart';
 import 'package:client/widgets/app_drawer.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/exercises/editing/edit_exercise_screen.dart';
 import 'package:client/widgets/exercises/exercises_by_muscle_group_screen.dart';
 import 'package:client/widgets/main_app_bar.dart';
@@ -12,7 +13,7 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('exercises_screen');
 
-class ExercisesScreen extends StatelessWidget with LogMessagePreparer {
+class ExercisesScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
   const ExercisesScreen({final Key? key}) : super(key: key);
 
   static const routeName = '/exercises';
@@ -56,25 +57,25 @@ class ExercisesScreen extends StatelessWidget with LogMessagePreparer {
     );
   }
 
-  Padding _buildHeader(final BuildContext context) {
+  Padding _buildHeader(final BuildContext context, final StringLocalizations uiStrings) {
     _logger.v(prepare('_buildHeader()'));
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            'Exercises by Muscle Group',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Text(
+            uiStrings.exercisesScreen_header_text,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const Spacer(),
           IconButton(
-            tooltip: 'Search Muscle Groups',
+            tooltip: uiStrings.exercisesScreen_search_tooltip,
             onPressed: () {},
             icon: const Icon(Icons.search),
           ),
           IconButton(
-            tooltip: 'Create new Exercise',
+            tooltip: uiStrings.exercisesScreen_createNew_tooltip,
             onPressed: () => Navigator.of(context).pushNamed(EditExerciseScreen.routeName),
             icon: const Icon(Icons.add),
           ),
@@ -86,13 +87,14 @@ class ExercisesScreen extends StatelessWidget with LogMessagePreparer {
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
+    final uiStrings = getLocalizedStrings(context);
     return Scaffold(
       appBar: const MainAppBar(),
       drawer: const AppDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(context),
+          _buildHeader(context, uiStrings),
           const Divider(),
           _buildMuscleGroupList(context),
         ],

@@ -2,11 +2,12 @@ import 'package:client/extensions/enum_extensions.dart';
 import 'package:client/models/exercises/exercise_attribute.dart';
 import 'package:client/models/training_programs/exercise_set.dart';
 import 'package:client/models/training_programs/workout_exercise.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/training_programs/common/segmented_text.dart';
 import 'package:client/widgets/training_programs/days/editing/workout_exercise_dialog.dart';
 import 'package:flutter/material.dart';
 
-class WorkoutExerciseDetailView extends StatelessWidget {
+class WorkoutExerciseDetailView extends StatelessWidget with StringLocalizer {
   const WorkoutExerciseDetailView(this._workoutExercise, {final Key? key}) : super(key: key);
 
   final WorkoutExercise _workoutExercise;
@@ -28,12 +29,12 @@ class WorkoutExerciseDetailView extends StatelessWidget {
     );
   }
 
-  Widget _buildSet(final BuildContext context, final ExerciseSet set) {
+  Widget _buildSet(final BuildContext context, final StringLocalizations uiStrings, final ExerciseSet set) {
     // TODO(raffaelfoidl-leabrugger): does not look nice yet
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Set ${set.number}: '),
+        Text('${uiStrings.workoutExerciseDetailView_setNumber_prefix} ${set.number}: '),
         _buildAttributeValues(context, set.attributes),
       ],
     );
@@ -50,6 +51,7 @@ class WorkoutExerciseDetailView extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final uiStrings = getLocalizedStrings(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       child: InkWell(
@@ -67,7 +69,7 @@ class WorkoutExerciseDetailView extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                ..._workoutExercise.sets.map((final set) => _buildSet(context, set)),
+                ..._workoutExercise.sets.map((final set) => _buildSet(context, uiStrings, set)),
               ],
             ),
           ),

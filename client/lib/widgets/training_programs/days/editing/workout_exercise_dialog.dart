@@ -1,6 +1,7 @@
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/training_programs/workout_exercise.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/training_programs/common/segmented_text.dart';
 import 'package:client/widgets/training_programs/common/training_program_component_header.dart';
 import 'package:client/widgets/training_programs/days/editing/workout_exercise_dialog_body.dart';
@@ -12,7 +13,7 @@ final _logger = getLogger('workout_exercise_dialog');
 //  (as it is right now) just save (or discard) all changes made to all sets at once
 
 // TODO(raffaelfoidl-leabrugger): Add new attributes, remove attributes (currently, only attribute values are displayed to edit)
-class WorkoutExerciseDialog extends StatelessWidget with LogMessagePreparer {
+class WorkoutExerciseDialog extends StatelessWidget with LogMessagePreparer, StringLocalizer {
   const WorkoutExerciseDialog(final this._exercise, {final Key? key}) : super(key: key);
 
   final WorkoutExercise _exercise;
@@ -21,14 +22,15 @@ class WorkoutExerciseDialog extends StatelessWidget with LogMessagePreparer {
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
     final theme = Theme.of(context);
+    final uiStrings = getLocalizedStrings(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Exercise Detail View'),
+        title: Text(uiStrings.workoutExerciseDialog_appBar_title),
         actions: [
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
             icon: const Icon(Icons.save),
-            tooltip: 'Save',
+            tooltip: uiStrings.workoutExerciseDialog_appBar_save,
           )
         ],
       ),
@@ -42,7 +44,10 @@ class WorkoutExerciseDialog extends StatelessWidget with LogMessagePreparer {
                 SegmentedText(
                   baseStyle: theme.textTheme.bodyText2?.merge(const TextStyle(fontSize: 16)),
                   segments: [
-                    TextSegment('Exercise ${_exercise.id}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    TextSegment(
+                      '${uiStrings.workoutExerciseDialog_header_numberPrefix} ${_exercise.number}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     TextSegment(_exercise.exercise.title, prefix: ' (', suffix: ')'),
                   ],
                 ),

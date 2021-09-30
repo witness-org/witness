@@ -22,7 +22,7 @@ Future<void> main() async {
         ChangeNotifierProxyProvider<AuthProvider, TrainingProgramProvider>(
           create: (final _) => TrainingProgramProvider.empty(),
           update: (final _, final auth, final previousTrainingPrograms) => TrainingProgramProvider.fromProviders(auth, previousTrainingPrograms),
-        )
+        ),
       ],
       child: const WitnessClient(
         key: ValueKey("root"),
