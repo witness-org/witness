@@ -1,6 +1,7 @@
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:flutter/material.dart';
 
-class TrainingProgramComponentCard extends StatelessWidget {
+class TrainingProgramComponentCard extends StatelessWidget with StringLocalizer {
   const TrainingProgramComponentCard(
     final this._headerText,
     final this._bodyTextLines,
@@ -11,15 +12,15 @@ class TrainingProgramComponentCard extends StatelessWidget {
 
   final String _headerText;
   final List<String?> _bodyTextLines;
-  final void Function(BuildContext) detailsAction;
-  final void Function(BuildContext) deleteAction;
+  final void Function(BuildContext, StringLocalizations) detailsAction;
+  final void Function(BuildContext, StringLocalizations) deleteAction;
 
-  void _openDetailsScreen(final BuildContext context) {
-    detailsAction(context);
+  void _openDetailsScreen(final BuildContext context, final StringLocalizations uiStrings) {
+    detailsAction(context, uiStrings);
   }
 
-  void _deleteComponent(final BuildContext context) {
-    deleteAction(context);
+  void _deleteComponent(final BuildContext context, final StringLocalizations uiStrings) {
+    deleteAction(context, uiStrings);
   }
 
   Widget _buildCardHeader() {
@@ -45,20 +46,20 @@ class TrainingProgramComponentCard extends StatelessWidget {
     return body;
   }
 
-  Widget _buildCardFooter(final BuildContext context) {
+  Widget _buildCardFooter(final BuildContext context, final StringLocalizations uiStrings) {
     final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         TextButton.icon(
-          onPressed: () => _openDetailsScreen(context),
+          onPressed: () => _openDetailsScreen(context, uiStrings),
           icon: const Icon(Icons.edit),
-          label: const Text('Details/Edit'),
+          label: Text(uiStrings.trainingProgramComponentCard_footer_details),
         ),
         TextButton.icon(
-          onPressed: () => _deleteComponent(context),
+          onPressed: () => _deleteComponent(context, uiStrings),
           icon: Icon(Icons.delete, color: theme.errorColor),
-          label: const Text('Delete'),
+          label: Text(uiStrings.trainingProgramComponentCard_footer_delete),
           style: TextButton.styleFrom(primary: theme.errorColor),
         ),
       ],
@@ -67,8 +68,9 @@ class TrainingProgramComponentCard extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final uiStrings = getLocalizedStrings(context);
     return InkWell(
-      onTap: () => _openDetailsScreen(context),
+      onTap: () => _openDetailsScreen(context, uiStrings),
       child: Container(
         width: double.infinity,
         margin: const EdgeInsets.symmetric(vertical: 2.5),
@@ -87,7 +89,7 @@ class TrainingProgramComponentCard extends StatelessWidget {
                 const SizedBox(height: 5),
                 ..._buildCardBody(),
                 const Divider(),
-                _buildCardFooter(context),
+                _buildCardFooter(context, uiStrings),
               ],
             ),
           ),

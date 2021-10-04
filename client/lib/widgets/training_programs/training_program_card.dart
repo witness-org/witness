@@ -2,28 +2,29 @@ import 'package:client/extensions/number_extensions.dart';
 import 'package:client/models/training_programs/overview/training_program_overview.dart';
 import 'package:client/providers/training_program_provider.dart';
 import 'package:client/widgets/common/dialog_helper.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/training_programs/common/training_program_component_card.dart';
 import 'package:client/widgets/training_programs/training_programs/training_program_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_loader_overlay/progress_loader_overlay.dart';
 import 'package:provider/provider.dart';
 
-class TrainingProgramCard extends StatelessWidget {
+class TrainingProgramCard extends StatelessWidget with StringLocalizer {
   const TrainingProgramCard(final this._trainingProgram, {final Key? key}) : super(key: key);
 
   final TrainingProgramOverview _trainingProgram;
 
-  void _openDetailsScreen(final BuildContext context) {
+  void _openDetailsScreen(final BuildContext context, final StringLocalizations uiStrings) {
     Navigator.of(context).pushNamed(TrainingProgramDetailScreen.routeName, arguments: _trainingProgram);
   }
 
-  void _deleteTrainingProgram(final BuildContext context) {
+  void _deleteTrainingProgram(final BuildContext context, final StringLocalizations uiStrings) {
     DialogHelper.getBool(
       context,
-      title: 'Delete Training Program?',
-      content: 'Are you sure you want to delete "${_trainingProgram.name}"?',
-      falseOption: 'Cancel',
-      trueOption: 'Delete',
+      title: uiStrings.trainingProgramCard_deleteDialog_title,
+      content: '${uiStrings.trainingProgramCard_deleteDialog_content_prefix} "${_trainingProgram.name}"?',
+      falseOption: uiStrings.trainingProgramCard_deleteDialog_cancel,
+      trueOption: uiStrings.trainingProgramCard_deleteDialog_delete,
       trueOptionStyle: TextStyle(color: Theme.of(context).errorColor),
     ).then(
       (final deleteProgram) {
@@ -40,13 +41,12 @@ class TrainingProgramCard extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    // Although this widget only returns one single other widget, I leave it as is since the appearance of this widget
-    // is subject to change and - from a factorization point of view - it should have its own dedicated library.
+    final uiStrings = getLocalizedStrings(context);
     return TrainingProgramComponentCard(
       _trainingProgram.name,
       [
         _trainingProgram.description,
-        _trainingProgram.numberOfWeeks.toNumberString('week'),
+        _trainingProgram.numberOfWeeks.toNumberString(uiStrings.trainingProgramCard_weeksLabel_noun),
       ],
       _openDetailsScreen,
       _deleteTrainingProgram,

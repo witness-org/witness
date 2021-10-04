@@ -2,14 +2,14 @@ import 'package:client/extensions/date_time_extensions.dart';
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/widgets/app_drawer.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/main_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // ignore: depend_on_referenced_packages
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 final _logger = getLogger('training_log_screen');
 
-class TrainingLogScreen extends StatelessWidget with LogMessagePreparer {
+class TrainingLogScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
   const TrainingLogScreen(this._workoutDay, {final Key? key}) : super(key: key);
 
   static const routeName = '/training-log';
@@ -33,7 +33,7 @@ class TrainingLogScreen extends StatelessWidget with LogMessagePreparer {
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
-    final uiStrings = AppLocalizations.of(context)!;
+    final uiStrings = getLocalizedStrings(context);
     return Scaffold(
       appBar: MainAppBar(currentlyViewedDate: _workoutDay.dateOnly()),
       drawer: const AppDrawer(),
@@ -43,14 +43,14 @@ class TrainingLogScreen extends StatelessWidget with LogMessagePreparer {
           const _WorkoutFloatingActionButton(),
           const SizedBox(height: 15),
           FloatingActionButton(
-            tooltip: uiStrings.mainAppBar_overview,
+            tooltip: uiStrings.trainingLogScreen_action_selectDay,
             child: const Icon(Icons.calendar_today),
             onPressed: () => _selectDate(context),
           ),
         ],
       ),
       body: Center(
-        child: Text('Workout overview for $_workoutDay'),
+        child: Text('${uiStrings.trainingLogScreen_placeholder_prefix} $_workoutDay'),
       ),
     );
   }
@@ -63,7 +63,7 @@ class _WorkoutFloatingActionButton extends StatefulWidget {
   _WorkoutFloatingActionButtonState createState() => _WorkoutFloatingActionButtonState();
 }
 
-class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButton> {
+class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButton> with StringLocalizer {
   var _isOpened = false;
 
   set isOpened(final bool isOpened) {
@@ -87,6 +87,7 @@ class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButt
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
+    final uiStrings = getLocalizedStrings(context);
     return SpeedDial(
       backgroundColor: theme.colorScheme.secondary,
       foregroundColor: theme.colorScheme.onSecondary,
@@ -97,9 +98,9 @@ class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButt
       icon: isOpened ? Icons.close : Icons.add,
       spacing: 2,
       children: [
-        _buildSpeedDialChild(theme, Icons.fitness_center, "Log Exercise", () {}),
-        _buildSpeedDialChild(theme, Icons.copy, "Copy Workout", () {}),
-        _buildSpeedDialChild(theme, Icons.content_paste, "Log Workout", () {}),
+        _buildSpeedDialChild(theme, Icons.fitness_center, uiStrings.trainingLogScreen_speedDial_logExercise, () {}),
+        _buildSpeedDialChild(theme, Icons.copy, uiStrings.trainingLogScreen_speedDial_logWorkout, () {}),
+        _buildSpeedDialChild(theme, Icons.content_paste, uiStrings.trainingLogScreen_speedDial_copyWorkout, () {}),
       ],
     );
   }

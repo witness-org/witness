@@ -4,6 +4,7 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/providers/exercise_provider.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/exercises/details/exercise_detail_screen.dart';
 import 'package:client/widgets/exercises/editing/edit_exercise_screen.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('exercises_by_muscle_group_screen');
 
-class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePreparer {
+class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
   const ExercisesByMuscleGroupScreen(this._muscleGroup, {final Key? key}) : super(key: key);
 
   static const routeName = '/exercises-by-muscle-group';
@@ -22,16 +23,16 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
     await Provider.of<ExerciseProvider>(context, listen: false).fetchExercisesByMuscleGroup(group);
   }
 
-  Widget _buildFallbackScreen() {
+  Widget _buildFallbackScreen(final StringLocalizations uiStrings) {
     _logger.v(prepare('_buildFallbackScreen()'));
     return Scaffold(
       appBar: AppBar(
-        title: const Text('No muscle group selected'),
+        title: Text(uiStrings.exercisesByMuscleGroupScreen_fallback_appBar_title),
       ),
     );
   }
 
-  Widget _buildHeader(final BuildContext context, final MuscleGroup group) {
+  Widget _buildHeader(final BuildContext context, final StringLocalizations uiStrings, final MuscleGroup group) {
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
       child: Row(
@@ -39,17 +40,17 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
         children: [
           Text(
             // TODO(raffaelfoidl): fix UI when text too long
-            'Muscle Group "${group.name}"',
+            '${uiStrings.exerciseByMuscleGroupScreen_header_prefix} "${group.name}"',
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const Spacer(),
           IconButton(
-            tooltip: 'Search Exercises',
+            tooltip: uiStrings.exerciseByMuscleGroupScreen_search_tooltip,
             onPressed: () {},
             icon: const Icon(Icons.search),
           ),
           IconButton(
-            tooltip: 'Create new Exercise',
+            tooltip: uiStrings.exerciseByMuscleGroupScreen_createNew_tooltip,
             onPressed: () => Navigator.of(context).pushNamed(EditExerciseScreen.routeName),
             icon: const Icon(Icons.add),
           ),
@@ -58,7 +59,7 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
     );
   }
 
-  Widget _buildExerciseList(final BuildContext context, final MuscleGroup group) {
+  Widget _buildExerciseList(final BuildContext context, final StringLocalizations uiStrings, final MuscleGroup group) {
     _logger.v(prepare('_buildExerciseList()'));
     return Expanded(
       child: FutureBuilder<void>(
@@ -94,7 +95,7 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
     );
   }
 
-  Widget _buildScreen(final BuildContext context, final MuscleGroup group) {
+  Widget _buildScreen(final BuildContext context, final StringLocalizations uiStrings, final MuscleGroup group) {
     _logger.v(prepare('_buildScreen()'));
     return Scaffold(
       appBar: AppBar(
@@ -103,8 +104,8 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(context, group),
-          _buildExerciseList(context, group),
+          _buildHeader(context, uiStrings, group),
+          _buildExerciseList(context, uiStrings, group),
         ],
       ),
     );
@@ -112,7 +113,8 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
 
   @override
   Widget build(final BuildContext context) {
-    return _muscleGroup == null ? _buildFallbackScreen() : _buildScreen(context, _muscleGroup!);
+    final uiStrings = getLocalizedStrings(context);
+    return _muscleGroup == null ? _buildFallbackScreen(uiStrings) : _buildScreen(context, uiStrings, _muscleGroup!);
   }
 }
 

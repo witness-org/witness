@@ -7,6 +7,7 @@ import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/models/training_programs/overview/training_day_overview.dart';
 import 'package:client/models/training_programs/overview/training_program_overview.dart';
 import 'package:client/models/training_programs/overview/training_week_overview.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/exercises/details/exercise_detail_screen.dart';
 import 'package:client/widgets/exercises/editing/edit_exercise_screen.dart';
 import 'package:client/widgets/exercises/exercises_by_muscle_group_screen.dart';
@@ -19,7 +20,6 @@ import 'package:client/widgets/training_programs/training_programs/training_prog
 import 'package:client/widgets/training_programs/training_programs_overview_screen.dart';
 import 'package:client/widgets/training_programs/weeks/training_week_detail_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // ignore: depend_on_referenced_packages
 
 final _logger = getLogger('app');
 
@@ -54,17 +54,16 @@ class WitnessClient extends StatefulWidget {
   State<WitnessClient> createState() => _WitnessClientState();
 }
 
-class _WitnessClientState extends State<WitnessClient> with LogMessagePreparer {
+class _WitnessClientState extends State<WitnessClient> with LogMessagePreparer, StringLocalizer {
   final ColorScheme colorScheme = WitnessClient._getLightColorTheme(Colors.purple, Colors.amber);
 
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
     return MaterialApp(
-      // TODO(raffaelfoidl-leabrugger): Think of naming convention for keys app_en.arb that makes life easy for us
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      onGenerateTitle: (final BuildContext context) => AppLocalizations.of(context)!.appTitle,
+      localizationsDelegates: StringLocalizations.localizationsDelegates,
+      supportedLocales: StringLocalizations.supportedLocales,
+      onGenerateTitle: (final BuildContext context) => getLocalizedStrings(context).appTitle,
       theme: ThemeData(
         primarySwatch: Colors.purple,
         colorScheme: colorScheme,
