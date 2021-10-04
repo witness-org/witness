@@ -1,9 +1,10 @@
 import 'package:client/extensions/enum_extensions.dart';
 import 'package:client/models/exercises/exercise_attribute.dart';
 import 'package:client/models/training_programs/exercise_set.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:flutter/material.dart';
 
-class WorkoutExerciseSetView extends StatelessWidget {
+class WorkoutExerciseSetView extends StatelessWidget with StringLocalizer {
   const WorkoutExerciseSetView(this._set, {final Key? key}) : super(key: key);
 
   final ExerciseSet _set;
@@ -25,6 +26,7 @@ class WorkoutExerciseSetView extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final uiStrings = getLocalizedStrings(context);
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(10)),
@@ -34,7 +36,7 @@ class WorkoutExerciseSetView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Set ${_set.number}: ',
+              '${uiStrings.workoutExerciseSetView_header_numberPrefix} ${_set.number}: ',
               style: Theme.of(context).textTheme.subtitle1?.merge(const TextStyle(fontWeight: FontWeight.bold)),
             ),
             _buildAttributeValues(context, _set.attributes),

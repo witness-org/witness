@@ -1,15 +1,303 @@
 {
   "@@locale": "en",
+  "appDrawer_tile_exercises": "Exercises",
+  "@appDrawer_tile_exercises": {
+    "description": "Label of tile in `AppDrawer` that represents a link to the exercises screen."
+  },
+  "appDrawer_tile_programs": "Programs",
+  "@appDrawer_tile_programs": {
+    "description": "Label of tile in `AppDrawer` that represents a link to the training programs screen."
+  },
+  "appDrawer_tile_settings": "Settings",
+  "@appDrawer_tile_settings": {
+    "description": "Label of tile in `AppDrawer` that represents a link to the settings screen."
+  },
+  "appDrawer_tile_statistics": "Statistics",
+  "@appDrawer_tile_statistics": {
+    "description": "Label of tile in `AppDrawer` that represents a link to the statistics screen."
+  },
+  "appDrawer_tile_trainingLog": "Training Log",
+  "@appDrawer_tile_trainingLog": {
+    "description": "Label of tile in `AppDrawer` that represents a link to the training log screen."
+  },
   "appTitle": "witness",
   "@appTitle": {
     "description": "The title of the application."
   },
-  "mainAppBar_overview": "Go to Day",
-  "@mainAppBar_overview": {
-    "description": "Textual description of the \"Workout Overview\" floating icon in the training logs screen."
+  "editExerciseScreen_appBar_title_create": "Create Exercise",
+  "@editExerciseScreen_appBar_title_create": {
+    "description": "Title of `AppBar` in `EditExerciseScreen` if an exercise is being created."
+  },
+  "editExerciseScreen_appBar_title_edit": "Edit Exercise",
+  "@editExerciseScreen_appBar_title_edit": {
+    "description": "Title of `AppBar` in `EditExerciseScreen` if an exercise is being edited."
+  },
+  "exerciseByMuscleGroupScreen_createNew_tooltip": "Create New Exercise",
+  "@exerciseByMuscleGroupScreen_createNew_tooltip": {
+    "description": "Tooltip of icon that allows to add a new exercise in `ExercisesByMuscleGroupScreen`."
+  },
+  "exerciseByMuscleGroupScreen_header_prefix": "Muscle Group",
+  "@exerciseByMuscleGroupScreen_header_prefix": {
+    "description": "Text to be displayed before muscle group in header of `ExercisesByMuscleGroupScreen`."
+  },
+  "exerciseByMuscleGroupScreen_search_tooltip": "Search Exercises",
+  "@exerciseByMuscleGroupScreen_search_tooltip": {
+    "description": "Tooltip of icon that allows to search exercises in `ExercisesByMuscleGroupScreen`."
+  },
+  "exerciseDetailScreen_fallback_appBar_title": "Exercise Details",
+  "@exerciseDetailScreen_fallback_appBar_title": {
+    "description": "Title of `AppBar` in `ExerciseDetailScreen` if no exercise was provided."
+  },
+  "exerciseDetailScreen_fallback_body_text": "No exercise selected",
+  "@exerciseDetailScreen_fallback_body_text": {
+    "description": "Title of body in `ExerciseDetailScreen` if no exercise was provided."
+  },
+  "exerciseDetailScreen_tab_history": "History",
+  "@exerciseDetailScreen_tab_history": {
+    "description": "Text of `History` tab in `ExerciseDetailScreen`."
+  },
+  "exerciseDetailScreen_tab_info": "Info",
+  "@exerciseDetailScreen_tab_info": {
+    "description": "Text of `Info` tab in `ExerciseDetailScreen`."
+  },
+  "exerciseDetailScreen_tab_statistics": "Statistics",
+  "@exerciseDetailScreen_tab_statistics": {
+    "description": "Text of `Statistics` tab in `ExerciseDetailScreen`."
+  },
+  "exerciseHistory_placeholder_suffix": "history",
+  "@exerciseHistory_placeholder_suffix": {
+    "description": "Text to display after exercise name in `ExerciseHistory` (just a temporary placeholder)."
+  },
+  "exerciseInformation_body_heading_attributes": "Attributes",
+  "@exerciseInformation_body_heading_attributes": {
+    "description": "Text of the heading related to the attributes in `ExerciseInformation`."
+  },
+  "exerciseInformation_body_heading_description": "Description",
+  "@exerciseInformation_body_heading_description": {
+    "description": "Text of the heading related to the exercise description in `ExerciseInformation`."
+  },
+  "exerciseInformation_body_heading_muscleGroups": "Muscle Groups",
+  "@exerciseInformation_body_heading_muscleGroups": {
+    "description": "Text of the heading related to the muscle groups in `ExerciseInformation`."
+  },
+  "exerciseInformation_footer_editButton_text": "Edit",
+  "@exerciseInformation_footer_editButton_text": {
+    "description": "Text of the button that allows editing an exercise in `ExerciseInformation`."
+  },
+  "exerciseStatistics_placeholder_suffix": "statistics",
+  "@exerciseStatistics_placeholder_suffix": {
+    "description": "Text to display after exercise name in `ExerciseStatistics` (just a temporary placeholder)."
+  },
+  "exercisesByMuscleGroupScreen_fallback_appBar_title": "No muscle group selected",
+  "@exercisesByMuscleGroupScreen_fallback_appBar_title": {
+    "description": "Title of `AppBar` in `ExercisesByMuscleGroupScreen` if no muscle group was provided."
+  },
+  "exercisesScreen_createNew_tooltip": "Create New Exercise",
+  "@exercisesScreen_createNew_tooltip": {
+    "description": "Tooltip of icon that allows to add a new exercise in `ExercisesScreen`."
+  },
+  "exercisesScreen_header_text": "Exercises by Muscle Group",
+  "@exercisesScreen_header_text": {
+    "description": "Text representing header of `ExercisesScreen`."
+  },
+  "exercisesScreen_search_tooltip": "Search Muscle Groups",
+  "@exercisesScreen_search_tooltip": {
+    "description": "Tooltip of icon that allows to search muscle groups in `ExercisesScreen`."
   },
   "mainAppBar_settings": "Account Settings",
   "@mainAppBar_settings": {
-    "description": "Textual description of the \"Account Settings\" icon in the main app bar."
+    "description": "Textual description of the `Account Settings` icon in the main app bar."
+  },
+  "settingsScreen_placeholder_text": "Settings",
+  "@settingsScreen_placeholder_text": {
+    "description": "Text of temporary placeholder container in `SettingsScreen`."
+  },
+  "statisticsScreen_placeholder_text": "Statistics",
+  "@statisticsScreen_placeholder_text": {
+    "description": "Text of temporary placeholder container in `StatisticsScreen`."
+  },
+  "trainingDayCard_dayNumber_prefix": "Day",
+  "@trainingDayCard_dayNumber_prefix": {
+    "description": "Text before the day number and name in a `TrainingDayCard`."
+  },
+  "trainingDayCard_deleteDialog_cancel": "Cancel",
+  "@trainingDayCard_deleteDialog_cancel": {
+    "description": "The text of the cancel button in the dialog in `TrainingDayCard` that asks the user to confirm the deletion of the respective day from the respective training week."
+  },
+  "trainingDayCard_deleteDialog_content_prefix": "Are you sure you want to delete Day",
+  "@trainingDayCard_deleteDialog_content_prefix": {
+    "description": "The content to be displayed before the day number in the dialog in `TrainingDayCard` that asks the user to confirm the deletion of the respective day from the respective training week."
+  },
+  "trainingDayCard_deleteDialog_delete": "Delete",
+  "@trainingDayCard_deleteDialog_delete": {
+    "description": "The text of the delete (confirm) button in the dialog in `TrainingDayCard` that asks the user to confirm the deletion of the respective day from the respective training week."
+  },
+  "trainingDayCard_deleteDialog_title": "Delete Training Day",
+  "@trainingDayCard_deleteDialog_title": {
+    "description": "The title of the dialog in `TrainingDayCard` that asks the user to confirm the deletion of the respective day from the respective training week."
+  },
+  "trainingDayCard_workoutsLabel_noun": "workout",
+  "@trainingDayCard_workoutsLabel_noun": {
+    "description": "The singular noun that accompanies the number of workouts in a `TrainingDayCard`, will be formatted according to grammatical number by `toNumberString`."
+  },
+  "trainingDayDetailScreen_action_addExercise": "Add Exercise to Workout",
+  "@trainingDayDetailScreen_action_addExercise": {
+    "description": "Tooltip of `FloatingActionButton` in `TrainingDayDetailScreen` that allows to add an exercise to a workout."
+  },
+  "trainingDayDetailScreen_appBar_dayNumber_prefix": "Day",
+  "@trainingDayDetailScreen_appBar_dayNumber_prefix": {
+    "description": "Text to be displayed before the day number in the `AppBar` of `TrainingDayDetailScreen`."
+  },
+  "trainingDayDetailScreen_appBar_weekNumber_prefix": "Week",
+  "@trainingDayDetailScreen_appBar_weekNumber_prefix": {
+    "description": "Text to be displayed before the week number in the `AppBar` of `TrainingDayDetailScreen`."
+  },
+  "trainingDayDetailScreen_fallback_appBar_title": "No day selected",
+  "@trainingDayDetailScreen_fallback_appBar_title": {
+    "description": "Title of `AppBar` in `TrainingDayDetailScreen` if no day was explicitly provided."
+  },
+  "trainingDayHeader_dayNumber_prefix": "Day",
+  "@trainingDayHeader_dayNumber_prefix": {
+    "description": "Text to be displayed before the day number in `TrainingDayHeader`, making up the header of `TrainingDayDetailScreen`."
+  },
+  "trainingLogScreen_action_selectDay": "Go to Day",
+  "@trainingLogScreen_action_selectDay": {
+    "description": "Tooltip of floating action button in `TrainingLogScreen` that allows to select a specific day to view workouts of."
+  },
+  "trainingLogScreen_placeholder_prefix": "Workout Overview for",
+  "@trainingLogScreen_placeholder_prefix": {
+    "description": "Text to display before formatted date of selected day in `TrainingLogScreen` (just a temporary placeholder)."
+  },
+  "trainingLogScreen_speedDial_copyWorkout": "Copy Workout",
+  "@trainingLogScreen_speedDial_copyWorkout": {
+    "description": "Label of `SpeedDialChild` in `TrainingLogScreen` that is used to create a workout log from a previously logged workout."
+  },
+  "trainingLogScreen_speedDial_logExercise": "Log Exercise",
+  "@trainingLogScreen_speedDial_logExercise": {
+    "description": "Label of `SpeedDialChild` in `TrainingLogScreen` that is used to create an exercise log."
+  },
+  "trainingLogScreen_speedDial_logWorkout": "Log Workout",
+  "@trainingLogScreen_speedDial_logWorkout": {
+    "description": "Label of `SpeedDialChild` in `TrainingLogScreen` that is used to create a new workout (from scratch)."
+  },
+  "trainingProgramCard_deleteDialog_cancel": "Cancel",
+  "@trainingProgramCard_deleteDialog_cancel": {
+    "description": "The text of the cancel button in the dialog in `TrainingProgramCard` that asks the user to confirm the deletion of the respective training program."
+  },
+  "trainingProgramCard_deleteDialog_content_prefix": "Are you sure you want to delete",
+  "@trainingProgramCard_deleteDialog_content_prefix": {
+    "description": "The content to be displayed before the day number in the dialog in `TrainingProgramCard` that asks the user to confirm the deletion of the respective training program."
+  },
+  "trainingProgramCard_deleteDialog_delete": "Delete",
+  "@trainingProgramCard_deleteDialog_delete": {
+    "description": "The text of the delete (confirm) button in the dialog in `TrainingProgramCard` that asks the user to confirm the deletion of the respective training program."
+  },
+  "trainingProgramCard_deleteDialog_title": "Delete Training Program",
+  "@trainingProgramCard_deleteDialog_title": {
+    "description": "The title of the dialog in `TrainingProgramCard` that asks the user to confirm the deletion of the respective training program."
+  },
+  "trainingProgramCard_weeksLabel_noun": "week",
+  "@trainingProgramCard_weeksLabel_noun": {
+    "description": "The singular noun that accompanies the number of weeks of a training program in a `TrainingProgramCard`, will be formatted according to grammatical number by `toNumberString`."
+  },
+  "trainingProgramComponentCard_footer_delete": "Delete",
+  "@trainingProgramComponentCard_footer_delete": {
+    "description": "Text of button on in the footer of a `TrainingProgramComponentCard` that executes the passed `deleteAction`."
+  },
+  "trainingProgramComponentCard_footer_details": "Details/Edit",
+  "@trainingProgramComponentCard_footer_details": {
+    "description": "Text of button on in the footer of a `TrainingProgramComponentCard` that executes the passed `detailsAction`."
+  },
+  "trainingProgramDetailScreen_action_addWeek": "Add Week to Program",
+  "@trainingProgramDetailScreen_action_addWeek": {
+    "description": "Tooltip of `FloatingActionButton` in `TrainingProgramDetailScreen` that allows to add a week to a training program."
+  },
+  "trainingProgramDetailScreen_fallback_appBar_title": "No training program selected",
+  "@trainingProgramDetailScreen_fallback_appBar_title": {
+    "description": "Title of `AppBar` in `TrainingProgramDetailScreen` if no training program was explicitly provided."
+  },
+  "trainingProgramHeader_publishCheckbox_label": "public",
+  "@trainingProgramHeader_publishCheckbox_label": {
+    "description": "Text accompanying the `LabelledCheckbox` that allows to manage whether a training program should be published/publicly available in `TrainingProgramHeader`."
+  },
+  "trainingProgramHeader_weekLabel_noun": "week",
+  "@trainingProgramHeader_weekLabel_noun": {
+    "description": "The singular noun that accompanies the number of weeks a training program consists of, to be displayed in `TrainingProgramHeader` and formatted according to grammatical number by `toNumberString`."
+  },
+  "trainingProgramsOverviewScreen_action_newProgram": "Create New Training Program",
+  "@trainingProgramsOverviewScreen_action_newProgram": {
+    "description": "Tooltip of `FloatingActionButton` in `TrainingProgramsOverviewScreen` that allows to create a new training program."
+  },
+  "trainingWeekCard_daysLabel_noun": "day",
+  "@trainingWeekCard_daysLabel_noun": {
+    "description": "The singular noun that accompanies the number of days in a `TrainingWeek` in a `TrainingWeekCard` that will be formatted according to grammatical number by `toNumberString`."
+  },
+  "trainingWeekCard_deleteDialog_cancel": "Cancel",
+  "@trainingWeekCard_deleteDialog_cancel": {
+    "description": "The text of the cancel button in the dialog in `TrainingWeekCard` that asks the user to confirm the deletion of the respective week from the respective training program."
+  },
+  "trainingWeekCard_deleteDialog_content_prefix": "Are you sure you want to delete Week",
+  "@trainingWeekCard_deleteDialog_content_prefix": {
+    "description": "The content to be displayed before the week number in the dialog in `TrainingWeekCard` that asks the user to confirm the deletion of the respective week from the respective training program."
+  },
+  "trainingWeekCard_deleteDialog_delete": "Delete",
+  "@trainingWeekCard_deleteDialog_delete": {
+    "description": "The text of the delete (confirm) button in the dialog in `TrainingWeekCard` that asks the user to confirm the deletion of the respective week from the respective training program."
+  },
+  "trainingWeekCard_deleteDialog_title": "Delete Training Week",
+  "@trainingWeekCard_deleteDialog_title": {
+    "description": "The title of the dialog in `TrainingWeekCard` that asks the user to confirm the deletion of the respective week from the respective training program."
+  },
+  "trainingWeekCard_weekNumber_prefix": "Week",
+  "@trainingWeekCard_weekNumber_prefix": {
+    "description": "Text before the week number in a `TrainingWeekCard`."
+  },
+  "trainingWeekCard_workoutsLabel_noun": "workout",
+  "@trainingWeekCard_workoutsLabel_noun": {
+    "description": "The singular noun that accompanies the overall number of workouts in a `TrainingWeekCard`, will be formatted according to grammatical number by `toNumberString`."
+  },
+  "trainingWeekCard_workoutsLabel_suffix": "overall",
+  "@trainingWeekCard_workoutsLabel_suffix": {
+    "description": "The singular noun that follows the overall number of workouts in a `TrainingWeekCard`."
+  },
+  "trainingWeekDetailScreen_action_addDay": "Add Day to Training Program",
+  "@trainingWeekDetailScreen_action_addDay": {
+    "description": "Text of `FloatingActionButton` in `TrainingWeekDetailScreen` that allows to add a day to the respective training program."
+  },
+  "trainingWeekDetailScreen_appBar_weekNumber_prefix": "Week",
+  "@trainingWeekDetailScreen_appBar_weekNumber_prefix": {
+    "description": "Text to be displayed before week number in the `AppBar` of `TrainingWeekDetailScreen`."
+  },
+  "trainingWeekDetailScreen_fallback_appBar_title": "No training week selected",
+  "@trainingWeekDetailScreen_fallback_appBar_title": {
+    "description": "Text of `AppBar` in `TrainingWeekDetailScreen` if no training week was provided."
+  },
+  "trainingWeekHeader_weekNumber_prefix": "Week",
+  "@trainingWeekHeader_weekNumber_prefix": {
+    "description": "Text to be displayed before week number in `TrainingWeekHeader`, making up part of the header of `TrainingWeekDetailScreen`."
+  },
+  "workoutExerciseDetailView_setNumber_prefix": "Set",
+  "@workoutExerciseDetailView_setNumber_prefix": {
+    "description": "Text to be displayed before the set number, representing the start of a line in `WorkoutExerciseDetailView`."
+  },
+  "workoutExerciseDialog_appBar_save": "Save",
+  "@workoutExerciseDialog_appBar_save": {
+    "description": "Tooltip of icon in `AppBar` in `WorkoutExerciseDialog` that allows to save changes made to the exercise."
+  },
+  "workoutExerciseDialog_appBar_title": "Exercise Detail View",
+  "@workoutExerciseDialog_appBar_title": {
+    "description": "Title of `AppBar` in `WorkoutExerciseDialog`."
+  },
+  "workoutExerciseDialog_header_numberPrefix": "Exercise",
+  "@workoutExerciseDialog_header_numberPrefix": {
+    "description": "Text to be displayed before the exercise number in `WorkoutExerciseDialog`."
+  },
+  "workoutExerciseSetView_header_numberPrefix": "Set",
+  "@workoutExerciseSetView_header_numberPrefix": {
+    "description": "Text to be displayed before the set number in `WorkoutExerciseSetView`."
+  },
+  "workoutExpanderItemHeader_workoutNumber_prefix": "Workout",
+  "@workoutExpanderItemHeader_workoutNumber_prefix": {
+    "description": "Text to be displayed before the workout number in `WorkoutExpanderItemHeader`, representing part of the header line in a workout representation within `TrainingDayDetailScreen`."
   }
 }

@@ -3,8 +3,9 @@ import 'package:client/extensions/number_extensions.dart';
 import 'package:client/models/exercises/exercise_attribute.dart';
 
 extension ExerciseAttributeExtensions on ExerciseAttribute {
+  // TODO(raffaelfoidl-leabrugger): also localize enum representations
+
   String toUiString() {
-    // TODO(raffaelfoidl-leabrugger): also localize enum representations
     switch (this) {
       case ExerciseAttribute.band:
         return 'band';

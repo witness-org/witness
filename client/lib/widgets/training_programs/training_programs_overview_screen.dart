@@ -3,6 +3,7 @@ import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/providers/training_program_provider.dart';
 import 'package:client/widgets/app_drawer.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/main_app_bar.dart';
 import 'package:client/widgets/training_programs/training_program_card.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('training_programs_overview_screen');
 
-class TrainingProgramsOverviewScreen extends StatelessWidget with LogMessagePreparer {
+class TrainingProgramsOverviewScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
   const TrainingProgramsOverviewScreen({final Key? key}) : super(key: key);
 
   static const routeName = '/training-programs-overview';
@@ -49,11 +50,12 @@ class TrainingProgramsOverviewScreen extends StatelessWidget with LogMessagePrep
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
+    final uiStrings = getLocalizedStrings(context);
     return Scaffold(
       appBar: const MainAppBar(),
       drawer: const AppDrawer(),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Create new Training Program',
+        tooltip: uiStrings.trainingProgramsOverviewScreen_action_newProgram,
         child: const Icon(Icons.add),
         onPressed: () {
           // TODO(raffaelfoidl-leabrugger): Go to training program creation screen
