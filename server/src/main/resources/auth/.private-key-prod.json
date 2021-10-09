@@ -1,0 +1,5 @@
+{
+  "secret": "This is just a placeholder for the original private key file because its content is a secret.",
+  "message": "You need to ask a maintainer for a local copy of a 'private-key-prod.json' file (without leading dot).",
+  "note": "This file needs to be transferred via a secure channel."
+}

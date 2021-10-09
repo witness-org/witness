@@ -1,3 +1,9 @@
+# New developers need to obtain Firebase service configuration files from
+# a maintainer via a secure channel.
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+web/firebase-config.js
+
 # Miscellaneous
 *.class
 *.log
