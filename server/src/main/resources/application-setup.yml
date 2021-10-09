@@ -1,0 +1,25 @@
+setup:
+  create-local-and-firebase:
+    admin:
+      - email: admin1@witness.com
+        password: adminadmin
+    premium:
+      - email: premium@witness.com
+        password: premium
+      - email: premium1@witness.com
+        password: premium
+    regular:
+      - email: regular1@witness.com
+        password: regular
+  create-local-with-firebase-id:
+    admin: [ ]
+    premium: [ ]
+    regular:
+      - email: regular@witness.com
+        firebaseId: S53QmhSXOxVSTcfImYL4cFI6Rs63
+  create-local-with-firebase-id-and-set-firebase-role:
+    admin:
+      - email: admin@witness.com
+        firebaseId: 4szW9pDWpVNePmnEPPrrOTN7ofh1
+    premium: [ ]
+    regular: [ ]

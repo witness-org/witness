@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ServerApplication-Setup" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="server" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.witness.server.ServerApplication" />
+    <option name="ACTIVE_PROFILES" value="development, setup" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="SHORTEN_COMMAND_LINE" value="NONE" />
+    <envs>
+      <env name="GOOGLE_APPLICATION_CREDENTIALS" value="classpath:auth/private-key-dev.json" />
+      <env name="CHECK_TOKEN_REVOKED" value="true" />
+    </envs>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
