@@ -1,0 +1,10 @@
+logging:
+  config: "./logback-test.xml"
+  directory: "./logs/test"
+  file-name: "server-unit-test"
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
