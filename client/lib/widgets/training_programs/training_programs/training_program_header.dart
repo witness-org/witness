@@ -24,7 +24,7 @@ class _TrainingProgramHeaderState extends State<TrainingProgramHeader> with LogM
   late bool _isPublished = widget._program.isPublished;
 
   void _publishCheckedChanged(final bool newValue) {
-    // todo provider call, provider calls service, widget._program is reloaded/updated...
+    // TODO(raffaelfoidl-leabrugger): provider call, provider calls service, widget._program is reloaded/updated...
     setState(() => _isPublished = newValue);
   }
 
