@@ -1,0 +1,130 @@
+{
+  "groups": [
+    {
+      "name": "security",
+      "description": "Allows specification of properties that are related to security."
+    },
+    {
+      "name": "date-times",
+      "description": "Allows specification of properties that are related to date and time handling."
+    },
+    {
+      "name": "setup",
+      "description": "Provides information about users and roles that should be created, locally and/or at Firebase side, during environment initialization. To be used with \"setup\" profile."
+    }
+  ],
+  "properties": [
+    {
+      "name": "security.firebase-service-account-key",
+      "type": "org.springframework.core.io.Resource",
+      "description": "Identifies a Resource (ClassPathResource, FileSystemResource, ...) that represents the private key used to establish a trusted interaction channel with the Firebase project."
+    },
+    {
+      "name": "security.check-token-revoked",
+      "type": "java.lang.Boolean",
+      "description": "If enabled, server will check if a token has been revoked when verifying a request using bearer JWT."
+    },
+    {
+      "name": "security.allowed-origins",
+      "type": "java.util.List<java.lang.String>",
+      "description": "An array of allowed cross origin domain names."
+    },
+    {
+      "name": "security.allowed-methods",
+      "type": "java.util.List<java.lang.String>",
+      "description": "An array of HTTP methods the server accepts."
+    },
+    {
+      "name": "security.allowed-headers",
+      "type": "java.util.List<java.lang.String>",
+      "description": "An array of HTTP headers the server accepts."
+    },
+    {
+      "name": "security.allowed-public-apis",
+      "type": "java.util.List<java.lang.String>",
+      "description": "An array of REST paths which are publicly accessible, i.e. do not require JWT authentication. Paths may contain Ant-style path patterns (?, *, **, RegEx), see also https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/AntPathMatcher.html."
+    },
+    {
+      "name": "security.valid-roles",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Valid application roles. Roles must be of format \"ROLE_ROLENAME\"."
+    },
+    {
+      "name": "security.admins",
+      "type": "java.util.List<java.lang.String>",
+      "description": "An array of pre-configured admin accounts (identified by email address)."
+    },
+    {
+      "name": "logging.directory",
+      "type": "java.lang.String",
+      "description": "Specifies the directory within which log files are created."
+    },
+    {
+      "name": "logging.file-name",
+      "type": "java.lang.String",
+      "description": "The file name (not path) without file extension of the log file to be created by the application."
+    },
+    {
+      "name": "date-times.zone-id",
+      "type": "java.lang.String",
+      "description": "String representation of the ZoneId to use as primary zoneId when serializing Date(Time) objects to strings."
+    },
+    {
+      "name": "setup.create-local-and-firebase",
+      "description": "A SetupUserHolder that contains information about users which should be created, both locally as well as on the Firebase server, during environment initialization."
+    },
+    {
+      "name": "setup.create-local-and-firebase.admin",
+      "type": "java.util.List<com.witness.server.setup.SetupArguments.SetupUserHolder<com.witness.server.setup.SetupArguments.SetupFirebaseUser>>",
+      "description": "Admin users which should be created, both locally as well as on the Firebase server, during environment initialization."
+    },
+    {
+      "name": "setup.create-local-and-firebase.premium",
+      "type": "java.util.List<com.witness.server.setup.SetupArguments.SetupUserHolder<com.witness.server.setup.SetupArguments.SetupFirebaseUser>>",
+      "description": "Premium users which should be created, both locally as well as on the Firebase server, during environment initialization."
+    },
+    {
+      "name": "setup.create-local-and-firebase.regular",
+      "type": "java.util.List<com.witness.server.setup.SetupArguments.SetupUserHolder<com.witness.server.setup.SetupArguments.SetupFirebaseUser>>",
+      "description": "Regular users which should be created, both locally as well as on the Firebase server, during environment initialization."
+    },
+    {
+      "name": "setup.create-local-with-firebase-id",
+      "description": "A SetupUserHolder that contains information about users which should be created, both locally as well as on the Firebase server, during environment initialization."
+    },
+    {
+      "name": "setup.create-local-with-firebase-id.admin",
+      "type": "java.util.List<com.witness.server.setup.SetupArguments.SetupUserHolder<com.witness.server.setup.SetupArguments.SetupFirebaseUser>>",
+      "description": "Admin users which should be created, both locally as well as on the Firebase server, during environment initialization."
+    },
+    {
+      "name": "setup.create-local-with-firebase-id.premium",
+      "type": "java.util.List<com.witness.server.setup.SetupArguments.SetupUserHolder<com.witness.server.setup.SetupArguments.SetupFirebaseUser>>",
+      "description": "Premium users which should be created, both locally as well as on the Firebase server, during environment initialization."
+    },
+    {
+      "name": "setup.create-local-with-firebase-id.regular",
+      "type": "java.util.List<com.witness.server.setup.SetupArguments.SetupUserHolder<com.witness.server.setup.SetupArguments.SetupFirebaseUser>>",
+      "description": "Regular users which should be created, both locally as well as on the Firebase server, during environment initialization."
+    },
+    {
+      "name": "setup.create-local-with-firebase-id-and-set-firebase-role",
+      "description": "A SetupUserHolder that contains information about users which should be created, both locally as well as on the Firebase server, during environment initialization."
+    },
+    {
+      "name": "setup.create-local-with-firebase-id-and-set-firebase-role.admin",
+      "type": "java.util.List<com.witness.server.setup.SetupArguments.SetupUserHolder<com.witness.server.setup.SetupArguments.SetupFirebaseUser>>",
+      "description": "Admin users which should be created, both locally as well as on the Firebase server, during environment initialization."
+    },
+    {
+      "name": "setup.create-local-with-firebase-id-and-set-firebase-role.premium",
+      "type": "java.util.List<com.witness.server.setup.SetupArguments.SetupUserHolder<com.witness.server.setup.SetupArguments.SetupFirebaseUser>>",
+      "description": "Premium users which should be created, both locally as well as on the Firebase server, during environment initialization."
+    },
+    {
+      "name": "setup.create-local-with-firebase-id-and-set-firebase-role.regular",
+      "type": "java.util.List<com.witness.server.setup.SetupArguments.SetupUserHolder<com.witness.server.setup.SetupArguments.SetupFirebaseUser>>",
+      "description": "Regular users which should be created, both locally as well as on the Firebase server, during environment initialization."
+    }
+  ]
+}

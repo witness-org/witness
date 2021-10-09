@@ -1,0 +1,78 @@
+date-times:
+  zone-id: "Europe/Vienna"
+
+logging:
+  file-name: "server"
+
+spring:
+  banner:
+    location: banner.txt
+  datasource:
+    driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+
+security:
+  # See https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/resources.html#resources-resourceloader
+  # for an overview of how to integrate different resources (ClassPath, FileSystem, URL, ...).
+  firebase-service-account-key: "${GOOGLE_APPLICATION_CREDENTIALS}"
+  check-token-revoked: ${CHECK_TOKEN_REVOKED}
+  allowed-origins:
+    - https://witness.com
+    - http://localhost:3000
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - PATCH
+    - DELETE
+    - OPTIONS
+  allowed-headers:
+    - Authorization
+    - Origin
+    - Content-Type
+    - Accept
+    - Accept-Encoding
+    - Accept-Language
+    - Access-Control-Allow-Origin
+    - Access-Control-Allow-Headers
+    - Access-Control-Request-Method
+    - X-Requested-With
+    - X-Auth-Token
+    - X-Xsrf-Token
+    - Cache-Control
+    - Id-Token
+  allowed-public-apis:
+    - /swagger-ui*
+    - /swagger-ui*/**
+    - /api-docs*
+    - /api-docs*/**
+    - /h2-console*
+    - /h2-console/**
+    - /greeting/public
+    - /user/register
+  valid-roles:
+    - ROLE_ADMIN
+    - ROLE_PREMIUM
+
+springdoc:
+  api-docs:
+    enabled: true
+    groups:
+      enabled: true
+    path: '/api-docs'
+  swagger-ui:
+    path: '/swagger-ui'
+    enabled: true
+
+server:
+  error:
+    include-message: always
