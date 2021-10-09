@@ -6,6 +6,8 @@ analyzer:
   # suppressing rules for a line of code: https://dart.dev/guides/language/analysis-options#suppressing-rules-for-a-line-of-code
   exclude:
     - build/**
+    - lib/generated_plugin_registrant.dart
+    - lib/**/*.g.dart
 
   language:
     # stricter analysis of generic arguments and raw type inference to change ensuing runtime errors to compile-time errors

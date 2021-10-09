@@ -1,3 +1,6 @@
+# Generated model classes for JSON serialization
+*.g.dart
+
 # New developers need to obtain Firebase service configuration files from
 # a maintainer via a secure channel.
 android/app/google-services.json
