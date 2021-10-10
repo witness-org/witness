@@ -1,5 +1,6 @@
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
+import 'package:client/providers/auth_provider.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/exercises/exercises_screen.dart';
 import 'package:client/widgets/settings/settings_screen.dart';
@@ -7,6 +8,7 @@ import 'package:client/widgets/statistics/statistics_screen.dart';
 import 'package:client/widgets/training_logs/training_log_screen.dart';
 import 'package:client/widgets/training_programs/training_programs_overview_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 final _logger = getLogger('app_drawer');
 
@@ -26,6 +28,7 @@ class AppDrawer extends StatelessWidget with LogMessagePreparer, StringLocalizer
     _logger.v(prepare('build()'));
     final theme = Theme.of(context);
     final uiStrings = getLocalizedStrings(context);
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     return Drawer(
       child: Column(
         children: [
@@ -66,6 +69,18 @@ class AppDrawer extends StatelessWidget with LogMessagePreparer, StringLocalizer
             uiStrings.appDrawer_tile_settings,
             Icons.settings,
             () => Navigator.of(context).pushReplacementNamed(SettingsScreen.routeName),
+          ),
+          _buildListTile(
+            uiStrings.appDrawer_tile_logout,
+            Icons.exit_to_app,
+            () {
+              // Close drawer to avoid error in case the UI switches back to login screen while drawer is still open.
+              Navigator.of(context).pop();
+              // Execute "home logic" upon logout, this most prominently entails showing the login screen.
+              Navigator.of(context).pushReplacementNamed('/');
+
+              auth.logout();
+            },
           ),
         ],
       ),

@@ -1,4 +1,17 @@
 HELP.md
+.jpb
+.jpb/**
+
+database/
+database/**
+
+logs/
+logs/**
+
+# New developers need to obtain the private key files for the
+# authentication servers from a maintainer via a secure channel.
+src/main/resources/auth/private-key-dev.json
+src/main/resources/auth/private-key-prod.json
 
 ### STS ###
 .apt_generated

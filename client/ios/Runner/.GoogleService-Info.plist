@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SECRET</key>
+	<string>This is just placeholder for the original service file because its content is a secret.</secret>
+	<key>MESSAGE</key>
+	<string>You need to ask a maintainer for a local copy of a 'GoogleService-Info.plist' file (without leading dot).</string>
+	<key>NOTE</key>
+	<string>That file needs to be transferred via a secure channel.</string>
+</dict>
+</plist>

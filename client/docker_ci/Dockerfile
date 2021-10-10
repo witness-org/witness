@@ -1,4 +1,4 @@
-FROM cirrusci/flutter:2.5.0
+FROM cirrusci/flutter:2.5.2
 
 RUN sudo apt update && sudo apt install -y gdebi-core libnss3 libgconf-2-4
 RUN wget --quiet --show-progress --output-document=./chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb

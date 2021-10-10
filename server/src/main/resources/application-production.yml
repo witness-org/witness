@@ -1,0 +1,20 @@
+logging:
+  config: "./logback.xml"
+  directory: "./logs"
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./database/server;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: user
+    password: password
+  h2:
+    console:
+      enabled: false
+  jpa:
+    show-sql: false
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

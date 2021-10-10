@@ -1,0 +1,11 @@
+{
+  "id": null,
+  "firebaseId": null,
+  "username": "createUser1",
+  "email": "create1@test.com",
+  "role": "PREMIUM",
+  "sex": "MALE",
+  "createdAt": null,
+  "modifiedAt": null,
+  "height": 157
+}

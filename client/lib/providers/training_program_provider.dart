@@ -11,21 +11,11 @@ import 'package:flutter/material.dart';
 final _logger = getLogger('training_program_provider');
 
 class TrainingProgramProvider with ChangeNotifier {
-  TrainingProgramProvider(
-    this._userId,
-    this._authToken,
-    this._isAuthenticated,
-    this._trainingPrograms,
-    this._trainingWeeks,
-    this._trainingDays,
-    this._workouts,
-  );
+  TrainingProgramProvider(this._auth, this._trainingPrograms, this._trainingWeeks, this._trainingDays, this._workouts);
 
   TrainingProgramProvider.empty()
       : this(
           null,
-          null,
-          false,
           <TrainingProgramOverview>[],
           <int, List<TrainingWeekOverview>>{},
           <int, List<TrainingDayOverview>>{},
@@ -34,9 +24,7 @@ class TrainingProgramProvider with ChangeNotifier {
 
   TrainingProgramProvider.fromProviders(final AuthProvider auth, final TrainingProgramProvider? instance)
       : this(
-          auth.userId,
-          auth.token,
-          auth.isAuthenticated,
+          auth,
           instance?._trainingPrograms ?? <TrainingProgramOverview>[],
           instance?._trainingWeeks ?? <int, List<TrainingWeekOverview>>{},
           instance?._trainingDays ?? <int, List<TrainingDayOverview>>{},
@@ -55,9 +43,7 @@ class TrainingProgramProvider with ChangeNotifier {
   Map<int, List<TrainingWeekOverview>> _trainingWeeks;
   Map<int, List<TrainingDayOverview>> _trainingDays;
   Map<int, List<Workout>> _workouts;
-  final String? _userId; // ignore: unused_field
-  final String? _authToken; // ignore: unused_field
-  final bool _isAuthenticated; // ignore: unused_field
+  final AuthProvider? _auth; // ignore: unused_field
 
   List<TrainingProgramOverview> get trainingPrograms {
     return collection.UnmodifiableListView(_trainingPrograms);

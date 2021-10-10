@@ -1,5 +1,6 @@
 import 'package:client/providers/auth_provider.dart';
 import 'package:client/providers/exercise_provider.dart';
+import 'package:client/providers/greeting_provider.dart';
 import 'package:client/providers/training_program_provider.dart';
 import 'package:client/widgets/app.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,10 @@ Future<void> main() async {
         ChangeNotifierProxyProvider<AuthProvider, TrainingProgramProvider>(
           create: (final _) => TrainingProgramProvider.empty(),
           update: (final _, final auth, final previousTrainingPrograms) => TrainingProgramProvider.fromProviders(auth, previousTrainingPrograms),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, GreetingProvider>(
+          create: (final _) => GreetingProvider.empty(),
+          update: (final _, final auth, final __) => GreetingProvider.fromProviders(auth),
         ),
       ],
       child: const WitnessClient(
