@@ -1,0 +1,8 @@
+{
+  "username": "createUser1",
+  "email": "create1@test.com",
+  "role": "PREMIUM",
+  "sex": "MALE",
+  "height": 157,
+  "password": "securePW"
+}

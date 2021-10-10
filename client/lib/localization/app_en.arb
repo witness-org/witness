@@ -4,6 +4,10 @@
   "@appDrawer_tile_exercises": {
     "description": "Label of tile in `AppDrawer` that represents a link to the exercises screen."
   },
+  "appDrawer_tile_logout": "Logout",
+  "@appDrawer_tile_logout": {
+    "description": "Label of tile in `AppDrawer` that can be used to log out from the current user profile."
+  },
   "appDrawer_tile_programs": "Programs",
   "@appDrawer_tile_programs": {
     "description": "Label of tile in `AppDrawer` that represents a link to the training programs screen."
@@ -31,6 +35,10 @@
   "editExerciseScreen_appBar_title_edit": "Edit Exercise",
   "@editExerciseScreen_appBar_title_edit": {
     "description": "Title of `AppBar` in `EditExerciseScreen` if an exercise is being edited."
+  },
+  "errorScreen_prefix": "Error",
+  "@errorScreen_prefix": {
+    "description": "Text to display before error description in `ErrorScreen`."
   },
   "exerciseByMuscleGroupScreen_createNew_tooltip": "Create New Exercise",
   "@exerciseByMuscleGroupScreen_createNew_tooltip": {
@@ -104,13 +112,77 @@
   "@exercisesScreen_search_tooltip": {
     "description": "Tooltip of icon that allows to search muscle groups in `ExercisesScreen`."
   },
+  "loginCard_action_login": "LOGIN",
+  "@loginCard_action_login": {
+    "description": "Text describing the operation of logging a user via `LoginCard`."
+  },
+  "loginCard_action_loginInstead": "LOGIN INSTEAD",
+  "@loginCard_action_loginInstead": {
+    "description": "Text describing button that allows to switch to login instead of signup in `LoginCard`."
+  },
+  "loginCard_action_signUp": "SIGN UP",
+  "@loginCard_action_signUp": {
+    "description": "Text describing the operation of logging creating a new user via `LoginCard`."
+  },
+  "loginCard_action_signUpInstead": "SIGN UP INSTEAD",
+  "@loginCard_action_signUpInstead": {
+    "description": "Text describing button that allows to switch to sign up instead of login in `LoginCard`."
+  },
+  "loginCard_form_email_label": "Email",
+  "@loginCard_form_email_label": {
+    "description": "Placeholder of email textbox in `LoginCard`."
+  },
+  "loginCard_form_password_label": "Password",
+  "@loginCard_form_password_label": {
+    "description": "Placeholder of password textbox in `LoginCard`."
+  },
+  "loginCard_form_passwordConfirmation_label": "Confirm Password",
+  "@loginCard_form_passwordConfirmation_label": {
+    "description": "Placeholder of password confirmation textbox in `LoginCard`."
+  },
+  "loginCard_form_error_invalidEmail": "Email has incorrect format",
+  "@loginCard_form_error_invalidEmail": {
+    "description": "Error message indicating that the email address entered to create a new account with is syntactically incorrect."
+  },
+  "loginCard_form_error_passwordMismatch": "Passwords do not match",
+  "@loginCard_form_error_passwordMismatch": {
+    "description": "Error message indicating that the passwords entered to create new account with do not match."
+  },
+  "loginCard_form_error_passwordTooShort": "Password is too short",
+  "@loginCard_form_error_passwordTooShort": {
+    "description": "Error message indicating that the password entered to create new account with is too short."
+  },
+  "mainAppBar_generateToken": "Get Token",
+  "@mainAppBar_generateToken": {
+    "description": "Textual description of the `Generate Token` icon in `MainAppBar`."
+  },
+  "mainAppBar_generateToken_dialog_title": "Bearer Token",
+  "@mainAppBar_generateToken_dialog_title": {
+    "description": "Title of the dialog that displays a current bearer token, opened by `MainAppBar`"
+  },
+  "mainAppBar_generateToken_dialog_fallback": "<unknown>",
+  "@mainAppBar_generateToken_dialog_fallback": {
+    "description": "Fallback text if no token could be obtained in the dialog that displays a current bearer token, opened by `MainAppBar`"
+  },
+  "mainAppBar_generateToken_ok": "OK",
+  "@mainAppBar_generateToken_ok": {
+    "description": "Text of the ok button in the dialog that displays a current bearer token, opened by `MainAppBar`"
+  },
+  "mainAppBar_generateToken_copy": "COPY",
+  "@mainAppBar_generateToken_copy": {
+    "description": "Text of the copy button in the dialog that displays a current bearer token, opened by `MainAppBar`"
+  },
   "mainAppBar_settings": "Account Settings",
   "@mainAppBar_settings": {
-    "description": "Textual description of the `Account Settings` icon in the main app bar."
+    "description": "Textual description of the `Account Settings` icon in `MainAppBar`."
   },
   "settingsScreen_placeholder_text": "Settings",
   "@settingsScreen_placeholder_text": {
     "description": "Text of temporary placeholder container in `SettingsScreen`."
+  },
+  "splashScreen_initialization": "Loading app...",
+  "@splashScreen_initialization": {
+    "description": "Text to be displayed while initialization processes (FlutterFire setup, checking login status, ...) are running."
   },
   "statisticsScreen_placeholder_text": "Statistics",
   "@statisticsScreen_placeholder_text": {

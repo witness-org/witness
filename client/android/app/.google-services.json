@@ -1,0 +1,5 @@
+{
+  "secret": "This is just a placeholder for the original services file because its content is a secret.",
+  "message": "You need to ask a maintainer for a local copy of a 'google-services.json' file (without leading dot).",
+  "note": "That file needs to be transferred via a secure channel."
+}

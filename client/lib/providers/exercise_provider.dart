@@ -9,22 +9,18 @@ import 'package:flutter/material.dart';
 final _logger = getLogger('exercise_provider');
 
 class ExerciseProvider with ChangeNotifier {
-  ExerciseProvider(this._userId, this._authToken, this._isAuthenticated, this._muscleGroups, this._exercises);
+  ExerciseProvider(this._auth, this._muscleGroups, this._exercises);
 
   ExerciseProvider.empty()
       : this(
           null,
-          null,
-          false,
           <MuscleGroup>[],
           <MuscleGroup, List<Exercise>>{},
         );
 
   ExerciseProvider.fromProviders(final AuthProvider auth, final ExerciseProvider? instance)
       : this(
-          auth.userId,
-          auth.token,
-          auth.isAuthenticated,
+          auth,
           instance?._muscleGroups ?? <MuscleGroup>[],
           instance?._exercises ?? <MuscleGroup, List<Exercise>>{},
         );
@@ -32,9 +28,7 @@ class ExerciseProvider with ChangeNotifier {
   final _exerciseService = ExerciseService();
   List<MuscleGroup> _muscleGroups;
   Map<MuscleGroup, List<Exercise>> _exercises;
-  final String? _userId; // ignore: unused_field
-  final String? _authToken; // ignore: unused_field
-  final bool _isAuthenticated; // ignore: unused_field
+  final AuthProvider? _auth; // ignore: unused_field
 
   List<MuscleGroup> get muscleGroups {
     return collection.UnmodifiableListView(_muscleGroups);

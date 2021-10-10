@@ -25,12 +25,13 @@ test-server:
 
 # Execute Flutter unit tests
 test-client:
-  image: cirrusci/flutter:2.5.0
+  image: cirrusci/flutter:2.5.2
   script:
     - 'cd client'
     - 'flutter doctor --verbose'
-    - 'flutter pub get'
     - 'flutter clean'
+    - 'flutter pub get'
+    - 'flutter pub run build_runner build'
     - 'flutter test --reporter expanded --coverage'
     - 'lcov --summary coverage/lcov.info > client-coverage.txt || true'
   artifacts:
@@ -39,13 +40,14 @@ test-client:
       
 # Execute Flutter integration tests
 integration-test-client:
-  image: raffaelfoidl/flutter-integration-test:chrome-v93-driver-v93
+  image: raffaelfoidl/flutter-integration-test:chrome-v94-driver-v94
   script:
     - 'cd client'
     - '/app/chromedriver --whitelisted-ips --port=4444 &'
     - 'flutter doctor --verbose'
-    - 'flutter pub get'
     - 'flutter clean'
+    - 'flutter pub get'
+    - 'flutter pub run build_runner build'
     - 'flutter drive --driver=test_driver/integration_test.dart --target=integration_test/main_test.dart --release -d web-server'
 
 # Execute maven checkstyle plugin
@@ -58,13 +60,20 @@ check-server:
 
 # Check codestyle, linting and static analysis of client code with dartfmt
 check-client:
-  image: cirrusci/flutter:2.5.0
+  image: cirrusci/flutter:2.5.2
   script:
     - 'cd client'
+    - 'flutter clean'
+    - 'flutter pub get'
+    - 'flutter pub run build_runner build'
 
-    # Applies code formatting to project using dartfmt. If this causes formatting changes, then exit with
-    # code 1, making the job fail.
-    - 'dart format ./ --line-length 150 --set-exit-if-changed'
+    # Applies code formatting to project using dartfmt. Redirect stderr (2) to stdout (1) and send it to a file. If
+    # this output (i.e. the formatted files) contains at least one line that ends with .dart, but NOT with .g.dart (generated
+    # files may be formatted differently due to different line lengths), the command on the last line returns 1, making the
+    # job fail.
+    - 'dart format ./ --line-length 150 > formatResult.txt 2>&1 || true'
+    - 'cat formatResult.txt'
+    - if [ $(grep --perl-regexp 'Formatted[[:space:]].*(?<!\.g)\.dart' formatResult.txt -c) != 0 ]; then exit 1; fi
 
     # The 'flutter analyze' may print parts of its output to stderr. Therefore, redirect stderr (2) to
     # stdout (1) and send it to a file. Finally, grep it for a positive outcome ("No issues found"). If this string
