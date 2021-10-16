@@ -1,91 +1,88 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/greeting.dart';
+import 'package:client/services/base_service.dart';
 import 'package:http/http.dart' as http;
 
 final _logger = getLogger('greeting_service');
 
-class GreetingService {
+class GreetingService extends BaseService {
   Future<String> getPublicData() async {
-    _logger.i('GET http://10.0.2.2:8080/greeting/public');
+    final requestUri = getUri('greeting/public');
+    _logger.i('GET $requestUri');
 
     await Future<void>.delayed(
       const Duration(seconds: 1),
     );
 
-    final url = Uri.parse('http://10.0.2.2:8080/greeting/public');
-    final response = await http.get(url);
+    final response = await http.get(requestUri);
     return response.body;
   }
 
   Future<String> getRegisteredData(final String name, final String? token) async {
-    _logger.i('GET http://10.0.2.2:8080/greeting');
+    final requestUri = getUri('greeting', queryParameters: {'name': name});
+    _logger.i('GET $requestUri');
 
     await Future<void>.delayed(
       const Duration(seconds: 1),
     );
 
-    final url = Uri.http('10.0.2.2:8080', '/greeting', <String, String>{'name': name});
-    final response = await http.get(url, headers: _getHeaders(token));
+    final httpHeaders = getHttpHeaders(authorization: token);
+    final response = await http.get(requestUri, headers: httpHeaders);
     return response.body;
   }
 
   Future<String> getPremiumData(final String? token) async {
-    _logger.i('GET http://10.0.2.2:8080/greeting/premiumData');
+    final requestUri = getUri('greeting/premiumData');
+    _logger.i('GET $requestUri');
 
     await Future<void>.delayed(
       const Duration(seconds: 1),
     );
 
-    final url = Uri.parse('http://10.0.2.2:8080/greeting/premiumData');
-    final response = await http.get(url, headers: _getHeaders(token));
+    final httpHeaders = getHttpHeaders(authorization: token);
+    final response = await http.get(requestUri, headers: httpHeaders);
     return response.body;
   }
 
   Future<String> getAdminData(final String? token) async {
-    _logger.i('GET http://10.0.2.2:8080/greeting/adminData');
+    final requestUri = getUri('greeting/adminData');
+    _logger.i('GET $requestUri');
 
     await Future<void>.delayed(
       const Duration(seconds: 1),
     );
 
-    final url = Uri.parse('http://10.0.2.2:8080/greeting/adminData');
-    final response = await http.get(url, headers: _getHeaders(token));
+    final httpHeaders = getHttpHeaders(authorization: token);
+    final response = await http.get(requestUri, headers: httpHeaders);
     return response.body;
   }
 
   Future<String> getPremiumOrAdminData(final String? token) async {
-    _logger.i('GET http://10.0.2.2:8080/greeting/premiumOrAdminData');
+    final requestUri = getUri('greeting/premiumOrAdminData');
+    _logger.i('GET $requestUri');
 
     await Future<void>.delayed(
       const Duration(seconds: 1),
     );
 
-    final url = Uri.parse('http://10.0.2.2:8080/greeting/premiumOrAdminData');
-    final response = await http.get(url, headers: _getHeaders(token));
+    final httpHeaders = getHttpHeaders(authorization: token);
+    final response = await http.get(requestUri, headers: httpHeaders);
     return response.body;
   }
 
   Future<String> postData(final Greeting greeting, final String? token) async {
-    _logger.i('POST http://10.0.2.2:8080/greeting');
+    final requestUri = getUri('greeting');
+    _logger.i('POST $requestUri');
 
     await Future<void>.delayed(
       const Duration(seconds: 1),
     );
 
-    final url = Uri.parse('http://10.0.2.2:8080/greeting');
+    final httpHeaders = getHttpHeaders(authorization: token, jsonContent: true);
     final payload = json.encode(greeting);
-    final response = await http.post(url, headers: _getHeaders(token, true), body: payload);
+    final response = await http.post(requestUri, headers: httpHeaders, body: payload);
     return response.body;
-  }
-
-  Map<String, String> _getHeaders(final String? token, [final bool jsonPayload = false]) {
-    final headers = {HttpHeaders.authorizationHeader: 'Bearer $token'};
-    if (jsonPayload) {
-      headers['Content-Type'] = ContentType.json.toString();
-    }
-    return headers;
   }
 }

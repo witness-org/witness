@@ -41,7 +41,7 @@ class AuthProvider with ChangeNotifier {
       (final firebaseAuth) async {
         _logger.i('Signing up and logging in new user "$email"');
         final createResponse = await _userService.createUser(email, password);
-        return createResponse != null ? login(email, password) : null;
+        return createResponse ?? await login(email, password);
       },
     );
   }

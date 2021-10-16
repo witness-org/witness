@@ -14,8 +14,8 @@ class FineGrainedDebugFilter extends LogFilter {
 
   @override
   bool shouldLog(final LogEvent event) {
-    // do not log in release mode
-    if (kReleaseMode) {
+    // only log in debug mode
+    if (!kDebugMode) {
       return false;
     }
 
