@@ -20,7 +20,7 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
     showDialog<void>(
       context: context,
       builder: (final ctx) => AlertDialog(
-        title: const Text('Login failed'),
+        title: Text(_loginData.mode == _AuthMode.login ? 'Login failed' : 'Signup failed'),
         content: Text(message),
         actions: [
           TextButton(
