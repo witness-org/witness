@@ -125,6 +125,15 @@
       "name": "setup.create-local-with-firebase-id-and-set-firebase-role.regular",
       "type": "java.util.List<com.witness.server.setup.SetupArguments.SetupUserHolder<com.witness.server.setup.SetupArguments.SetupFirebaseUser>>",
       "description": "Regular users which should be created, both locally as well as on the Firebase server, during environment initialization."
+    },
+    {
+      "name": "setup.create-exercises",
+      "description": "A SetupExerciseHolder that contains information about exercises which should be created during environment initialization."
+    },
+    {
+      "name": "setup.create-exercises.exercises",
+      "type": "java.util.List<com.witness.server.setup.SetupArguments.SetupExerciseHolder<com.witness.server.setup.SetupArguments.SetupExercise>>",
+      "description": "Exercises which should be created during environment initialization."
     }
   ]
 }
