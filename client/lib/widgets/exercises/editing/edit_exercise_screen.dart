@@ -3,6 +3,8 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/main_app_bar.dart';
+import 'package:client/widgets/exercises/editing/create_exercise_form.dart';
+
 import 'package:flutter/material.dart';
 
 final _logger = getLogger('edit_exercise_screen');
@@ -12,6 +14,16 @@ class EditExerciseScreen extends StatelessWidget with LogMessagePreparer, String
 
   static const routeName = '/edit-exercise';
   final Exercise? _exercise;
+
+  Widget _buildCreateScreen() {
+    return const CreateExerciseForm();
+  }
+
+  Widget _buildEditScreen(final Exercise exercise) {
+    return Center(
+      child: Text('Editing Exercise "${exercise.name}"'),
+    );
+  }
 
   @override
   Widget build(final BuildContext context) {
@@ -23,7 +35,7 @@ class EditExerciseScreen extends StatelessWidget with LogMessagePreparer, String
       appBar: MainAppBar(
         preferredTitle: title,
       ),
-      body: _exercise == null ? const Center(child: Text('Creating new Exercise')) : Center(child: Text('Editing Exercise "${_exercise!.title}"')),
+      body: _exercise == null ? _buildCreateScreen() : _buildEditScreen(_exercise!),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:client/extensions/async_snapshot_extensions.dart';
+import 'package:client/extensions/enum_extensions.dart';
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
@@ -6,7 +7,6 @@ import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/providers/exercise_provider.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/exercises/details/exercise_detail_screen.dart';
-import 'package:client/widgets/exercises/editing/edit_exercise_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +40,7 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
         children: [
           Text(
             // TODO(raffaelfoidl): fix UI when text too long
-            '${uiStrings.exerciseByMuscleGroupScreen_header_prefix} "${group.name}"',
+            '${uiStrings.exerciseByMuscleGroupScreen_header_prefix} ${group.toUiString()}',
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const Spacer(),
@@ -48,12 +48,7 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
             tooltip: uiStrings.exerciseByMuscleGroupScreen_search_tooltip,
             onPressed: () {},
             icon: const Icon(Icons.search),
-          ),
-          IconButton(
-            tooltip: uiStrings.exerciseByMuscleGroupScreen_createNew_tooltip,
-            onPressed: () => Navigator.of(context).pushNamed(EditExerciseScreen.routeName),
-            icon: const Icon(Icons.add),
-          ),
+          )
         ],
       ),
     );
@@ -65,31 +60,37 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
       child: FutureBuilder<void>(
         future: _fetchExercisesByMuscleGroup(context, group),
         builder: (final _, final snapshot) {
-          return snapshot.waitSwitch(
-            RefreshIndicator(
-              onRefresh: () => _fetchExercisesByMuscleGroup(context, group),
-              child: Consumer<ExerciseProvider>(
-                builder: (final _, final exerciseData, final __) {
-                  _logger.v(prepare('_buildExerciseList.Consumer.builder()'));
-                  return Scrollbar(
-                    isAlwaysShown: true,
-                    child: ListView.builder(
-                      itemCount: exerciseData.getExercisesByMuscleGroup(group).length,
-                      itemBuilder: (final _, final index) {
-                        final exercise = exerciseData.getExercisesByMuscleGroup(group)[index];
-                        return Column(
-                          children: [
-                            _ExerciseByMuscleGroupItem(exercise),
-                            const Divider(),
-                          ],
-                        );
-                      },
-                    ),
-                  );
-                },
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Could not fetch exercises: ' + snapshot.error.toString()),
+            );
+          } else {
+            return snapshot.waitSwitch(
+              RefreshIndicator(
+                onRefresh: () => _fetchExercisesByMuscleGroup(context, group),
+                child: Consumer<ExerciseProvider>(
+                  builder: (final _, final exerciseData, final __) {
+                    _logger.v(prepare('_buildExerciseList.Consumer.builder()'));
+                    return Scrollbar(
+                      isAlwaysShown: true,
+                      child: ListView.builder(
+                        itemCount: exerciseData.getExercisesByMuscleGroup(group).length,
+                        itemBuilder: (final _, final index) {
+                          final exercise = exerciseData.getExercisesByMuscleGroup(group)[index];
+                          return Column(
+                            children: [
+                              _ExerciseByMuscleGroupItem(exercise),
+                              const Divider(),
+                            ],
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          );
+            );
+          }
         },
       ),
     );
@@ -99,7 +100,7 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
     _logger.v(prepare('_buildScreen()'));
     return Scaffold(
       appBar: AppBar(
-        title: Text(group.name),
+        title: Text(group.toUiString()),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,10 +128,10 @@ class _ExerciseByMuscleGroupItem extends StatelessWidget with LogMessagePreparer
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
     return ListTile(
-      title: Text(_exercise.title),
+      title: Text(_exercise.name),
       leading: const CircleAvatar(
         backgroundColor: Colors.transparent,
-        foregroundImage: AssetImage('assets/images/flutter_logo.png'),
+        foregroundImage: AssetImage('assets/images/dumbbell.png'),
       ),
       onTap: () {
         Navigator.of(context).pushNamed(ExerciseDetailScreen.routeName, arguments: _exercise);

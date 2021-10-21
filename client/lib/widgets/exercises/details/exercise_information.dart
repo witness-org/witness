@@ -23,7 +23,7 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer, Strin
     );
   }
 
-  Widget _buildBadge(final BuildContext context, final String text, final Color backgroundColor, final Color textColor) {
+  Widget _buildChip(final BuildContext context, final String text, final Color backgroundColor, final Color textColor) {
     return Chip(
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       label: Text(
@@ -34,11 +34,11 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer, Strin
     );
   }
 
-  Widget _buildBadgeList(final BuildContext context, final Iterable<String> badgeTexts, final Color backgroundColor, final Color textColor) {
+  Widget _buildChipList(final BuildContext context, final Iterable<String> chipText, final Color backgroundColor, final Color textColor) {
     return Wrap(
       spacing: 6,
       runSpacing: 6,
-      children: badgeTexts.map((final text) => _buildBadge(context, text, backgroundColor, textColor)).toList(),
+      children: chipText.map((final text) => _buildChip(context, text, backgroundColor, textColor)).toList(),
     );
   }
 
@@ -49,20 +49,20 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer, Strin
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildHeading(uiStrings.exerciseInformation_body_heading_description),
-        Text(_exercise.description ?? ''),
+        Text(_exercise.description ?? uiStrings.exerciseInformation_body_description_empty),
         const SizedBox(height: 15),
         _buildHeading(uiStrings.exerciseInformation_body_heading_muscleGroups),
-        _buildBadgeList(
+        _buildChipList(
           context,
-          _exercise.muscleGroups.map((final group) => group.name),
+          _exercise.muscleGroups.map((final group) => group.toUiString()),
           theme.primaryColor,
           theme.colorScheme.onPrimary,
         ),
         const SizedBox(height: 15),
-        _buildHeading(uiStrings.exerciseInformation_body_heading_attributes),
-        _buildBadgeList(
+        _buildHeading(uiStrings.exerciseInformation_body_heading_loggingTypes),
+        _buildChipList(
           context,
-          _exercise.attributes.map((final attribute) => attribute.toUiString()),
+          _exercise.loggingTypes.map((final attribute) => attribute.toUiString()),
           theme.colorScheme.secondary,
           theme.colorScheme.onSecondary,
         ),

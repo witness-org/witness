@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/services/firebase_service.dart';
+import 'package:client/services/server_response.dart';
 import 'package:client/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -113,20 +114,20 @@ class AuthProvider with ChangeNotifier {
     );
   }
 
-  Future<String?> _performLogin(final Future<AuthenticationResult> Function() loginDelegate) async {
+  Future<String?> _performLogin(final Future<ServerResponse<FirebaseUser, String>> Function() loginDelegate) async {
     final loginResult = await loginDelegate();
-    if (loginResult.isSuccess) {
-      _loggedInUser = loginResult.loggedInUser;
+    if (loginResult.isSuccessAndResponse) {
+      _loggedInUser = loginResult.success;
       notifyListeners();
       return null;
     } else {
-      return loginResult.errorMessage;
+      return loginResult.error;
     }
   }
 
-  T _firebaseAuthAction<T>(final T Function(FirebaseAuth) action) {
+  T _firebaseAuthAction<T>(final T Function(FirebaseAuth authenticationService) action) {
     if (_firebaseAuth == null) {
-      _logger.w('Cannot perform login has authentication service has not been initialized yet');
+      _logger.w('Cannot perform login as authentication service has not been initialized yet');
       throw Exception('Invalid State: Authentication Service not initialized.');
     }
 
