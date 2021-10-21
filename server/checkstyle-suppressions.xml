@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+
+    <!-- suppress certain checks on all files in a package -->
+    <!--<suppress files="my[\\/]super[\\/]package[\\/]name" checks="ModifierOrderCheck|NeedBracesCheck|MagicNumberCheck"/>-->
+    <!-- suppress all checks on all files in a package -->
+    <!--<suppress files="another[\\/]super[\\/]package[\\/]of[\\/]mine" checks=".*"/>-->
+    <!-- suppress certain checks on all files -->
+    <!--<suppress files="." checks="IndentationCheck"/>-->
+
+    <!-- test code does not need as extensive documentation as production code -->
+    <suppress files="com[\\/]witness[\\/]server[\\/](unit|integration)" checks="MissingJavadocType"/>
+
+    <!-- DTOs are documented by springdoc OpenAPI annotations - additional JavaDoc would decrease readability -->
+    <suppress files="com[\\/]witness[\\/]server[\\/](dto)" checks="MissingJavadocType"/>
+
+    <!-- controllers are documented by springdoc OpenAPI annotations - additional JavaDoc would decrease readability -->
+    <suppress files="com[\\/]witness[\\/]server[\\/]web[\\/]controller" checks="MissingJavadocType"/>
+
+    <!-- entities and enums are mostly direct representation of concepts from domain model, no added value in JavaDoc
+     (if an entity or enumeration does not directly stem from the domain model, documentation is to be be added -->
+    <suppress files="com[\\/]witness[\\/]server[\\/](entity|enumeration)" checks="MissingJavadocType"/>
+
+    <!-- the purpose of mappers is clear from their name and method signatures, no added value in JavaDoc -->
+    <suppress files="com[\\/]witness[\\/]server[\\/](mapper)" checks="MissingJavadocType"/>
+
+    <!-- as per naming conventions, repositories reference their corresponding entities, making their purpose clear -->
+    <suppress files="com[\\/]witness[\\/]server[\\/](repository)" checks="MissingJavadocType"/>
+
+    <!-- most service implementations only have one implementation that does not need further explanations
+     (if there are additional implementations of an interface, JavaDocs are to be added explaining the differences) -->
+    <suppress files="com[\\/]witness[\\/]server[\\/]service[\\/]impl" checks="MissingJavadocType"/>
+
+    <!-- no docs necessary for main entry point -->
+    <suppress files="com[\\/]witness[\\/]server[\\/](ServerApplication.java)" checks="MissingJavadocType"/>
+</suppressions>
