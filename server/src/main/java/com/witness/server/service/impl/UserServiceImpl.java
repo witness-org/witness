@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User createUser(User user, String password) throws DataCreationException, DataNotFoundException, DataModificationException {
+    log.info(String.format("Creating user with username \"%s\".", user.getUsername()));
     var firebaseUser = firebaseService.createUser(user.getEmail(), password);
 
     if (user.getRole() != null) {
@@ -51,21 +52,25 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User setRole(Long userId, Role role) throws DataAccessException {
+    log.info(String.format("Setting role of user with user ID \"%s\" to \"%s\".", userId, role));
     return setRoleInternal(() -> findById(userId), role);
   }
 
   @Override
   public User setRole(String firebaseId, Role role) throws DataAccessException {
+    log.info(String.format("Setting role of user with Firebase ID \"%s\" to \"%s\".", firebaseId, role));
     return setRoleInternal(() -> findByFirebaseId(firebaseId), role);
   }
 
   @Override
   public User removeRole(String firebaseId) throws DataAccessException {
+    log.info(String.format("Removing role from user with Firebase ID \"%s\".", firebaseId));
     return setRoleInternal(() -> findByFirebaseId(firebaseId), null);
   }
 
   @Override
   public User findById(Long userId) throws DataAccessException {
+    log.info(String.format("Trying to find user with user ID %d.", userId));
     return findUserInternal(() ->
         userRepository
             .findById(userId)
@@ -74,6 +79,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User findByFirebaseId(String firebaseId) throws DataAccessException {
+    log.info(String.format("Trying to find user with Firebase ID %s.", firebaseId));
     return findUserInternal(() ->
         userRepository
             .findByFirebaseIdEquals(firebaseId)
@@ -83,6 +89,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User findByEmail(String email) throws DataAccessException {
+    log.info(String.format("Trying to find user with email address \"%s\".", email));
     return findUserInternal(() ->
         userRepository
             .findByEmailEqualsIgnoreCase(email)
@@ -117,6 +124,7 @@ public class UserServiceImpl implements UserService {
     var firebaseId = databaseUser.getFirebaseId();
     var firebaseUser = firebaseService.findUserById(firebaseId);
     if (!databaseUser.getEmail().equals(firebaseUser.getEmail())) {
+      log.error("An error occurred while checking if the data are consistent.");
       throw new DataAccessException("Email for user with id \"%s\" deposited in the database does not match Firebase server".formatted(firebaseId));
     }
   }
