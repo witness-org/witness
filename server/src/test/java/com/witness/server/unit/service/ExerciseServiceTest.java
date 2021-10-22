@@ -10,11 +10,9 @@ import com.witness.server.entity.UserExercise;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.InvalidRequestException;
-import com.witness.server.model.FirebaseUser;
 import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.UserExerciseRepository;
 import com.witness.server.service.ExerciseService;
-import com.witness.server.service.SecurityService;
 import com.witness.server.service.UserService;
 import com.witness.server.service.impl.ExerciseServiceImpl;
 import com.witness.server.unit.BaseUnitTest;
@@ -39,9 +37,6 @@ class ExerciseServiceTest extends BaseUnitTest {
 
   @MockBean
   private UserExerciseRepository userExerciseRepository;
-
-  @MockBean
-  private SecurityService securityService;
 
   @MockBean
   private UserService userService;
@@ -76,72 +71,68 @@ class ExerciseServiceTest extends BaseUnitTest {
   void createUserExercise_initialExerciseWithAlreadyTakenName_throwException(UserExercise exercise) {
     when(exerciseRepository.existsByName(exercise.getName())).thenReturn(true);
 
-    assertThatThrownBy(() -> target.createUserExercise(exercise))
+    assertThatThrownBy(() -> target.createUserExercise("firebaseId", exercise))
         .isInstanceOf(InvalidRequestException.class);
   }
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
       @JsonFileSource(value = DATA_ROOT + "UserExercise1NullId.json", type = UserExercise.class),
-      @JsonFileSource(value = DATA_ROOT + "FirebaseUser1.json", type = FirebaseUser.class),
       @JsonFileSource(value = DATA_ROOT + "User1.json", type = User.class)
   })
-  void createUserExercise_createdExerciseWithAlreadyTakenName_throwException(UserExercise exercise, FirebaseUser firebaseUser, User user)
+  void createUserExercise_createdExerciseWithAlreadyTakenName_throwException(UserExercise exercise, User user)
       throws DataAccessException {
+    var firebaseId = user.getFirebaseId();
     when(exerciseRepository.existsByName(exercise.getName())).thenReturn(false);
-    when(securityService.getCurrentUser()).thenReturn(firebaseUser);
-    when(userService.findByFirebaseId(firebaseUser.getUid())).thenReturn(user);
+    when(userService.findByFirebaseId(firebaseId)).thenReturn(user);
     when(userExerciseRepository.existsByNameAndCreatedBy(exercise.getName(), user)).thenReturn(true);
 
-    assertThatThrownBy(() -> target.createUserExercise(exercise))
+    assertThatThrownBy(() -> target.createUserExercise(firebaseId, exercise))
         .isInstanceOf(InvalidRequestException.class);
   }
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
       @JsonFileSource(value = DATA_ROOT + "UserExercise1NullId.json", type = UserExercise.class),
-      @JsonFileSource(value = DATA_ROOT + "FirebaseUser1.json", type = FirebaseUser.class),
       @JsonFileSource(value = DATA_ROOT + "User1.json", type = User.class),
       @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class)
   })
-  void createUserExercise_userExercise_returnCorrectUserExercise(UserExercise input, FirebaseUser firebaseUser, User user, UserExercise output)
+  void createUserExercise_userExercise_returnCorrectUserExercise(UserExercise input, User user, UserExercise output)
       throws DataAccessException, InvalidRequestException {
+    var firebaseId = user.getFirebaseId();
     when(exerciseRepository.existsByName(input.getName())).thenReturn(false);
-    when(securityService.getCurrentUser()).thenReturn(firebaseUser);
-    when(userService.findByFirebaseId(firebaseUser.getUid())).thenReturn(user);
+    when(userService.findByFirebaseId(firebaseId)).thenReturn(user);
     when(userExerciseRepository.existsByNameAndCreatedBy(input.getName(), user)).thenReturn(false);
     when(userExerciseRepository.save(input)).thenReturn(output);
 
-    assertThat(target.createUserExercise(input)).isEqualTo(output);
+    assertThat(target.createUserExercise(firebaseId, input)).isEqualTo(output);
   }
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
-      @JsonFileSource(value = DATA_ROOT + "FirebaseUser1.json", type = FirebaseUser.class),
       @JsonFileSource(value = DATA_ROOT + "User1.json", type = User.class),
       @JsonFileSource(value = DATA_ROOT + "Exercises_1-2.json", type = Exercise[].class, arrayToList = true)
   })
-  void getExercisesForUserByMuscleGroup_user_returnList(FirebaseUser firebaseUser, User user, List<Exercise> exercises) throws DataAccessException {
+  void getExercisesForUserByMuscleGroup_user_returnList(User user, List<Exercise> exercises) throws DataAccessException {
+    var firebaseId = user.getFirebaseId();
     var muscleGroup = MuscleGroup.CHEST;
 
-    when(securityService.getCurrentUser()).thenReturn(firebaseUser);
-    when(userService.findByFirebaseId(firebaseUser.getUid())).thenReturn(user);
+    when(userService.findByFirebaseId(firebaseId)).thenReturn(user);
     when(exerciseRepository.findAllForUser(user, muscleGroup)).thenReturn(exercises);
 
-    assertThat(target.getExercisesForUserByMuscleGroup(muscleGroup)).containsExactlyInAnyOrderElementsOf(exercises);
+    assertThat(target.getExercisesForUserByMuscleGroup(firebaseId, muscleGroup)).containsExactlyInAnyOrderElementsOf(exercises);
   }
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
-      @JsonFileSource(value = DATA_ROOT + "FirebaseUser1.json", type = FirebaseUser.class),
       @JsonFileSource(value = DATA_ROOT + "User1.json", type = User.class),
       @JsonFileSource(value = DATA_ROOT + "Exercises_1-2.json", type = Exercise[].class, arrayToList = true)
   })
-  void getExercisesCreatedByUser_user_returnList(FirebaseUser firebaseUser, User user, List<Exercise> exercises) throws DataAccessException {
-    when(securityService.getCurrentUser()).thenReturn(firebaseUser);
-    when(userService.findByFirebaseId(firebaseUser.getUid())).thenReturn(user);
+  void getExercisesCreatedByUser_user_returnList(User user, List<Exercise> exercises) throws DataAccessException {
+    String firebaseId = user.getFirebaseId();
+    when(userService.findByFirebaseId(firebaseId)).thenReturn(user);
     when(exerciseRepository.findAllByUser(user)).thenReturn(exercises);
 
-    assertThat(target.getExercisesCreatedByUser()).containsExactlyInAnyOrderElementsOf(exercises);
+    assertThat(target.getExercisesCreatedByUser(firebaseId)).containsExactlyInAnyOrderElementsOf(exercises);
   }
 }

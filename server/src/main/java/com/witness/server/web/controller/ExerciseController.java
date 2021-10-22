@@ -8,6 +8,7 @@ import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.InvalidRequestException;
 import com.witness.server.mapper.ExerciseMapper;
 import com.witness.server.service.ExerciseService;
+import com.witness.server.service.SecurityService;
 import com.witness.server.web.meta.RequiresAdmin;
 import com.witness.server.web.meta.SecuredValidatedRestController;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,11 +34,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ExerciseController {
 
   private final ExerciseService exerciseService;
+  private final SecurityService securityService;
   private final ExerciseMapper exerciseMapper;
 
-
-  public ExerciseController(ExerciseService exerciseService, ExerciseMapper exerciseMapper) {
+  @Autowired
+  public ExerciseController(ExerciseService exerciseService, SecurityService securityService, ExerciseMapper exerciseMapper) {
     this.exerciseService = exerciseService;
+    this.securityService = securityService;
     this.exerciseMapper = exerciseMapper;
   }
 
@@ -75,7 +79,8 @@ public class ExerciseController {
                                             @Parameter(description = "The exercise that should be created.") ExerciseCreateDto exercise)
       throws DataAccessException, InvalidRequestException {
     var entity = exerciseMapper.createDtoToUserEntity(exercise);
-    var createdEntity = exerciseService.createUserExercise(entity);
+    var currentUser = securityService.getCurrentUser();
+    var createdEntity = exerciseService.createUserExercise(currentUser.getUid(), entity);
     return exerciseMapper.userEntityToDto(createdEntity);
   }
 
@@ -93,7 +98,8 @@ public class ExerciseController {
   public List<ExerciseDto> getAllForUserByMuscleGroup(@RequestParam(name = "muscleGroup")
                                                       @Parameter(description = "The muscle group that should be trained.") MuscleGroup muscleGroup)
       throws DataAccessException {
-    var result = exerciseService.getExercisesForUserByMuscleGroup(muscleGroup);
+    var currentUser = securityService.getCurrentUser();
+    var result = exerciseService.getExercisesForUserByMuscleGroup(currentUser.getUid(), muscleGroup);
     return exerciseMapper.entitiesToDtos(result);
   }
 
@@ -109,7 +115,8 @@ public class ExerciseController {
       }
   )
   public List<ExerciseDto> getAllCreatedByUser() throws DataAccessException {
-    var result = exerciseService.getExercisesCreatedByUser();
+    var currentUser = securityService.getCurrentUser();
+    var result = exerciseService.getExercisesCreatedByUser(currentUser.getUid());
     return exerciseMapper.entitiesToDtos(result);
   }
 }

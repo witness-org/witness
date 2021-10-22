@@ -1,8 +1,0 @@
-{
-  "uid": "firebase1",
-  "name": "user1",
-  "email": "user1@test.com",
-  "emailVerified": true,
-  "issuer": "issuer1",
-  "picture": "pic"
-}

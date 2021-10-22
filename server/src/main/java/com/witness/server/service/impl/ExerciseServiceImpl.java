@@ -9,7 +9,6 @@ import com.witness.server.exception.InvalidRequestException;
 import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.UserExerciseRepository;
 import com.witness.server.service.ExerciseService;
-import com.witness.server.service.SecurityService;
 import com.witness.server.service.UserService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -20,20 +19,16 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ExerciseServiceImpl implements ExerciseService {
 
-  private final SecurityService securityService;
-  private final UserExerciseRepository userExerciseRepository;
-  private final ExerciseRepository exerciseRepository;
   private final UserService userService;
+  private final ExerciseRepository exerciseRepository;
+  private final UserExerciseRepository userExerciseRepository;
 
   @Autowired
-  public ExerciseServiceImpl(SecurityService securityService, UserExerciseRepository userExerciseRepository, ExerciseRepository exerciseRepository,
-                             UserService userService) {
-    this.securityService = securityService;
-    this.userExerciseRepository = userExerciseRepository;
-    this.exerciseRepository = exerciseRepository;
+  public ExerciseServiceImpl(UserService userService, ExerciseRepository exerciseRepository, UserExerciseRepository userExerciseRepository) {
     this.userService = userService;
+    this.exerciseRepository = exerciseRepository;
+    this.userExerciseRepository = userExerciseRepository;
   }
-
 
   @Override
   public Exercise createInitialExercise(Exercise exercise) throws InvalidRequestException {
@@ -48,7 +43,7 @@ public class ExerciseServiceImpl implements ExerciseService {
   }
 
   @Override
-  public UserExercise createUserExercise(UserExercise exercise) throws InvalidRequestException, DataAccessException {
+  public UserExercise createUserExercise(String firebaseId, UserExercise exercise) throws InvalidRequestException, DataAccessException {
     log.info(String.format("Creating new user exercise \"%s\".", exercise.getName()));
 
     if (exerciseRepository.existsByName(exercise.getName())) {
@@ -56,7 +51,7 @@ public class ExerciseServiceImpl implements ExerciseService {
       throw new InvalidRequestException("There already exists an exercise with this name.");
     }
 
-    var user = getLoggedInUser();
+    var user = getUser(firebaseId);
     exercise.setCreatedBy(user);
 
     if (userExerciseRepository.existsByNameAndCreatedBy(exercise.getName(), user)) {
@@ -68,23 +63,22 @@ public class ExerciseServiceImpl implements ExerciseService {
   }
 
   @Override
-  public List<Exercise> getExercisesForUserByMuscleGroup(MuscleGroup muscleGroup) throws DataAccessException {
-    var user = getLoggedInUser();
+  public List<Exercise> getExercisesForUserByMuscleGroup(String firebaseId, MuscleGroup muscleGroup) throws DataAccessException {
+    var user = getUser(firebaseId);
 
     log.info(String.format("Fetching exercises for muscle group %s for user with ID %d.", muscleGroup, user.getId()));
     return exerciseRepository.findAllForUser(user, muscleGroup);
   }
 
   @Override
-  public List<Exercise> getExercisesCreatedByUser() throws DataAccessException {
-    var user = getLoggedInUser();
+  public List<Exercise> getExercisesCreatedByUser(String firebaseId) throws DataAccessException {
+    var user = getUser(firebaseId);
 
     log.info(String.format("Fetching exercises created by user with ID %d.", user.getId()));
     return exerciseRepository.findAllByUser(user);
   }
 
-  private User getLoggedInUser() throws DataAccessException {
-    var currentUser = securityService.getCurrentUser();
-    return userService.findByFirebaseId(currentUser.getUid());
+  private User getUser(String firebaseId) throws DataAccessException {
+    return userService.findByFirebaseId(firebaseId);
   }
 }

@@ -8,7 +8,7 @@ import com.witness.server.exception.InvalidRequestException;
 import java.util.List;
 
 /**
- * Provides methods related to managing Exercises or UserExercises.
+ * Provides methods related to managing exercises (both initial exercises and user exercises).
  */
 public interface ExerciseService {
 
@@ -16,39 +16,42 @@ public interface ExerciseService {
    * Creates a new initial exercise, i.e. an exercise that is available to every user.
    *
    * @param exercise exercise to be created
-   * @return persisted Exercise object
+   * @return persisted {@link Exercise} object
    * @throws InvalidRequestException if there is already an initial exercise with the name of the requested {@code exercise}
    */
   Exercise createInitialExercise(Exercise exercise) throws InvalidRequestException;
 
   /**
-   * Creates a new user exercise, i.e. an exercise that will only be available to the logged-in user.
+   * Creates a new user exercise, i.e. an exercise that will only be available to the user with the provided Firebase ID.
    *
-   * @param exercise user exercise to be created
-   * @return persisted UserExercise object
-   * @throws DataAccessException     if the logged-in user is not found in the database
-   * @throws InvalidRequestException if there is already an initial exercise or user exercise created by the logged-in user with the name of the
-   *                                 requested {@code exercise}
+   * @param firebaseId Firebase ID of the user that creates the user exercise
+   * @param exercise   user exercise to be created
+   * @return persisted {@link UserExercise} object
+   * @throws DataAccessException     if the user with the provided {@code firebaseId} is not found in the database
+   * @throws InvalidRequestException if there is already an initial exercise or user exercise created by the user with the provided {@code firebaseId}
+   *                                 with the name of the requested {@code exercise}
    */
-  UserExercise createUserExercise(UserExercise exercise) throws DataAccessException, InvalidRequestException;
+  UserExercise createUserExercise(String firebaseId, UserExercise exercise) throws DataAccessException, InvalidRequestException;
 
   /**
-   * Fetches all exercises contained in the "repertoire" of the logged-in user that train a given muscle group. The "repertoire" consists of the
-   * initial exercises (i.e. Exercise objects, available to every user) and the user's user exercises (i.e. UserExercise objects, only available to
-   * the user that created them).
+   * Fetches all exercises contained in the "repertoire" of the user with the given Firebase ID that train the given muscle group. The "repertoire"
+   * consists of the initial exercises (i.e. {@link Exercise} objects, available to every user) and the user's user exercises (i.e.
+   * {@link UserExercise} objects, only available to the user that created them).
    *
+   * @param firebaseId Firebase ID of the user for whom the exercises should be fetched
    * @param muscleGroup that should be trained with the fetched exercises
-   * @return list of exercises in the "repertoire" of the logged-in user for the {@code muscleGroup}
-   * @throws DataAccessException if the logged-in user is not found in the database
+   * @return list of exercises in the "repertoire" of the user with the provided {@code firebaseId} for the {@code muscleGroup}
+   * @throws DataAccessException if the user with the provided {@code firebaseId} is not found in the database
    */
-  List<Exercise> getExercisesForUserByMuscleGroup(MuscleGroup muscleGroup) throws DataAccessException;
+  List<Exercise> getExercisesForUserByMuscleGroup(String firebaseId, MuscleGroup muscleGroup) throws DataAccessException;
 
   /**
-   * Fetches all exercises that were created by the logged-in user.
+   * Fetches all exercises that were created by the user with the given Firebase ID.
    *
-   * @return list of exercises that were created by the logged-in user
-   * @throws DataAccessException if the logged-in user is not found in the database
+   * @param firebaseId Firebase ID of the user whose exercises should be fetched
+   * @return list of exercises that were created by the user with the provided {@code firebaseId}
+   * @throws DataAccessException if the user with the provided {@code firebaseId} is not found in the database
    */
-  List<Exercise> getExercisesCreatedByUser() throws DataAccessException;
+  List<Exercise> getExercisesCreatedByUser(String firebaseId) throws DataAccessException;
 
 }
