@@ -32,10 +32,10 @@ public class ExerciseServiceImpl implements ExerciseService {
 
   @Override
   public Exercise createInitialExercise(Exercise exercise) throws InvalidRequestException {
-    log.info(String.format("Creating new initial exercise \"%s\".", exercise.getName()));
+    log.info("Creating new initial exercise with name \"{}\".", exercise.getName());
 
     if (exerciseRepository.existsByName(exercise.getName())) {
-      log.error(String.format("Initial exercise with name \"%s\" already exists.", exercise.getName()));
+      log.error("There already exists an initial exercise with the name \"{}\".", exercise.getName());
       throw new InvalidRequestException("There already exists an exercise with this name.");
     }
 
@@ -44,10 +44,10 @@ public class ExerciseServiceImpl implements ExerciseService {
 
   @Override
   public UserExercise createUserExercise(String firebaseId, UserExercise exercise) throws InvalidRequestException, DataAccessException {
-    log.info(String.format("Creating new user exercise \"%s\".", exercise.getName()));
+    log.info("Creating new user exercise with name \"{}\".", exercise.getName());
 
     if (exerciseRepository.existsByName(exercise.getName())) {
-      log.error(String.format("There already exists an initial exercise with the name \"%s\".", exercise.getName()));
+      log.error("There already exists an initial exercise with the name \"{}\".", exercise.getName());
       throw new InvalidRequestException("There already exists an exercise with this name.");
     }
 
@@ -55,7 +55,8 @@ public class ExerciseServiceImpl implements ExerciseService {
     exercise.setCreatedBy(user);
 
     if (userExerciseRepository.existsByNameAndCreatedBy(exercise.getName(), user)) {
-      log.error(String.format("There already exists a user exercise with the name \"%s\" created by the logged-in user.", exercise.getName()));
+      log.error("There already exists a user exercise with the name \"{}\" created by the provided user with ID {}.",
+          exercise.getName(), user.getId());
       throw new InvalidRequestException("You already created an exercise with this name.");
     }
 
@@ -66,7 +67,7 @@ public class ExerciseServiceImpl implements ExerciseService {
   public List<Exercise> getExercisesForUserByMuscleGroup(String firebaseId, MuscleGroup muscleGroup) throws DataAccessException {
     var user = getUser(firebaseId);
 
-    log.info(String.format("Fetching exercises for muscle group %s for user with ID %d.", muscleGroup, user.getId()));
+    log.info("Fetching exercises for muscle group \"{}\" for user with ID {}.", muscleGroup, user.getId());
     return exerciseRepository.findAllForUser(user, muscleGroup);
   }
 
@@ -74,7 +75,7 @@ public class ExerciseServiceImpl implements ExerciseService {
   public List<Exercise> getExercisesCreatedByUser(String firebaseId) throws DataAccessException {
     var user = getUser(firebaseId);
 
-    log.info(String.format("Fetching exercises created by user with ID %d.", user.getId()));
+    log.info("Fetching exercises created by user with ID {}.", user.getId());
     return exerciseRepository.findAllByUser(user);
   }
 
