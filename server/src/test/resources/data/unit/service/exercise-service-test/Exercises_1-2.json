@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Exercise 1",
+    "description": "Description of Exercise 1",
+    "muscleGroups": [
+      "CHEST"
+    ],
+    "loggingTypes": [
+      "TIME",
+      "REPS"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Exercise 2",
+    "description": "Description of Exercise 2",
+    "muscleGroups": [
+      "CHEST",
+      "SHOULDERS"
+    ],
+    "loggingTypes": [
+      "REPS"
+    ]
+  }
+]

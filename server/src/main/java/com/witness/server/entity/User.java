@@ -12,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -32,7 +33,8 @@ import org.hibernate.validator.constraints.Length;
 @RequiredArgsConstructor
 public class User {
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_generator")
+  @SequenceGenerator(name = "user_id_generator", sequenceName = "user_id_sequence")
   @Column(name = "id", nullable = false)
   @NotNull
   private Long id;
@@ -80,11 +82,9 @@ public class User {
     if (this == o) {
       return true;
     }
-
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-
     var user = (User) o;
     return Objects.equals(id, user.id) && Objects.equals(firebaseId, user.firebaseId)
         && Objects.equals(username, user.username) && Objects.equals(email, user.email) && role == user.role && sex == user.sex

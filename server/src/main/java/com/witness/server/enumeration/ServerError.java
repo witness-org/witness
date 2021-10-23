@@ -3,6 +3,9 @@ package com.witness.server.enumeration;
 import com.google.firebase.auth.AuthErrorCode;
 import java.util.Arrays;
 
+/**
+ * Represents an error returned by the REST API of this application. This error may be interpreted and mapped to localized error messages by clients.
+ */
 public enum ServerError {
 
   /**

@@ -9,7 +9,6 @@ import com.witness.server.mapper.UserMapper;
 import com.witness.server.unit.BaseUnitTest;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
-import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mapstruct.factory.Mappers;
 
@@ -18,14 +17,13 @@ class UserMapperTest extends BaseUnitTest {
   private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
   @ParameterizedTest
-  @JsonFileSources(parameters = {
+  @JsonFileSources(unwrapArrays = true, parameters = {
       @JsonFileSource(value = DATA_ROOT + "Users_1-2.json", type = User[].class),
-      @JsonFileSource(value = DATA_ROOT + "UserDtos_1-2.json", type = UserDto[].class, arrayToList = true)
+      @JsonFileSource(value = DATA_ROOT + "UserDtos_1-2.json", type = UserDto[].class)
   })
-  void entityToDto(User[] entities, List<UserDto> dtos) {
-    for (var i = 0; i < entities.length; i++) {
-      assertThat(mapper.entityToDto(entities[i])).isEqualTo(dtos.get(i));
-    }
+  void entityToDto(User entity, UserDto dto) {
+    assertThat(mapper.entityToDto(entity)).isEqualTo(dto);
+
   }
 
   @ParameterizedTest

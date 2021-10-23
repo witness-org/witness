@@ -49,7 +49,7 @@ class ExerciseDetailScreen extends StatelessWidget with LogMessagePreparer, Stri
               ),
             ],
           ),
-          title: Text(exercise.title),
+          title: Text(exercise.name),
         ),
         body: TabBarView(
           children: [

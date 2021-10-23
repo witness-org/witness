@@ -23,12 +23,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @SecuredValidatedRestController
 @RequestMapping("/greeting")
 public class GreetingController {
-  private final AtomicLong counter = new AtomicLong();
+  private final AtomicLong counter;
   private final GreetingMapper greetingMapper;
 
   @Autowired
   public GreetingController(GreetingMapper greetingMapper) {
     this.greetingMapper = greetingMapper;
+    this.counter = new AtomicLong();
   }
 
   @GetMapping

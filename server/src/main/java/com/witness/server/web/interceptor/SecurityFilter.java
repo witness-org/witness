@@ -19,10 +19,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * A custom {@link OncePerRequestFilter} that is registered before Spring's {@link UsernamePasswordAuthenticationFilter}. It serves the purpose of
+ * verifying the validity of a Bearer JWT (sent in the Authorization header of an HTTP request). This JWT represents a Firebase ID token that is then
+ * sent to the Firebase authentication server, which in turn replies with a response indicating the validity. Based on this response, the incoming
+ * request is processed further or rejected with an appropriate HTTP status code.
+ */
 @Component
 @Slf4j
 public class SecurityFilter extends OncePerRequestFilter {

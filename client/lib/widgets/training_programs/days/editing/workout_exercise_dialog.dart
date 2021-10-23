@@ -48,7 +48,7 @@ class WorkoutExerciseDialog extends StatelessWidget with LogMessagePreparer, Str
                       '${uiStrings.workoutExerciseDialog_header_numberPrefix} ${_exercise.number}',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    TextSegment(_exercise.exercise.title, prefix: ' (', suffix: ')'),
+                    TextSegment(_exercise.exercise.name, prefix: ' (', suffix: ')'),
                   ],
                 ),
                 if (_exercise.comment != null) Text(_exercise.comment!),

@@ -1,15 +1,13 @@
-import 'package:client/extensions/async_snapshot_extensions.dart';
+import 'package:client/extensions/enum_extensions.dart';
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/muscle_group.dart';
-import 'package:client/providers/exercise_provider.dart';
 import 'package:client/widgets/app_drawer.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/exercises/editing/edit_exercise_screen.dart';
 import 'package:client/widgets/exercises/exercises_by_muscle_group_screen.dart';
 import 'package:client/widgets/main_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 final _logger = getLogger('exercises_screen');
 
@@ -18,40 +16,24 @@ class ExercisesScreen extends StatelessWidget with LogMessagePreparer, StringLoc
 
   static const routeName = '/exercises';
 
-  Future<void> _fetchMuscleGroups(final BuildContext context) async {
-    _logger.v(prepare('_fetchMuscleGroups()'));
-    await Provider.of<ExerciseProvider>(context, listen: false).fetchMuscleGroups();
-  }
-
   Widget _buildMuscleGroupList(final BuildContext context) {
     _logger.v(prepare('_buildMuscleGroupList()'));
     return Expanded(
-      child: FutureBuilder<void>(
-        future: _fetchMuscleGroups(context),
-        builder: (final _, final snapshot) => snapshot.waitSwitch(
-          RefreshIndicator(
-            onRefresh: () => _fetchMuscleGroups(context),
-            child: Consumer<ExerciseProvider>(
-              builder: (final _, final exerciseData, final __) {
-                _logger.v(prepare('_buildMuscleGroupList.Consumer.builder()'));
-                return Scrollbar(
-                  isAlwaysShown: true,
-                  child: ListView.builder(
-                    itemCount: exerciseData.muscleGroups.length,
-                    itemBuilder: (final _, final index) {
-                      final muscleGroup = exerciseData.muscleGroups[index];
-                      return Column(
-                        children: [
-                          _ExerciseOverviewItem(muscleGroup),
-                          const Divider(),
-                        ],
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
+      child: Scrollbar(
+        isAlwaysShown: true,
+        child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: MuscleGroup.values.length,
+          itemBuilder: (final _, final index) {
+            final muscleGroup = MuscleGroup.values[index];
+            return Column(
+              children: [
+                _ExerciseOverviewItem(muscleGroup),
+                const Divider(),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -112,10 +94,10 @@ class _ExerciseOverviewItem extends StatelessWidget with LogMessagePreparer {
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
     return ListTile(
-      title: Text(_muscleGroup.name),
+      title: Text(_muscleGroup.toUiString()),
       leading: const CircleAvatar(
         backgroundColor: Colors.transparent,
-        foregroundImage: AssetImage('assets/images/flutter_logo.png'),
+        foregroundImage: AssetImage('assets/images/dumbbell.png'),
       ),
       onTap: () {
         Navigator.of(context).pushNamed(ExercisesByMuscleGroupScreen.routeName, arguments: _muscleGroup);

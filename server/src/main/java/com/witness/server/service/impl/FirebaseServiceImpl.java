@@ -40,16 +40,19 @@ public class FirebaseServiceImpl implements FirebaseService {
 
   @Override
   public FirebaseUser findUserById(String userId) throws DataAccessException {
+    log.info("Trying to find Firebase user with ID {}.", userId);
     return findUserInternal(() -> findUserByIdInternal(userId));
   }
 
   @Override
   public FirebaseUser findUserByEmail(String email) throws DataAccessException {
+    log.info("Trying to find Firebase user with email address \"{}\".", email);
     return findUserInternal(() -> findUserByEmailInternal(email));
   }
 
   @Override
   public FirebaseUser createUser(String email, String password) throws DataCreationException {
+    log.info("Creating new Firebase user with email address \"{}\".", email);
     var request = new UserRecord.CreateRequest()
         .setEmail(email)
         .setPassword(password);
@@ -58,6 +61,7 @@ public class FirebaseServiceImpl implements FirebaseService {
       var userRecord = FirebaseAuth.getInstance().createUser(request);
       return firebaseMapper.recordToUser(userRecord);
     } catch (FirebaseAuthException e) {
+      log.error("Creating Firebase user failed.", e);
       throw new DataCreationException("Could not create Firebase user: %s".formatted(e.getMessage()),
           ServerError.fromFirebaseError(e.getAuthErrorCode(), ServerError.COULD_NOT_CREATE_USER), e);
     }
@@ -65,6 +69,7 @@ public class FirebaseServiceImpl implements FirebaseService {
 
   @Override
   public Credentials verifyToken(String idToken, boolean checkTokenRevoked) throws AuthenticationException {
+    log.info("Verifying token.");
     try {
       var decodedToken = firebaseAuth.verifyIdToken(idToken, checkTokenRevoked);
       return new Credentials(decodedToken, idToken);
@@ -72,15 +77,18 @@ public class FirebaseServiceImpl implements FirebaseService {
       log.warn("The current request does not provide a token to validate.");
       return null;
     } catch (FirebaseAuthException e) {
+      log.error("Verifying token failed.", e);
       throw new AuthenticationException(e.getMessage(), ServerError.fromFirebaseError(e.getAuthErrorCode()), e);
     }
   }
 
   @Override
   public void revokeRefreshTokens(String userId) throws DataModificationException {
+    log.info("Revoking refresh tokens of user with user ID {}.", userId);
     try {
       FirebaseAuth.getInstance().revokeRefreshTokens(userId);
     } catch (FirebaseAuthException e) {
+      log.error("Revoking refresh tokens failed.", e);
       throw new DataModificationException("Could not revoke token of user %s".formatted(userId),
           ServerError.fromFirebaseError(e.getAuthErrorCode()),
           e);
@@ -89,16 +97,19 @@ public class FirebaseServiceImpl implements FirebaseService {
 
   @Override
   public void addRole(String userId, Role role) throws DataNotFoundException, DataModificationException {
+    log.info("Adding role \"{}\" to user with user ID {}.", role, userId);
     setOrAddRole(userId, role, false);
   }
 
   @Override
   public void setRole(String userId, Role role) throws DataModificationException, DataNotFoundException {
+    log.info("Setting role for user with user ID {}: \"{}\".", userId, role);
     setOrAddRole(userId, role, true);
   }
 
   @Override
   public void removeRole(String userId, Role role) throws DataModificationException, DataNotFoundException {
+    log.info("Removing role \"{}\" from user with user ID {}", role, userId);
     try {
       var user = findUserByIdInternal(userId);
       var customClaims = new HashMap<>(user.getCustomClaims());
@@ -106,7 +117,7 @@ public class FirebaseServiceImpl implements FirebaseService {
       firebaseAuth.setCustomUserClaims(userId, customClaims);
       revokeRefreshTokens(userId);
     } catch (FirebaseAuthException e) {
-      log.error("Could not remove role \"%s\" from user \"%s\"".formatted(role, userId), e);
+      log.error("Removing role \"%s\" from user with ID %s failed.".formatted(role, userId), e);
       if (e.getAuthErrorCode() == AuthErrorCode.USER_NOT_FOUND) {
         throw new DataNotFoundException(e.getMessage(), ServerError.fromFirebaseError(e.getAuthErrorCode()), e);
       } else {
@@ -122,7 +133,7 @@ public class FirebaseServiceImpl implements FirebaseService {
       firebaseAuth.setCustomUserClaims(userId, Collections.emptyMap());
       revokeRefreshTokens(userId);
     } catch (FirebaseAuthException e) {
-      log.error("Could not clear roles of user \"%s\"".formatted(userId), e);
+      log.error("Clearing roles of user with ID %s failed.".formatted(userId), e);
       if (e.getAuthErrorCode() == AuthErrorCode.USER_NOT_FOUND) {
         throw new DataNotFoundException(e.getMessage(), ServerError.fromFirebaseError(e.getAuthErrorCode()), e);
       } else {
@@ -152,7 +163,7 @@ public class FirebaseServiceImpl implements FirebaseService {
       firebaseAuth.setCustomUserClaims(userId, customClaims);
       revokeRefreshTokens(userId);
     } catch (FirebaseAuthException e) {
-      log.error("Could not %s role \"%s\" for user \"%s\"".formatted(set ? "set" : "add", role, userId), e);
+      log.error("Could not %s role \"%s\" for user \"%s\".".formatted(set ? "set" : "add", role, userId), e);
       if (e.getAuthErrorCode() == AuthErrorCode.USER_NOT_FOUND) {
         throw new DataNotFoundException(e.getMessage(), ServerError.fromFirebaseError(e.getAuthErrorCode()), e);
       } else {
@@ -167,9 +178,11 @@ public class FirebaseServiceImpl implements FirebaseService {
       return firebaseMapper.recordToUser(userRecord);
     } catch (FirebaseAuthException e) {
       if (e.getAuthErrorCode() == AuthErrorCode.USER_NOT_FOUND) {
+        log.error("The requested user was not found.");
         throw new DataNotFoundException("Firebase user not found: %s".formatted(e.getMessage()),
             ServerError.fromFirebaseError(e.getAuthErrorCode()), e);
       } else {
+        log.error("An unexpected error occurred while looking up user.");
         throw new DataAccessException("Unexpected error while looking up user",
             ServerError.fromFirebaseError(e.getAuthErrorCode(), ServerError.LOOKUP_FAILURE), e);
       }

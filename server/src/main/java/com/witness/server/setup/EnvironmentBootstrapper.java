@@ -1,9 +1,13 @@
 package com.witness.server.setup;
 
+import com.witness.server.entity.Exercise;
 import com.witness.server.entity.User;
+import com.witness.server.enumeration.LoggingType;
+import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.enumeration.Role;
 import com.witness.server.enumeration.Sex;
 import com.witness.server.repository.UserRepository;
+import com.witness.server.service.ExerciseService;
 import com.witness.server.service.FirebaseService;
 import com.witness.server.service.UserService;
 import com.witness.server.util.ThrowingConsumer;
@@ -20,9 +24,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
- * Handles environment initialization which consists of local user database preparation as well as synchronization with and adaptation of user
- * records on the Firebase authentication server. Typical tasks are application of roles to user records or linking local user records with
- * Firebase user records by means of the Firebase ID.
+ * Handles environment initialization which consists of local user and exercise database preparation as well as synchronization with and adaptation
+ * of user records on the Firebase authentication server. Typical tasks are application of roles to user records, linking local user records with
+ * Firebase user records by means of the Firebase ID or simply inserting some initial exercises, respectively.
  */
 @Profile("setup")
 @Component
@@ -30,18 +34,20 @@ import org.springframework.stereotype.Component;
 public class EnvironmentBootstrapper {
   private final SetupArguments setupArguments;
   private final UserService userService;
+  private final ExerciseService exerciseService;
   private final FirebaseService firebaseService;
   private final UserRepository userRepository;
   private final Random random;
 
   @Autowired
-  public EnvironmentBootstrapper(SetupArguments setupArguments, UserService userService, FirebaseService firebaseService,
-                                 UserRepository userRepository) {
+  public EnvironmentBootstrapper(SetupArguments setupArguments, UserService userService, ExerciseService exerciseService,
+                                 FirebaseService firebaseService, UserRepository userRepository) {
+    this.exerciseService = exerciseService;
     this.firebaseService = firebaseService;
-    this.random = new Random();
     this.setupArguments = setupArguments;
     this.userService = userService;
     this.userRepository = userRepository;
+    this.random = new Random();
   }
 
   @PostConstruct
@@ -53,6 +59,15 @@ public class EnvironmentBootstrapper {
       return;
     }
 
+    setUpUsers();
+    setUpExercises();
+
+    log.info("Finished environment initialization");
+  }
+
+  private void setUpUsers() {
+    log.info("Setting up users...");
+
     var createLocalAndFirebase = setupArguments.getCreateLocalAndFirebase();
     if (createLocalAndFirebase != null) {
       forEachRoleAndRegular(role ->
@@ -60,7 +75,10 @@ public class EnvironmentBootstrapper {
               role,
               "Step 1/3, role \"{}\": No users to create locally and on the Firebase server",
               "Step 1/3, role \"{}\": Creating {} users locally and on the Firebase server",
-              setupUser -> getDummyUser(setupUser.getEmail(), role, null, false),
+              setupUser -> getDummyUser(setupUser.getEmail(),
+                  role,
+                  null,
+                  false),
               (userToCreate, setupUser) -> createUserLocallyAndInFirebase(userToCreate, setupUser.getPassword())));
     }
 
@@ -71,7 +89,10 @@ public class EnvironmentBootstrapper {
               role,
               "Step 2/3, role \"{}\": No users to create locally (link with Firebase)",
               "Step 2/3, role \"{}\": Creating {} users locally (link with Firebase)",
-              setupUser -> getDummyUser(setupUser.getEmail(), role, setupUser.getFirebaseId(), true),
+              setupUser -> getDummyUser(setupUser.getEmail(),
+                  role,
+                  setupUser.getFirebaseId(),
+                  true),
               (userToCreate, setupUser) -> createUserLocallyAndLinkWithFirebase(userToCreate)));
     }
 
@@ -82,11 +103,26 @@ public class EnvironmentBootstrapper {
               role,
               "Step 3/3, role \"{}\": No users to create locally (link with Firebase and set Firebase role)",
               "Step 3/3, \"{}\": Creating {} users locally (link with Firebase and set Firebase role)",
-              setupUser -> getDummyUser(setupUser.getEmail(), role, setupUser.getFirebaseId(), true),
+              setupUser -> getDummyUser(setupUser.getEmail(),
+                  role,
+                  setupUser.getFirebaseId(),
+                  true),
               (userToCreate, setupUser) -> createUserLocallyAndLinkWithFirebaseAndSetFirebaseRole(userToCreate)));
     }
+  }
 
-    log.info("Finished environment initialization");
+  private void setUpExercises() {
+    log.info("Setting up exercises...");
+
+    var createExercises = setupArguments.getCreateExercises();
+    if (createExercises != null) {
+      createExercises(createExercises.getExercises(),
+          setupExercise -> getDummyExercise(setupExercise.getName(),
+              setupExercise.getDescription(),
+              setupExercise.getMuscleGroups(),
+              setupExercise.getLoggingTypes()),
+          exerciseToCreate -> tryCreateExercise(exerciseToCreate, exerciseService::createInitialExercise));
+    }
   }
 
   private <T extends SetupArguments.SetupUser> void createUsers(List<T> users, Role role, String emptyMessage, String creatingMessage,
@@ -103,6 +139,22 @@ public class EnvironmentBootstrapper {
       log.debug("  {}/{}: user \"{}\"", i + 1, users.size(), user.getEmail());
       var userToCreate = dummyUserGetter.apply(user);
       userCreator.accept(userToCreate, user);
+    }
+  }
+
+  private void createExercises(List<SetupArguments.SetupExercise> exercises, Function<SetupArguments.SetupExercise, Exercise> dummyExerciseGetter,
+                               Consumer<Exercise> exerciseCreator) {
+    if (exercises == null || exercises.isEmpty()) {
+      log.info("No exercises to create");
+      return;
+    }
+
+    log.info("Creating {} exercises", exercises.size());
+    for (var i = 0; i < exercises.size(); i++) {
+      var exercise = exercises.get(i);
+      log.debug("  {}/{}: exercise \"{}\"", i + 1, exercises.size(), exercise.getName());
+      var exerciseToCreate = dummyExerciseGetter.apply(exercise);
+      exerciseCreator.accept(exerciseToCreate);
     }
   }
 
@@ -136,11 +188,28 @@ public class EnvironmentBootstrapper {
         .build();
   }
 
+  private Exercise getDummyExercise(String name, String description, List<MuscleGroup> muscleGroups, List<LoggingType> loggingTypes) {
+    return Exercise.builder()
+        .name(name)
+        .description(description)
+        .muscleGroups(muscleGroups)
+        .loggingTypes(loggingTypes)
+        .build();
+  }
+
   private void tryCreateUser(User user, ThrowingConsumer<User, Exception> userCreator) {
     try {
       userCreator.accept(user);
     } catch (Exception e) {
       log.warn("  Could not create user \"{}\": {}", user.getEmail(), e.getMessage());
+    }
+  }
+
+  private void tryCreateExercise(Exercise exercise, ThrowingConsumer<Exercise, Exception> exerciseCreator) {
+    try {
+      exerciseCreator.accept(exercise);
+    } catch (Exception e) {
+      log.warn("  Could not create exercise \"{}\"", exercise.getName());
     }
   }
 
