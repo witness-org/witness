@@ -52,6 +52,10 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
       _showErrorDialog(error);
     }
 
+    if (!mounted) {
+      return;
+    }
+
     setState(() {
       _isLoading = false;
     });

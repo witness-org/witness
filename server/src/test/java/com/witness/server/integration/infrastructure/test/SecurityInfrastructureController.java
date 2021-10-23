@@ -22,7 +22,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/security-infrastructure")
 @Profile("integration-test")
 public class SecurityInfrastructureController {
-  private final AtomicLong counter = new AtomicLong();
+  private final AtomicLong counter;
+
+  public SecurityInfrastructureController() {
+    counter = new AtomicLong();
+  }
 
   @GetMapping
   public MessageDto message(@RequestParam(value = "name", defaultValue = "World") @Size(min = 3) @NotBlank String name) {

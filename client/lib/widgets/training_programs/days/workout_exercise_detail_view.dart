@@ -1,5 +1,5 @@
 import 'package:client/extensions/enum_extensions.dart';
-import 'package:client/models/exercises/exercise_attribute.dart';
+import 'package:client/models/exercises/logging_type.dart';
 import 'package:client/models/training_programs/exercise_set.dart';
 import 'package:client/models/training_programs/workout_exercise.dart';
 import 'package:client/widgets/common/string_localizer.dart';
@@ -12,7 +12,7 @@ class WorkoutExerciseDetailView extends StatelessWidget with StringLocalizer {
 
   final WorkoutExercise _workoutExercise;
 
-  Widget _buildAttributeValues(final BuildContext context, final Map<ExerciseAttribute, Object> attributes) {
+  Widget _buildAttributeValues(final BuildContext context, final Map<LoggingType, Object> attributes) {
     final segments = <TextSegment>[];
     final attributeList = attributes.entries.toList();
     for (int i = 0; i < attributeList.length; i++) {
@@ -35,7 +35,7 @@ class WorkoutExerciseDetailView extends StatelessWidget with StringLocalizer {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('${uiStrings.workoutExerciseDetailView_setNumber_prefix} ${set.number}: '),
-        _buildAttributeValues(context, set.attributes),
+        _buildAttributeValues(context, set.loggingTypes),
       ],
     );
   }
@@ -65,7 +65,7 @@ class WorkoutExerciseDetailView extends StatelessWidget with StringLocalizer {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _workoutExercise.exercise.title,
+                  _workoutExercise.exercise.name,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),

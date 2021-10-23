@@ -40,9 +40,53 @@
   "@errorScreen_prefix": {
     "description": "Text to display before error description in `ErrorScreen`."
   },
-  "exerciseByMuscleGroupScreen_createNew_tooltip": "Create New Exercise",
-  "@exerciseByMuscleGroupScreen_createNew_tooltip": {
-    "description": "Tooltip of icon that allows to add a new exercise in `ExercisesByMuscleGroupScreen`."
+  "createExerciseForm_body_heading_name": "Name",
+  "@createExerciseForm_body_heading_name": {
+    "description": "Text for heading above input field for exercise name."
+  },
+  "createExerciseForm_body_nameInput_placeholder": "e.g. Barbell Bench Press",
+  "@createExerciseForm_body_nameInput_placeholder": {
+    "description": "Placeholder for input field for exercise name."
+  },
+  "createExerciseForm_body_nameInput_emptyErrorMessage": "Please enter a name.",
+  "@createExerciseForm_body_nameInput_emptyErrorMessage": {
+    "description": "Error message that is displayed if the provided exercise name string is empty."
+  },
+  "createExerciseForm_body_heading_description": "Description",
+  "@createExerciseForm_body_heading_description": {
+    "description": "Text for heading above input field for exercise description."
+  },
+  "createExerciseForm_body_descriptionInput_placeholder": "You can optionally enter a description.",
+  "@createExerciseForm_body_descriptionInput_placeholder": {
+    "description": "Placeholder for input field for exercise description."
+  },
+  "createExerciseForm_body_heading_muscleGroups": "Muscle Groups",
+  "@createExerciseForm_body_heading_muscleGroups": {
+    "description": "Text for heading above choice chips for muscle groups targeted by exercise."
+  },
+  "createExerciseForm_body_heading_loggingTypes": "Logging Types",
+  "@createExerciseForm_body_heading_loggingTypes": {
+    "description": "Text for heading above choice chips for logging types for exercise."
+  },
+  "createExerciseForm_body_save_buttonText": "Save",
+  "@createExerciseForm_body_save_buttonText": {
+    "description": "Text for button that submits form for creating new exercise."
+  },
+  "createExerciseForm_body_errorMessage_muscleGroups_loggingTypes": "Please select at least one muscle group and one logging type.",
+  "@createExerciseForm_body_errorMessage_muscleGroups_loggingTypes": {
+    "description": "Error message that is displayed if no muscle group and no logging type is selected."
+  },
+  "createExerciseForm_body_errorMessage_muscleGroups": "Please select at least one muscle group.",
+  "@createExerciseForm_body_errorMessage_muscleGroups": {
+    "description": "Error message that is displayed if no muscle group is selected."
+  },
+  "createExerciseForm_body_errorMessage_loggingTypes": "Please select at least one logging type.",
+  "@createExerciseForm_body_errorMessage_loggingTypes": {
+    "description": "Error message that is displayed if no logging type is selected."
+  },
+  "createExerciseForm_body_errorMessage_requestFailedDefault": "Failed to create exercise.",
+  "@createExerciseForm_body_errorMessage_requestFailedDefault": {
+    "description": "Text to be displayed if the exercise creation request failed and no error message is provided."
   },
   "exerciseByMuscleGroupScreen_header_prefix": "Muscle Group",
   "@exerciseByMuscleGroupScreen_header_prefix": {
@@ -76,13 +120,17 @@
   "@exerciseHistory_placeholder_suffix": {
     "description": "Text to display after exercise name in `ExerciseHistory` (just a temporary placeholder)."
   },
-  "exerciseInformation_body_heading_attributes": "Attributes",
-  "@exerciseInformation_body_heading_attributes": {
-    "description": "Text of the heading related to the attributes in `ExerciseInformation`."
+  "exerciseInformation_body_heading_loggingTypes": "Logging",
+  "@exerciseInformation_body_heading_loggingTypes": {
+    "description": "Text of the heading related to the logging types in `ExerciseInformation`."
   },
   "exerciseInformation_body_heading_description": "Description",
   "@exerciseInformation_body_heading_description": {
     "description": "Text of the heading related to the exercise description in `ExerciseInformation`."
+  },
+  "exerciseInformation_body_description_empty": "—",
+  "@exerciseInformation_body_description_empty": {
+    "description": "Text that is displayed if there is no description for the given exercise."
   },
   "exerciseInformation_body_heading_muscleGroups": "Muscle Groups",
   "@exerciseInformation_body_heading_muscleGroups": {

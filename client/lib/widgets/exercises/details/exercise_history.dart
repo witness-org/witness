@@ -16,7 +16,7 @@ class ExerciseHistory extends StatelessWidget with LogMessagePreparer, StringLoc
     _logger.v(prepare('build()'));
     final uiStrings = getLocalizedStrings(context);
     return Center(
-      child: Text('${_exercise.title} ${uiStrings.exerciseHistory_placeholder_suffix}'),
+      child: Text('${_exercise.name} ${uiStrings.exerciseHistory_placeholder_suffix}'),
     );
   }
 }

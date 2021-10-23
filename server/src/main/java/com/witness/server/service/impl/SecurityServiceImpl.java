@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 @Service
+@Slf4j
 public class SecurityServiceImpl implements SecurityService {
   private static final String BEARER_PREFIX = "Bearer ";
   private final TimeService timeService;
@@ -36,6 +38,7 @@ public class SecurityServiceImpl implements SecurityService {
 
   @Override
   public FirebaseUser getCurrentUser() {
+    log.info("Fetching currently logged-in user.");
     FirebaseUser firebaseUserPrincipal = null;
 
     var securityContext = SecurityContextHolder.getContext();
@@ -49,12 +52,14 @@ public class SecurityServiceImpl implements SecurityService {
 
   @Override
   public Credentials getCurrentCredentials() {
+    log.info("Fetching credentials of currently logged-in user.");
     var securityContext = SecurityContextHolder.getContext();
     return (Credentials) securityContext.getAuthentication().getCredentials();
   }
 
   @Override
   public String getBearerToken(HttpServletRequest request) {
+    log.info("Extracting bearer token from request.");
     String bearerToken = null;
 
     var authorization = request.getHeader("Authorization");

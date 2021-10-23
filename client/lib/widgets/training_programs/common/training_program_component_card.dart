@@ -12,8 +12,8 @@ class TrainingProgramComponentCard extends StatelessWidget with StringLocalizer 
 
   final String _headerText;
   final List<String?> _bodyTextLines;
-  final void Function(BuildContext, StringLocalizations) detailsAction;
-  final void Function(BuildContext, StringLocalizations) deleteAction;
+  final void Function(BuildContext context, StringLocalizations localizations) detailsAction;
+  final void Function(BuildContext context, StringLocalizations localizations) deleteAction;
 
   void _openDetailsScreen(final BuildContext context, final StringLocalizations uiStrings) {
     detailsAction(context, uiStrings);

@@ -1,5 +1,5 @@
 import 'package:client/extensions/enum_extensions.dart';
-import 'package:client/models/exercises/exercise_attribute.dart';
+import 'package:client/models/exercises/logging_type.dart';
 import 'package:client/models/training_programs/exercise_set.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ class WorkoutExerciseSetView extends StatelessWidget with StringLocalizer {
 
   final ExerciseSet _set;
 
-  Widget _buildAttributeValues(final BuildContext context, final Map<ExerciseAttribute, Object> attributes) {
+  Widget _buildAttributeValues(final BuildContext context, final Map<LoggingType, Object> attributes) {
     return Column(
       children: attributes.entries
           .map(
@@ -39,7 +39,7 @@ class WorkoutExerciseSetView extends StatelessWidget with StringLocalizer {
               '${uiStrings.workoutExerciseSetView_header_numberPrefix} ${_set.number}: ',
               style: Theme.of(context).textTheme.subtitle1?.merge(const TextStyle(fontWeight: FontWeight.bold)),
             ),
-            _buildAttributeValues(context, _set.attributes),
+            _buildAttributeValues(context, _set.loggingTypes),
             const Divider(),
           ],
         ),

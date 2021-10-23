@@ -1,0 +1,11 @@
+{
+  "name": "UserExercise 2",
+  "description": "Description of UserExercise 2",
+  "muscleGroups": [
+    "CHEST"
+  ],
+  "loggingTypes": [
+    "TIME"
+  ],
+  "createdBy": null
+}

@@ -42,7 +42,7 @@ public interface SecurityService {
   String getBearerToken(HttpServletRequest request);
 
   /**
-   * Determines the roles of from the granted authorities of a {@link Authentication} object.
+   * Determines the roles of the granted authorities of a {@link Authentication} object.
    *
    * @param authentication the {@link Authentication} object of the {@link SecurityContext} of the current request. May be {@code null}.
    * @return an optional list of {@link Role}s that represents the roles of the user who is authenticated for the current request. A value is present

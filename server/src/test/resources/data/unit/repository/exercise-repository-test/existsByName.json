@@ -1,0 +1,46 @@
+[
+  {
+    "exercises": [],
+    "queryName": "nonExistingName",
+    "expectedResult": false
+  },
+  {
+    "exercises": [
+      {
+        "name": "existingName1",
+        "muscleGroups": [
+          "CHEST"
+        ],
+        "loggingTypes": [
+          "REPS"
+        ]
+      },
+      {
+        "name": "existingName2",
+        "muscleGroups": [
+          "SHOULDERS"
+        ],
+        "loggingTypes": [
+          "TIME"
+        ]
+      }
+    ],
+    "queryName": "existingName1",
+    "expectedResult": true
+  },
+  {
+    "exercises": [
+      {
+        "name": "existingName",
+        "muscleGroups": [
+          "CHEST"
+        ],
+        "loggingTypes": [
+          "REPS"
+        ]
+      }
+    ],
+    "queryName": "nonExistingName",
+    "expectedResult": false
+  }
+]

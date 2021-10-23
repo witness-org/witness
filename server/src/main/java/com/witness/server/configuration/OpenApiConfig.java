@@ -15,6 +15,12 @@ import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Exposes beans that are related to the configuration of springdoc, the plugin that generates an OpenAPI 3.0 specification of the
+ * rest API exposed by this application which is consumed by Swagger, based on special annotations.
+ *
+ * @see io.swagger.v3.oas.annotations
+ */
 @Configuration
 public class OpenApiConfig {
   public static final String SECURITY_SCHEME_BEARER_TOKEN = "bearerAuth";

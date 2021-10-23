@@ -6,6 +6,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
+/**
+ * POJO representation of {@code security} section in application properties.
+ */
 @Component
 @ConfigurationProperties(prefix = "security")
 @Data

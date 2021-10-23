@@ -16,7 +16,7 @@ class ExerciseStatistics extends StatelessWidget with LogMessagePreparer, String
     _logger.v(prepare('build()'));
     final uiStrings = getLocalizedStrings(context);
     return Center(
-      child: Text('${_exercise.title} ${uiStrings.exerciseStatistics_placeholder_suffix}'),
+      child: Text('${_exercise.name} ${uiStrings.exerciseStatistics_placeholder_suffix}'),
     );
   }
 }
