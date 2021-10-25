@@ -28,6 +28,10 @@ public class TimeServiceImpl implements TimeService {
 
   @Override
   public ZonedDateTime getCurrentTime(ZoneId timeZone) {
+    if (timeZone == null) {
+      throw new IllegalArgumentException("timeZone must not be null");
+    }
+
     return Instant.now().atZone(timeZone);
   }
 
