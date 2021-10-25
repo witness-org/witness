@@ -1,8 +1,10 @@
 package com.witness.server.integration.web;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,13 +30,13 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import org.mockito.Answers;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -49,7 +51,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -57,8 +61,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD) // TODO proper reset of database (see GitLab issue #51)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest {
-  private static final ZoneId UTC_TIMEZONE = ZoneId.of("UTC");
-
   @LocalServerPort
   private int port;
 
@@ -77,7 +79,7 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
   private FirebaseApp firebaseApp;
 
   @MockBean
-  private FirebaseService firebaseService;
+  protected FirebaseService firebaseService;
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -107,8 +109,7 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
     return exchange(authMode, url, HttpMethod.GET, queryParams, clazz);
   }
 
-  protected <T> ResponseEntity<T> exchange(TestAuthentication authMode, String url, HttpMethod method,
-                                           Class<T> responseType) {
+  protected <T> ResponseEntity<T> exchange(TestAuthentication authMode, String url, HttpMethod method, Class<T> responseType) {
     return exchange(authMode, url, method, null, null, responseType);
   }
 
@@ -125,17 +126,17 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
   @SneakyThrows({AuthenticationException.class, IOException.class})
   protected <T, U> ResponseEntity<T> exchange(TestAuthentication authMode, String url, HttpMethod method,
                                               MultiValueMap<String, String> queryParams, U requestBody, Class<T> responseType) {
-
     doAnswer(this::stubAuthenticationError)
         .when(securityService)
-        .replyAuthenticationError(ArgumentMatchers.any(HttpServletResponse.class), ArgumentMatchers.any(AuthenticationException.class));
+        .replyAuthenticationError(any(HttpServletResponse.class), any(AuthenticationException.class));
 
     if (authMode == TestAuthentication.NONE) {
       when(firebaseService.verifyToken(nullable(String.class), anyBoolean())).thenReturn(null);
     } else {
-      var token = Mockito.mock(FirebaseToken.class);
+      var token = mock(FirebaseToken.class);
       when(token.getClaims()).thenReturn(getClaimsForAuthMode(authMode));
-      when(firebaseService.verifyToken(nullable(String.class), anyBoolean())).thenReturn(new Credentials(token, "testToken"));
+      when(securityService.extractRoles(any(Authentication.class))).thenReturn(getRolesForAuthMode(authMode));
+      when(firebaseService.verifyToken(nullable(String.class), anyBoolean())).thenReturn(new Credentials(token, "integrationTestToken"));
     }
 
     var headers = new HttpHeaders();
@@ -147,6 +148,12 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
     var requestEntity = new HttpEntity<>(requestBody, headers);
 
     return restTemplate.exchange(uriBuilder.toUriString(), method, requestEntity, responseType);
+  }
+
+  protected static <K, V> MultiValueMap<K, V> toMultiValueMap(Map<K, V> map) {
+    var multiValueMap = new LinkedMultiValueMap<K, V>();
+    map.forEach((key, value) -> multiValueMap.put(key, Collections.singletonList(value)));
+    return multiValueMap;
   }
 
   @SneakyThrows(DataAccessException.class)
@@ -184,7 +191,7 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
     errorObject.put("error", errorStatus);
     errorObject.put("status", errorStatus.value());
     errorObject.put("errorKey", exception.getErrorKey());
-    errorObject.put("timestamp", Instant.now().atZone(UTC_TIMEZONE));
+    errorObject.put("timestamp", Instant.now().atZone(ZoneId.of("UTC")));
 
     var response = invocation.getArgument(0, HttpServletResponse.class);
 
@@ -208,17 +215,24 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
     return Map.of(roleClaim, true);
   }
 
+  private Optional<List<Role>> getRolesForAuthMode(TestAuthentication authMode) {
+    return switch (authMode) {
+      case ADMIN -> Optional.of(Collections.singletonList(Role.ADMIN));
+      case PREMIUM -> Optional.of(Collections.singletonList(Role.PREMIUM));
+      case REGULAR -> Optional.of(Collections.emptyList());
+      case NONE -> Optional.empty();
+    };
+  }
+
   private static FirebaseUser getDummyFirebaseUser() {
-    var result = new FirebaseUser();
-
-    result.setName("TestUser");
-    result.setEmail("user@test.com");
-    result.setUid("TestUserFirebaseId");
-    result.setEmailVerified(true);
-    result.setIssuer("TestUserIssuer");
-    result.setPicture("TestUserPicture");
-
-    return result;
+    return FirebaseUser.builder()
+        .name("TestUser")
+        .email("user@test.com")
+        .uid("TestUserFirebaseId")
+        .isEmailVerified(true)
+        .issuer("TestUserIssuer")
+        .picture("TestUserPicture")
+        .build();
   }
 
   private static User getDummyUser(FirebaseUser firebaseUser, Role role) {

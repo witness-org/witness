@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,8 +96,9 @@ public class ExerciseController {
               description = "The exercises could not be fetched because the logged-in user could not be found in the database.")
       }
   )
-  public List<ExerciseDto> getAllForUserByMuscleGroup(@RequestParam(name = "muscleGroup")
-                                                      @Parameter(description = "The muscle group that should be trained.") MuscleGroup muscleGroup)
+  public List<ExerciseDto> getAllForUserByMuscleGroup(
+      @RequestParam(name = "muscleGroup") @NotNull
+      @Parameter(description = "The muscle group that should be trained.", example = "CHEST") MuscleGroup muscleGroup)
       throws DataAccessException {
     var currentUser = securityService.getCurrentUser();
     var result = exerciseService.getExercisesForUserByMuscleGroup(currentUser.getUid(), muscleGroup);

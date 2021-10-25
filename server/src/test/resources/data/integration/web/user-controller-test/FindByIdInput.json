@@ -1,0 +1,68 @@
+{
+  "persistedUsers": [
+    {
+      "id": 1,
+      "firebaseId": "aXusKTIbLYSKc8wnQJeOz8c3JsT2",
+      "username": "user123",
+      "email": "user123@example.com",
+      "role": "PREMIUM",
+      "sex": "FEMALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 183
+    },
+    {
+      "id": 2,
+      "firebaseId": "hZDVd4U6fWVQVRxQzCExsch6nXC3",
+      "username": "user1234",
+      "email": "user1234@example.com",
+      "role": "PREMIUM",
+      "sex": "FEMALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 183
+    },
+    {
+      "id": 3,
+      "firebaseId": "rxJkHVmRtMewTcFRX9CCSuaKl4o2",
+      "username": "user12345",
+      "email": "user12345@example.com",
+      "role": null,
+      "sex": "FEMALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 183
+    },
+    {
+      "id": 4,
+      "firebaseId": "kIFqfDZEdkMhn1YbOnowyZbRwF93",
+      "username": "user123456",
+      "email": "user123456@example.com",
+      "role": "ADMIN",
+      "sex": "FEMALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 183
+    }
+  ],
+  "lookupId": 3,
+  "firebaseUser": {
+    "uid": "rxJkHVmRtMewTcFRX9CCSuaKl4o2",
+    "name": "user12345",
+    "email": "user12345@example.com",
+    "emailVerified": true,
+    "issuer": "issuer",
+    "picture": "pictureUrl"
+  },
+  "expectedDto": {
+    "id": 3,
+    "firebaseId": "rxJkHVmRtMewTcFRX9CCSuaKl4o2",
+    "username": "user12345",
+    "email": "user12345@example.com",
+    "role": null,
+    "sex": "FEMALE",
+    "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+    "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+    "height": 183
+  }
+}
