@@ -1,6 +1,5 @@
 package com.witness.server.integration.infrastructure.test;
 
-import com.witness.server.dto.GreetingDto;
 import com.witness.server.web.meta.PublicApi;
 import com.witness.server.web.meta.RequiresAdmin;
 import com.witness.server.web.meta.RequiresPremium;
@@ -58,7 +57,7 @@ public class SecurityInfrastructureController {
   }
 
   @PostMapping
-  public GreetingDto createGreeting(@Valid @RequestBody GreetingDto dto) {
+  public MessageDto createGreeting(@Valid @RequestBody MessageDto dto) {
     return dto;
   }
 
