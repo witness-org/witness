@@ -1,3 +1,6 @@
+date-times:
+  zone-id: "Asia/Kolkata"
+
 logging:
   config: "./logback-test.xml"
   directory: "./logs/test"

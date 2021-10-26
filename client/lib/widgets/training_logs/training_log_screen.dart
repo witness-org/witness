@@ -4,7 +4,6 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/widgets/app_drawer.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/main_app_bar.dart';
-import 'package:client/widgets/training_logs/api_consumer_showcase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -50,13 +49,8 @@ class TrainingLogScreen extends StatelessWidget with LogMessagePreparer, StringL
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Center(
-            child: Text('${uiStrings.trainingLogScreen_placeholder_prefix} $_workoutDay'),
-          ),
-          const ApiConsumerShowcase(),
-        ],
+      body: Center(
+        child: Text('${uiStrings.trainingLogScreen_placeholder_prefix} $_workoutDay'),
       ),
     );
   }

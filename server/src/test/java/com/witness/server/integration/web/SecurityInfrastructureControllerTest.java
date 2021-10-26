@@ -3,7 +3,6 @@ package com.witness.server.integration.web;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.witness.server.integration.infrastructure.test.MessageDto;
-import java.util.Collections;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,8 +17,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.LinkedMultiValueMap;
 
 class SecurityInfrastructureControllerTest extends BaseControllerIntegrationTest {
   @Override
@@ -41,8 +38,7 @@ class SecurityInfrastructureControllerTest extends BaseControllerIntegrationTest
 
   @Test
   void message_validMessage_returnMessageContainingName() {
-    var params = new LinkedMultiValueMap<String, String>();
-    params.put("name", Collections.singletonList("user"));
+    var params = toMultiValueMap(Map.of("name", "user"));
     var response = exchange(TestAuthentication.REGULAR, requestUrl(), HttpMethod.GET, params, MessageDto.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -52,7 +48,7 @@ class SecurityInfrastructureControllerTest extends BaseControllerIntegrationTest
 
   @Test
   void message_invalidMessage_return400() {
-    var params = CollectionUtils.toMultiValueMap(Map.of("name", Collections.singletonList("u")));
+    var params = toMultiValueMap(Map.of("name", "u"));
     var response = exchange(TestAuthentication.REGULAR, requestUrl(), HttpMethod.GET, params, MessageDto.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

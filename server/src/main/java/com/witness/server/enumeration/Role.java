@@ -20,7 +20,7 @@ public enum Role {
    * Creates a {@link Role} from a {@link Role#identifier()} string.
    *
    * @param identifier the identifier
-   * @return a {@link Role} that corresponds to the identifier {@code identifier}
+   * @return a {@link Role} that corresponds to the identifier {@code identifier} or {@code null} if no such member exists.
    */
   public static Role fromIdentifier(String identifier) {
     return Arrays.stream(values())

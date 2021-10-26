@@ -45,7 +45,6 @@ public interface UserService {
    */
   User setRole(Long userId, Role role) throws DataAccessException;
 
-
   /**
    * Sets a user's role to exactly one role, in the database and on the Firebase server. Clients need to re-authenticate (login again) since
    * this operation revokes all refresh tokens associated with the corresponding user.
@@ -79,7 +78,6 @@ public interface UserService {
    */
   User findById(Long userId) throws DataAccessException;
 
-
   /**
    * Finds a user by its Firebase identifier.
    *
@@ -89,7 +87,6 @@ public interface UserService {
    * @throws DataAccessException   if an error occurs during user lookup, e.g. inconsistent data between database and Firebase
    */
   User findByFirebaseId(String firebaseId) throws DataAccessException;
-
 
   /**
    * Finds a user by its email.

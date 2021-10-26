@@ -107,6 +107,7 @@ public class UserServiceImpl implements UserService {
 
     var modifiedDatabaseUser = databaseUser
         .toBuilder()
+        .modifiedAt(timeService.getCurrentTime())
         .role(role)
         .build();
 

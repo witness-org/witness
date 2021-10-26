@@ -12,13 +12,12 @@ import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.UserExerciseRepository;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
-import java.util.Collections;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.LinkedMultiValueMap;
 
 class ExerciseControllerTest extends BaseControllerIntegrationTest {
   private static final String DATA_ROOT = "data/integration/web/exercise-controller-test/";
@@ -39,6 +38,8 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
     return "exercise";
   }
 
+  //region /newInitialExercise
+
   @ParameterizedTest
   @JsonFileSources(parameters = {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDto1.json", type = ExerciseCreateDto.class),
@@ -57,7 +58,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDto1.json", type = ExerciseCreateDto.class)
   })
   void createInitialExercise_validExerciseDtoAsPremium_return403(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.PREMIUM, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
+    var response = exchange(TestAuthentication.PREMIUM, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
@@ -67,7 +68,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDto1.json", type = ExerciseCreateDto.class)
   })
   void createInitialExercise_validExerciseDtoAsRegular_return403(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
@@ -77,7 +78,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDto1.json", type = ExerciseCreateDto.class)
   })
   void createInitialExercise_validExerciseDtoNoAuthorization_return401(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.NONE, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
+    var response = exchange(TestAuthentication.NONE, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
   }
@@ -87,7 +88,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoNullName.json", type = ExerciseCreateDto.class)
   })
   void createInitialExercise_exerciseDtoNullNameAsAdmin_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -97,7 +98,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoEmptyName.json", type = ExerciseCreateDto.class)
   })
   void createInitialExercise_exerciseDtoEmptyNameAsAdmin_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -107,7 +108,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoLongName.json", type = ExerciseCreateDto.class)
   })
   void createInitialExercise_exerciseDtoLongNameAsAdmin_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -117,7 +118,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoLongDescription.json", type = ExerciseCreateDto.class)
   })
   void createInitialExercise_exerciseDtoLongDescriptionAsAdmin_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -127,7 +128,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoNullMuscleGroups.json", type = ExerciseCreateDto.class)
   })
   void createInitialExercise_exerciseDtoNullMuscleGroupsAsAdmin_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -137,7 +138,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoNullLoggingTypes.json", type = ExerciseCreateDto.class)
   })
   void createInitialExercise_exerciseDtoNullLoggingTypesAsAdmin_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -147,7 +148,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoEmptyMuscleGroups.json", type = ExerciseCreateDto.class)
   })
   void createInitialExercise_exerciseDtoEmptyMuscleGroupsAsAdmin_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -157,7 +158,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoEmptyLoggingTypes.json", type = ExerciseCreateDto.class)
   })
   void createInitialExercise_exerciseDtoEmptyLoggingTypesAsAdmin_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -170,10 +171,14 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
   void createInitialExercise_validExerciseDtoTakenNameAsAdmin_return400(Exercise persistedExercise, ExerciseCreateDto createDto) {
     persistEntities(exerciseRepository, persistedExercise);
 
-    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
+
+  //endregion
+
+  //region /newUserExercise
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -236,7 +241,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDto1.json", type = ExerciseCreateDto.class)
   })
   void createUserExercise_validExerciseDtoNoAuthorization_return401(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.NONE, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
+    var response = exchange(TestAuthentication.NONE, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
   }
@@ -246,7 +251,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoNullName.json", type = ExerciseCreateDto.class)
   })
   void createUserExercise_exerciseDtoNullNameAsRegular_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -256,7 +261,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoEmptyName.json", type = ExerciseCreateDto.class)
   })
   void createUserExercise_exerciseDtoEmptyNameAsRegular_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -266,7 +271,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoLongName.json", type = ExerciseCreateDto.class)
   })
   void createUserExercise_exerciseDtoLongNameAsRegular_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -276,7 +281,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoLongDescription.json", type = ExerciseCreateDto.class)
   })
   void createUserExercise_exerciseDtoLongDescriptionAsRegular_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -286,7 +291,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoNullMuscleGroups.json", type = ExerciseCreateDto.class)
   })
   void createUserExercise_exerciseDtoNullMuscleGroupsAsRegular_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -296,7 +301,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoNullLoggingTypes.json", type = ExerciseCreateDto.class)
   })
   void createUserExercise_exerciseDtoNullLoggingTypesAsRegular_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -306,7 +311,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoEmptyMuscleGroups.json", type = ExerciseCreateDto.class)
   })
   void createUserExercise_exerciseDtoEmptyMuscleGroupsAsRegular_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -316,7 +321,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDtoEmptyLoggingTypes.json", type = ExerciseCreateDto.class)
   })
   void createUserExercise_exerciseDtoEmptyLoggingTypesAsRegular_return400(ExerciseCreateDto createDto) {
-    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -331,7 +336,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
     persistUserAndMockLoggedIn(authMode);
     persistEntities(exerciseRepository, persistedExercise);
 
-    var response = exchange(authMode, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
+    var response = exchange(authMode, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -346,18 +351,21 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
     persistUserAndMockLoggedIn(authMode);
     persistUserExercises(persistedUserExercise);
 
-    var response = exchange(authMode, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
+    var response = exchange(authMode, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
+
+  //endregion
+
+  //region /allByMuscleGroup
 
   @Test
   void getAllForUserByMuscleGroup_nonePersistedAsRegular_return200AndEmptyList() {
     var authMode = TestAuthentication.REGULAR;
     persistUserAndMockLoggedIn(authMode);
 
-    var params = new LinkedMultiValueMap<String, String>();
-    params.put("muscleGroup", Collections.singletonList(MuscleGroup.CHEST.toString()));
+    var params = toMultiValueMap(Map.of("muscleGroup", MuscleGroup.CHEST.toString()));
     var response = get(authMode, requestUrl(GET_ALL_FOR_USER_BY_MUSCLE_GROUP_URL), params, ExerciseDto[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -378,8 +386,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
     persistEntities(exerciseRepository, persistedInitialExercise);
     persistUserExercises(persistedUserExercise);
 
-    var params = new LinkedMultiValueMap<String, String>();
-    params.put("muscleGroup", Collections.singletonList(MuscleGroup.CHEST.toString()));
+    var params = toMultiValueMap(Map.of("muscleGroup", MuscleGroup.CHEST.toString()));
     var response = get(authMode, requestUrl(GET_ALL_FOR_USER_BY_MUSCLE_GROUP_URL), params, ExerciseDto[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -387,6 +394,10 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
         .usingElementComparatorIgnoringFields("id")
         .containsExactlyInAnyOrder(expected);
   }
+
+  //endregion
+
+  //region /allCreatedByUser
 
   @Test
   void getAllCreatedByUser_noExercisesPersistedAsRegular_return200AndEmptyList() {
@@ -420,6 +431,8 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
         .usingElementComparatorIgnoringFields("id")
         .containsExactlyInAnyOrder(expected);
   }
+
+  //endregion
 
   private void persistUserExercises(UserExercise... exercises) {
     for (UserExercise exercise : exercises) {

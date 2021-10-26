@@ -11,6 +11,7 @@ import com.witness.server.mapper.ExerciseMapper;
 import com.witness.server.unit.BaseUnitTest;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
+import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mapstruct.factory.Mappers;
 
@@ -34,6 +35,15 @@ class ExerciseMapperTest extends BaseUnitTest {
   })
   void userEntityToDto(UserExercise entity, UserExerciseDto dto) {
     assertThat(mapper.userEntityToDto(entity)).isEqualTo(dto);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "Exercises_1-2.json", type = Exercise[].class, arrayToList = true),
+      @JsonFileSource(value = DATA_ROOT + "ExerciseDtos_1-2.json", type = ExerciseDto[].class, arrayToList = true)
+  })
+  void entitiesToDtos(List<Exercise> entity, List<ExerciseDto> dto) {
+    assertThat(mapper.entitiesToDtos(entity)).usingRecursiveComparison().isEqualTo(dto);
   }
 
   @ParameterizedTest

@@ -63,8 +63,8 @@ public class SecurityFilter extends OncePerRequestFilter {
     var firebaseCredentials = firebaseService.verifyToken(bearerJwt, securityProperties.isCheckTokenRevoked());
 
     if (firebaseCredentials == null) {
-      // No authentication was provided. If request was not sent to a public ("allowed") path by the unauthorizedHandler (see CORS config), a 401
-      // response will be sent. Otherwise, the request will be processed, but there is no point in handling roles. Hence, in both cases, return.
+      // No authentication was provided. If request was not sent to a public ("allowed") path, a 401 response will be sent by the unauthorizedHandler
+      // (see CORS config). Otherwise, the request will be processed, but there is no point in handling roles. Hence, in both cases, return.
       return;
     }
 

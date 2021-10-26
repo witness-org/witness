@@ -2,6 +2,9 @@ package com.witness.server.unit.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.witness.server.entity.Exercise;
@@ -57,11 +60,14 @@ class ExerciseServiceTest extends BaseUnitTest {
       @JsonFileSource(value = DATA_ROOT + "Exercise1NullId.json", type = Exercise.class),
       @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class)
   })
-  void testCreateInitialExercise_givenExercise_returnCorrectExercise(Exercise input, Exercise output) throws InvalidRequestException {
+  void createInitialExercise_givenExercise_returnCorrectExercise(Exercise input, Exercise output) throws InvalidRequestException {
     when(exerciseRepository.existsByName(input.getName())).thenReturn(false);
     when(exerciseRepository.save(input)).thenReturn(output);
 
     assertThat(target.createInitialExercise(input)).isEqualTo(output);
+
+    verify(exerciseRepository, times(1)).existsByName(input.getName());
+    verify(exerciseRepository, times(1)).save(any(Exercise.class));
   }
 
   @ParameterizedTest
@@ -106,6 +112,11 @@ class ExerciseServiceTest extends BaseUnitTest {
     when(userExerciseRepository.save(input)).thenReturn(output);
 
     assertThat(target.createUserExercise(firebaseId, input)).isEqualTo(output);
+
+    verify(exerciseRepository, times(1)).existsByName(input.getName());
+    verify(userExerciseRepository, times(1)).existsByNameAndCreatedBy(input.getName(), user);
+    verify(userExerciseRepository, times(1)).save(input);
+    verify(userService, times(1)).findByFirebaseId(user.getFirebaseId());
   }
 
   @ParameterizedTest
@@ -121,6 +132,9 @@ class ExerciseServiceTest extends BaseUnitTest {
     when(exerciseRepository.findAllForUser(user, muscleGroup)).thenReturn(exercises);
 
     assertThat(target.getExercisesForUserByMuscleGroup(firebaseId, muscleGroup)).containsExactlyInAnyOrderElementsOf(exercises);
+
+    verify(exerciseRepository, times(1)).findAllForUser(user, muscleGroup);
+    verify(userService, times(1)).findByFirebaseId(user.getFirebaseId());
   }
 
   @ParameterizedTest
@@ -134,5 +148,8 @@ class ExerciseServiceTest extends BaseUnitTest {
     when(exerciseRepository.findAllByUser(user)).thenReturn(exercises);
 
     assertThat(target.getExercisesCreatedByUser(firebaseId)).containsExactlyInAnyOrderElementsOf(exercises);
+
+    verify(exerciseRepository, times(1)).findAllByUser(user);
+    verify(userService, times(1)).findByFirebaseId(user.getFirebaseId());
   }
 }
