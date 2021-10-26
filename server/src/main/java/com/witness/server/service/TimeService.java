@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 public interface TimeService {
 
   /**
-   * Gets the current date and time in the configured primary time zone (as specified by {@link TimeService#getPrimaryTimeZone()} ()}).
+   * Gets the current date and time in the configured primary time zone, as specified by {@link TimeService#getPrimaryTimeZone()}.
    *
    * @return the current date and time in the primary time zone
    */
@@ -20,8 +20,9 @@ public interface TimeService {
    *
    * @param timeZone defines the time zone of the {@link ZonedDateTime} to return
    * @return the current date and time in the primary time zone
+   * @throws IllegalArgumentException if {@code timeZone} is null
    */
-  ZonedDateTime getCurrentTime(ZoneId timeZone);
+  ZonedDateTime getCurrentTime(ZoneId timeZone) throws IllegalArgumentException;
 
   /**
    * Gets the current date and time in UTC time.
@@ -34,14 +35,14 @@ public interface TimeService {
    * Gets the primary time zone that is considered by default when accessing date functions. This time zone is also used when serializing date time
    * values to JSON (see {@link com.witness.server.configuration.JacksonConfig}).
    *
-   * @return the default {@link ZoneId}. Implementations may decide for themselves how this time zone is determined.
+   * @return the default {@link ZoneId}. Implementations may decide for themselves how this time zone is determined. Must not be null.
    */
   ZoneId getPrimaryTimeZone();
 
   /**
    * A shortcut to the {@link ZoneId} of UTC.
    *
-   * @return the {@link ZoneId} of UTC.
+   * @return the {@link ZoneId} of UTC. Must not be null.
    */
   ZoneId getUtcTimeZone();
 }

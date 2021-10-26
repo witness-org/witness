@@ -15,7 +15,7 @@ import javax.validation.constraints.Email;
  * of "@" as well has at least one "non-@" character before and after it.
  * </p>
  * <p>
- * Note that the values of the properties {@link EmailStrict#message()}, {@link EmailStrict#groups()}, {@link EmailStrict#payload()} does not have
+ * Note that the values of the properties {@link EmailStrict#message()}, {@link EmailStrict#groups()}, {@link EmailStrict#payload()} do not have
  * any effect. The validation functionality is thoroughly delegated to the {@link Email} annotation with aforementioned pattern. These properties
  * are merely present in order to satisfy the contract of {@link Constraint}, which is necessary for {@link EmailStrict} to be considered when
  * automatic validation is triggered.

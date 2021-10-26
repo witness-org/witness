@@ -16,6 +16,7 @@ import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -75,6 +76,7 @@ public class User {
 
   @Column(name = "height", nullable = false)
   @NotNull
+  @Positive
   private Long height;
 
   @Override

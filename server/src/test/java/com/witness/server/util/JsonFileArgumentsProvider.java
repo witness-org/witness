@@ -3,6 +3,11 @@ package com.witness.server.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.witness.server.util.converters.ArgumentConverter;
+import com.witness.server.util.converters.NoOpArgumentConverter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,6 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * A {@link ArgumentsProvider} and {@link AnnotationConsumer} for the {@link JsonFileSources} annotation.
@@ -39,7 +45,7 @@ public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationC
       var file = files[i];
       var jsonStream = new ClassPathResource(file.value()).getInputStream();
 
-      var deserializedObject = objectMapper.readValue(jsonStream, file.type());
+      var deserializedObject = getDeserializedObject(file, jsonStream, file.converter());
       if (file.arrayToList() && file.type().isArray()) {
         deserializedObject = Arrays.stream((Object[]) deserializedObject).collect(Collectors.toList());
       }
@@ -62,6 +68,22 @@ public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationC
     }
   }
 
+  private Object getDeserializedObject(JsonFileSource file, InputStream jsonStream, Class<? extends ArgumentConverter<?, ?>> argumentConverter)
+      throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    var converter = ReflectionUtils.accessibleConstructor(argumentConverter).newInstance();
+    var noOpConverter = converter instanceof NoOpArgumentConverter;
+    var sourceType = noOpConverter ? file.type() : converter.intermediateClass(); // JSON deserialization target type
+    var targetType = noOpConverter ? file.type() : converter.targetClass(); // method return type
+
+    if (!targetType.equals(file.type())) {
+      log.error("The specified test argument converter is not NoOpArgumentConverter, but its target class differs from the class specified by the "
+          + "\"type\" argument of the @JsonFileSource annotation. Supplying arguments to the test will fail due to incompatible types.");
+    }
+
+    var intermediateObject = objectMapper.readValue(jsonStream, sourceType);
+    return converter.toConcreteInstance(intermediateObject);
+  }
+
   private boolean shouldUnwrap(Object[] parameters, ExtensionContext context) {
     // Three conditions need to hold in order for unwrapping to happen:
 
@@ -71,13 +93,13 @@ public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationC
     }
 
     var testMethod = context.getTestMethod().isPresent() ? context.getTestMethod().get().getName() : "<unknown>";
-    var warningMessage = "Test \"" + testMethod + "\" is annotated with @JsonFileSources and \"unwrapArrays=true\", but {}. Will not unwrap, test "
+    var errorMessage = "Test \"" + testMethod + "\" is annotated with @JsonFileSources and \"unwrapArrays=true\", but {}. Will not unwrap, test "
         + "will fail. Please examine your data sources and @JsonFileSource annotations.";
 
     // 2) all arguments must be arrays
     var allArrays = Arrays.stream(parameters).allMatch(param -> param.getClass().isArray());
     if (!allArrays) {
-      log.warn(warningMessage, "not all arguments specified are arrays");
+      log.error(errorMessage, "not all arguments specified are arrays");
       return false;
     }
 
@@ -85,7 +107,7 @@ public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationC
     // we compare the length of the first array with the length of all other arrays (and therefore do not need to examine the first element)
     var sameLengthArrays = Arrays.stream(parameters).skip(1).allMatch(param -> ((Object[]) param).length == ((Object[]) parameters[0]).length);
     if (!sameLengthArrays) {
-      log.warn(warningMessage, "not all argument arrays have the same length");
+      log.error(errorMessage, "not all argument arrays have the same length");
       return false;
     }
 

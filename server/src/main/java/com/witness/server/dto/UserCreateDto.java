@@ -6,6 +6,7 @@ import com.witness.server.validation.EmailStrict;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -31,6 +32,7 @@ public class UserCreateDto {
   private Sex sex;
 
   @NotNull
+  @Positive
   @Schema(description = "The height of the user in cm.", example = "183")
   private Long height;
 

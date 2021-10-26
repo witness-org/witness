@@ -9,6 +9,7 @@ import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.UserExerciseRepository;
 import com.witness.server.repository.UserRepository;
+import com.witness.server.util.Comparators;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
 import java.util.Comparator;
@@ -22,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class ExerciseRepositoryTest extends BaseRepositoryTest {
   private static final String DATA_ROOT = "data/unit/repository/exercise-repository-test/";
-  private static final Comparator<Exercise> EXERCISE_COMPARATOR = getEntityComparator(Exercise.class);
+  private static final Comparator<Exercise> EXERCISE_COMPARATOR = Comparators.getEntityComparator(Exercise.class);
 
   @Autowired
   private UserRepository userRepository;
