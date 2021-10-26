@@ -10,6 +10,8 @@ logging:
 security:
   check-token-revoked: true
   allowed-public-apis:
+    - /swagger-ui*
+    - /swagger-ui*/**
     - /security-infrastructure/public
     - /user/register
 
@@ -19,6 +21,6 @@ spring:
 
 springdoc:
   api-docs:
-    enabled: false
+    enabled: true
   swagger-ui:
-    enabled: false
+    enabled: true

@@ -39,9 +39,10 @@ class TimeServiceTest extends BaseUnitTest {
 
   @Test
   void getCurrentTime_givenNoZoneId_returnTimeInPrimaryTimezone() {
-    // Precondition for the test, otherwise the assertion below does not make sense. Ignoring (instead of failing) test is okay since, if the
-    // assumption is not met, getPrimaryTimeZone_givenProfileSpecificZoneId_respectConfiguration() fails.
-    assumeThat(timeService.getPrimaryTimeZone()).isEqualTo(TEST_TIMEZONE);
+    // Ignoring instead of failing is okay since, in that case, getPrimaryTimeZone_givenProfileSpecificZoneId_respectConfiguration() fails.
+    assumeThat(timeService.getPrimaryTimeZone())
+        .describedAs("The primary timezone, denoted by \"timeService.getPrimaryTimeZone\", must be equal to TEST_TIMEZONE")
+        .isEqualTo(TEST_TIMEZONE);
 
     assertThat(timeService.getCurrentTime()).isCloseTo(ZonedDateTime.now(TEST_TIMEZONE), DATETIME_PRECISION);
   }

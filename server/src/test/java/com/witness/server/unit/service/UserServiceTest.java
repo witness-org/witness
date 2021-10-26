@@ -53,7 +53,7 @@ class UserServiceTest {
   private TimeService timeService;
 
   @Captor
-  ArgumentCaptor<User> userArgumentCaptor;
+  private ArgumentCaptor<User> userArgumentCaptor;
 
   //region createUser
 
