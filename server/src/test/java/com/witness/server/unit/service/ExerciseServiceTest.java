@@ -15,6 +15,7 @@ import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;
 import com.witness.server.exception.InvalidRequestException;
+import com.witness.server.mapper.ExerciseMapperImpl;
 import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.UserExerciseRepository;
 import com.witness.server.service.ExerciseService;
@@ -30,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-@SpringBootTest(classes = ExerciseServiceImpl.class)
+@SpringBootTest(classes = {ExerciseServiceImpl.class, ExerciseMapperImpl.class})
 class ExerciseServiceTest extends BaseUnitTest {
 
   private static final String DATA_ROOT = "data/unit/service/exercise-service-test/";

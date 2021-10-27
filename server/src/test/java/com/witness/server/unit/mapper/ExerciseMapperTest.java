@@ -6,6 +6,7 @@ import com.witness.server.dto.ExerciseCreateDto;
 import com.witness.server.dto.ExerciseDto;
 import com.witness.server.dto.UserExerciseDto;
 import com.witness.server.entity.Exercise;
+import com.witness.server.entity.User;
 import com.witness.server.entity.UserExercise;
 import com.witness.server.mapper.ExerciseMapper;
 import com.witness.server.unit.BaseUnitTest;
@@ -20,6 +21,16 @@ import org.mapstruct.factory.Mappers;
 class ExerciseMapperTest extends BaseUnitTest {
   private static final String DATA_ROOT = "data/unit/mapper/exercise-mapper-test/";
   private final ExerciseMapper mapper = Mappers.getMapper(ExerciseMapper.class);
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
+      @JsonFileSource(value = DATA_ROOT + "User1.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class)
+  })
+  void fromExerciseAndCreatedBy(Exercise exercise, User user, UserExercise expected) {
+    assertThat(mapper.fromExerciseAndCreatedBy(exercise, user)).isEqualTo(expected);
+  }
 
   @ParameterizedTest
   @JsonFileSources(unwrapArrays = true, parameters = {

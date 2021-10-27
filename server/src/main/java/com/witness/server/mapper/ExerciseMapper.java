@@ -4,6 +4,7 @@ import com.witness.server.dto.ExerciseCreateDto;
 import com.witness.server.dto.ExerciseDto;
 import com.witness.server.dto.UserExerciseDto;
 import com.witness.server.entity.Exercise;
+import com.witness.server.entity.User;
 import com.witness.server.entity.UserExercise;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +13,9 @@ import org.mapstruct.Mapping;
 
 @Mapper
 public abstract class ExerciseMapper {
+
+  @Mapping(source = "exercise.id", target = "id")
+  public abstract UserExercise fromExerciseAndCreatedBy(Exercise exercise, User createdBy);
 
   public abstract ExerciseDto entityToDto(Exercise exercise);
 

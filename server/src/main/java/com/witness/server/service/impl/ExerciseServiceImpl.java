@@ -8,6 +8,7 @@ import com.witness.server.enumeration.Role;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;
 import com.witness.server.exception.InvalidRequestException;
+import com.witness.server.mapper.ExerciseMapper;
 import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.UserExerciseRepository;
 import com.witness.server.service.ExerciseService;
@@ -24,12 +25,15 @@ public class ExerciseServiceImpl implements ExerciseService {
   private final UserService userService;
   private final ExerciseRepository exerciseRepository;
   private final UserExerciseRepository userExerciseRepository;
+  private final ExerciseMapper exerciseMapper;
 
   @Autowired
-  public ExerciseServiceImpl(UserService userService, ExerciseRepository exerciseRepository, UserExerciseRepository userExerciseRepository) {
+  public ExerciseServiceImpl(UserService userService, ExerciseRepository exerciseRepository, UserExerciseRepository userExerciseRepository,
+                             ExerciseMapper exerciseMapper) {
     this.userService = userService;
     this.exerciseRepository = exerciseRepository;
     this.userExerciseRepository = userExerciseRepository;
+    this.exerciseMapper = exerciseMapper;
   }
 
   @Override
@@ -92,7 +96,7 @@ public class ExerciseServiceImpl implements ExerciseService {
       throwIfUserExerciseCreatedByWithNameExists(newName, user);
     }
 
-    var userExercise = fromExerciseAndCreatedBy(exercise, user);
+    var userExercise = exerciseMapper.fromExerciseAndCreatedBy(exercise, user);
     return userExerciseRepository.save(userExercise);
   }
 
@@ -128,16 +132,5 @@ public class ExerciseServiceImpl implements ExerciseService {
       log.error("There already exists a user exercise with the name \"{}\" created by the provided user with ID {}.", name, user.getId());
       throw new InvalidRequestException("There already exists an exercise created by the provided user with this name.");
     }
-  }
-
-  private static UserExercise fromExerciseAndCreatedBy(Exercise exercise, User createdBy) {
-    return UserExercise.userExerciseBuilder()
-        .id(exercise.getId())
-        .name(exercise.getName())
-        .description(exercise.getDescription())
-        .muscleGroups(exercise.getMuscleGroups())
-        .loggingTypes(exercise.getLoggingTypes())
-        .createdBy(createdBy)
-        .build();
   }
 }
