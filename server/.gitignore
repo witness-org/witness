@@ -13,6 +13,12 @@ logs/**
 src/main/resources/auth/private-key-dev.json
 src/main/resources/auth/private-key-prod.json
 
+# These files are created by ApiGenerationTest.downloadApiSpecification() and also available as CI build artifacts
+# on GitLab. The filename (without extension) has to be kept in sync with the value of the LOCAL_FILE_NAME constant in
+# the "server/src/test/java/com/witness/server/integration/web/ApiGenerationTest.java" file.
+server_api.json
+server_api.yaml
+
 ### STS ###
 .apt_generated
 .classpath

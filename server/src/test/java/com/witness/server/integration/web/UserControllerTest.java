@@ -39,7 +39,7 @@ class UserControllerTest extends BaseControllerIntegrationTest {
   private static final String REMOVE_ROLE_URL = "/%s/removeRole";
 
   @Autowired
-  UserRepository userRepository;
+  private UserRepository userRepository;
 
   @SpyBean
   private TimeService timeService;

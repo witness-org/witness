@@ -26,11 +26,11 @@ public abstract class AbstractExerciseDto {
 
   @NotNull
   @NotEmpty
-  @ArraySchema(schema = @Schema(description = "A list of muscle groups that the exercise trains.", example = "[CHEST]"))
+  @ArraySchema(schema = @Schema(description = "A list of muscle groups that the exercise trains.", example = "CHEST"))
   private List<MuscleGroup> muscleGroups;
 
   @NotNull
   @NotEmpty
-  @ArraySchema(schema = @Schema(description = "A list of logging types that describe how the exercise can be logged.", example = "[REPS]"))
+  @ArraySchema(schema = @Schema(description = "A list of logging types that describe how the exercise can be logged.", example = "REPS"))
   private List<LoggingType> loggingTypes;
 }
