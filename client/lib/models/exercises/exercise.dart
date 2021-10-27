@@ -12,6 +12,7 @@ class Exercise {
     final this.description,
     final this.muscleGroups = const <MuscleGroup>[],
     final this.loggingTypes = const <LoggingType>[],
+    final this.createdBy,
   });
 
   factory Exercise.fromJson(final Map<String, dynamic> json) => _$ExerciseFromJson(json);
@@ -21,6 +22,7 @@ class Exercise {
   final String? description;
   final List<MuscleGroup> muscleGroups;
   final List<LoggingType> loggingTypes;
+  final String? createdBy;
 
   Map<String, dynamic> toJson() => _$ExerciseToJson(this);
 }
