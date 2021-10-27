@@ -1,8 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:client/configuration/client_configuration.dart';
+import 'package:http/http.dart';
 
 abstract class BaseService {
+  /// Decodes a [Response] `httpResponse` which represents a JSON object into an object of type [T] using UTF-8 encoding.
+  T decodeResponse<T>(final Response httpResponse) {
+    return json.decode(utf8.decode(httpResponse.bodyBytes)) as T;
+  }
+
   /// Builds a [Map] that represents the HTTP headers to be sent along with an HTTP request. If [authorization] is not `null`, the `Authorization`
   /// header is set to `Bearer $authorization`. If `jsonContent` is `true`, the `Content-Typ` header is set to `application/json; charset=utf-8`.
   Map<String, String> getHttpHeaders({final String? authorization, final bool jsonContent = false}) {

@@ -25,10 +25,10 @@ class ExerciseService extends BaseService {
     final response = await http.get(requestUri, headers: getHttpHeaders(authorization: token));
 
     if (response.statusCode == 200) {
-      final responseList = json.decode(response.body) as List<dynamic>;
+      final responseList = decodeResponse<List<dynamic>>(response);
       return ServerResponse.success(responseList.map((final dynamic e) => Exercise.fromJson(e as Map<String, dynamic>)).toList());
     } else {
-      final responseMap = json.decode(response.body) as Map<String, dynamic>;
+      final responseMap = decodeResponse<Map<String, dynamic>>(response);
       _logger.e('Could not fetch exercises: ${responseMap['message']}');
       return ServerResponse.failure(responseMap['message'].toString());
     }
@@ -47,12 +47,34 @@ class ExerciseService extends BaseService {
     final payload = json.encode(exercise);
     final response = await http.post(requestUri, headers: getHttpHeaders(authorization: token, jsonContent: true), body: payload);
 
-    final responseMap = json.decode(response.body) as Map<String, dynamic>;
+    final responseMap = decodeResponse<Map<String, dynamic>>(response);
 
     if (response.statusCode == 201) {
       return ServerResponse.success(Exercise.fromJson(responseMap));
     } else {
       _logger.e('Could not create user exercise: ${responseMap['message']}');
+      return ServerResponse.failure(responseMap['message'].toString());
+    }
+  }
+
+  Future<ServerResponse<Exercise, String>> putUserExercise(final Exercise exercise, final String? token) async {
+    final requestUri = getUri('exercise/updateUserExercise');
+    _logger
+      ..i('Delegating update of user exercise to server')
+      ..i('PUT $requestUri');
+
+    await Future<void>.delayed(
+      const Duration(seconds: 1),
+    );
+
+    final payload = json.encode(exercise);
+    final response = await http.put(requestUri, headers: getHttpHeaders(authorization: token, jsonContent: true), body: payload);
+    final responseMap = decodeResponse<Map<String, dynamic>>(response);
+
+    if (response.statusCode == 200) {
+      return ServerResponse.success(Exercise.fromJson(responseMap));
+    } else {
+      _logger.e('Could not update user exercise: ${responseMap['message']}');
       return ServerResponse.failure(responseMap['message'].toString());
     }
   }

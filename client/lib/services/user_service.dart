@@ -32,7 +32,7 @@ class UserService extends BaseService {
     );
 
     if (response.statusCode == 201) {
-      final responseMap = json.decode(response.body) as Map<String, dynamic>;
+      final responseMap = decodeResponse<Map<String, dynamic>>(response);
       // ignore: unused_local_variable, just an example on how to deserialize from response using auto-generated model
       final returnedUser = User.fromJson(responseMap);
       return null;

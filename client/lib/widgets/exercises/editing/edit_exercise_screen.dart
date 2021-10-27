@@ -2,6 +2,7 @@ import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/widgets/common/string_localizer.dart';
+import 'package:client/widgets/exercises/editing/edit_exercise_form.dart';
 import 'package:client/widgets/main_app_bar.dart';
 import 'package:client/widgets/exercises/editing/create_exercise_form.dart';
 
@@ -20,9 +21,7 @@ class EditExerciseScreen extends StatelessWidget with LogMessagePreparer, String
   }
 
   Widget _buildEditScreen(final Exercise exercise) {
-    return Center(
-      child: Text('Editing Exercise "${exercise.name}"'),
-    );
+    return EditExerciseForm(exercise);
   }
 
   @override
