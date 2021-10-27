@@ -22,6 +22,12 @@ test-server:
   script:
     - 'cd server'
     - 'mvn $MAVEN_CLI_OPTS clean verify'
+  artifacts:
+    paths:
+      # Filename (without extension) of API artifacts has to be kept in sync with the value of the LOCAL_FILE_NAME
+      # constant in the server/src/test/java/com/witness/server/integration/web/ApiGenerationTest.java file.
+      - './server/server_api.json'
+      - './server/server_api.yaml'
 
 # Execute Flutter unit tests
 test-client:
@@ -32,11 +38,7 @@ test-client:
     - 'flutter clean'
     - 'flutter pub get'
     - 'flutter pub run build_runner build'
-    - 'flutter test --reporter expanded --coverage'
-    - 'lcov --summary coverage/lcov.info > client-coverage.txt || true'
-  artifacts:
-    paths:
-      - './client/client-coverage.txt'
+    - 'flutter test --reporter expanded'
       
 # Execute Flutter integration tests
 integration-test-client:

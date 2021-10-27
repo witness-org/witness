@@ -24,6 +24,7 @@ import com.witness.server.service.FirebaseService;
 import com.witness.server.service.SecurityService;
 import com.witness.server.service.UserService;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -139,8 +140,14 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
       when(firebaseService.verifyToken(nullable(String.class), anyBoolean())).thenReturn(new Credentials(token, "integrationTestToken"));
     }
 
+    // Content Types for OpenAPI specifications (source: https://github.com/OAI/OpenAPI-Specification/issues/110#issuecomment-364498200)
+    //   - "application/vnd.oai.openapi" (YAML variant), not yet registered with IANA
+    //   - "application/vnd.oai.openapi+json" (JSON only variant), not yet registered with IANA
     var headers = new HttpHeaders();
     headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+    headers.setAccept(List.of(MediaType.APPLICATION_JSON,
+        new MediaType("application", "vnd.oai.openapi", StandardCharsets.UTF_8),
+        new MediaType("application", "vnd.oai.openapi+json", StandardCharsets.UTF_8)));
 
     var uriBuilder = UriComponentsBuilder
         .fromHttpUrl(url)

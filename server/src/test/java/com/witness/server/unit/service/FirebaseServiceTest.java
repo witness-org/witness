@@ -54,13 +54,13 @@ class FirebaseServiceTest {
   private FirebaseService firebaseService;
 
   @MockBean
-  FirebaseAuth firebaseAuth;
+  private FirebaseAuth firebaseAuth;
 
   @MockBean
-  SecurityProperties securityProperties;
+  private SecurityProperties securityProperties;
 
   @Captor
-  ArgumentCaptor<Map<String, Object>> customClaimMapCaptor;
+  private ArgumentCaptor<Map<String, Object>> customClaimMapCaptor;
 
   //region findUserById
 
