@@ -1,0 +1,21 @@
+{
+  "name": "UserExercise 1",
+  "description": "Description of UserExercise 1",
+  "muscleGroups": [
+    "LEGS"
+  ],
+  "loggingTypes": [
+    "TIME"
+  ],
+  "createdBy": {
+    "id": 2,
+    "firebaseId": "firebaseRegular2",
+    "username": "regularUser2",
+    "email": "regular2@test.com",
+    "role": null,
+    "sex": "FEMALE",
+    "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+    "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+    "height": 163
+  }
+}

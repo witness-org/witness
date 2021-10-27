@@ -11,7 +11,9 @@ import com.witness.server.mapper.ExerciseMapper;
 import com.witness.server.unit.BaseUnitTest;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
+import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mapstruct.factory.Mappers;
 
@@ -30,6 +32,16 @@ class ExerciseMapperTest extends BaseUnitTest {
 
   @ParameterizedTest
   @JsonFileSources(unwrapArrays = true, parameters = {
+      @JsonFileSource(value = DATA_ROOT + "ExerciseDtos_1-2.json", type = ExerciseDto[].class),
+      @JsonFileSource(value = DATA_ROOT + "Exercises_1-2.json", type = Exercise[].class),
+  })
+  void dtoToEntity(ExerciseDto dto, Exercise entity) {
+    assertThat(mapper.dtoToEntity(dto)).isEqualTo(entity);
+  }
+
+
+  @ParameterizedTest
+  @JsonFileSources(unwrapArrays = true, parameters = {
       @JsonFileSource(value = DATA_ROOT + "UserExercises_1-2.json", type = UserExercise[].class),
       @JsonFileSource(value = DATA_ROOT + "UserExerciseDtos_1-2.json", type = UserExerciseDto[].class)
   })
@@ -45,6 +57,33 @@ class ExerciseMapperTest extends BaseUnitTest {
   void entitiesToDtos(List<Exercise> entity, List<ExerciseDto> dto) {
     assertThat(mapper.entitiesToDtos(entity)).usingRecursiveComparison().isEqualTo(dto);
   }
+
+  @Test
+  void entitiesToDtos_null_null() {
+    assertThat(mapper.entitiesToDtos(null)).isNull();
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "Exercises_1-2.json", type = Exercise[].class, arrayToList = true),
+      @JsonFileSource(value = DATA_ROOT + "UserExercises_1-2.json", type = UserExercise[].class, arrayToList = true),
+      @JsonFileSource(value = DATA_ROOT + "ExerciseDtos_1-2.json", type = ExerciseDto[].class, arrayToList = true),
+      @JsonFileSource(value = DATA_ROOT + "UserExerciseDtos_1-2.json", type = UserExerciseDto[].class, arrayToList = true)
+  })
+  void entitiesToDtos_exercisesAndUserExercises_mapsSubtypesCorrectly(List<Exercise> exercises, List<UserExercise> userExercises,
+                                                                      List<ExerciseDto> exerciseDtos, List<UserExerciseDto> userExerciseDtos) {
+    var mixedExercises = new ArrayList<Exercise>();
+    mixedExercises.addAll(exercises);
+    mixedExercises.addAll(userExercises);
+
+    var mappedMixedDtos = mapper.entitiesToDtos(mixedExercises);
+
+    var expectedMixedDtos = new ArrayList<ExerciseDto>();
+    expectedMixedDtos.addAll(exerciseDtos);
+    expectedMixedDtos.addAll(userExerciseDtos);
+    assertThat(mappedMixedDtos).usingRecursiveComparison().isEqualTo(expectedMixedDtos);
+  }
+
 
   @ParameterizedTest
   @JsonFileSources(parameters = {

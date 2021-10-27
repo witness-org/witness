@@ -6,6 +6,7 @@ import com.witness.server.dto.ExerciseCreateDto;
 import com.witness.server.dto.ExerciseDto;
 import com.witness.server.dto.UserExerciseDto;
 import com.witness.server.entity.Exercise;
+import com.witness.server.entity.User;
 import com.witness.server.entity.UserExercise;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.repository.ExerciseRepository;
@@ -13,7 +14,6 @@ import com.witness.server.repository.UserExerciseRepository;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
 import java.util.Map;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -24,6 +24,8 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
   private static final String CREATE_INITIAL_EXERCISE_URL = "/newInitialExercise";
   private static final String CREATE_USER_EXERCISE_URL = "/newUserExercise";
+  private static final String UPDATE_INITIAL_EXERCISE_URL = "/updateInitialExercise";
+  private static final String UPDATE_USER_EXERCISE_URL = "/updateUserExercise";
   private static final String GET_ALL_FOR_USER_BY_MUSCLE_GROUP_URL = "/allByMuscleGroup";
   private static final String GET_ALL_CREATED_BY_USER_URL = "/allCreatedByUser";
 
@@ -182,63 +184,57 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
-      @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDto1.json", type = ExerciseCreateDto.class),
-      @JsonFileSource(value = DATA_ROOT + "UserExerciseDto1.json", type = UserExerciseDto.class)
+      @JsonFileSource(value = DATA_ROOT + "AdminUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExerciseCreateDto1.json", type = ExerciseCreateDto.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExerciseDto1Admin.json", type = UserExerciseDto.class)
   })
-  void createUserExercise_validExerciseDtoAsAdmin_return201AndReturnCorrectDto(ExerciseCreateDto createDto, UserExerciseDto exerciseDto) {
-    var authMode = TestAuthentication.ADMIN;
-    persistUserAndMockLoggedIn(authMode);
+  void createUserExercise_validExerciseDtoAsAdmin_return201AndReturnCorrectDto(User user, ExerciseCreateDto createDto, UserExerciseDto exerciseDto) {
+    persistUserAndMockLoggedIn(user);
 
-    var response = exchange(authMode, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     assertThat(response.getBody()).isNotNull();
-    assertThat(response.getBody()).usingRecursiveComparison()
-        .ignoringFields("id", "createdById")
-        .isEqualTo(exerciseDto);
-    assertThat(response.getBody().getCreatedByUserId()).isNotNull();
+    assertThat(response.getBody()).usingRecursiveComparison().ignoringFields("id").isEqualTo(exerciseDto);
   }
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
-      @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDto1.json", type = ExerciseCreateDto.class),
-      @JsonFileSource(value = DATA_ROOT + "ExerciseDto1.json", type = UserExerciseDto.class)
+      @JsonFileSource(value = DATA_ROOT + "PremiumUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExerciseCreateDto1.json", type = ExerciseCreateDto.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExerciseDto1Premium.json", type = UserExerciseDto.class)
   })
-  void createUserExercise_validExerciseDtoAsPremium_return201AndReturnCorrectDto(ExerciseCreateDto createDto, UserExerciseDto exerciseDto) {
-    var authMode = TestAuthentication.PREMIUM;
-    persistUserAndMockLoggedIn(authMode);
+  void createUserExercise_validExerciseDtoAsPremium_return201AndReturnCorrectDto(User user, ExerciseCreateDto createDto,
+                                                                                 UserExerciseDto exerciseDto) {
+    persistUserAndMockLoggedIn(user);
 
-    var response = exchange(authMode, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
+    var response = exchange(TestAuthentication.PREMIUM, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     assertThat(response.getBody()).isNotNull();
-    assertThat(response.getBody()).usingRecursiveComparison()
-        .ignoringFields("id", "createdByUserId")
-        .isEqualTo(exerciseDto);
+    assertThat(response.getBody()).usingRecursiveComparison().ignoringFields("id").isEqualTo(exerciseDto);
   }
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
-      @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDto1.json", type = ExerciseCreateDto.class),
-      @JsonFileSource(value = DATA_ROOT + "UserExerciseDto1.json", type = UserExerciseDto.class)
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExerciseCreateDto1.json", type = ExerciseCreateDto.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExerciseDto1Regular.json", type = UserExerciseDto.class)
   })
-  void createUserExercise_validExerciseDtoAsRegular_return201AndReturnCorrectDto(ExerciseCreateDto createDto, UserExerciseDto exerciseDto) {
-    var authMode = TestAuthentication.REGULAR;
-    persistUserAndMockLoggedIn(authMode);
+  void createUserExercise_validExerciseDtoAsRegular_return201AndReturnCorrectDto(User user, ExerciseCreateDto createDto,
+                                                                                 UserExerciseDto exerciseDto) {
+    persistUserAndMockLoggedIn(user);
 
-    var response = exchange(authMode, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     assertThat(response.getBody()).isNotNull();
-    assertThat(response.getBody()).usingRecursiveComparison()
-        .ignoringFields("id", "createdByUserId")
-        .isEqualTo(exerciseDto);
-    assertThat(response.getBody().getCreatedByUserId()).isNotNull();
+    assertThat(response.getBody()).usingRecursiveComparison().ignoringFields("id").isEqualTo(exerciseDto);
   }
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
-      @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDto1.json", type = ExerciseCreateDto.class)
+      @JsonFileSource(value = DATA_ROOT + "UserExerciseCreateDto1.json", type = ExerciseCreateDto.class)
   })
   void createUserExercise_validExerciseDtoNoAuthorization_return401(ExerciseCreateDto createDto) {
     var response = exchange(TestAuthentication.NONE, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
@@ -328,30 +324,31 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
       @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDto1.json", type = ExerciseCreateDto.class)
   })
-  void createUserExercise_validExerciseDtoTakenNameInitialAsRegular_return400(Exercise persistedExercise, ExerciseCreateDto createDto) {
-    var authMode = TestAuthentication.REGULAR;
-    persistUserAndMockLoggedIn(authMode);
+  void createUserExercise_validExerciseDtoTakenNameInitialAsRegular_return400(User user, Exercise persistedExercise, ExerciseCreateDto createDto) {
+    persistUserAndMockLoggedIn(user);
     persistEntities(exerciseRepository, persistedExercise);
 
-    var response = exchange(authMode, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
       @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class),
-      @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDto1.json", type = ExerciseCreateDto.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExerciseCreateDto1.json", type = ExerciseCreateDto.class),
   })
-  void createUserExercise_validExerciseDtoTakenNameUserAsRegular_return400(UserExercise persistedUserExercise, ExerciseCreateDto createDto) {
-    var authMode = TestAuthentication.REGULAR;
-    persistUserAndMockLoggedIn(authMode);
-    persistUserExercises(persistedUserExercise);
+  void createUserExercise_validExerciseDtoTakenNameUserAsRegular_return400(User user, UserExercise persistedUserExercise,
+                                                                           ExerciseCreateDto createDto) {
+    persistUserAndMockLoggedIn(user);
+    persistExercisesForLoggedInUser(persistedUserExercise);
 
-    var response = exchange(authMode, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
@@ -360,13 +357,15 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
   //region /allByMuscleGroup
 
-  @Test
-  void getAllForUserByMuscleGroup_nonePersistedAsRegular_return200AndEmptyList() {
-    var authMode = TestAuthentication.REGULAR;
-    persistUserAndMockLoggedIn(authMode);
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class)
+  })
+  void getAllForUserByMuscleGroup_nonePersistedAsRegular_return200AndEmptyList(User user) {
+    persistUserAndMockLoggedIn(user);
 
     var params = toMultiValueMap(Map.of("muscleGroup", MuscleGroup.CHEST.toString()));
-    var response = get(authMode, requestUrl(GET_ALL_FOR_USER_BY_MUSCLE_GROUP_URL), params, ExerciseDto[].class);
+    var response = get(TestAuthentication.REGULAR, requestUrl(GET_ALL_FOR_USER_BY_MUSCLE_GROUP_URL), params, ExerciseDto[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody()).isEmpty();
@@ -374,20 +373,20 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
       @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
       @JsonFileSource(value = DATA_ROOT + "UserExercise2.json", type = UserExercise.class),
       @JsonFileSource(value = DATA_ROOT + "ExerciseDtos_1-2.json", type = ExerciseDto[].class)
   })
-  void getAllForUserByMuscleGroup_oneInitialOneCreatedPersistedAsRegular_return200AndEmptyList(Exercise persistedInitialExercise,
+  void getAllForUserByMuscleGroup_oneInitialOneCreatedPersistedAsRegular_return200AndEmptyList(User user, Exercise persistedInitialExercise,
                                                                                                UserExercise persistedUserExercise,
                                                                                                ExerciseDto[] expected) {
-    var authMode = TestAuthentication.REGULAR;
-    persistUserAndMockLoggedIn(authMode);
+    persistUserAndMockLoggedIn(user);
     persistEntities(exerciseRepository, persistedInitialExercise);
-    persistUserExercises(persistedUserExercise);
+    persistExercisesForLoggedInUser(persistedUserExercise);
 
     var params = toMultiValueMap(Map.of("muscleGroup", MuscleGroup.CHEST.toString()));
-    var response = get(authMode, requestUrl(GET_ALL_FOR_USER_BY_MUSCLE_GROUP_URL), params, ExerciseDto[].class);
+    var response = get(TestAuthentication.REGULAR, requestUrl(GET_ALL_FOR_USER_BY_MUSCLE_GROUP_URL), params, ExerciseDto[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody())
@@ -398,13 +397,14 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
   //endregion
 
   //region /allCreatedByUser
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class)
+  })
+  void getAllCreatedByUser_noExercisesPersistedAsRegular_return200AndEmptyList(User user) {
+    persistUserAndMockLoggedIn(user);
 
-  @Test
-  void getAllCreatedByUser_noExercisesPersistedAsRegular_return200AndEmptyList() {
-    var authMode = TestAuthentication.REGULAR;
-    persistUserAndMockLoggedIn(authMode);
-
-    var response = get(authMode, requestUrl(GET_ALL_CREATED_BY_USER_URL), ExerciseDto[].class);
+    var response = get(TestAuthentication.REGULAR, requestUrl(GET_ALL_CREATED_BY_USER_URL), ExerciseDto[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody()).isEmpty();
@@ -412,19 +412,19 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
       @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
       @JsonFileSource(value = DATA_ROOT + "UserExercise2.json", type = UserExercise.class),
       @JsonFileSource(value = DATA_ROOT + "ExerciseDtos_2.json", type = ExerciseDto[].class)
   })
-  void getAllCreatedByUser_oneInitialOneCreatedPersistedAsRegular_return200AndEmptyList(Exercise persistedInitialExercise,
+  void getAllCreatedByUser_oneInitialOneCreatedPersistedAsRegular_return200AndEmptyList(User user, Exercise persistedInitialExercise,
                                                                                         UserExercise persistedUserExercise,
                                                                                         ExerciseDto[] expected) {
-    var authMode = TestAuthentication.REGULAR;
-    persistUserAndMockLoggedIn(authMode);
+    persistUserAndMockLoggedIn(user);
     persistEntities(exerciseRepository, persistedInitialExercise);
-    persistUserExercises(persistedUserExercise);
+    persistExercisesForLoggedInUser(persistedUserExercise);
 
-    var response = get(authMode, requestUrl(GET_ALL_CREATED_BY_USER_URL), ExerciseDto[].class);
+    var response = get(TestAuthentication.REGULAR, requestUrl(GET_ALL_CREATED_BY_USER_URL), ExerciseDto[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody())
@@ -434,7 +434,196 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  private void persistUserExercises(UserExercise... exercises) {
+  //region /updateInitialExercise
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "ExerciseDto1_updatedNewName.json", type = ExerciseDto.class),
+      @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
+      @JsonFileSource(value = DATA_ROOT + "ExerciseDto1_updatedNewName.json", type = ExerciseDto.class)
+  })
+  void updateInitialExercise_validExerciseDtoAsAdmin_return200AndReturnCorrectDto(ExerciseDto request, Exercise persistedExercise,
+                                                                                  ExerciseDto expected) {
+    persistEntities(exerciseRepository, persistedExercise);
+
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(UPDATE_INITIAL_EXERCISE_URL), HttpMethod.PUT, request, ExerciseDto.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody()).isEqualTo(expected);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "ExerciseDto1_updatedNewName.json", type = ExerciseDto.class)
+  })
+  void updateInitialExercise_validExerciseDtoAsPremium_return403(ExerciseDto request) {
+    var response = exchange(TestAuthentication.PREMIUM, requestUrl(UPDATE_INITIAL_EXERCISE_URL), HttpMethod.PUT, request, Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "ExerciseDto1_updatedNewName.json", type = ExerciseDto.class)
+  })
+  void updateInitialExercise_validExerciseDtoAsRegular_return403(ExerciseDto request) {
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(UPDATE_INITIAL_EXERCISE_URL), HttpMethod.PUT, request, Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "ExerciseDto1_updatedNewName.json", type = ExerciseDto.class)
+  })
+  void updateInitialExercise_nonExistentExerciseDtoAsAdmin_return404(ExerciseDto request) {
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(UPDATE_INITIAL_EXERCISE_URL), HttpMethod.PUT, request, Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "Exercises_1-2.json", type = Exercise[].class),
+      @JsonFileSource(value = DATA_ROOT + "ExerciseDto1_updatedNewName.json", type = ExerciseDto.class)
+  })
+  void updateInitialExercise_existingNameExerciseDtoAsAdmin_return400(Exercise[] persistedExercises, ExerciseDto request) {
+    persistEntities(exerciseRepository, persistedExercises);
+
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(UPDATE_INITIAL_EXERCISE_URL), HttpMethod.PUT, request, Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  //endregion
+
+  //region /updateUserExercise
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "AdminUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1Dto_updatedNewName.json", type = ExerciseDto.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1Dto_updatedNewName.json", type = ExerciseDto.class)
+  })
+  void updateUserExercise_validExerciseDtoAsAdmin_return200AndReturnCorrectDto(User user, ExerciseDto request, UserExercise persistedExercise,
+                                                                               ExerciseDto expected) {
+    persistUserAndMockLoggedIn(user);
+    persistExercisesForLoggedInUser(persistedExercise);
+
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(UPDATE_USER_EXERCISE_URL), HttpMethod.PUT, request, ExerciseDto.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody()).isEqualTo(expected);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "PremiumUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1Dto_updatedNewName.json", type = ExerciseDto.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1Dto_updatedNewName.json", type = ExerciseDto.class)
+  })
+  void updateUserExercise_validExerciseDtoAsPremium_return200AndReturnCorrectDto(User user, ExerciseDto request, UserExercise persistedExercise,
+                                                                                 ExerciseDto expected) {
+    persistUserAndMockLoggedIn(user);
+    persistExercisesForLoggedInUser(persistedExercise);
+
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(UPDATE_USER_EXERCISE_URL), HttpMethod.PUT, request, ExerciseDto.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody()).isEqualTo(expected);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1Dto_updatedNewName.json", type = ExerciseDto.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1Dto_updatedNewName.json", type = ExerciseDto.class)
+  })
+  void updateUserExercise_validExerciseDtoAsRegular_return200AndReturnCorrectDto(User user, ExerciseDto request, UserExercise persistedExercise,
+                                                                                 ExerciseDto expected) {
+    persistUserAndMockLoggedIn(user);
+    persistExercisesForLoggedInUser(persistedExercise);
+
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(UPDATE_USER_EXERCISE_URL), HttpMethod.PUT, request, ExerciseDto.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody()).isEqualTo(expected);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1Dto_updatedNewName.json", type = ExerciseDto.class)
+  })
+  void updateUserExercise_nonExistentExerciseDtoAsRegular_return404(User user, ExerciseDto request) {
+    persistUserAndMockLoggedIn(user);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(UPDATE_USER_EXERCISE_URL), HttpMethod.PUT, request, Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1Dto_updatedNewName.json", type = ExerciseDto.class),
+      @JsonFileSource(value = DATA_ROOT + "RegularUser2.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1Regular2.json", type = UserExercise.class)
+  })
+  void updateUserExercise_exerciseDtoWrongUserAsRegular_return404(User requester, ExerciseDto request, User persistedUser,
+                                                                  UserExercise persistedExercise) {
+    persistUserAndMockLoggedIn(requester);
+    persistUser(persistedUser);
+    persistEntities(userExerciseRepository, persistedExercise);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(UPDATE_USER_EXERCISE_URL), HttpMethod.PUT, request, Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1Dto_updatedNewName.json", type = ExerciseDto.class)
+  })
+  void updateUserExercise_existingInitialNameExerciseDtoAsRegular_return400(User user, Exercise persistedExercise, UserExercise persistedUserExercise,
+                                                                            ExerciseDto request) {
+    persistUserAndMockLoggedIn(user);
+    persistExercisesForLoggedInUser(persistedUserExercise);
+    persistEntities(exerciseRepository, persistedExercise);
+
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(UPDATE_USER_EXERCISE_URL), HttpMethod.PUT, request, Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercises_1-2.json", type = UserExercise[].class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1Dto_updatedNewName.json", type = ExerciseDto.class)
+  })
+  void updateUserExercise_existingUserNameExerciseDtoAsRegular_return400(User user, UserExercise[] persistedUserExercises,
+                                                                         ExerciseDto request) {
+    persistUserAndMockLoggedIn(user);
+    persistExercisesForLoggedInUser(persistedUserExercises);
+
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(UPDATE_USER_EXERCISE_URL), HttpMethod.PUT, request, Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  //endregion
+
+
+  private void persistExercisesForLoggedInUser(UserExercise... exercises) {
     for (UserExercise exercise : exercises) {
       var user = getLoggedInUser();
       exercise.setCreatedBy(user);

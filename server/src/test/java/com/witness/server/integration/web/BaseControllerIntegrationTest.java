@@ -13,7 +13,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import com.witness.server.entity.User;
 import com.witness.server.enumeration.Role;
-import com.witness.server.enumeration.Sex;
 import com.witness.server.exception.AuthenticationException;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.integration.BaseIntegrationTest;
@@ -27,7 +26,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -163,12 +161,15 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
     return multiValueMap;
   }
 
-  @SneakyThrows(DataAccessException.class)
-  protected void persistUserAndMockLoggedIn(TestAuthentication authMode) {
-    var firebaseUser = getDummyFirebaseUser();
-    var user = getDummyUser(firebaseUser, getRoleFromAuthenticationMode(authMode));
-
+  protected void persistUser(User user) {
     userRepository.save(user);
+  }
+
+  @SneakyThrows(DataAccessException.class)
+  protected void persistUserAndMockLoggedIn(User user) {
+    var firebaseUser = getFirebaseUser(user);
+
+    persistUser(user);
     when(securityService.getCurrentUser()).thenReturn(firebaseUser);
     when(firebaseService.findUserById(firebaseUser.getUid())).thenReturn(firebaseUser);
   }
@@ -231,37 +232,14 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
     };
   }
 
-  private static FirebaseUser getDummyFirebaseUser() {
-    return FirebaseUser.builder()
-        .name("TestUser")
-        .email("user@test.com")
-        .uid("TestUserFirebaseId")
+  private static FirebaseUser getFirebaseUser(User user) {
+    return new FirebaseUser().builder()
+        .name(user.getUsername())
+        .email(user.getEmail())
+        .uid(user.getFirebaseId())
         .isEmailVerified(true)
         .issuer("TestUserIssuer")
         .picture("TestUserPicture")
         .build();
-  }
-
-  private static User getDummyUser(FirebaseUser firebaseUser, Role role) {
-    var currentTime = ZonedDateTime.now();
-
-    return User.builder()
-        .username(firebaseUser.getName())
-        .email(firebaseUser.getEmail())
-        .firebaseId(firebaseUser.getUid())
-        .createdAt(currentTime)
-        .modifiedAt(currentTime)
-        .sex(Sex.FEMALE)
-        .height(170L)
-        .role(role)
-        .build();
-  }
-
-  private static Role getRoleFromAuthenticationMode(TestAuthentication authMode) {
-    return switch (authMode) {
-      case ADMIN -> Role.ADMIN;
-      case PREMIUM -> Role.PREMIUM;
-      case REGULAR, NONE -> null;
-    };
   }
 }

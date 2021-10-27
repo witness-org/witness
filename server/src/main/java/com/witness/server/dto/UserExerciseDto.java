@@ -10,6 +10,6 @@ import lombok.EqualsAndHashCode;
 @Schema(description = "Represents a persisted user exercise.")
 public class UserExerciseDto extends ExerciseDto {
   @NotNull
-  @Schema(description = "The ID of the user who created the exercise.", example = "1")
-  private Long createdByUserId;
+  @Schema(description = "The name of the user who created the exercise.", example = "user123")
+  private String createdBy;
 }
