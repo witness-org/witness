@@ -4,6 +4,7 @@ import com.witness.server.entity.Exercise;
 import com.witness.server.entity.UserExercise;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.exception.DataAccessException;
+import com.witness.server.exception.DataNotFoundException;
 import com.witness.server.exception.InvalidRequestException;
 import java.util.List;
 
@@ -32,6 +33,29 @@ public interface ExerciseService {
    *                                 with the name of the requested {@code exercise}
    */
   UserExercise createUserExercise(String firebaseId, UserExercise exercise) throws DataAccessException, InvalidRequestException;
+
+  /**
+   * Updates an initial exercise, i.e. an exercise that is available to every user.
+   *
+   * @param exercise updated exercise
+   * @return updated {@link Exercise} object
+   * @throws InvalidRequestException if there is already an initial exercise with the updated name of the requested {@code exercise}
+   * @throws DataNotFoundException if the exercise to update does not exist
+   */
+  Exercise updateInitialExercise(Exercise exercise) throws InvalidRequestException, DataNotFoundException;
+
+  /**
+   * Updates a user exercise, i.e. an exercise that will only be available to the user with the provided Firebase ID.
+   *
+   * @param firebaseId Firebase ID of the user that updates the user exercise
+   * @param exercise   updated user exercise
+   * @return updated {@link UserExercise} object
+   * @throws DataAccessException     if the user with the provided {@code firebaseId} is not found in the database
+   * @throws InvalidRequestException if there is already an initial exercise or user exercise created by the user with the provided {@code firebaseId}
+   *                                 with the updated name of the requested {@code exercise} or if the user with the provided {@code firebaseId} is
+   *                                 not an admin and the requested {@code exercise} was not created by them
+   */
+  UserExercise updateUserExercise(String firebaseId, Exercise exercise) throws DataAccessException, InvalidRequestException;
 
   /**
    * Fetches all exercises contained in the "repertoire" of the user with the given Firebase ID that train the given muscle group. The "repertoire"

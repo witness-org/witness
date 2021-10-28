@@ -1,12 +1,13 @@
 {
   "id": 1,
-  "name": "UserExercise 1",
-  "description": "Description of UserExercise 1",
+  "name": "Exercise 1",
+  "description": "Description of Exercise 1",
   "muscleGroups": [
     "LEGS"
   ],
   "loggingTypes": [
-    "TIME"
+    "TIME",
+    "REPS"
   ],
   "createdBy": {
     "id": 1,

@@ -62,4 +62,8 @@ class ExerciseProvider with ChangeNotifier {
   Future<ServerResponse<Exercise, String>> postUserExercise(final ExerciseCreate data) async {
     return _exerciseService.postUserExercise(data, await _auth?.getToken());
   }
+
+  Future<ServerResponse<Exercise, String>> putUserExercise(final Exercise data) async {
+    return _exerciseService.putUserExercise(data, await _auth?.getToken());
+  }
 }

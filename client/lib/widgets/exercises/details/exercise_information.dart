@@ -101,12 +101,13 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer, Strin
             ),
           ),
         ),
-        Column(
-          children: [
-            const Divider(),
-            _buildStickyFooter(context, uiStrings),
-          ],
-        ),
+        if (_exercise.createdBy != null)
+          Column(
+            children: [
+              const Divider(),
+              _buildStickyFooter(context, uiStrings),
+            ],
+          ),
       ],
     );
   }

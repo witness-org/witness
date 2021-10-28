@@ -1,11 +1,13 @@
 {
+  "id": 1,
   "name": "UserExercise 1",
   "description": "Description of UserExercise 1",
   "muscleGroups": [
     "LEGS"
   ],
   "loggingTypes": [
-    "TIME"
+    "TIME",
+    "REPS"
   ],
-  "createdBy": null
+  "createdBy": "adminUser"
 }
