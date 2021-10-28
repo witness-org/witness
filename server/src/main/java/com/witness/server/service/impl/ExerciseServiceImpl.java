@@ -4,8 +4,11 @@ import com.witness.server.entity.Exercise;
 import com.witness.server.entity.User;
 import com.witness.server.entity.UserExercise;
 import com.witness.server.enumeration.MuscleGroup;
+import com.witness.server.enumeration.Role;
 import com.witness.server.exception.DataAccessException;
+import com.witness.server.exception.DataNotFoundException;
 import com.witness.server.exception.InvalidRequestException;
+import com.witness.server.mapper.ExerciseMapper;
 import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.UserExerciseRepository;
 import com.witness.server.service.ExerciseService;
@@ -22,45 +25,79 @@ public class ExerciseServiceImpl implements ExerciseService {
   private final UserService userService;
   private final ExerciseRepository exerciseRepository;
   private final UserExerciseRepository userExerciseRepository;
+  private final ExerciseMapper exerciseMapper;
 
   @Autowired
-  public ExerciseServiceImpl(UserService userService, ExerciseRepository exerciseRepository, UserExerciseRepository userExerciseRepository) {
+  public ExerciseServiceImpl(UserService userService, ExerciseRepository exerciseRepository, UserExerciseRepository userExerciseRepository,
+                             ExerciseMapper exerciseMapper) {
     this.userService = userService;
     this.exerciseRepository = exerciseRepository;
     this.userExerciseRepository = userExerciseRepository;
+    this.exerciseMapper = exerciseMapper;
   }
 
   @Override
   public Exercise createInitialExercise(Exercise exercise) throws InvalidRequestException {
-    log.info("Creating new initial exercise with name \"{}\".", exercise.getName());
+    var exerciseName = exercise.getName();
+    log.info("Creating new initial exercise with name \"{}\".", exerciseName);
 
-    if (exerciseRepository.existsByName(exercise.getName())) {
-      log.error("There already exists an initial exercise with the name \"{}\".", exercise.getName());
-      throw new InvalidRequestException("There already exists an exercise with this name.");
-    }
+    throwIfInitialExerciseWithNameExists(exerciseName);
 
     return exerciseRepository.save(exercise);
   }
 
   @Override
   public UserExercise createUserExercise(String firebaseId, UserExercise exercise) throws InvalidRequestException, DataAccessException {
-    log.info("Creating new user exercise with name \"{}\".", exercise.getName());
+    var exerciseName = exercise.getName();
+    log.info("Creating new user exercise with name \"{}\".", exerciseName);
 
-    if (exerciseRepository.existsByName(exercise.getName())) {
-      log.error("There already exists an initial exercise with the name \"{}\".", exercise.getName());
-      throw new InvalidRequestException("There already exists an exercise with this name.");
-    }
+    throwIfInitialExerciseWithNameExists(exerciseName);
 
     var user = getUser(firebaseId);
-    exercise.setCreatedBy(user);
+    throwIfUserExerciseCreatedByWithNameExists(exerciseName, user);
 
-    if (userExerciseRepository.existsByNameAndCreatedBy(exercise.getName(), user)) {
-      log.error("There already exists a user exercise with the name \"{}\" created by the provided user with ID {}.",
-          exercise.getName(), user.getId());
-      throw new InvalidRequestException("You already created an exercise with this name.");
+    exercise.setCreatedBy(user);
+    return userExerciseRepository.save(exercise);
+  }
+
+  @Override
+  public Exercise updateInitialExercise(Exercise exercise) throws InvalidRequestException, DataNotFoundException {
+    var exerciseId = exercise.getId();
+    log.info("Updating initial exercise with ID {}.", exerciseId);
+
+    var exerciseToUpdate = exerciseRepository.findById(exerciseId).orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist."));
+
+    var newName = exercise.getName();
+    if (!exerciseToUpdate.getName().equals(newName)) {
+      throwIfInitialExerciseWithNameExists(newName);
     }
 
-    return userExerciseRepository.save(exercise);
+    return exerciseRepository.save(exercise);
+  }
+
+  @Override
+  public UserExercise updateUserExercise(String firebaseId, Exercise exercise) throws DataAccessException, InvalidRequestException {
+    var exerciseId = exercise.getId();
+    log.info("Updating user exercise with ID {}.", exerciseId);
+
+    var exerciseToUpdate = userExerciseRepository
+        .findById(exerciseId)
+        .orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist."));
+
+    var user = getUser(firebaseId);
+    if (!Role.ADMIN.equals(user.getRole()) && !exerciseToUpdate.getCreatedBy().equals(user)) {
+      log.error("Requested exercise was not created by user with provided Firebase ID {}.", firebaseId);
+      throw new InvalidRequestException("The requested exercise was not created by the provided user.");
+    }
+
+    var newName = exercise.getName();
+    if (!exerciseToUpdate.getName().equals(newName)) {
+      throwIfInitialExerciseWithNameExists(newName);
+      throwIfUserExerciseCreatedByWithNameExists(newName, user);
+    }
+
+    var userExercise = exerciseMapper.fromExerciseAndCreatedBy(exercise, user);
+    return userExerciseRepository.save(userExercise);
   }
 
   @Override
@@ -81,5 +118,19 @@ public class ExerciseServiceImpl implements ExerciseService {
 
   private User getUser(String firebaseId) throws DataAccessException {
     return userService.findByFirebaseId(firebaseId);
+  }
+
+  private void throwIfInitialExerciseWithNameExists(String name) throws InvalidRequestException {
+    if (exerciseRepository.existsByName(name)) {
+      log.error("There already exists an initial exercise with the name \"{}\".", name);
+      throw new InvalidRequestException("There already exists an initial exercise with this name.");
+    }
+  }
+
+  private void throwIfUserExerciseCreatedByWithNameExists(String name, User user) throws InvalidRequestException {
+    if (userExerciseRepository.existsByNameAndCreatedBy(name, user)) {
+      log.error("There already exists a user exercise with the name \"{}\" created by the provided user with ID {}.", name, user.getId());
+      throw new InvalidRequestException("There already exists an exercise created by the provided user with this name.");
+    }
   }
 }

@@ -9,7 +9,7 @@
     "loggingTypes": [
       "TIME"
     ],
-    "createdByUserId": 1
+    "createdBy": "user1"
   },
   {
     "id": 2,
@@ -23,6 +23,6 @@
       "REPS",
       "TIME"
     ],
-    "createdByUserId": 1
+    "createdBy": "user1"
   }
 ]

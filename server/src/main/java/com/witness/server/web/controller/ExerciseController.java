@@ -5,6 +5,7 @@ import com.witness.server.dto.ExerciseDto;
 import com.witness.server.dto.UserExerciseDto;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.exception.DataAccessException;
+import com.witness.server.exception.DataNotFoundException;
 import com.witness.server.exception.InvalidRequestException;
 import com.witness.server.mapper.ExerciseMapper;
 import com.witness.server.service.ExerciseService;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -82,6 +84,47 @@ public class ExerciseController {
     var entity = exerciseMapper.createDtoToUserEntity(exercise);
     var currentUser = securityService.getCurrentUser();
     var createdEntity = exerciseService.createUserExercise(currentUser.getUid(), entity);
+    return exerciseMapper.userEntityToDto(createdEntity);
+  }
+
+  @PutMapping("updateInitialExercise")
+  @ResponseStatus(HttpStatus.OK)
+  @RequiresAdmin
+  @Operation(summary = "Updates an initial exercise. Only possible for admins.")
+  @ApiResponses(
+      value = {
+          @ApiResponse(responseCode = "200", description = "The initial exercise was successfully updated."),
+          @ApiResponse(responseCode = "400", description = "The initial exercise could not be updated because the request was invalid."),
+          @ApiResponse(responseCode = "404", description = "The requested initial exercise does not exist.")
+      }
+  )
+  public ExerciseDto updateInitialExercise(@Valid @RequestBody
+                                           @Parameter(description = "The exercise that should be updated.") ExerciseDto exercise)
+      throws InvalidRequestException, DataNotFoundException {
+    var entity = exerciseMapper.dtoToEntity(exercise);
+    var createdEntity = exerciseService.updateInitialExercise(entity);
+    return exerciseMapper.entityToDto(createdEntity);
+  }
+
+  @PutMapping("updateUserExercise")
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Updates an exercise that is visible only to the requesting user.")
+  @ApiResponses(
+      value = {
+          @ApiResponse(responseCode = "200", description = "The user exercise was successfully updated."),
+          @ApiResponse(responseCode = "400", description = "The user exercise could not be updated because the request was invalid."),
+          @ApiResponse(responseCode = "404",
+              description = "The requested exercise does not exist or the Firebase ID of the logged-in user cannot be found in the database."),
+          @ApiResponse(responseCode = "500",
+              description = "The user exercise could not be updated because the logged-in user could not be found in the database.")
+      }
+  )
+  public UserExerciseDto updateUserExercise(@Valid @RequestBody
+                                            @Parameter(description = "The exercise that should be updated.") ExerciseDto exercise)
+      throws DataAccessException, InvalidRequestException {
+    var entity = exerciseMapper.dtoToEntity(exercise);
+    var currentUser = securityService.getCurrentUser();
+    var createdEntity = exerciseService.updateUserExercise(currentUser.getUid(), entity);
     return exerciseMapper.userEntityToDto(createdEntity);
   }
 

@@ -60,6 +60,10 @@
   "@createExerciseForm_body_descriptionInput_placeholder": {
     "description": "Placeholder for input field for exercise description."
   },
+  "createExerciseForm_body_descriptionInput_tooLongErrorMessage": "The description must not be longer than 1024 characters.",
+  "@createExerciseForm_body_descriptionInput_tooLongErrorMessage": {
+    "description": "Error message that is displayed if the provided exercise description is too long."
+  },
   "createExerciseForm_body_heading_muscleGroups": "Muscle Groups",
   "@createExerciseForm_body_heading_muscleGroups": {
     "description": "Text for heading above choice chips for muscle groups targeted by exercise."
