@@ -20,9 +20,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class ExerciseServiceImpl implements ExerciseService {
+public class ExerciseServiceImpl extends BaseEndpointServiceImpl implements ExerciseService {
 
-  private final UserService userService;
   private final ExerciseRepository exerciseRepository;
   private final UserExerciseRepository userExerciseRepository;
   private final ExerciseMapper exerciseMapper;
@@ -30,7 +29,7 @@ public class ExerciseServiceImpl implements ExerciseService {
   @Autowired
   public ExerciseServiceImpl(UserService userService, ExerciseRepository exerciseRepository, UserExerciseRepository userExerciseRepository,
                              ExerciseMapper exerciseMapper) {
-    this.userService = userService;
+    super(userService);
     this.exerciseRepository = exerciseRepository;
     this.userExerciseRepository = userExerciseRepository;
     this.exerciseMapper = exerciseMapper;
@@ -114,10 +113,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     log.info("Fetching exercises created by user with ID {}.", user.getId());
     return exerciseRepository.findAllByUser(user);
-  }
-
-  private User getUser(String firebaseId) throws DataAccessException {
-    return userService.findByFirebaseId(firebaseId);
   }
 
   private void throwIfInitialExerciseWithNameExists(String name) throws InvalidRequestException {
