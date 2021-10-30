@@ -3,17 +3,20 @@ import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/widgets/app_drawer.dart';
+import 'package:client/widgets/common/image_provider_facade.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/exercises/editing/edit_exercise_screen.dart';
 import 'package:client/widgets/exercises/exercises_by_muscle_group_screen.dart';
 import 'package:client/widgets/main_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
 
 final _logger = getLogger('exercises_screen');
 
 class ExercisesScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
-  const ExercisesScreen({final Key? key}) : super(key: key);
+  const ExercisesScreen({final Key? key = _key}) : super(key: key);
 
+  static const _key = Key('exercises_screen');
   static const routeName = '/exercises';
 
   Widget _buildMuscleGroupList(final BuildContext context) {
@@ -29,7 +32,7 @@ class ExercisesScreen extends StatelessWidget with LogMessagePreparer, StringLoc
             final muscleGroup = MuscleGroup.values[index];
             return Column(
               children: [
-                _ExerciseOverviewItem(muscleGroup),
+                ExerciseOverviewItem(muscleGroup),
                 const Divider(),
               ],
             );
@@ -85,19 +88,21 @@ class ExercisesScreen extends StatelessWidget with LogMessagePreparer, StringLoc
   }
 }
 
-class _ExerciseOverviewItem extends StatelessWidget with LogMessagePreparer {
-  const _ExerciseOverviewItem(this._muscleGroup, {final Key? key}) : super(key: key);
+class ExerciseOverviewItem extends StatelessWidget with LogMessagePreparer {
+  const ExerciseOverviewItem(this._muscleGroup, {final Key? key}) : super(key: key);
 
+  static final Injector _injector = Injector.appInstance;
   final MuscleGroup _muscleGroup;
 
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
+    final imageProvider = _injector.get<ImageProviderFacade>();
     return ListTile(
       title: Text(_muscleGroup.toUiString()),
-      leading: const CircleAvatar(
+      leading: CircleAvatar(
         backgroundColor: Colors.transparent,
-        foregroundImage: AssetImage('assets/images/dumbbell.png'),
+        foregroundImage: imageProvider.fromAsset('assets/images/dumbbell.png'),
       ),
       onTap: () {
         Navigator.of(context).pushNamed(ExercisesByMuscleGroupScreen.routeName, arguments: _muscleGroup);

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @SecuredValidatedRestController
 @RequestMapping("/security-infrastructure")
-@Profile("integration-test")
+@Profile("integration-test & !api-generation")
 public class SecurityInfrastructureController {
   private final AtomicLong counter;
 

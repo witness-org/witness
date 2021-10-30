@@ -5,8 +5,8 @@ import 'package:client/services/firebase_service.dart';
 import 'package:client/services/server_response.dart';
 import 'package:client/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
 
 final _logger = getLogger('auth_provider');
 
@@ -15,11 +15,13 @@ final _logger = getLogger('auth_provider');
 typedef FirebaseUser = User;
 
 class AuthProvider with ChangeNotifier {
-  final UserService _userService = UserService();
-  final FirebaseService _authService = FirebaseService();
+  static final Injector _injector = Injector.appInstance;
+  late final FirebaseService _firebaseService = _injector.get<FirebaseService>();
+  late final UserService _userService = _injector.get<UserService>();
 
   FirebaseAuth? _firebaseAuth;
   FirebaseUser? _loggedInUser;
+
   StreamSubscription<FirebaseUser?>? _userStateStream;
 
   FirebaseUser? get currentUser {
@@ -34,7 +36,7 @@ class AuthProvider with ChangeNotifier {
     return _loggedInUser?.getIdToken();
   }
 
-  Future<String?> signUp(final String email, final String password) async {
+  Future<ServerResponse<void, String>> signUp(final String email, final String password) async {
     // signing up is a two-step process:
     //   - create the user via the server (which, in turn, creates a user at Firebase
     //   - sign in and receive authentication token via FlutterFire
@@ -42,16 +44,21 @@ class AuthProvider with ChangeNotifier {
       (final firebaseAuth) async {
         _logger.i('Signing up and logging in new user "$email"');
         final createResponse = await _userService.createUser(email, password);
-        return createResponse ?? await login(email, password);
+        if (createResponse.isSuccessAndResponse) {
+          return login(email, password);
+        } else {
+          _logger.e('Could not create user: ${createResponse.error}');
+          return createResponse;
+        }
       },
     );
   }
 
-  Future<String?> login(final String email, final String password) async {
+  Future<ServerResponse<FirebaseUser, String>> login(final String email, final String password) async {
     return _firebaseAuthAction(
       (final firebaseAuth) async {
         _logger.i('Trying to login user "$email"');
-        return _performLogin(() => _authService.loginEmailPassword(firebaseAuth, email, password));
+        return _performLogin(() => _firebaseService.loginEmailPassword(firebaseAuth, email, password));
       },
     );
   }
@@ -64,7 +71,7 @@ class AuthProvider with ChangeNotifier {
       }
 
       _logger.i('Logging out user with id "${_loggedInUser!.uid}"');
-      await _authService.logout(_firebaseAuth!);
+      await _firebaseService.logout(firebaseAuth);
     });
   }
 
@@ -82,8 +89,7 @@ class AuthProvider with ChangeNotifier {
       return;
     }
 
-    await Firebase.initializeApp();
-    _firebaseAuth = FirebaseAuth.instance;
+    _firebaseAuth = await _injector.get<Future<FirebaseAuth>>();
   }
 
   void _listenToUserChangeStream() {
@@ -94,7 +100,7 @@ class AuthProvider with ChangeNotifier {
     _firebaseAuthAction(
       (final firebaseAuth) {
         _logger.i('Setting up listener to Firebase user state stream');
-        _userStateStream = firebaseAuth.userChanges().distinct().listen(
+        _userStateStream = firebaseAuth.authStateChanges().distinct().listen(
           (final FirebaseUser? user) {
             _logger.i('User state stream: received onData event');
             if (user != null) {
@@ -114,15 +120,13 @@ class AuthProvider with ChangeNotifier {
     );
   }
 
-  Future<String?> _performLogin(final Future<ServerResponse<FirebaseUser, String>> Function() loginDelegate) async {
+  Future<ServerResponse<FirebaseUser, String>> _performLogin(final Future<ServerResponse<FirebaseUser, String>> Function() loginDelegate) async {
     final loginResult = await loginDelegate();
     if (loginResult.isSuccessAndResponse) {
       _loggedInUser = loginResult.success;
       notifyListeners();
-      return null;
-    } else {
-      return loginResult.error;
     }
+    return loginResult;
   }
 
   T _firebaseAuthAction<T>(final T Function(FirebaseAuth authenticationService) action) {

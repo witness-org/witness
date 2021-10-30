@@ -15,11 +15,12 @@ final _logger = getLogger('app_drawer');
 class AppDrawer extends StatelessWidget with LogMessagePreparer, StringLocalizer {
   const AppDrawer({final Key? key}) : super(key: key);
 
-  Widget _buildListTile(final String title, final IconData icon, final void Function() onTap) {
+  Widget _buildListTile(final String title, final IconData icon, final void Function() onTap, [final Key? key]) {
     return ListTile(
       leading: Icon(icon),
       title: Text(title),
       onTap: onTap,
+      key: key,
     );
   }
 
@@ -49,26 +50,31 @@ class AppDrawer extends StatelessWidget with LogMessagePreparer, StringLocalizer
             uiStrings.appDrawer_tile_trainingLog,
             Icons.date_range,
             () => Navigator.of(context).pushReplacementNamed(TrainingLogScreen.routeName),
+            const Key('app_drawer.training_log'),
           ),
           _buildListTile(
             uiStrings.appDrawer_tile_exercises,
             Icons.fitness_center,
             () => Navigator.of(context).pushReplacementNamed(ExercisesScreen.routeName),
+            const Key('app_drawer.exercises'),
           ),
           _buildListTile(
             uiStrings.appDrawer_tile_programs,
             Icons.article_outlined,
             () => Navigator.of(context).pushReplacementNamed(TrainingProgramsOverviewScreen.routeName),
+            const Key('app_drawer.programs'),
           ),
           _buildListTile(
             uiStrings.appDrawer_tile_statistics,
             Icons.insights,
             () => Navigator.of(context).pushReplacementNamed(StatisticsScreen.routeName),
+            const Key('app_drawer.statistics'),
           ),
           _buildListTile(
             uiStrings.appDrawer_tile_settings,
             Icons.settings,
             () => Navigator.of(context).pushReplacementNamed(SettingsScreen.routeName),
+            const Key('app_drawer.settings'),
           ),
           _buildListTile(
             uiStrings.appDrawer_tile_logout,
@@ -81,6 +87,7 @@ class AppDrawer extends StatelessWidget with LogMessagePreparer, StringLocalizer
 
               auth.logout();
             },
+            const Key('app_drawer.logout'),
           ),
         ],
       ),

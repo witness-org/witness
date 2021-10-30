@@ -7,14 +7,15 @@ import 'package:client/providers/auth_provider.dart';
 import 'package:client/services/training_program_service.dart';
 import 'package:collection/collection.dart' as collection;
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
 
 final _logger = getLogger('training_program_provider');
 
 class TrainingProgramProvider with ChangeNotifier {
-  TrainingProgramProvider(this._auth, this._trainingPrograms, this._trainingWeeks, this._trainingDays, this._workouts);
+  TrainingProgramProvider._(this._auth, this._trainingPrograms, this._trainingWeeks, this._trainingDays, this._workouts);
 
   TrainingProgramProvider.empty()
-      : this(
+      : this._(
           null,
           <TrainingProgramOverview>[],
           <int, List<TrainingWeekOverview>>{},
@@ -23,7 +24,7 @@ class TrainingProgramProvider with ChangeNotifier {
         );
 
   TrainingProgramProvider.fromProviders(final AuthProvider auth, final TrainingProgramProvider? instance)
-      : this(
+      : this._(
           auth,
           instance?._trainingPrograms ?? <TrainingProgramOverview>[],
           instance?._trainingWeeks ?? <int, List<TrainingWeekOverview>>{},
@@ -31,7 +32,9 @@ class TrainingProgramProvider with ChangeNotifier {
           instance?._workouts ?? <int, List<Workout>>{},
         );
 
-  final _trainingProgramService = TrainingProgramService();
+  static final Injector _injector = Injector.appInstance;
+  late final TrainingProgramService _trainingProgramService = _injector.get<TrainingProgramService>();
+
   List<TrainingProgramOverview> _trainingPrograms;
 
   /* TODO instead of the Map-approach, one could opt for creating separate Providers (TrainingWeekProvider, TrainingDayProvider, WorkoutProvider)

@@ -7,7 +7,10 @@ analyzer:
   exclude:
     - build/**
     - lib/generated_plugin_registrant.dart
+    - lib/*.g.dart
     - lib/**/*.g.dart
+    - test/*.mocks.dart
+    - test/**/*.mocks.dart
 
   language:
     # stricter analysis of generic arguments and raw type inference to change ensuing runtime errors to compile-time errors
