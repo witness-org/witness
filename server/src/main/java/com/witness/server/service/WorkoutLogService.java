@@ -11,7 +11,7 @@ import com.witness.server.exception.InvalidRequestException;
  */
 public interface WorkoutLogService {
 
-  WorkoutLog createNewWorkoutLog(String firebaseId) throws DataAccessException;
+  WorkoutLog createWorkoutLog(String firebaseId) throws DataAccessException;
 
   WorkoutLog setWorkoutDuration(String firebaseId, Long workoutLogId, Integer duration) throws DataAccessException, InvalidRequestException;
 

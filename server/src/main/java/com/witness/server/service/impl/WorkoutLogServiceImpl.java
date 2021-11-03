@@ -50,7 +50,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
   }
 
   @Override
-  public WorkoutLog createNewWorkoutLog(String firebaseId) throws DataAccessException {
+  public WorkoutLog createWorkoutLog(String firebaseId) throws DataAccessException {
     log.info("Creating new workout for user with Firebase ID {}", firebaseId);
 
     var user = getUser(userService, firebaseId);

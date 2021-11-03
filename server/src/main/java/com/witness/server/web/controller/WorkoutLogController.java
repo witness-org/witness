@@ -43,7 +43,7 @@ public class WorkoutLogController {
   @ResponseStatus(HttpStatus.CREATED)
   public String createNewWorkoutLog() throws DataAccessException {
     var currentUser = securityService.getCurrentUser();
-    workoutLogService.createNewWorkoutLog(currentUser.getUid());
+    workoutLogService.createWorkoutLog(currentUser.getUid());
     return "CHECK DATABASE";
   }
 
