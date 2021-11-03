@@ -1,10 +1,10 @@
-package com.witness.server.entity;
+package com.witness.server.entity.workout;
 
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,19 +14,19 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "user_exercise")
+@Table(name = "time_set_log")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @SuperBuilder(toBuilder = true)
 @ToString(callSuper = true)
-public class UserExercise extends Exercise {
+public class TimeSetLog extends SetLog {
 
-  @ManyToOne(targetEntity = User.class)
-  @JoinColumn(name = "created_by_id", nullable = false)
+  @Column(name = "seconds", nullable = false)
   @NotNull
-  private User createdBy;
+  @Min(1)
+  private Integer seconds;
 
   @Override
   public boolean equals(Object o) {
@@ -39,12 +39,12 @@ public class UserExercise extends Exercise {
     if (!super.equals(o)) {
       return false;
     }
-    var that = (UserExercise) o;
-    return Objects.equals(createdBy, that.createdBy);
+    var that = (TimeSetLog) o;
+    return Objects.equals(seconds, that.seconds);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), createdBy);
+    return Objects.hash(super.hashCode(), seconds);
   }
 }

@@ -3,9 +3,9 @@ package com.witness.server.integration.web;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import com.witness.server.dto.UserCreateDto;
-import com.witness.server.dto.UserDto;
-import com.witness.server.entity.User;
+import com.witness.server.dto.user.UserCreateDto;
+import com.witness.server.dto.user.UserDto;
+import com.witness.server.entity.user.User;
 import com.witness.server.model.FirebaseUser;
 import com.witness.server.repository.UserRepository;
 import com.witness.server.service.TimeService;

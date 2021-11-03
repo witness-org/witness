@@ -1,6 +1,6 @@
 package com.witness.server.service;
 
-import com.witness.server.entity.User;
+import com.witness.server.entity.user.User;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;
 

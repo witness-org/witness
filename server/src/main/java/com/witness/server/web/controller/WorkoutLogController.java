@@ -1,7 +1,7 @@
 package com.witness.server.web.controller;
 
-import com.witness.server.dto.AbstractSetLogCreateDto;
-import com.witness.server.dto.AbstractSetLogDto;
+import com.witness.server.dto.workout.AbstractSetLogCreateDto;
+import com.witness.server.dto.workout.AbstractSetLogDto;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.InvalidRequestException;
 import com.witness.server.mapper.SetLogMapper;

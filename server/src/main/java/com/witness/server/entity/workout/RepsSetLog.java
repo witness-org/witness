@@ -1,4 +1,4 @@
-package com.witness.server.entity;
+package com.witness.server.entity.workout;
 
 import java.util.Objects;
 import javax.persistence.Column;

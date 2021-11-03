@@ -1,4 +1,4 @@
-package com.witness.server.dto;
+package com.witness.server.dto.workout;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

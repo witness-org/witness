@@ -1,4 +1,4 @@
-package com.witness.server.dto;
+package com.witness.server.dto.workout;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

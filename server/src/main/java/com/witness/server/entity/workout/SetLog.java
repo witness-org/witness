@@ -1,4 +1,4 @@
-package com.witness.server.entity;
+package com.witness.server.entity.workout;
 
 import com.witness.server.enumeration.ResistanceBand;
 import java.util.ArrayList;

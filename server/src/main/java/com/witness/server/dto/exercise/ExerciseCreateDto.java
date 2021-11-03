@@ -1,4 +1,4 @@
-package com.witness.server.dto;
+package com.witness.server.dto.exercise;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

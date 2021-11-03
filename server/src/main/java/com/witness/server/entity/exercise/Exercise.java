@@ -1,4 +1,4 @@
-package com.witness.server.entity;
+package com.witness.server.entity.exercise;
 
 import com.witness.server.enumeration.LoggingType;
 import com.witness.server.enumeration.MuscleGroup;

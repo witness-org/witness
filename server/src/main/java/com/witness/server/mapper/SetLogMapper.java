@@ -1,14 +1,14 @@
 package com.witness.server.mapper;
 
-import com.witness.server.dto.AbstractSetLogCreateDto;
-import com.witness.server.dto.AbstractSetLogDto;
-import com.witness.server.dto.RepsSetLogCreateDto;
-import com.witness.server.dto.RepsSetLogDto;
-import com.witness.server.dto.TimeSetLogCreateDto;
-import com.witness.server.dto.TimeSetLogDto;
-import com.witness.server.entity.RepsSetLog;
-import com.witness.server.entity.SetLog;
-import com.witness.server.entity.TimeSetLog;
+import com.witness.server.dto.workout.AbstractSetLogCreateDto;
+import com.witness.server.dto.workout.AbstractSetLogDto;
+import com.witness.server.dto.workout.RepsSetLogCreateDto;
+import com.witness.server.dto.workout.RepsSetLogDto;
+import com.witness.server.dto.workout.TimeSetLogCreateDto;
+import com.witness.server.dto.workout.TimeSetLogDto;
+import com.witness.server.entity.workout.RepsSetLog;
+import com.witness.server.entity.workout.SetLog;
+import com.witness.server.entity.workout.TimeSetLog;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

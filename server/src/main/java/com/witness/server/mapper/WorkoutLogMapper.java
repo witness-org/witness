@@ -1,7 +1,7 @@
 package com.witness.server.mapper;
 
-import com.witness.server.entity.User;
-import com.witness.server.entity.WorkoutLog;
+import com.witness.server.entity.user.User;
+import com.witness.server.entity.workout.WorkoutLog;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

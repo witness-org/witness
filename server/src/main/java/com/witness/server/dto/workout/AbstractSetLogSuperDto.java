@@ -1,4 +1,4 @@
-package com.witness.server.dto;
+package com.witness.server.dto.workout;
 
 import com.witness.server.enumeration.ResistanceBand;
 import java.util.List;

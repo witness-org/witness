@@ -1,7 +1,7 @@
 package com.witness.server.service;
 
-import com.witness.server.entity.SetLog;
-import com.witness.server.entity.WorkoutLog;
+import com.witness.server.entity.workout.SetLog;
+import com.witness.server.entity.workout.WorkoutLog;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.InvalidRequestException;
 

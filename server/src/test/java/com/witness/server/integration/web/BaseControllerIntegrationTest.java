@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
-import com.witness.server.entity.User;
+import com.witness.server.entity.user.User;
 import com.witness.server.enumeration.Role;
 import com.witness.server.exception.AuthenticationException;
 import com.witness.server.exception.DataAccessException;

@@ -1,4 +1,4 @@
-package com.witness.server.dto;
+package com.witness.server.dto.exercise;
 
 import com.witness.server.enumeration.LoggingType;
 import com.witness.server.enumeration.MuscleGroup;

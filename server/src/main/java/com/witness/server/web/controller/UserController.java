@@ -1,7 +1,7 @@
 package com.witness.server.web.controller;
 
-import com.witness.server.dto.UserCreateDto;
-import com.witness.server.dto.UserDto;
+import com.witness.server.dto.user.UserCreateDto;
+import com.witness.server.dto.user.UserDto;
 import com.witness.server.enumeration.Role;
 import com.witness.server.enumeration.ServerError;
 import com.witness.server.exception.AccessDeniedException;

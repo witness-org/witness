@@ -1,8 +1,8 @@
 package com.witness.server.service.impl;
 
-import com.witness.server.entity.ExerciseLog;
-import com.witness.server.entity.SetLog;
-import com.witness.server.entity.WorkoutLog;
+import com.witness.server.entity.workout.ExerciseLog;
+import com.witness.server.entity.workout.SetLog;
+import com.witness.server.entity.workout.WorkoutLog;
 import com.witness.server.enumeration.Role;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;

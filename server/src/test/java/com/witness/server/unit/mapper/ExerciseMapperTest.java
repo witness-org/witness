@@ -2,12 +2,12 @@ package com.witness.server.unit.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.witness.server.dto.ExerciseCreateDto;
-import com.witness.server.dto.ExerciseDto;
-import com.witness.server.dto.UserExerciseDto;
-import com.witness.server.entity.Exercise;
-import com.witness.server.entity.User;
-import com.witness.server.entity.UserExercise;
+import com.witness.server.dto.exercise.ExerciseCreateDto;
+import com.witness.server.dto.exercise.ExerciseDto;
+import com.witness.server.dto.exercise.UserExerciseDto;
+import com.witness.server.entity.exercise.Exercise;
+import com.witness.server.entity.user.User;
+import com.witness.server.entity.exercise.UserExercise;
 import com.witness.server.mapper.ExerciseMapper;
 import com.witness.server.unit.BaseUnitTest;
 import com.witness.server.util.JsonFileSource;

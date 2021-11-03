@@ -34,21 +34,21 @@
     attributes that are defined via annotations in the production code.
     -->
 
-    <entity class="com.witness.server.entity.Exercise">
+    <entity class="com.witness.server.entity.user.User">
+        <attributes>
+            <id name="id">
+                <generated-value strategy="SEQUENCE" generator="user_id_generator"/>
+                <sequence-generator name="user_id_generator" sequence-name="user_id_sequence" allocation-size="1"/>
+            </id>
+        </attributes>
+    </entity>
+
+    <entity class="com.witness.server.entity.exercise.Exercise">
         <attributes>
             <id name="id">
                 <generated-value strategy="SEQUENCE" generator="exercise_id_generator"/>
                 <sequence-generator name="exercise_id_generator" sequence-name="exercise_id_sequence"
                                     allocation-size="1"/>
-            </id>
-        </attributes>
-    </entity>
-
-    <entity class="com.witness.server.entity.User">
-        <attributes>
-            <id name="id">
-                <generated-value strategy="SEQUENCE" generator="user_id_generator"/>
-                <sequence-generator name="user_id_generator" sequence-name="user_id_sequence" allocation-size="1"/>
             </id>
         </attributes>
     </entity>

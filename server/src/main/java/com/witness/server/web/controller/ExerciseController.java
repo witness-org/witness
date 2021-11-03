@@ -1,8 +1,8 @@
 package com.witness.server.web.controller;
 
-import com.witness.server.dto.ExerciseCreateDto;
-import com.witness.server.dto.ExerciseDto;
-import com.witness.server.dto.UserExerciseDto;
+import com.witness.server.dto.exercise.ExerciseCreateDto;
+import com.witness.server.dto.exercise.ExerciseDto;
+import com.witness.server.dto.exercise.UserExerciseDto;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;

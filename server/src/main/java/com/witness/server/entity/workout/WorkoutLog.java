@@ -1,5 +1,6 @@
-package com.witness.server.entity;
+package com.witness.server.entity.workout;
 
+import com.witness.server.entity.user.User;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
