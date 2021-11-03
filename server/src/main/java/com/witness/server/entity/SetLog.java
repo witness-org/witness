@@ -63,6 +63,9 @@ public abstract class SetLog extends Set {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
+    if (!super.equals(o)) {
+      return false;
+    }
     var setLog = (SetLog) o;
     return Objects.equals(id, setLog.id) && Objects.equals(weightKg, setLog.weightKg) && Objects.equals(resistanceBands, setLog.resistanceBands)
         && Objects.equals(exerciseLog, setLog.exerciseLog);
@@ -70,6 +73,6 @@ public abstract class SetLog extends Set {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, weightKg, resistanceBands, exerciseLog);
+    return Objects.hash(super.hashCode(), id, weightKg, resistanceBands, exerciseLog);
   }
 }
