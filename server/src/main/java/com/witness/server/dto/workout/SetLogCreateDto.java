@@ -9,8 +9,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = TimeSetLogCreateDto.class, name = "time"),
-    @JsonSubTypes.Type(value = RepsSetLogCreateDto.class, name = "reps")
+    @JsonSubTypes.Type(value = TimeSetLogCreateDto.class, name = "timeCreate"),
+    @JsonSubTypes.Type(value = RepsSetLogCreateDto.class, name = "repsCreate")
 })
 public abstract class SetLogCreateDto extends BaseSetLogDto {
 }
