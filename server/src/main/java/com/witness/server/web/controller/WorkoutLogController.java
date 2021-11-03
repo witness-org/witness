@@ -47,64 +47,64 @@ public class WorkoutLogController {
     return "CHECK DATABASE";
   }
 
-  @PatchMapping("/{id}")
+  @PatchMapping("/{workoutLogId}")
   @ResponseStatus(HttpStatus.OK)
-  public String setWorkoutDuration(@PathVariable Long id, @RequestBody Integer duration) throws DataAccessException, InvalidRequestException {
+  public String setWorkoutDuration(@PathVariable Long workoutLogId, @RequestBody Integer duration) throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
-    workoutLogService.setWorkoutDuration(currentUser.getUid(), id, duration);
+    workoutLogService.setWorkoutDuration(currentUser.getUid(), workoutLogId, duration);
     return "CHECK DATABASE";
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/{workoutLogId}")
   @ResponseStatus(HttpStatus.OK)
-  public String deleteWorkoutLog(@PathVariable Long id) throws DataAccessException, InvalidRequestException {
+  public String deleteWorkoutLog(@PathVariable Long workoutLogId) throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
-    workoutLogService.deleteWorkoutLog(currentUser.getUid(), id);
+    workoutLogService.deleteWorkoutLog(currentUser.getUid(), workoutLogId);
     return "CHECK DATABASE";
   }
 
-  @PostMapping("/{id}")
+  @PostMapping("/{workoutLogId}")
   @ResponseStatus(HttpStatus.CREATED)
-  public String addExerciseLog(@PathVariable Long id, @RequestBody Long exerciseId) throws DataAccessException, InvalidRequestException {
+  public String addExerciseLog(@PathVariable Long workoutLogId, @RequestBody Long exerciseId) throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
-    workoutLogService.addExerciseLog(currentUser.getUid(), id, exerciseId);
+    workoutLogService.addExerciseLog(currentUser.getUid(), workoutLogId, exerciseId);
     return "CHECK DATABASE";
   }
 
-  @DeleteMapping("/{id}/{exerciseId}")
+  @DeleteMapping("/{workoutLogId}/{exerciseId}")
   @ResponseStatus(HttpStatus.OK)
-  public String deleteExerciseLog(@PathVariable Long id, @PathVariable Long exerciseId) throws DataAccessException, InvalidRequestException {
+  public String deleteExerciseLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseId) throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
-    workoutLogService.deleteExerciseLog(currentUser.getUid(), id, exerciseId);
+    workoutLogService.deleteExerciseLog(currentUser.getUid(), workoutLogId, exerciseId);
     return "CHECK DATABASE";
   }
 
-  @PostMapping("/{id}/{exerciseId}")
+  @PostMapping("/{workoutLogId}/{exerciseLogId}")
   @ResponseStatus(HttpStatus.CREATED)
-  public String addSetLog(@PathVariable Long id, @PathVariable Long exerciseId, @RequestBody AbstractSetLogCreateDto setLogDto)
+  public String addSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody AbstractSetLogCreateDto setLogDto)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     var setLog = setLogMapper.createDtoToEntity(setLogDto);
-    workoutLogService.addSetLog(currentUser.getUid(), id, exerciseId, setLog);
+    workoutLogService.addSetLog(currentUser.getUid(), workoutLogId, exerciseLogId, setLog);
     return "CHECK DATABASE";
   }
 
-  @PutMapping("/{id}/{exerciseId}")
+  @PutMapping("/{workoutLogId}/{exerciseLogId}")
   @ResponseStatus(HttpStatus.OK)
-  public String updateSetLog(@PathVariable Long id, @PathVariable Long exerciseId, @RequestBody AbstractSetLogDto setLogDto)
+  public String updateSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody AbstractSetLogDto setLogDto)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     var setLog = setLogMapper.dtoToEntity(setLogDto);
-    workoutLogService.updateSetLog(currentUser.getUid(), id, exerciseId, setLog);
+    workoutLogService.updateSetLog(currentUser.getUid(), workoutLogId, exerciseLogId, setLog);
     return "CHECK DATABASE";
   }
 
-  @DeleteMapping("/{id}/{exerciseId}/{setId}")
+  @DeleteMapping("/{workoutLogId}/{exerciseLogId}/{setLogId}")
   @ResponseStatus(HttpStatus.OK)
-  public String deleteSetLog(@PathVariable Long id, @PathVariable Long exerciseId, @PathVariable Long setId)
+  public String deleteSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @PathVariable Long setLogId)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
-    workoutLogService.deleteSetLog(currentUser.getUid(), id, exerciseId, setId);
+    workoutLogService.deleteSetLog(currentUser.getUid(), workoutLogId, exerciseLogId, setLogId);
     return "CHECK DATABASE";
   }
 }
