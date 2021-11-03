@@ -12,6 +12,7 @@ import com.witness.server.mapper.ExerciseMapper;
 import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.UserExerciseRepository;
 import com.witness.server.service.ExerciseService;
+import com.witness.server.service.UserAccessor;
 import com.witness.server.service.UserService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -20,18 +21,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class ExerciseServiceImpl extends BaseEndpointServiceImpl implements ExerciseService {
+public class ExerciseServiceImpl implements ExerciseService, UserAccessor {
 
   private final ExerciseRepository exerciseRepository;
   private final UserExerciseRepository userExerciseRepository;
+  private final UserService userService;
   private final ExerciseMapper exerciseMapper;
 
   @Autowired
-  public ExerciseServiceImpl(UserService userService, ExerciseRepository exerciseRepository, UserExerciseRepository userExerciseRepository,
+  public ExerciseServiceImpl(ExerciseRepository exerciseRepository, UserExerciseRepository userExerciseRepository, UserService userService,
                              ExerciseMapper exerciseMapper) {
-    super(userService);
     this.exerciseRepository = exerciseRepository;
     this.userExerciseRepository = userExerciseRepository;
+    this.userService = userService;
     this.exerciseMapper = exerciseMapper;
   }
 
@@ -52,7 +54,7 @@ public class ExerciseServiceImpl extends BaseEndpointServiceImpl implements Exer
 
     throwIfInitialExerciseWithNameExists(exerciseName);
 
-    var user = getUser(firebaseId);
+    var user = getUser(userService, firebaseId);
     throwIfUserExerciseCreatedByWithNameExists(exerciseName, user);
 
     exercise.setCreatedBy(user);
@@ -83,7 +85,7 @@ public class ExerciseServiceImpl extends BaseEndpointServiceImpl implements Exer
         .findById(exerciseId)
         .orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist."));
 
-    var user = getUser(firebaseId);
+    var user = getUser(userService, firebaseId);
     if (!Role.ADMIN.equals(user.getRole()) && !exerciseToUpdate.getCreatedBy().equals(user)) {
       log.error("Requested exercise was not created by user with provided Firebase ID {}.", firebaseId);
       throw new InvalidRequestException("The requested exercise was not created by the provided user.");
@@ -101,7 +103,7 @@ public class ExerciseServiceImpl extends BaseEndpointServiceImpl implements Exer
 
   @Override
   public List<Exercise> getExercisesForUserByMuscleGroup(String firebaseId, MuscleGroup muscleGroup) throws DataAccessException {
-    var user = getUser(firebaseId);
+    var user = getUser(userService, firebaseId);
 
     log.info("Fetching exercises for muscle group \"{}\" for user with ID {}.", muscleGroup, user.getId());
     return exerciseRepository.findAllForUser(user, muscleGroup);
@@ -109,7 +111,7 @@ public class ExerciseServiceImpl extends BaseEndpointServiceImpl implements Exer
 
   @Override
   public List<Exercise> getExercisesCreatedByUser(String firebaseId) throws DataAccessException {
-    var user = getUser(firebaseId);
+    var user = getUser(userService, firebaseId);
 
     log.info("Fetching exercises created by user with ID {}.", user.getId());
     return exerciseRepository.findAllByUser(user);

@@ -14,6 +14,7 @@ import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.SetLogRepository;
 import com.witness.server.repository.WorkoutLogRepository;
 import com.witness.server.service.TimeService;
+import com.witness.server.service.UserAccessor;
 import com.witness.server.service.UserService;
 import com.witness.server.service.WorkoutLogService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,26 +23,27 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class WorkoutLogServiceImpl extends BaseEndpointServiceImpl implements WorkoutLogService {
+public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
 
   private final ExerciseRepository exerciseRepository;
   private final WorkoutLogRepository workoutLogRepository;
   private final ExerciseLogRepository exerciseLogRepository;
   private final SetLogRepository setLogRepository;
+  private final UserService userService;
   private final TimeService timeService;
   private final WorkoutLogMapper workoutLogMapper;
   private final ExerciseLogMapper exerciseLogMapper;
 
   @Autowired
-  public WorkoutLogServiceImpl(UserService userService, ExerciseRepository exerciseRepository1,
-                               WorkoutLogRepository workoutLogRepository, ExerciseLogRepository exerciseRepository,
-                               SetLogRepository setLogRepository, TimeService timeService,
+  public WorkoutLogServiceImpl(ExerciseRepository exerciseRepository,
+                               WorkoutLogRepository workoutLogRepository, ExerciseLogRepository exerciseLogRepository,
+                               SetLogRepository setLogRepository, UserService userService, TimeService timeService,
                                WorkoutLogMapper workoutLogMapper, ExerciseLogMapper exerciseLogMapper) {
-    super(userService);
-    this.exerciseRepository = exerciseRepository1;
+    this.exerciseRepository = exerciseRepository;
     this.workoutLogRepository = workoutLogRepository;
-    this.exerciseLogRepository = exerciseRepository;
+    this.exerciseLogRepository = exerciseLogRepository;
     this.setLogRepository = setLogRepository;
+    this.userService = userService;
     this.timeService = timeService;
     this.workoutLogMapper = workoutLogMapper;
     this.exerciseLogMapper = exerciseLogMapper;
@@ -51,7 +53,7 @@ public class WorkoutLogServiceImpl extends BaseEndpointServiceImpl implements Wo
   public WorkoutLog createNewWorkoutLog(String firebaseId) throws DataAccessException {
     log.info("Creating new workout for user with Firebase ID {}", firebaseId);
 
-    var user = getUser(firebaseId);
+    var user = getUser(userService, firebaseId);
     var workoutLog = workoutLogMapper.fromUser(user);
     workoutLog.setLoggedOn(timeService.getCurrentTime());
 
@@ -202,7 +204,7 @@ public class WorkoutLogServiceImpl extends BaseEndpointServiceImpl implements Wo
   }
 
   private void throwIfLoggedWorkoutNotByUser(String firebaseId, WorkoutLog workoutLog) throws InvalidRequestException, DataAccessException {
-    var user = getUser(firebaseId);
+    var user = getUser(userService, firebaseId);
 
     if (!Role.ADMIN.equals(user.getRole()) && !workoutLog.getUser().equals(user)) {
       log.error("Requested workout was not logged by user with provided Firebase ID {}.", firebaseId);
