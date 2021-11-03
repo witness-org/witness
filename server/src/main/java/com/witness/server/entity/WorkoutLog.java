@@ -32,6 +32,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkoutLog {
+
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "workout_log_id_generator")
   @SequenceGenerator(name = "workout_log_id_generator", sequenceName = "workout_log_id_sequence")
@@ -39,7 +40,7 @@ public class WorkoutLog {
   @NotNull
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(targetEntity = User.class)
   @JoinColumn(name = "logged_by_id", nullable = false)
   @NotNull
   private User user;

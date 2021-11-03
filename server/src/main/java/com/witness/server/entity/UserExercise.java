@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class UserExercise extends Exercise {
 
-  @ManyToOne
+  @ManyToOne(targetEntity = User.class)
   @JoinColumn(name = "created_by_id", nullable = false)
   @NotNull
   private User createdBy;
