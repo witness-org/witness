@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "reps_set_log")
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder(toBuilder = true)

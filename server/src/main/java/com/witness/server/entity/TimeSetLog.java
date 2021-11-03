@@ -17,10 +17,10 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "time_set_log")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder(toBuilder = true)
+@ToString(callSuper = true)
 public class TimeSetLog extends SetLog {
 
   @Column(name = "seconds", nullable = false)

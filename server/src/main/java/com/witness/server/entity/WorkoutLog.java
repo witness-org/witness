@@ -23,6 +23,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "workout_log")
@@ -31,6 +32,7 @@ import lombok.Setter;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class WorkoutLog {
 
   @Id
@@ -82,15 +84,5 @@ public class WorkoutLog {
   @Override
   public int hashCode() {
     return Objects.hash(id, loggedOn, durationMinutes, exerciseLogs);
-  }
-
-  @Override
-  public String toString() {
-    return "WorkoutLog{"
-        + "id=" + id
-        + ", loggedOn=" + loggedOn
-        + ", durationMinutes=" + durationMinutes
-        + ", exerciseLogs=" + exerciseLogs
-        + '}';
   }
 }

@@ -22,6 +22,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -31,6 +32,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
+@ToString(callSuper = true)
 public class ExerciseLog extends ExerciseReference {
 
   @Id
@@ -81,17 +83,5 @@ public class ExerciseLog extends ExerciseReference {
   @Override
   public int hashCode() {
     return Objects.hash(super.hashCode(), id, comment, workoutLog, setLogs);
-  }
-
-  @Override
-  public String toString() {
-    return "ExerciseLog{"
-        + "id=" + id
-        + ", comment='" + comment + '\''
-        + ", workoutLog=" + workoutLog
-        + ", setLogs=" + setLogs
-        + ", position=" + position
-        + ", exercise=" + exercise
-        + '}';
   }
 }

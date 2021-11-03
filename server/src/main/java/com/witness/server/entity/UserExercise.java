@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -19,6 +20,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
+@ToString(callSuper = true)
 public class UserExercise extends Exercise {
 
   @ManyToOne(targetEntity = User.class)
@@ -44,12 +46,5 @@ public class UserExercise extends Exercise {
   @Override
   public int hashCode() {
     return Objects.hash(super.hashCode(), createdBy);
-  }
-
-  @Override
-  public String toString() {
-    return "UserExercise{"
-        + "createdBy=" + createdBy
-        + '}';
   }
 }
