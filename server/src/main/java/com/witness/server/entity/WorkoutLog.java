@@ -41,7 +41,7 @@ public class WorkoutLog {
   @NotNull
   private User user;
 
-  @Column(name = "loggedOn", nullable = false)
+  @Column(name = "logged_on", nullable = false)
   @NotNull
   private ZonedDateTime loggedOn;
 
