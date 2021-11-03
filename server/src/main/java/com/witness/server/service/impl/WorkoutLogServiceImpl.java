@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
 
+  // TODO properly handle ordering of exercise/set logs (upon DELETE, fix ordering etc.)
+
   private final ExerciseRepository exerciseRepository;
   private final WorkoutLogRepository workoutLogRepository;
   private final ExerciseLogRepository exerciseLogRepository;
