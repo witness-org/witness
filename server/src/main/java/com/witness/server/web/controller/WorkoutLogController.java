@@ -8,6 +8,8 @@ import com.witness.server.mapper.SetLogMapper;
 import com.witness.server.service.SecurityService;
 import com.witness.server.service.WorkoutLogService;
 import com.witness.server.web.meta.SecuredValidatedRestController;
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,7 +50,7 @@ public class WorkoutLogController {
 
   @PatchMapping("/{workoutLogId}")
   @ResponseStatus(HttpStatus.OK)
-  public String setWorkoutDuration(@PathVariable Long workoutLogId, @RequestBody Integer duration) throws DataAccessException, InvalidRequestException {
+  public String setWorkoutDuration(@PathVariable Long workoutLogId, @RequestBody @Positive @Valid Integer duration) throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     workoutLogService.setWorkoutDuration(currentUser.getUid(), workoutLogId, duration);
     return "CHECK DATABASE";
@@ -64,7 +66,7 @@ public class WorkoutLogController {
 
   @PostMapping("/{workoutLogId}")
   @ResponseStatus(HttpStatus.CREATED)
-  public String addExerciseLog(@PathVariable Long workoutLogId, @RequestBody Long exerciseId) throws DataAccessException, InvalidRequestException {
+  public String addExerciseLog(@PathVariable Long workoutLogId, @RequestBody @Valid Long exerciseId) throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     workoutLogService.addExerciseLog(currentUser.getUid(), workoutLogId, exerciseId);
     return "CHECK DATABASE";
@@ -80,7 +82,7 @@ public class WorkoutLogController {
 
   @PostMapping("/{workoutLogId}/{exerciseLogId}")
   @ResponseStatus(HttpStatus.CREATED)
-  public String addSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody SetLogCreateDto setLogDto)
+  public String addSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody @Valid SetLogCreateDto setLogDto)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     var setLog = setLogMapper.createDtoToEntity(setLogDto);
@@ -90,7 +92,7 @@ public class WorkoutLogController {
 
   @PutMapping("/{workoutLogId}/{exerciseLogId}")
   @ResponseStatus(HttpStatus.OK)
-  public String updateSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody SetLogDto setLogDto)
+  public String updateSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody @Valid SetLogDto setLogDto)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     var setLog = setLogMapper.dtoToEntity(setLogDto);
