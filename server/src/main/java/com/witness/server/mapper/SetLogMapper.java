@@ -10,6 +10,7 @@ import com.witness.server.entity.RepsSetLog;
 import com.witness.server.entity.SetLog;
 import com.witness.server.entity.TimeSetLog;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper
 public abstract class SetLogMapper {
@@ -44,8 +45,12 @@ public abstract class SetLogMapper {
     }
   }
 
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "exerciseLog", ignore = true)
   public abstract TimeSetLog timeCreateDtoToEntity(TimeSetLogCreateDto setLog);
 
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "exerciseLog", ignore = true)
   public abstract RepsSetLog repsCreateDtoToEntity(RepsSetLogCreateDto setLog);
 
   public abstract TimeSetLog timeDtoToEntity(TimeSetLogDto setLog);

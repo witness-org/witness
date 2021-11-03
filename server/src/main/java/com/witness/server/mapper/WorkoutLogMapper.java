@@ -10,5 +10,8 @@ public abstract class WorkoutLogMapper {
 
   @Mapping(target = "user")
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "loggedOn", ignore = true)
+  @Mapping(target = "durationMinutes", ignore = true)
+  @Mapping(target = "exerciseLogs", ignore = true)
   public abstract WorkoutLog fromUser(User user);
 }
