@@ -22,6 +22,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "exercise_log")
@@ -29,26 +30,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class ExerciseLog extends ExerciseReference {
-
-  /**
-   * Constructs a new {@link ExerciseLog} instance.
-   *
-   * @param position   exercise log position
-   * @param exercise   executed exercise
-   * @param id         ID of the exercise log
-   * @param comment    comment accompanying the exercise log
-   * @param workoutLog reference to the workout log
-   * @param setLogs    executed sets
-   */
-  @Builder(toBuilder = true)
-  public ExerciseLog(Integer position, Exercise exercise, Long id, String comment, WorkoutLog workoutLog, List<SetLog> setLogs) {
-    super(position, exercise);
-    this.id = id;
-    this.comment = comment;
-    this.workoutLog = workoutLog;
-    this.setLogs = setLogs != null ? setLogs : new ArrayList<>();
-  }
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exercise_log_id_generator")
@@ -68,6 +51,7 @@ public class ExerciseLog extends ExerciseReference {
   @OneToMany(targetEntity = SetLog.class, mappedBy = "exerciseLog", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   @Setter(AccessLevel.NONE)
   @NotNull
+  @Builder.Default
   private List<SetLog> setLogs = new ArrayList<>();
 
   public boolean addSetLog(SetLog setLog) {

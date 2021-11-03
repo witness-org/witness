@@ -1,7 +1,5 @@
 package com.witness.server.entity;
 
-import com.witness.server.enumeration.ResistanceBand;
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,11 +7,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "reps_set_log")
@@ -22,15 +20,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class RepsSetLog extends SetLog {
-
-  @Builder(toBuilder = true)
-  public RepsSetLog(Integer position, Integer rpe, Long id, Long weightKg, List<ResistanceBand> resistanceBands, ExerciseLog exerciseLog,
-                    Integer reps) {
-    super(position, rpe, id, weightKg, resistanceBands, exerciseLog);
-    this.reps = reps;
-  }
-
+  
   @Column(name = "reps", nullable = false)
   @NotNull
   @Min(1)

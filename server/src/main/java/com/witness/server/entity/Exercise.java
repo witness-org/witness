@@ -20,11 +20,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
@@ -33,10 +33,11 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @Setter
 @ToString
-@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class Exercise {
+
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exercise_id_generator")
   @SequenceGenerator(name = "exercise_id_generator", sequenceName = "exercise_id_sequence")

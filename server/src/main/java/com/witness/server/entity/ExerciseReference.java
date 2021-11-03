@@ -12,13 +12,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @MappedSuperclass
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder(toBuilder = true)
 public abstract class ExerciseReference {
+  
   @Column(name = "position", nullable = false)
   @NotNull
   @Min(1)

@@ -1,8 +1,5 @@
 package com.witness.server.entity;
 
-import com.witness.server.enumeration.LoggingType;
-import com.witness.server.enumeration.MuscleGroup;
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -10,10 +7,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "user_exercise")
@@ -21,13 +18,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class UserExercise extends Exercise {
-
-  @Builder(builderMethodName = "userExerciseBuilder")
-  public UserExercise(Long id, String name, String description, List<MuscleGroup> muscleGroups, List<LoggingType> loggingTypes, User createdBy) {
-    super(id, name, description, muscleGroups, loggingTypes);
-    this.createdBy = createdBy;
-  }
 
   @ManyToOne
   @JoinColumn(name = "created_by_id", nullable = false)
