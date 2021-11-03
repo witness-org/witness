@@ -11,5 +11,5 @@ public class TimeSetLogCreateDto extends AbstractSetLogCreateDto {
 
   @NotNull
   @Min(1)
-  private Long seconds;
+  private Integer seconds;
 }

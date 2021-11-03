@@ -26,7 +26,7 @@ public class TimeSetLog extends SetLog {
   @Column(name = "seconds", nullable = false)
   @NotNull
   @Min(1)
-  private Long seconds;
+  private Integer seconds;
 
   @Override
   public boolean equals(Object o) {
