@@ -20,7 +20,7 @@ import javax.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
@@ -31,7 +31,7 @@ import org.hibernate.validator.constraints.Length;
 @ToString
 @Builder(toBuilder = true)
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_generator")

@@ -18,25 +18,25 @@ import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class ExerciseLog extends ExerciseReference {
 
   /**
    * Constructs a new {@link ExerciseLog} instance.
    *
-   * @param position exercise log position
-   * @param exercise executed exercise
-   * @param id ID of the exercise log
-   * @param comment comment accompanying the exercise log
+   * @param position   exercise log position
+   * @param exercise   executed exercise
+   * @param id         ID of the exercise log
+   * @param comment    comment accompanying the exercise log
    * @param workoutLog reference to the workout log
-   * @param setLogs executed sets
+   * @param setLogs    executed sets
    */
   @Builder(toBuilder = true)
   public ExerciseLog(Integer position, Exercise exercise, Long id, String comment, WorkoutLog workoutLog, List<SetLog> setLogs) {

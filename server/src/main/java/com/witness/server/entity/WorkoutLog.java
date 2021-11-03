@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -27,7 +27,7 @@ import lombok.Setter;
 @Setter
 @Builder(toBuilder = true)
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class WorkoutLog {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "workout_log_id_generator")
