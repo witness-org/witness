@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -27,6 +28,7 @@ import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
+@Table(name = "exercise")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
