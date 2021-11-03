@@ -39,7 +39,7 @@ public class WorkoutLogController {
     this.setLogMapper = setLogMapper;
   }
 
-  @PostMapping("")
+  @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public String createNewWorkoutLog() throws DataAccessException {
     var currentUser = securityService.getCurrentUser();
