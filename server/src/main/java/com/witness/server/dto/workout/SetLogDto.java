@@ -13,8 +13,7 @@ import lombok.EqualsAndHashCode;
     @JsonSubTypes.Type(value = TimeSetLogDto.class, name = "time"),
     @JsonSubTypes.Type(value = RepsSetLogDto.class, name = "reps")
 })
-public abstract class AbstractSetLogDto extends AbstractSetLogSuperDto {
-
+public abstract class SetLogDto extends BaseSetLogDto {
   @NotNull
   protected Long id;
 }

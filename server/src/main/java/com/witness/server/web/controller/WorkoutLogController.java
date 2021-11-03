@@ -1,7 +1,7 @@
 package com.witness.server.web.controller;
 
-import com.witness.server.dto.workout.AbstractSetLogCreateDto;
-import com.witness.server.dto.workout.AbstractSetLogDto;
+import com.witness.server.dto.workout.SetLogCreateDto;
+import com.witness.server.dto.workout.SetLogDto;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.InvalidRequestException;
 import com.witness.server.mapper.SetLogMapper;
@@ -81,7 +81,7 @@ public class WorkoutLogController {
 
   @PostMapping("/{workoutLogId}/{exerciseLogId}")
   @ResponseStatus(HttpStatus.CREATED)
-  public String addSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody AbstractSetLogCreateDto setLogDto)
+  public String addSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody SetLogCreateDto setLogDto)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     var setLog = setLogMapper.createDtoToEntity(setLogDto);
@@ -91,7 +91,7 @@ public class WorkoutLogController {
 
   @PutMapping("/{workoutLogId}/{exerciseLogId}")
   @ResponseStatus(HttpStatus.OK)
-  public String updateSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody AbstractSetLogDto setLogDto)
+  public String updateSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody SetLogDto setLogDto)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     var setLog = setLogMapper.dtoToEntity(setLogDto);

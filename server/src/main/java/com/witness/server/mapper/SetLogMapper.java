@@ -1,7 +1,7 @@
 package com.witness.server.mapper;
 
-import com.witness.server.dto.workout.AbstractSetLogCreateDto;
-import com.witness.server.dto.workout.AbstractSetLogDto;
+import com.witness.server.dto.workout.SetLogCreateDto;
+import com.witness.server.dto.workout.SetLogDto;
 import com.witness.server.dto.workout.RepsSetLogCreateDto;
 import com.witness.server.dto.workout.RepsSetLogDto;
 import com.witness.server.dto.workout.TimeSetLogCreateDto;
@@ -23,7 +23,7 @@ public abstract class SetLogMapper {
    * @param setLog DTO to be mapped
    * @return mapped {@link SetLog object}
    */
-  public SetLog createDtoToEntity(AbstractSetLogCreateDto setLog) {
+  public SetLog createDtoToEntity(SetLogCreateDto setLog) {
     if (setLog instanceof TimeSetLogCreateDto) {
       return timeCreateDtoToEntity((TimeSetLogCreateDto) setLog);
     } else {
@@ -37,7 +37,7 @@ public abstract class SetLogMapper {
    * @param setLog DTO to be mapped
    * @return mapped {@link SetLog object}
    */
-  public SetLog dtoToEntity(AbstractSetLogDto setLog) {
+  public SetLog dtoToEntity(SetLogDto setLog) {
     if (setLog instanceof TimeSetLogDto) {
       return timeDtoToEntity((TimeSetLogDto) setLog);
     } else {

@@ -7,5 +7,5 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Represents an exercise create request.")
-public class ExerciseCreateDto extends AbstractExerciseDto {
+public class ExerciseCreateDto extends BaseExerciseDto {
 }

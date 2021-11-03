@@ -7,8 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TimeSetLogDto extends AbstractSetLogDto {
-
+public class TimeSetLogDto extends SetLogDto {
   @NotNull
   @Min(1)
   private Long seconds;

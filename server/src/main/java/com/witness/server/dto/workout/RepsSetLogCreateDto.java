@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RepsSetLogCreateDto extends AbstractSetLogCreateDto {
+public class RepsSetLogCreateDto extends SetLogCreateDto {
   @NotNull
   @Min(1)
   private Integer reps;

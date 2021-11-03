@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode
-public abstract class AbstractSetLogSuperDto {
+public abstract class BaseSetLogDto {
   @NotNull
   @Min(1)
   protected Integer position;

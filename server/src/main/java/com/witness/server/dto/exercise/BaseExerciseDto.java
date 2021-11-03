@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Length;
 
 @Data
 @EqualsAndHashCode
-public abstract class AbstractExerciseDto {
+public abstract class BaseExerciseDto {
   @NotBlank
   @Length(min = 1, max = 256)
   @Schema(description = "The name of the exercise.", example = "Barbell Bench Press")
