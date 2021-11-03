@@ -8,7 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper
 public abstract class ExerciseLogMapper {
 
-  @Mapping(source = "exercise", target = "exercise")
   @Mapping(target = "position", ignore = true)
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "comment", ignore = true)
