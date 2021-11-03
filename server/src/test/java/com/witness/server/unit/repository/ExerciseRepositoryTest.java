@@ -3,8 +3,8 @@ package com.witness.server.unit.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.witness.server.entity.exercise.Exercise;
-import com.witness.server.entity.user.User;
 import com.witness.server.entity.exercise.UserExercise;
+import com.witness.server.entity.user.User;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.UserExerciseRepository;

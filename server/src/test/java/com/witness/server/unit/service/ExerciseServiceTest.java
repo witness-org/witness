@@ -9,8 +9,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.witness.server.entity.exercise.Exercise;
-import com.witness.server.entity.user.User;
 import com.witness.server.entity.exercise.UserExercise;
+import com.witness.server.entity.user.User;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;

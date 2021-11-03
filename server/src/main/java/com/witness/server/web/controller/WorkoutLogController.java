@@ -50,7 +50,8 @@ public class WorkoutLogController {
 
   @PatchMapping("/{workoutLogId}")
   @ResponseStatus(HttpStatus.OK)
-  public String setWorkoutDuration(@PathVariable Long workoutLogId, @RequestBody @Positive @Valid Integer duration) throws DataAccessException, InvalidRequestException {
+  public String setWorkoutDuration(@PathVariable Long workoutLogId, @RequestBody @Positive @Valid Integer duration) throws DataAccessException,
+      InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     workoutLogService.setWorkoutDuration(currentUser.getUid(), workoutLogId, duration);
     return "CHECK DATABASE";
@@ -66,7 +67,8 @@ public class WorkoutLogController {
 
   @PostMapping("/{workoutLogId}")
   @ResponseStatus(HttpStatus.CREATED)
-  public String addExerciseLog(@PathVariable Long workoutLogId, @RequestBody @Valid Long exerciseId) throws DataAccessException, InvalidRequestException {
+  public String addExerciseLog(@PathVariable Long workoutLogId, @RequestBody @Valid Long exerciseId)
+      throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     workoutLogService.addExerciseLog(currentUser.getUid(), workoutLogId, exerciseId);
     return "CHECK DATABASE";
@@ -74,7 +76,8 @@ public class WorkoutLogController {
 
   @DeleteMapping("/{workoutLogId}/{exerciseId}")
   @ResponseStatus(HttpStatus.OK)
-  public String deleteExerciseLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseId) throws DataAccessException, InvalidRequestException {
+  public String deleteExerciseLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseId)
+      throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     workoutLogService.deleteExerciseLog(currentUser.getUid(), workoutLogId, exerciseId);
     return "CHECK DATABASE";

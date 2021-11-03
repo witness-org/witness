@@ -1,8 +1,8 @@
 package com.witness.server.service.impl;
 
 import com.witness.server.entity.exercise.Exercise;
-import com.witness.server.entity.user.User;
 import com.witness.server.entity.exercise.UserExercise;
+import com.witness.server.entity.user.User;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.enumeration.Role;
 import com.witness.server.exception.DataAccessException;
