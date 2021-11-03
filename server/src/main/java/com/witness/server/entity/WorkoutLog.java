@@ -55,31 +55,11 @@ public class WorkoutLog {
   @Builder.Default
   private List<ExerciseLog> exerciseLogs = new ArrayList<>();
 
-  /**
-   * Adds a {@link ExerciseLog} entry.
-   *
-   * @param exerciseLog exercise log entry to add
-   * @return true if the operation was successful; otherwise false
-   */
   public boolean addExerciseLog(ExerciseLog exerciseLog) {
-    if (exerciseLogs == null) {
-      exerciseLogs = new ArrayList<>();
-    }
-
     return exerciseLogs.add(exerciseLog);
   }
 
-  /**
-   * Removes a {@link ExerciseLog} entry.
-   *
-   * @param exerciseLog exercise log entry to remove
-   * @return true if the operation was successful; otherwise false
-   */
   public boolean removeExerciseLog(ExerciseLog exerciseLog) {
-    if (exerciseLogs == null) {
-      return false;
-    }
-
     return exerciseLogs.remove(exerciseLog);
   }
 

@@ -68,31 +68,11 @@ public class ExerciseLog extends ExerciseReference {
   @NotNull
   private List<SetLog> setLogs = new ArrayList<>();
 
-  /**
-   * Adds a {@link SetLog} entry.
-   *
-   * @param setLog set log entry to add
-   * @return true if the operation was successful; otherwise false
-   */
   public boolean addSetLog(SetLog setLog) {
-    if (setLogs == null) {
-      setLogs = new ArrayList<>();
-    }
-
     return setLogs.add(setLog);
   }
 
-  /**
-   * Removes a {@link SetLog} entry.
-   *
-   * @param setLog set log entry to remove
-   * @return true if the operation was successful; otherwise false
-   */
   public boolean removeSetLog(SetLog setLog) {
-    if (setLogs == null) {
-      return false;
-    }
-
     return setLogs.remove(setLog);
   }
 
