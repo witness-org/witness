@@ -14,6 +14,8 @@ import org.mapstruct.Mapper;
 @Mapper
 public abstract class SetLogMapper {
 
+  // TODO subclass mappings can be simplified with a future MapStruct version (see also ExerciseMapper)
+  //  (see https://mvnrepository.com/artifact/org.mapstruct/mapstruct and https://github.com/mapstruct/mapstruct/pull/2512)
   /**
    * Maps a creation DTO to a {@link SetLog object} based on the concrete class.
    *
