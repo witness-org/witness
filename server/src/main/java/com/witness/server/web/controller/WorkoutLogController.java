@@ -32,8 +32,7 @@ public class WorkoutLogController {
   private final SetLogMapper setLogMapper;
 
   @Autowired
-  public WorkoutLogController(SecurityService securityService, WorkoutLogService workoutLogService,
-                              SetLogMapper setLogMapper) {
+  public WorkoutLogController(SecurityService securityService, WorkoutLogService workoutLogService, SetLogMapper setLogMapper) {
     this.securityService = securityService;
     this.workoutLogService = workoutLogService;
     this.setLogMapper = setLogMapper;
