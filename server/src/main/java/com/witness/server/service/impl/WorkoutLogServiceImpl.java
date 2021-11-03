@@ -94,6 +94,8 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
         .orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist."));
     var exerciseLog = exerciseLogMapper.fromExercise(exercise);
 
+    // TODO validate logging type
+
     exerciseLog.setWorkoutLog(workoutLog);
     exerciseLog.setPosition(workoutLog.getExerciseLogs().size() + 1);
 
@@ -130,6 +132,8 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
     var exerciseLog = getExerciseLogOrThrow(exerciseLogId);
     throwIfLoggedExerciseNotInWorkoutLog(exerciseLog, workoutLog);
 
+    // TODO validate logging type
+
     setLog.setExerciseLog(exerciseLog);
     setLog.setPosition(exerciseLog.getSetLogs().size() + 1);
 
@@ -155,6 +159,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
     throwIfLoggedSetNotInExerciseLog(setLogToUpdate, exerciseLog);
 
     // TODO validate position (position must not change?)
+    // TODO validate logging type
 
     setLog.setExerciseLog(exerciseLog);
     setLogRepository.save(setLog);
