@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -65,6 +66,7 @@ public class ExerciseLog extends ExerciseReference {
   private WorkoutLog workoutLog;
 
   @OneToMany(targetEntity = SetLog.class, mappedBy = "exerciseLog", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  @Setter(AccessLevel.NONE)
   @NotNull
   private List<SetLog> setLogs = new ArrayList<>();
 
