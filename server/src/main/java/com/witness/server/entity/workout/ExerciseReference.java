@@ -33,6 +33,7 @@ public abstract class ExerciseReference {
   @ManyToOne(targetEntity = Exercise.class, fetch = FetchType.LAZY)
   @JoinColumn(name = "exercise_id", nullable = false)
   @NotNull
+  @ToString.Exclude
   protected Exercise exercise;
 
   @Override

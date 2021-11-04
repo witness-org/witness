@@ -48,16 +48,18 @@ public class ExerciseLog extends ExerciseReference {
   @ManyToOne(targetEntity = WorkoutLog.class, fetch = FetchType.LAZY)
   @JoinColumn(name = "workout_log", nullable = false)
   @NotNull
+  @ToString.Exclude
   private WorkoutLog workoutLog;
 
   @OneToMany(targetEntity = SetLog.class, mappedBy = "exerciseLog", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   @Setter(AccessLevel.NONE)
   @NotNull
   @Builder.Default
+  @ToString.Exclude
   private List<SetLog> setLogs = new ArrayList<>();
 
-  public boolean addSetLog(SetLog setLog) {
-    return setLogs.add(setLog);
+  public void addSetLog(SetLog setLog) {
+    setLogs.add(setLog);
   }
 
   public boolean removeSetLog(SetLog setLog) {

@@ -55,6 +55,7 @@ public abstract class SetLog extends Set {
   @ManyToOne(targetEntity = ExerciseLog.class, fetch = FetchType.LAZY)
   @JoinColumn(name = "exercise_log", nullable = false)
   @NotNull
+  @ToString.Exclude
   protected ExerciseLog exerciseLog;
 
   @Override

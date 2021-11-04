@@ -59,10 +59,11 @@ public class WorkoutLog {
   @NotNull
   @Setter(AccessLevel.NONE)
   @Builder.Default
+  @ToString.Exclude
   private List<ExerciseLog> exerciseLogs = new ArrayList<>();
 
-  public boolean addExerciseLog(ExerciseLog exerciseLog) {
-    return exerciseLogs.add(exerciseLog);
+  public void addExerciseLog(ExerciseLog exerciseLog) {
+    exerciseLogs.add(exerciseLog);
   }
 
   public boolean removeExerciseLog(ExerciseLog exerciseLog) {
