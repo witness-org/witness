@@ -1,4 +1,4 @@
-package com.witness.server.util.stubs;
+package com.witness.server.util.stub;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

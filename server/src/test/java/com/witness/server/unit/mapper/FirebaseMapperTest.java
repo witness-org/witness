@@ -9,8 +9,8 @@ import com.witness.server.model.FirebaseUser;
 import com.witness.server.unit.BaseUnitTest;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
-import com.witness.server.util.converters.FirebaseTokenArgumentConverter;
-import com.witness.server.util.converters.UserRecordArgumentConverter;
+import com.witness.server.util.converter.FirebaseTokenArgumentConverter;
+import com.witness.server.util.converter.UserRecordArgumentConverter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mapstruct.factory.Mappers;
 

@@ -23,7 +23,6 @@ class UserMapperTest extends BaseUnitTest {
   })
   void entityToDto(User entity, UserDto dto) {
     assertThat(mapper.entityToDto(entity)).isEqualTo(dto);
-
   }
 
   @ParameterizedTest

@@ -2,9 +2,12 @@ package com.witness.server.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.witness.server.util.converters.ArgumentConverter;
-import com.witness.server.util.converters.NoOpArgumentConverter;
+import com.witness.server.entity.workout.SetLog;
+import com.witness.server.util.converter.ArgumentConverter;
+import com.witness.server.util.converter.NoOpArgumentConverter;
+import com.witness.server.util.deserializer.SetLogDeserializer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -26,6 +29,8 @@ import org.springframework.util.ReflectionUtils;
 public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<JsonFileSources> {
   private static final ObjectMapper objectMapper = new ObjectMapper()
       .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+      .registerModule(new SimpleModule("CUSTOM_DESERIALIZERS")
+          .addDeserializer(SetLog.class, new SetLogDeserializer()))
       .registerModule(new JavaTimeModule());
 
   private JsonFileSource[] files;

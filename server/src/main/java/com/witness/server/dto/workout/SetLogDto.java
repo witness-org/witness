@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = TimeSetLogDto.class, name = "time"),
@@ -16,4 +18,7 @@ import lombok.EqualsAndHashCode;
 public abstract class SetLogDto extends BaseSetLogDto {
   @NotNull
   protected Long id;
+
+  @NotNull
+  protected Long exerciseLogId;
 }

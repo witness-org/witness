@@ -90,7 +90,6 @@ public class SetupArguments {
    * An exercise that is created during environment setup.
    */
   @Data
-  @EqualsAndHashCode
   public static class SetupExercise {
     private String name;
     private String description;

@@ -1,10 +1,10 @@
-package com.witness.server.util.converters;
+package com.witness.server.util.converter;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.firebase.auth.FirebaseToken;
-import com.witness.server.util.stubs.FirebaseTokenStub;
+import com.witness.server.util.stub.FirebaseTokenStub;
 
 /**
  * Implementation of {@link ArgumentConverter} for {@link FirebaseToken} and {@link FirebaseTokenStub} instances.

@@ -19,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,6 +50,7 @@ public abstract class SetLog extends Set {
   @Enumerated(EnumType.STRING)
   @ElementCollection(targetClass = ResistanceBand.class)
   @Builder.Default
+  @Setter(AccessLevel.NONE)
   @NotNull
   protected List<ResistanceBand> resistanceBands = new ArrayList<>();
 

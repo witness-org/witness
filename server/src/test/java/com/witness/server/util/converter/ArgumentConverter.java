@@ -1,4 +1,4 @@
-package com.witness.server.util.converters;
+package com.witness.server.util.converter;
 
 import com.witness.server.util.JsonFileArgumentsProvider;
 import com.witness.server.util.JsonFileSource;

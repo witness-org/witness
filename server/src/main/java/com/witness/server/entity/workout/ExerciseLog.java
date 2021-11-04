@@ -24,6 +24,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = "exercise_log")
@@ -43,6 +44,7 @@ public class ExerciseLog extends ExerciseReference {
   private Long id;
 
   @Column(name = "comment")
+  @Length(max = 1024)
   private String comment;
 
   @ManyToOne(targetEntity = WorkoutLog.class, fetch = FetchType.LAZY)

@@ -1,4 +1,4 @@
-package com.witness.server.util.converters;
+package com.witness.server.util.converter;
 
 /**
  * Default implementation of {@link ArgumentConverter}. It converts nothing and returns the passed instance verbatim.

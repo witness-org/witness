@@ -11,5 +11,5 @@ import lombok.EqualsAndHashCode;
 public class ExerciseDto extends BaseExerciseDto {
   @NotNull
   @Schema(description = "The ID of the exercise.", example = "1")
-  private Long id;
+  protected Long id;
 }

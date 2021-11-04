@@ -1,11 +1,12 @@
 package com.witness.server.mapper;
 
+import com.witness.server.dto.workout.WorkoutLogDto;
 import com.witness.server.entity.user.User;
 import com.witness.server.entity.workout.WorkoutLog;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(uses = {ExerciseLogMapper.class})
 public abstract class WorkoutLogMapper {
 
   @Mapping(target = "user")
@@ -14,4 +15,7 @@ public abstract class WorkoutLogMapper {
   @Mapping(target = "durationMinutes", ignore = true)
   @Mapping(target = "exerciseLogs", ignore = true)
   public abstract WorkoutLog fromUser(User user);
+
+  @Mapping(source = "user.id", target = "userId")
+  public abstract WorkoutLogDto entityToDto(WorkoutLog workoutLog);
 }
