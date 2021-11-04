@@ -1,3 +1,7 @@
+stages:
+  - check
+  - test
+
 variables:
   # This will suppress any download for dependencies and plugins or upload messages which would clutter the console log.
   # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
@@ -15,54 +19,18 @@ cache:
   paths:
     - .m2/repository
 
-# Run Java unit and integration tests
-test-server:
-  image: maven:3.8-openjdk-15
-  stage: test
-  script:
-    - 'cd server'
-    - 'mvn $MAVEN_CLI_OPTS clean verify'
-  artifacts:
-    paths:
-      # Filename (without extension) of API artifacts has to be kept in sync with the value of the LOCAL_FILE_NAME
-      # constant in the server/src/test/java/com/witness/server/integration/web/ApiGenerationTest.java file.
-      - './server/server_api.json'
-      - './server/server_api.yaml'
-
-# Execute Flutter unit tests
-test-client:
-  image: cirrusci/flutter:2.5.2
-  script:
-    - 'cd client'
-    - 'flutter doctor --verbose'
-    - 'flutter clean'
-    - 'flutter pub get'
-    - 'flutter pub run build_runner build'
-    - 'flutter test --reporter expanded'
-      
-# Execute Flutter integration tests
-integration-test-client:
-  image: raffaelfoidl/flutter-integration-test:chrome-v94-driver-v94
-  script:
-    - 'cd client'
-    - '/app/chromedriver --whitelisted-ips --port=4444 &'
-    - 'flutter doctor --verbose'
-    - 'flutter clean'
-    - 'flutter pub get'
-    - 'flutter pub run build_runner build'
-    - 'flutter drive --driver=test_driver/integration_test.dart --target=integration_test/main_test.dart --release -d web-server'
-
 # Execute maven checkstyle plugin
-check-server:
+check:server:
   image: maven:3.8-openjdk-15
-  stage: test
+  stage: check
   script:
     - 'cd server'
     - 'mvn $MAVEN_CLI_OPTS checkstyle:check'
 
 # Check codestyle, linting and static analysis of client code with dartfmt
-check-client:
+check:client:
   image: cirrusci/flutter:2.5.2
+  stage: check
   script:
     - 'cd client'
     - 'flutter clean'
@@ -70,12 +38,11 @@ check-client:
     - 'flutter pub run build_runner build'
 
     # Applies code formatting to project using dartfmt. Redirect stderr (2) to stdout (1) and send it to a file. If
-    # this output (i.e. the formatted files) contains at least one line that ends with .dart, but NOT with .g.dart (generated
-    # files may be formatted differently due to different line lengths), the command on the last line returns 1, making the
-    # job fail.
+    # this output (i.e. the formatted files) contains at least one line that ends with .dart, but NOT with .g.dart or .mocks.dart
+    # (generated files may be formatted differently), the command on the last line returns 1, making the job fail.
     - 'dart format ./ --line-length 150 > formatResult.txt 2>&1 || true'
     - 'cat formatResult.txt'
-    - if [ $(grep --perl-regexp 'Formatted[[:space:]].*(?<!\.g)\.dart' formatResult.txt -c) != 0 ]; then exit 1; fi
+    - if [ $(grep --perl-regexp 'Formatted[[:space:]].*(?<!\.(g|mocks))\.dart' formatResult.txt -c) != 0 ]; then exit 1; fi
 
     # The 'flutter analyze' may print parts of its output to stderr. Therefore, redirect stderr (2) to
     # stdout (1) and send it to a file. Finally, grep it for a positive outcome ("No issues found"). If this string
@@ -84,3 +51,50 @@ check-client:
     - 'flutter analyze > analysisResult.txt 2>&1 || true'
     - 'cat analysisResult.txt'
     - 'grep "No issues found" analysisResult.txt'
+
+# Run Java unit and integration tests
+test:server:
+  image: maven:3.8-openjdk-15
+  stage: test
+  needs:
+    - check:server
+  when: always
+  script:
+    - 'cd server'
+    - 'mvn $MAVEN_CLI_OPTS clean verify'
+  artifacts:
+    when: always
+    paths:
+      - './server/target/surefire-reports/'
+      # Filename (without extension) of API artifacts has to be kept in sync with the value of the LOCAL_FILE_NAME
+      # constant in the server/src/test/java/com/witness/server/integration/web/ApiGenerationTest.java file.
+      - './server/server_api.json'
+      - './server/server_api.yaml'
+
+# Execute Flutter unit tests
+test:client:
+  image: cirrusci/flutter:2.5.2
+  stage: test
+  needs:
+    - check:client
+  when: always
+  script:
+    - 'cd client'
+    - 'flutter doctor --verbose'
+    - 'flutter clean'
+    - 'flutter pub get'
+    - 'flutter pub run build_runner build'
+    # Set environment variable for additional pub packages and activate them.
+    - 'export PATH="$PATH":"$HOME/.pub-cache/bin"'
+    - 'flutter pub global activate dart_dot_reporter'
+    - 'flutter pub global activate junitreport'
+    # Execute tests, save JSON output to file. junitreport converts the very verbose, raw JSON output into a more readable XML format
+    # for further examinations. dart_dot_reporter creates a nice summary of the test execution from the JSON output for the CI logs.
+    - 'flutter test --machine > flutter-test-report-raw.json || echo "[ERROR] Flutter Tests failed! See build artifacts for more details."'
+    - 'flutter pub global run junitreport:tojunit --input flutter-test-report-raw.json --output flutter-test-report.xml'
+    - 'flutter pub global run dart_dot_reporter flutter-test-report-raw.json --show-message --show-success --show-id'
+  artifacts:
+    when: always
+    paths:
+      - './client/flutter-test-report-raw.json'
+      - './client/flutter-test-report.xml'

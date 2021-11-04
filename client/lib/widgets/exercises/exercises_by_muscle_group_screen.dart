@@ -5,9 +5,11 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/providers/exercise_provider.dart';
+import 'package:client/widgets/common/image_provider_facade.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/exercises/details/exercise_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
 import 'package:provider/provider.dart';
 
 final _logger = getLogger('exercises_by_muscle_group_screen');
@@ -79,7 +81,7 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
                           final exercise = exerciseData.getExercisesByMuscleGroup(group)[index];
                           return Column(
                             children: [
-                              _ExerciseByMuscleGroupItem(exercise),
+                              ExerciseByMuscleGroupItem(exercise),
                               const Divider(),
                             ],
                           );
@@ -119,19 +121,21 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
   }
 }
 
-class _ExerciseByMuscleGroupItem extends StatelessWidget with LogMessagePreparer {
-  const _ExerciseByMuscleGroupItem(this._exercise, {final Key? key}) : super(key: key);
+class ExerciseByMuscleGroupItem extends StatelessWidget with LogMessagePreparer {
+  const ExerciseByMuscleGroupItem(this._exercise, {final Key? key}) : super(key: key);
 
+  static final Injector _injector = Injector.appInstance;
   final Exercise _exercise;
 
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
+    final imageProvider = _injector.get<ImageProviderFacade>();
     return ListTile(
       title: Text(_exercise.name),
-      leading: const CircleAvatar(
+      leading: CircleAvatar(
         backgroundColor: Colors.transparent,
-        foregroundImage: AssetImage('assets/images/dumbbell.png'),
+        foregroundImage: imageProvider.fromAsset('assets/images/dumbbell.png'),
       ),
       onTap: () {
         Navigator.of(context).pushNamed(ExerciseDetailScreen.routeName, arguments: _exercise);

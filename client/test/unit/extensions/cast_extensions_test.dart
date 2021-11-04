@@ -4,8 +4,12 @@ import 'package:client/extensions/cast_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matcher/matcher.dart' as matchers;
 
+import '../../common/test_helpers.dart';
+
+const _sutName = 'cast_extensions';
+
 void main() {
-  group('castOrNull<int>', () {
+  group(getPrefixedGroupName(_sutName, 'castOrNull<int>'), () {
     test('should return int on int', () {
       const Object? obj = 1;
       final int? _int = obj.castOrNull<int>();
@@ -25,7 +29,7 @@ void main() {
     });
   });
 
-  group('castOrFallback<int>', () {
+  group(getPrefixedGroupName(_sutName, 'castOrFallback<int>'), () {
     test('should return int on int', () {
       const Object? obj = 1;
       final int _int = obj.castOrFallback<int>(2);
@@ -45,7 +49,7 @@ void main() {
     });
   });
 
-  group('castOrThrow<int>', () {
+  group(getPrefixedGroupName(_sutName, 'castOrThrow<int>'), () {
     test('should return int on int', () {
       const Object? obj = 1;
       final int _int = obj.castOrThrow<int>();

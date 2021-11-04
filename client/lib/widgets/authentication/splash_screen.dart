@@ -1,5 +1,4 @@
 import 'package:client/widgets/common/string_localizer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget with StringLocalizer {

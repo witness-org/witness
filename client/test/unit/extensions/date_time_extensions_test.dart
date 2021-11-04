@@ -1,8 +1,12 @@
 import 'package:client/extensions/date_time_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../common/test_helpers.dart';
+
+const _sutName = 'date_time_extensions';
+
 void main() {
-  group('dateOnly', () {
+  group(getPrefixedGroupName(_sutName, 'dateOnly'), () {
     test('should return a date of the same day, with time set to midnight', () {
       final _inputDate = DateTime(2021, 12, 3, 14, 46, 23, 123, 7772);
       final _expectedDate = DateTime(2021, 12, 3, 0, 0, 0, 0, 0);
@@ -11,7 +15,7 @@ void main() {
     });
   });
 
-  group('addYears', () {
+  group(getPrefixedGroupName(_sutName, 'addYears'), () {
     test('should return the same date if 0 year are added', () {
       final _inputDate = DateTime(2021, 12, 3, 14, 46, 23, 123, 7772);
       final _expectedDate = DateTime(2021, 12, 3, 14, 46, 23, 123, 7772);
@@ -27,7 +31,7 @@ void main() {
     });
   });
 
-  group('subtractYears', () {
+  group(getPrefixedGroupName(_sutName, 'subtractYears'), () {
     test('should return the same date if 0 year are subtracted', () {
       final _inputDate = DateTime(2021, 12, 3, 14, 46, 23, 123, 7772);
       final _expectedDate = DateTime(2021, 12, 3, 14, 46, 23, 123, 7772);

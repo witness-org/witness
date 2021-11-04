@@ -10,8 +10,9 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 final _logger = getLogger('training_log_screen');
 
 class TrainingLogScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
-  const TrainingLogScreen(this._workoutDay, {final Key? key}) : super(key: key);
+  const TrainingLogScreen(this._workoutDay, {final Key? key = _key}) : super(key: key);
 
+  static const Key _key = Key('training_log_screen');
   static const routeName = '/training-log';
   final DateTime _workoutDay;
 

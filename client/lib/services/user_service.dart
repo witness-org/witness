@@ -3,12 +3,13 @@ import 'dart:convert';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/user/user.dart';
 import 'package:client/services/base_service.dart';
+import 'package:client/services/server_response.dart';
 import 'package:http/http.dart' as http;
 
 final _logger = getLogger('user_service');
 
 class UserService extends BaseService {
-  Future<String?> createUser(final String email, final String password) async {
+  Future<ServerResponse<User, String>> createUser(final String email, final String password) async {
     final requestUri = getUri('user/register');
     _logger
       ..i('Delegating creation of user "email" to server')
@@ -25,19 +26,14 @@ class UserService extends BaseService {
       'password': password,
     };
 
-    final response = await http.post(
-      requestUri,
-      headers: httpHeaders,
-      body: json.encode(payload),
-    );
+    final response = await http.post(requestUri, headers: httpHeaders, body: json.encode(payload));
+    final responseMap = decodeResponse<Map<String, dynamic>>(response);
 
     if (response.statusCode == 201) {
-      final responseMap = decodeResponse<Map<String, dynamic>>(response);
-      // ignore: unused_local_variable, just an example on how to deserialize from response using auto-generated model
-      final returnedUser = User.fromJson(responseMap);
-      return null;
+      return ServerResponse.success(User.fromJson(responseMap));
     } else {
-      return response.body;
+      _logger.e('Could not register new user: ${responseMap['message']}');
+      return ServerResponse.failure(responseMap['message'].toString());
     }
   }
 }
