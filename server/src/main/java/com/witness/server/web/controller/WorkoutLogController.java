@@ -48,7 +48,7 @@ public class WorkoutLogController {
     return "CHECK DATABASE";
   }
 
-  @PatchMapping("/{workoutLogId}")
+  @PatchMapping("{workoutLogId}")
   @ResponseStatus(HttpStatus.OK)
   public String setWorkoutDuration(@PathVariable Long workoutLogId, @RequestBody @Positive @Valid Integer duration) throws DataAccessException,
       InvalidRequestException {
@@ -57,7 +57,7 @@ public class WorkoutLogController {
     return "CHECK DATABASE";
   }
 
-  @DeleteMapping("/{workoutLogId}")
+  @DeleteMapping("{workoutLogId}")
   @ResponseStatus(HttpStatus.OK)
   public String deleteWorkoutLog(@PathVariable Long workoutLogId) throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
@@ -65,7 +65,7 @@ public class WorkoutLogController {
     return "CHECK DATABASE";
   }
 
-  @PostMapping("/{workoutLogId}")
+  @PostMapping("{workoutLogId}")
   @ResponseStatus(HttpStatus.CREATED)
   public String addExerciseLog(@PathVariable Long workoutLogId, @RequestBody @Valid Long exerciseId)
       throws DataAccessException, InvalidRequestException {
@@ -74,7 +74,7 @@ public class WorkoutLogController {
     return "CHECK DATABASE";
   }
 
-  @DeleteMapping("/{workoutLogId}/{exerciseId}")
+  @DeleteMapping("{workoutLogId}/{exerciseId}")
   @ResponseStatus(HttpStatus.OK)
   public String deleteExerciseLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseId)
       throws DataAccessException, InvalidRequestException {
@@ -83,7 +83,7 @@ public class WorkoutLogController {
     return "CHECK DATABASE";
   }
 
-  @PostMapping("/{workoutLogId}/{exerciseLogId}")
+  @PostMapping("{workoutLogId}/{exerciseLogId}")
   @ResponseStatus(HttpStatus.CREATED)
   public String addSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody @Valid SetLogCreateDto setLogDto)
       throws DataAccessException, InvalidRequestException {
@@ -93,7 +93,7 @@ public class WorkoutLogController {
     return "CHECK DATABASE";
   }
 
-  @PutMapping("/{workoutLogId}/{exerciseLogId}")
+  @PutMapping("{workoutLogId}/{exerciseLogId}")
   @ResponseStatus(HttpStatus.OK)
   public String updateSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody @Valid SetLogDto setLogDto)
       throws DataAccessException, InvalidRequestException {
@@ -103,7 +103,7 @@ public class WorkoutLogController {
     return "CHECK DATABASE";
   }
 
-  @DeleteMapping("/{workoutLogId}/{exerciseLogId}/{setLogId}")
+  @DeleteMapping("{workoutLogId}/{exerciseLogId}/{setLogId}")
   @ResponseStatus(HttpStatus.OK)
   public String deleteSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @PathVariable Long setLogId)
       throws DataAccessException, InvalidRequestException {
