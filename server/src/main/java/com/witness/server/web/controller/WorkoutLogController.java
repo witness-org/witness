@@ -50,7 +50,7 @@ public class WorkoutLogController {
 
   @PatchMapping("{workoutLogId}")
   @ResponseStatus(HttpStatus.OK)
-  public String setWorkoutDuration(@PathVariable Long workoutLogId, @RequestBody @Positive @Valid Integer duration) throws DataAccessException,
+  public String setWorkoutDuration(@PathVariable Long workoutLogId, @Valid @RequestBody @Positive Integer duration) throws DataAccessException,
       InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     workoutLogService.setWorkoutDuration(currentUser.getUid(), workoutLogId, duration);
@@ -67,7 +67,7 @@ public class WorkoutLogController {
 
   @PostMapping("{workoutLogId}")
   @ResponseStatus(HttpStatus.CREATED)
-  public String addExerciseLog(@PathVariable Long workoutLogId, @RequestBody @Valid Long exerciseId)
+  public String addExerciseLog(@PathVariable Long workoutLogId, @Valid @RequestBody Long exerciseId)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     workoutLogService.addExerciseLog(currentUser.getUid(), workoutLogId, exerciseId);
@@ -85,7 +85,7 @@ public class WorkoutLogController {
 
   @PostMapping("{workoutLogId}/{exerciseLogId}")
   @ResponseStatus(HttpStatus.CREATED)
-  public String addSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody @Valid SetLogCreateDto setLogDto)
+  public String addSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @Valid @RequestBody SetLogCreateDto setLogDto)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     var setLog = setLogMapper.createDtoToEntity(setLogDto);
@@ -95,7 +95,7 @@ public class WorkoutLogController {
 
   @PutMapping("{workoutLogId}/{exerciseLogId}")
   @ResponseStatus(HttpStatus.OK)
-  public String updateSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @RequestBody @Valid SetLogDto setLogDto)
+  public String updateSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @Valid @RequestBody SetLogDto setLogDto)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     var setLog = setLogMapper.dtoToEntity(setLogDto);
