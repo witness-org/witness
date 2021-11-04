@@ -1,11 +1,12 @@
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/providers/auth_provider.dart';
+import 'package:client/services/base_service.dart';
 import 'package:client/services/server_response.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 final _logger = getLogger('firebase_service');
 
-class FirebaseService {
+class FirebaseService extends BaseService {
   static const Map<String, String> _errorMappings = {
     'email-already-in-use': 'There already exists an account with the given email address.',
     'invalid-email': 'Given email address is not valid.',

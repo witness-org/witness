@@ -1,36 +1,39 @@
 import 'package:client/extensions/enum_extensions.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
+import 'package:client/models/exercises/exercise_create.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/providers/auth_provider.dart';
-import 'package:client/services/server_response.dart';
 import 'package:client/services/exercise_service.dart';
-import 'package:client/models/exercises/exercise_create.dart';
+import 'package:client/services/server_response.dart';
 import 'package:collection/collection.dart' as collection;
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
 
 final _logger = getLogger('exercise_provider');
 
 class ExerciseProvider with ChangeNotifier {
-  ExerciseProvider(this._auth, this._muscleGroups, this._exercises);
+  ExerciseProvider._(this._auth, this._muscleGroups, this._exercises);
 
   ExerciseProvider.empty()
-      : this(
+      : this._(
           null,
           <MuscleGroup>[],
           <MuscleGroup, List<Exercise>>{},
         );
 
   ExerciseProvider.fromProviders(final AuthProvider auth, final ExerciseProvider? instance)
-      : this(
+      : this._(
           auth,
           instance?._muscleGroups ?? <MuscleGroup>[],
           instance?._exercises ?? <MuscleGroup, List<Exercise>>{},
         );
 
-  final _exerciseService = ExerciseService();
-  List<MuscleGroup> _muscleGroups;
-  Map<MuscleGroup, List<Exercise>> _exercises;
+  static final Injector _injector = Injector.appInstance;
+  late final ExerciseService _exerciseService = _injector.get<ExerciseService>();
+
+  final List<MuscleGroup> _muscleGroups;
+  final Map<MuscleGroup, List<Exercise>> _exercises;
   final AuthProvider? _auth;
 
   List<MuscleGroup> get muscleGroups {
@@ -56,7 +59,11 @@ class ExerciseProvider with ChangeNotifier {
       notifyListeners();
     }
 
-    _logger.i(resultList != null ? 'Received ${resultList.length} exercises' : 'Error while fetching exercises: ${response.error}');
+    if (resultList != null) {
+      _logger.i('Received ${resultList.length} exercises');
+    } else {
+      _logger.w('Fetching exercises failed');
+    }
   }
 
   Future<ServerResponse<Exercise, String>> postUserExercise(final ExerciseCreate data) async {

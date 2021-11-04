@@ -43,13 +43,12 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
     });
 
     final auth = Provider.of<AuthProvider>(context, listen: false);
-    String? error;
-    error = _loginData.mode == _AuthMode.login
+    final authenticationResult = _loginData.mode == _AuthMode.login
         ? await auth.login(_loginData.user, _loginData.password)
         : await auth.signUp(_loginData.user, _loginData.password);
 
-    if (error != null) {
-      _showErrorDialog(error);
+    if (authenticationResult.isError) {
+      _showErrorDialog(authenticationResult.error!);
     }
 
     if (!mounted) {
@@ -62,6 +61,7 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
   }
 
   void _switchAuthMode() {
+    _formKey.currentState?.reset();
     if (_loginData.mode == _AuthMode.login) {
       setState(() {
         _loginData.mode = _AuthMode.signUp;
@@ -97,6 +97,7 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
             child: Column(
               children: [
                 TextFormField(
+                  key: const Key('login_card.email'),
                   decoration: InputDecoration(labelText: uiStrings.loginCard_form_email_label),
                   keyboardType: TextInputType.emailAddress,
                   validator: (final value) {
@@ -109,6 +110,7 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
                   },
                 ),
                 TextFormField(
+                  key: const Key('login_card.password'),
                   decoration: InputDecoration(labelText: uiStrings.loginCard_form_password_label),
                   obscureText: true,
                   controller: _passwordController,
@@ -121,35 +123,39 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
                     _loginData.password = value;
                   },
                 ),
-                AnimatedContainer(
-                  constraints: BoxConstraints(
-                    minHeight: signingUp ? 60 : 0,
-                    maxHeight: signingUp ? 120 : 0,
-                  ),
-                  curve: Curves.ease,
-                  duration: animationDuration,
-                  child: TextFormField(
-                    enabled: signingUp,
-                    decoration: InputDecoration(labelText: uiStrings.loginCard_form_passwordConfirmation_label),
-                    obscureText: true,
-                    validator: signingUp
-                        ? (final value) {
-                            if (value != _passwordController.text) {
-                              return uiStrings.loginCard_form_error_passwordMismatch;
+                if (signingUp)
+                  AnimatedContainer(
+                    constraints: BoxConstraints(
+                      minHeight: signingUp ? 60 : 0,
+                      maxHeight: signingUp ? 120 : 0,
+                    ),
+                    curve: Curves.ease,
+                    duration: animationDuration,
+                    child: TextFormField(
+                      key: const Key('login_card.passwordConfirmation'),
+                      enabled: signingUp,
+                      decoration: InputDecoration(labelText: uiStrings.loginCard_form_passwordConfirmation_label),
+                      obscureText: true,
+                      validator: signingUp
+                          ? (final value) {
+                              if (value != _passwordController.text) {
+                                return uiStrings.loginCard_form_error_passwordMismatch;
+                              }
                             }
-                          }
-                        : null,
+                          : null,
+                    ),
                   ),
-                ),
                 const SizedBox(height: 20),
                 if (_isLoading)
                   const CircularProgressIndicator()
                 else
                   ElevatedButton(
+                    key: const Key('login_card.submit'),
                     child: Text(signingUp ? uiStrings.loginCard_action_signUp : uiStrings.loginCard_action_login),
                     onPressed: _submit,
                   ),
                 TextButton(
+                  key: const Key('login_card.switchAuthMode'),
                   child: Text(signingUp ? uiStrings.loginCard_action_loginInstead : uiStrings.loginCard_action_signUpInstead),
                   onPressed: _switchAuthMode,
                 ),

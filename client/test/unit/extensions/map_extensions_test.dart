@@ -2,13 +2,17 @@ import 'package:client/extensions/map_extensions.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../common/test_helpers.dart';
+
+const _sutName = 'map_extensions';
+
 final _unorderedIterableEqualsInt = const UnorderedIterableEquality<int>().equals;
 final _unorderedIterableEqualsString = const UnorderedIterableEquality<String>().equals;
 
 void main() {
   // Since MapEntry objects cannot be compared (see https://github.com/dart-lang/sdk/issues/32559), a list of the returned map entry keys
   // and values, respectively, is collected and checked for equality.
-  group('where', () {
+  group(getPrefixedGroupName(_sutName, 'where'), () {
     test('with TRUE predicate should return all map entries', () {
       const map = {1: 'test1', 2: 'test2', 3: 'test3'};
       predicate(final MapEntry<int, String> entry) => true;
@@ -46,7 +50,7 @@ void main() {
     });
   });
 
-  group('whereKeys', () {
+  group(getPrefixedGroupName(_sutName, 'whereKeys'), () {
     test('with TRUE predicate should return all map keys', () {
       const map = {1: 'test1', 2: 'test2', 3: 'test3'};
       predicate(final MapEntry<int, String> entry) => true;
@@ -69,7 +73,7 @@ void main() {
     });
   });
 
-  group('whereValues', () {
+  group(getPrefixedGroupName(_sutName, 'whereValues'), () {
     test('with TRUE predicate should return all map values', () {
       const map = {1: 'test1', 2: 'test2', 3: 'test3'};
       predicate(final MapEntry<int, String> entry) => true;

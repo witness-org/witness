@@ -124,7 +124,9 @@ public class UserServiceImpl implements UserService {
     // data must be consistent, i.e. the persisted Firebase user ID must point to an existing user
     var firebaseId = databaseUser.getFirebaseId();
     var firebaseUser = firebaseService.findUserById(firebaseId);
-    if (!databaseUser.getEmail().equals(firebaseUser.getEmail())) {
+
+    // comparison must be case-insensitive since Firebase stores email addresses in lowercase
+    if (!databaseUser.getEmail().equalsIgnoreCase(firebaseUser.getEmail())) {
       log.error("An error occurred while checking if the data are consistent.");
       throw new DataAccessException("Email for user with id \"%s\" deposited in the database does not match Firebase server".formatted(firebaseId));
     }
