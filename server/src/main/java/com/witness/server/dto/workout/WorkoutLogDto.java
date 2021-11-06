@@ -3,11 +3,12 @@ package com.witness.server.dto.workout;
 import java.time.ZonedDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class WorkoutLogDto {
+@EqualsAndHashCode(callSuper = true)
+public class WorkoutLogDto extends BaseWorkoutLogDto {
   @NotNull
   private Long id;
 
@@ -16,9 +17,6 @@ public class WorkoutLogDto {
 
   @NotNull
   private ZonedDateTime loggedOn;
-
-  @Positive
-  private Integer durationMinutes;
 
   @NotNull
   private List<ExerciseLogDto> exerciseLogs;

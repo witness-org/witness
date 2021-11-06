@@ -52,12 +52,14 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
   }
 
   @Override
-  public WorkoutLog createWorkoutLog(String firebaseId) throws DataAccessException {
+  public WorkoutLog createWorkoutLog(WorkoutLog workoutLog, String firebaseId) throws DataAccessException {
     log.info("Creating new workout for user with Firebase ID {}", firebaseId);
 
     var user = getUser(userService, firebaseId);
-    var workoutLog = workoutLogMapper.fromUser(user);
+    workoutLog.setUser(user);
     workoutLog.setLoggedOn(timeService.getCurrentTime());
+    //var workoutLog1 = workoutLogMapper.fromUser(user);
+    //workoutLog1.setLoggedOn(timeService.getCurrentTime());
 
     return workoutLogRepository.save(workoutLog);
   }

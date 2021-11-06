@@ -6,6 +6,7 @@ import com.witness.server.dto.workout.SetLogCreateDto;
 import com.witness.server.dto.workout.SetLogDto;
 import com.witness.server.dto.workout.TimeSetLogCreateDto;
 import com.witness.server.dto.workout.TimeSetLogDto;
+import com.witness.server.entity.workout.ExerciseLog;
 import com.witness.server.entity.workout.RepsSetLog;
 import com.witness.server.entity.workout.SetLog;
 import com.witness.server.entity.workout.TimeSetLog;
@@ -62,6 +63,8 @@ public abstract class SetLogMapper {
   }
 
   public abstract List<SetLogDto> entitiesToDtos(List<SetLog> setLogs);
+
+  public abstract List<SetLog> createDtosToEntities(List<SetLogCreateDto> setLogs);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "exerciseLog", ignore = true)

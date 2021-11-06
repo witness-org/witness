@@ -2,6 +2,7 @@ package com.witness.server.unit.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.witness.server.dto.workout.WorkoutLogCreateDto;
 import com.witness.server.dto.workout.WorkoutLogDto;
 import com.witness.server.entity.workout.WorkoutLog;
 import com.witness.server.mapper.ExerciseLogMapperImpl;
@@ -28,8 +29,15 @@ class WorkoutLogMapperTest extends BaseUnitTest {
       @JsonFileSource(value = DATA_ROOT + "WorkoutLogDtos_1-2-3.json", type = WorkoutLogDto[].class)
   })
   void entityToDto(WorkoutLog entity, WorkoutLogDto dto) {
-    assertThat(mapper.entityToDto(entity))
-        .usingRecursiveComparison()
-        .isEqualTo(dto);
+    assertThat(mapper.entityToDto(entity)).usingRecursiveComparison().isEqualTo(dto);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(unwrapArrays = true, parameters = {
+      @JsonFileSource(value = DATA_ROOT + "WorkoutLogCreateDtos_1-2-3.json", type = WorkoutLogCreateDto[].class),
+      @JsonFileSource(value = DATA_ROOT + "WorkoutLogsFromCreateDtos_1-2-3.json", type = WorkoutLog[].class)
+  })
+  void createDtoToEntity(WorkoutLogCreateDto workoutLogCreateDto, WorkoutLog entity) {
+    assertThat(mapper.createDtoToEntity(workoutLogCreateDto)).usingRecursiveComparison().isEqualTo(entity);
   }
 }

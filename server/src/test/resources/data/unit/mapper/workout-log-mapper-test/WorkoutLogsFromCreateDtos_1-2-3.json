@@ -1,38 +1,38 @@
 [
   {
-    "id": 234,
-    "userId": 123,
-    "loggedOn": "2021-11-04T13:31:22.3007597+02:00",
+    "id": null,
+    "user": null,
+    "loggedOn": null,
     "durationMinutes": 183,
     "exerciseLogs": [
       {
         "position": 2,
-        "exerciseId": 12,
-        "id": 1,
+        "exercise": {
+          "id": 12
+        },
+        "id": null,
         "comment": "logComment",
-        "workoutLogId": 234,
+        "workoutLog": null,
         "setLogs": [
           {
-            "type": "reps",
             "position": 3,
             "rpe": 7,
-            "id": 13,
+            "id": null,
             "weightKg": 23,
             "resistanceBands": [
               "LIGHT",
               "HEAVY"
             ],
-            "exerciseLogId": 1,
+            "exerciseLog": null,
             "reps": 20
           },
           {
-            "type": "time",
             "position": 3,
             "rpe": 7,
-            "id": 11,
+            "id": null,
             "weightKg": 23,
             "resistanceBands": [],
-            "exerciseLogId": 1,
+            "exerciseLog": null,
             "seconds": 25
           }
         ]
@@ -40,25 +40,27 @@
     ]
   },
   {
-    "id": 234,
-    "userId": 123,
-    "loggedOn": "2021-11-04T13:31:22.3007597+02:00",
+    "id": null,
+    "user": null,
+    "loggedOn": null,
     "durationMinutes": 183,
     "exerciseLogs": [
       {
         "position": 2,
-        "exerciseId": 12,
-        "id": 1,
+        "exercise": {
+          "id": 12
+        },
+        "id": null,
         "comment": null,
-        "workoutLogId": 234,
+        "workoutLog": null,
         "setLogs": []
       }
     ]
   },
   {
-    "id": 234,
-    "userId": 123,
-    "loggedOn": "2021-11-04T13:31:22.3007597+02:00",
+    "id": null,
+    "user": null,
+    "loggedOn": null,
     "durationMinutes": 183,
     "exerciseLogs": []
   }

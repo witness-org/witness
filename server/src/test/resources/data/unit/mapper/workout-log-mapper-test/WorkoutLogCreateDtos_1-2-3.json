@@ -1,38 +1,29 @@
 [
   {
-    "id": 234,
-    "userId": 123,
-    "loggedOn": "2021-11-04T13:31:22.3007597+02:00",
     "durationMinutes": 183,
     "exerciseLogs": [
       {
         "position": 2,
         "exerciseId": 12,
-        "id": 1,
         "comment": "logComment",
-        "workoutLogId": 234,
         "setLogs": [
           {
-            "type": "reps",
+            "type": "repsCreate",
             "position": 3,
             "rpe": 7,
-            "id": 13,
             "weightKg": 23,
             "resistanceBands": [
               "LIGHT",
               "HEAVY"
             ],
-            "exerciseLogId": 1,
             "reps": 20
           },
           {
-            "type": "time",
+            "type": "timeCreate",
             "position": 3,
             "rpe": 7,
-            "id": 11,
             "weightKg": 23,
             "resistanceBands": [],
-            "exerciseLogId": 1,
             "seconds": 25
           }
         ]
@@ -40,25 +31,17 @@
     ]
   },
   {
-    "id": 234,
-    "userId": 123,
-    "loggedOn": "2021-11-04T13:31:22.3007597+02:00",
     "durationMinutes": 183,
     "exerciseLogs": [
       {
         "position": 2,
         "exerciseId": 12,
-        "id": 1,
         "comment": null,
-        "workoutLogId": 234,
         "setLogs": []
       }
     ]
   },
   {
-    "id": 234,
-    "userId": 123,
-    "loggedOn": "2021-11-04T13:31:22.3007597+02:00",
     "durationMinutes": 183,
     "exerciseLogs": []
   }

@@ -1,5 +1,6 @@
 package com.witness.server.mapper;
 
+import com.witness.server.dto.workout.ExerciseLogCreateDto;
 import com.witness.server.dto.workout.ExerciseLogDto;
 import com.witness.server.entity.exercise.Exercise;
 import com.witness.server.entity.workout.ExerciseLog;
@@ -21,5 +22,13 @@ public abstract class ExerciseLogMapper {
   @Mapping(source = "workoutLog.id", target = "workoutLogId")
   public abstract ExerciseLogDto entityToDto(ExerciseLog exerciseLog);
 
-  public abstract List<ExerciseLogDto> entitiesToDto(List<ExerciseLog> exerciseLog);
+  @Mapping(source = "exerciseId", target = "exercise.id")
+  @Mapping(source = "setLogs", target = "logs")
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "workoutLog", ignore = true)
+  public abstract ExerciseLog createDtoToEntity(ExerciseLogCreateDto exerciseLog);
+
+  public abstract List<ExerciseLogDto> entitiesToDto(List<ExerciseLog> exerciseLogs);
+
+  public abstract List<ExerciseLog> createDtosToEntities(List<ExerciseLogCreateDto> exerciseLogs);
 }

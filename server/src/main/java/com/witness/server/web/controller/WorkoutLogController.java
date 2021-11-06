@@ -2,6 +2,7 @@ package com.witness.server.web.controller;
 
 import com.witness.server.dto.workout.SetLogCreateDto;
 import com.witness.server.dto.workout.SetLogDto;
+import com.witness.server.dto.workout.WorkoutLogCreateDto;
 import com.witness.server.dto.workout.WorkoutLogDto;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.InvalidRequestException;
@@ -49,9 +50,10 @@ public class WorkoutLogController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   @Operation(summary = "Creates a new workout log.")
-  public WorkoutLogDto createNewWorkoutLog() throws DataAccessException {
+  public WorkoutLogDto createNewWorkoutLog(@Valid @RequestBody WorkoutLogCreateDto workoutLog) throws DataAccessException {
     var currentUser = securityService.getCurrentUser();
-    var createdWorkoutLog = workoutLogService.createWorkoutLog(currentUser.getUid());
+    var workoutToCreate = workoutLogMapper.createDtoToEntity(workoutLog);
+    var createdWorkoutLog = workoutLogService.createWorkoutLog(workoutToCreate, currentUser.getUid());
     return workoutLogMapper.entityToDto(createdWorkoutLog);
   }
 

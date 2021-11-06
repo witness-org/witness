@@ -1,5 +1,6 @@
 package com.witness.server.mapper;
 
+import com.witness.server.dto.workout.WorkoutLogCreateDto;
 import com.witness.server.dto.workout.WorkoutLogDto;
 import com.witness.server.entity.user.User;
 import com.witness.server.entity.workout.WorkoutLog;
@@ -18,4 +19,7 @@ public abstract class WorkoutLogMapper {
 
   @Mapping(source = "user.id", target = "userId")
   public abstract WorkoutLogDto entityToDto(WorkoutLog workoutLog);
+
+  @Mapping(target = "user", ignore = true)
+  public abstract WorkoutLog createDtoToEntity(WorkoutLogCreateDto workoutLogCreateDto);
 }
