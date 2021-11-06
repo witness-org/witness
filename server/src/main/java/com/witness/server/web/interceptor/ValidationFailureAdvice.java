@@ -21,6 +21,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -64,16 +65,18 @@ public class ValidationFailureAdvice {
           .map(fieldError -> {
             var errorMessage = messageSource.getMessage(fieldError, Locale.ROOT);
             return new ValidationError(
-                fieldError.getObjectName() + "." + fieldError.getField(),
+                fieldError.getObjectName(),
+                fieldError.getField(),
                 fieldError.getRejectedValue(),
                 !StringUtils.hasText(errorMessage) ? fieldError.getDefaultMessage() : errorMessage);
           })
           .collect(Collectors.toList());
-    });
+    }, ex);
   }
 
   /**
-   * Validation errors with a {@link Valid} annotation as root cause result in {@link ConstraintViolationException} objects.
+   * Validation errors with a {@link Validated} annotation or a JPA provider (e.g. Hibernate)as root cause result in
+   * {@link ConstraintViolationException} objects.
    *
    * @param ex information about the validation failure
    * @return a {@link ValidationErrorsHolder} instance representing information about the validation failure that are relevant to the requester
@@ -83,11 +86,13 @@ public class ValidationFailureAdvice {
   @ExceptionHandler(ConstraintViolationException.class)
   public ValidationErrorsHolder constraintViolationException(ConstraintViolationException ex) {
     return buildValidationFailureResponse(() -> ex.getConstraintViolations().stream()
-        .map(violation -> new ValidationError(
-            violation.getPropertyPath().toString(),
-            violation.getInvalidValue(),
-            violation.getMessage()))
-        .collect(Collectors.toList()));
+            .map(violation -> new ValidationError(
+                violation.getRootBeanClass().getSimpleName(),
+                violation.getPropertyPath().toString(),
+                violation.getInvalidValue(),
+                violation.getMessage()))
+            .collect(Collectors.toList()),
+        ex);
   }
 
   /**
@@ -99,11 +104,11 @@ public class ValidationFailureAdvice {
    * @return a {@link ValidationErrorsHolder} with the current timestamp, a message indicating a validation error and the errors provided
    *     by {@code errorCollector}
    */
-  private ValidationErrorsHolder buildValidationFailureResponse(
-      Supplier<Collection<? extends ValidationError>> errorCollector) {
+  private ValidationErrorsHolder buildValidationFailureResponse(Supplier<Collection<? extends ValidationError>> errorCollector, Throwable cause) {
     var errors = new ValidationErrorsHolder(timeService.getCurrentTime());
     errors.setErrors(errorCollector.get());
-    log.error("HTTP input validation failed with {} errors: {}", errors.getValidationErrors().size(), errors);
+
+    log.error("Input validation failed with %d errors: %s".formatted(errors.getValidationErrors().size(), errors), cause);
     return errors;
   }
 
@@ -152,6 +157,7 @@ public class ValidationFailureAdvice {
     @Data
     @AllArgsConstructor
     static class ValidationError {
+      private final String rootBean;
       private final String propertyPath;
       private final Object invalidValue;
       private final String message;

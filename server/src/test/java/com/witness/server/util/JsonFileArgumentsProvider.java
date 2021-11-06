@@ -47,14 +47,7 @@ public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationC
     var parameters = new Object[files.length];
 
     for (var i = 0; i < files.length; i++) {
-      var file = files[i];
-      var jsonStream = new ClassPathResource(file.value()).getInputStream();
-
-      var deserializedObject = getDeserializedObject(file, jsonStream, file.converter());
-      if (file.arrayToList() && file.type().isArray()) {
-        deserializedObject = Arrays.stream((Object[]) deserializedObject).collect(Collectors.toList());
-      }
-
+      Object deserializedObject = deserializeObject(files[i]);
       parameters[i] = deserializedObject;
     }
 
@@ -73,7 +66,24 @@ public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationC
     }
   }
 
-  private Object getDeserializedObject(JsonFileSource file, InputStream jsonStream, Class<? extends ArgumentConverter<?, ?>> argumentConverter)
+  private Object deserializeObject(JsonFileSource file) throws Exception {
+    try {
+      var jsonStream = new ClassPathResource(file.value()).getInputStream();
+
+      var deserializedObject = readObjectFromFile(file, jsonStream, file.converter());
+      if (file.arrayToList() && file.type().isArray()) {
+        deserializedObject = Arrays.stream((Object[]) deserializedObject).collect(Collectors.toList());
+      }
+      return deserializedObject;
+    } catch (IOException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+      throw new Exception(
+          "Could not deserialize object from @JsonFileSource(value=%s, type=%s, converter=%s, arrayToList=%b)"
+              .formatted(file.value(), file.type().getSimpleName(), file.converter().getSimpleName(), file.arrayToList()),
+          e);
+    }
+  }
+
+  private Object readObjectFromFile(JsonFileSource file, InputStream jsonStream, Class<? extends ArgumentConverter<?, ?>> argumentConverter)
       throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
     var converter = ReflectionUtils.accessibleConstructor(argumentConverter).newInstance();
     var noOpConverter = converter instanceof NoOpArgumentConverter;
