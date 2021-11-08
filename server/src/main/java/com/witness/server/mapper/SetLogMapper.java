@@ -6,7 +6,6 @@ import com.witness.server.dto.workout.SetLogCreateDto;
 import com.witness.server.dto.workout.SetLogDto;
 import com.witness.server.dto.workout.TimeSetLogCreateDto;
 import com.witness.server.dto.workout.TimeSetLogDto;
-import com.witness.server.entity.workout.ExerciseLog;
 import com.witness.server.entity.workout.RepsSetLog;
 import com.witness.server.entity.workout.SetLog;
 import com.witness.server.entity.workout.TimeSetLog;
@@ -49,7 +48,7 @@ public abstract class SetLogMapper {
   }
 
   /**
-   * Maps a {@link SetLog} object to a {@link SetLogDto} based based on the concrete class.
+   * Maps a {@link SetLog} object to a {@link SetLogDto} based on the concrete class.
    *
    * @param setLog entity to be mapped
    * @return mapped {@link SetLogDto} object

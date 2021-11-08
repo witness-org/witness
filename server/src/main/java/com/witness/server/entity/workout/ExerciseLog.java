@@ -62,10 +62,16 @@ public class ExerciseLog extends ExerciseReference {
 
   public void addSetLog(SetLog setLog) {
     setLogs.add(setLog);
+    setLog.setExerciseLog(this);
   }
 
   public boolean removeSetLog(SetLog setLog) {
-    return setLogs.remove(setLog);
+    if (setLogs.remove(setLog)) {
+      setLog.setExerciseLog(null);
+      return true;
+    }
+
+    return false;
   }
 
   @Override

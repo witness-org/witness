@@ -1,8 +1,11 @@
 package com.witness.server.service.impl;
 
 import com.witness.server.entity.workout.ExerciseLog;
+import com.witness.server.entity.workout.RepsSetLog;
 import com.witness.server.entity.workout.SetLog;
+import com.witness.server.entity.workout.TimeSetLog;
 import com.witness.server.entity.workout.WorkoutLog;
+import com.witness.server.enumeration.LoggingType;
 import com.witness.server.enumeration.Role;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;
@@ -17,6 +20,7 @@ import com.witness.server.service.TimeService;
 import com.witness.server.service.UserAccessor;
 import com.witness.server.service.UserService;
 import com.witness.server.service.WorkoutLogService;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,16 +56,38 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
   }
 
   @Override
-  public WorkoutLog createWorkoutLog(WorkoutLog workoutLog, String firebaseId) throws DataAccessException {
+  public WorkoutLog createWorkoutLog(WorkoutLog workoutLog, String firebaseId) throws DataAccessException, InvalidRequestException {
     log.info("Creating new workout for user with Firebase ID {}", firebaseId);
 
     var user = getUser(userService, firebaseId);
+
+    var exerciseLogs = List.copyOf(workoutLog.getExerciseLogs());
+    workoutLog.getExerciseLogs().clear();
     workoutLog.setUser(user);
     workoutLog.setLoggedOn(timeService.getCurrentTime());
-    //var workoutLog1 = workoutLogMapper.fromUser(user);
-    //workoutLog1.setLoggedOn(timeService.getCurrentTime());
 
-    return workoutLogRepository.save(workoutLog);
+    var persistedWorkoutLog = workoutLogRepository.save(workoutLog);
+
+    for (ExerciseLog exerciseLog : exerciseLogs) {
+      var exercise = exerciseRepository.findById(exerciseLog.getExercise().getId())
+          .orElseThrow(() -> new DataNotFoundException("Requested exercise could not be found."));
+      exerciseLog.setExercise(exercise);
+
+      var setLogs = List.copyOf(exerciseLog.getSetLogs());
+      exerciseLog.getSetLogs().clear();
+
+      persistedWorkoutLog.addExerciseLog(exerciseLog);
+      persistedWorkoutLog = workoutLogRepository.save(persistedWorkoutLog);
+
+      for (SetLog setLog : setLogs) {
+        var workoutExerciseLogs = persistedWorkoutLog.getExerciseLogs();
+        var persistedExerciseLog = workoutExerciseLogs.get(workoutExerciseLogs.size() - 1);
+        addSetLogToExerciseLog(persistedExerciseLog, setLog);
+        exerciseLogRepository.save(persistedExerciseLog);
+      }
+    }
+
+    return persistedWorkoutLog;
   }
 
   @Override
@@ -100,7 +126,6 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
 
     // TODO validate logging type
 
-    exerciseLog.setWorkoutLog(workoutLog);
     exerciseLog.setPosition(workoutLog.getExerciseLogs().size() + 1);
 
     workoutLog.addExerciseLog(exerciseLog);
@@ -138,7 +163,6 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
 
     // TODO validate logging type
 
-    setLog.setExerciseLog(exerciseLog);
     setLog.setPosition(exerciseLog.getSetLogs().size() + 1);
 
     exerciseLog.addSetLog(setLog);
@@ -244,5 +268,16 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
       log.error("Requested set log with ID {} not consistent with requested exercise log with ID {}.", setLog.getId(), exerciseLog.getId());
       throw new DataAccessException("There are some data inconsistencies.");
     }
+  }
+
+  private void addSetLogToExerciseLog(ExerciseLog exerciseLog, SetLog setLog) throws InvalidRequestException {
+    var loggingTypes = exerciseLog.getExercise().getLoggingTypes();
+    if ((setLog instanceof RepsSetLog && !loggingTypes.contains(LoggingType.REPS))
+        || (setLog instanceof TimeSetLog && !loggingTypes.contains(LoggingType.TIME))) {
+      log.error("Invalid log!");
+      throw new InvalidRequestException("Invalid log!");
+    }
+
+    exerciseLog.addSetLog(setLog);
   }
 }

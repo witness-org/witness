@@ -66,10 +66,16 @@ public class WorkoutLog {
 
   public void addExerciseLog(ExerciseLog exerciseLog) {
     exerciseLogs.add(exerciseLog);
+    exerciseLog.setWorkoutLog(this);
   }
 
   public boolean removeExerciseLog(ExerciseLog exerciseLog) {
-    return exerciseLogs.remove(exerciseLog);
+    if (exerciseLogs.remove(exerciseLog)) {
+      exerciseLog.setWorkoutLog(null);
+      return true;
+    }
+
+    return false;
   }
 
   @Override

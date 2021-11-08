@@ -50,7 +50,7 @@ public class WorkoutLogController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   @Operation(summary = "Creates a new workout log.")
-  public WorkoutLogDto createNewWorkoutLog(@Valid @RequestBody WorkoutLogCreateDto workoutLog) throws DataAccessException {
+  public WorkoutLogDto createNewWorkoutLog(@Valid @RequestBody WorkoutLogCreateDto workoutLog) throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     var workoutToCreate = workoutLogMapper.createDtoToEntity(workoutLog);
     var createdWorkoutLog = workoutLogService.createWorkoutLog(workoutToCreate, currentUser.getUid());
