@@ -1,8 +1,10 @@
+import 'package:client/extensions/date_time_extensions.dart';
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/providers/auth_provider.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/settings/settings_screen.dart';
+import 'package:client/widgets/training_logs/training_log_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +46,21 @@ class MainAppBar extends StatelessWidget with LogMessagePreparer, StringLocalize
     });
   }
 
+  void _selectDate(final BuildContext context) {
+    final referenceDate = currentlyViewedDate!;
+    showDatePicker(
+      context: context,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      initialDate: referenceDate,
+      firstDate: referenceDate.subtractYears(1),
+      lastDate: referenceDate.addYears(1),
+    ).then((final pickedDate) {
+      if (pickedDate != null) {
+        Navigator.of(context).pushReplacementNamed(TrainingLogScreen.routeName, arguments: [pickedDate.dateOnly(), null]);
+      }
+    });
+  }
+
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
@@ -52,6 +69,12 @@ class MainAppBar extends StatelessWidget with LogMessagePreparer, StringLocalize
     return AppBar(
       title: Text(preferredTitle ?? uiStrings.appTitle),
       actions: [
+        if (currentlyViewedDate != null)
+          IconButton(
+            onPressed: () => _selectDate(context),
+            icon: const Icon(Icons.calendar_today),
+            tooltip: uiStrings.mainAppBar_action_selectDay,
+          ),
         IconButton(
           onPressed: () => _showTokenDialog(auth, context, uiStrings),
           icon: const Icon(Icons.vpn_key),

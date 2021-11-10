@@ -6,6 +6,7 @@ import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/models/training_programs/overview/training_day_overview.dart';
 import 'package:client/models/training_programs/overview/training_program_overview.dart';
 import 'package:client/models/training_programs/overview/training_week_overview.dart';
+import 'package:client/models/workouts/workout_log.dart';
 import 'package:client/providers/auth_provider.dart';
 import 'package:client/widgets/authentication/error_screen.dart';
 import 'package:client/widgets/authentication/login_screen.dart';
@@ -31,7 +32,7 @@ Route<dynamic>? selectRoute(final RouteSettings routeSettings, final AuthProvide
         // home
         case '/':
           return auth.isAuthenticated
-              ? TrainingLogScreen(routeSettings.arguments.castOrFallback<DateTime>(DateTime.now().dateOnly()))
+              ? TrainingLogScreen(DateTime.now().dateOnly(), routeSettings.arguments.castOrNull<WorkoutLog>())
               : FutureBuilder(
                   future: auth.reloadAuthentication(),
                   builder: (final ctx, final snapshot) => snapshot.waitSwitch(
@@ -43,7 +44,8 @@ Route<dynamic>? selectRoute(final RouteSettings routeSettings, final AuthProvide
 
         // training logs
         case TrainingLogScreen.routeName:
-          return TrainingLogScreen(routeSettings.arguments.castOrFallback<DateTime>(DateTime.now().dateOnly()));
+          final args = routeSettings.arguments.castOrNull<List<Object?>>();
+          return TrainingLogScreen(args?[0].castOrFallback(DateTime.now().dateOnly()), args?[1].castOrNull<WorkoutLog>());
 
         // exercises
         case ExercisesScreen.routeName:
