@@ -8,6 +8,7 @@
       {
         "position": 2,
         "exerciseId": 12,
+        "exerciseName": "Exercise 1",
         "id": 1,
         "comment": "logComment",
         "workoutLogId": 234,
@@ -48,6 +49,7 @@
       {
         "position": 2,
         "exerciseId": 12,
+        "exerciseName": "Exercise 1",
         "id": 1,
         "comment": null,
         "workoutLogId": 234,

@@ -73,8 +73,10 @@ public abstract class SetLogMapper {
   @Mapping(target = "exerciseLog", ignore = true)
   public abstract RepsSetLog repsCreateDtoToEntity(RepsSetLogCreateDto setLog);
 
+  @Mapping(source = "exerciseLogId", target = "exerciseLog.id")
   public abstract TimeSetLog timeDtoToEntity(TimeSetLogDto setLog);
 
+  @Mapping(source = "exerciseLogId", target = "exerciseLog.id")
   public abstract RepsSetLog repsDtoToEntity(RepsSetLogDto setLog);
 
   @Mapping(source = "exerciseLog.id", target = "exerciseLogId")

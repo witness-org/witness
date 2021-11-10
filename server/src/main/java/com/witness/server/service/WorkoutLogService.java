@@ -4,7 +4,6 @@ import com.witness.server.entity.workout.ExerciseLog;
 import com.witness.server.entity.workout.SetLog;
 import com.witness.server.entity.workout.WorkoutLog;
 import com.witness.server.exception.DataAccessException;
-import com.witness.server.exception.DataNotFoundException;
 import com.witness.server.exception.InvalidRequestException;
 import java.time.ZonedDateTime;
 import java.util.List;

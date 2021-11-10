@@ -9,8 +9,6 @@ import com.witness.server.enumeration.Role;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;
 import com.witness.server.exception.InvalidRequestException;
-import com.witness.server.mapper.ExerciseLogMapper;
-import com.witness.server.mapper.WorkoutLogMapper;
 import com.witness.server.repository.ExerciseLogRepository;
 import com.witness.server.repository.SetLogRepository;
 import com.witness.server.repository.WorkoutLogRepository;
@@ -40,21 +38,16 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
   private final SetLogRepository setLogRepository;
   private final UserService userService;
   private final TimeService timeService;
-  private final WorkoutLogMapper workoutLogMapper;
-  private final ExerciseLogMapper exerciseLogMapper;
 
   @Autowired
-  public WorkoutLogServiceImpl(ExerciseService exerciseService, WorkoutLogRepository workoutLogRepository,
-                               ExerciseLogRepository exerciseLogRepository, SetLogRepository setLogRepository, UserService userService,
-                               TimeService timeService, WorkoutLogMapper workoutLogMapper, ExerciseLogMapper exerciseLogMapper) {
+  public WorkoutLogServiceImpl(ExerciseService exerciseService, WorkoutLogRepository workoutLogRepository, TimeService timeService,
+                               ExerciseLogRepository exerciseLogRepository, SetLogRepository setLogRepository, UserService userService) {
     this.exerciseService = exerciseService;
     this.workoutLogRepository = workoutLogRepository;
     this.exerciseLogRepository = exerciseLogRepository;
     this.setLogRepository = setLogRepository;
     this.userService = userService;
     this.timeService = timeService;
-    this.workoutLogMapper = workoutLogMapper;
-    this.exerciseLogMapper = exerciseLogMapper;
   }
 
   @Override
