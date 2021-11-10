@@ -1,5 +1,6 @@
 package com.witness.server.service.impl;
 
+import com.witness.server.entity.exercise.Exercise;
 import com.witness.server.entity.workout.ExerciseLog;
 import com.witness.server.entity.workout.SetLog;
 import com.witness.server.entity.workout.WorkoutLog;
@@ -136,6 +137,22 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
   }
 
   @Override
+  public WorkoutLog setExerciseLogComment(String firebaseId, Long workoutLogId, Long exerciseLogId, String comment)
+      throws DataAccessException, InvalidRequestException {
+    log.info("Setting the comment of exercise log with ID {} form workout with ID {}", exerciseLogId, workoutLogId);
+
+    var workoutLog = getWorkoutLogOrThrow(workoutLogId);
+    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+
+    var exerciseLog = getExerciseLogOrThrow(exerciseLogId);
+    throwIfLoggedExerciseNotInWorkoutLog(exerciseLog, workoutLog);
+
+    exerciseLog.setComment(comment);
+
+    return workoutLogRepository.save(workoutLog);
+  }
+
+  @Override
   public WorkoutLog addSetLog(String firebaseId, Long workoutLogId, Long exerciseLogId, SetLog setLog)
       throws DataAccessException, InvalidRequestException {
     log.info("Adding set log to exercise log with ID {}", exerciseLogId);
@@ -146,11 +163,9 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     var exerciseLog = getExerciseLogOrThrow(exerciseLogId);
     throwIfLoggedExerciseNotInWorkoutLog(exerciseLog, workoutLog);
 
-    // TODO validate logging type
-
     setLog.setPosition(exerciseLog.getSetLogs().size() + 1);
+    addSetLogToExerciseLog(exerciseLog, setLog);
 
-    exerciseLog.addSetLog(setLog);
     exerciseLogRepository.save(exerciseLog);
 
     return workoutLog;
@@ -172,8 +187,8 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     throwIfLoggedSetNotInExerciseLog(setLogToUpdate, exerciseLog);
 
     // TODO validate position (position must not change?)
-    // TODO validate logging type
 
+    validateLoggingType(exerciseLog.getExercise(), setLog);
     setLog.setExerciseLog(exerciseLog);
     setLogRepository.save(setLog);
 
@@ -255,14 +270,17 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     }
   }
 
-  private void addSetLogToExerciseLog(ExerciseLog exerciseLog, SetLog setLog) throws InvalidRequestException {
-    var loggingTypes = exerciseLog.getExercise().getLoggingTypes();
+  private void validateLoggingType(Exercise exercise, SetLog setLog) throws InvalidRequestException {
+    var loggingTypes = exercise.getLoggingTypes();
     var setLogType = LoggingType.fromLog(setLog.getClass());
     if (!loggingTypes.contains(setLogType)) {
-      log.error("Logging type {} is not valid for exercise with ID {}.", setLog.getClass().getSimpleName(), exerciseLog.getExercise().getId());
+      log.error("Logging type {} is not valid for exercise with ID {}.", setLog.getClass().getSimpleName(), exercise.getId());
       throw new InvalidRequestException("Requested logging type is not valid for the specified exercise.");
     }
+  }
 
+  private void addSetLogToExerciseLog(ExerciseLog exerciseLog, SetLog setLog) throws InvalidRequestException {
+    validateLoggingType(exerciseLog.getExercise(), setLog);
     exerciseLog.addSetLog(setLog);
   }
 

@@ -19,6 +19,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping("workouts")
 public class WorkoutLogController {
 
-  // TODO add comment for exercise log (PATCH request)
   // TODO change position of exercises (PUT request)
   // TODO maybe change position of sets (PUT request)
 
@@ -107,13 +107,24 @@ public class WorkoutLogController {
     return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 
-  @DeleteMapping("{workoutLogId}/{exerciseId}")
+  @DeleteMapping("{workoutLogId}/{exerciseLogId}")
   @ResponseStatus(HttpStatus.OK)
   @Operation(summary = "Delete an exercise log from an existing workout log.")
-  public WorkoutLogDto deleteExerciseLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseId)
+  public WorkoutLogDto deleteExerciseLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
-    var modifiedWorkoutLog = workoutLogService.deleteExerciseLog(currentUser.getUid(), workoutLogId, exerciseId);
+    var modifiedWorkoutLog = workoutLogService.deleteExerciseLog(currentUser.getUid(), workoutLogId, exerciseLogId);
+    return workoutLogMapper.entityToDto(modifiedWorkoutLog);
+  }
+
+  @PatchMapping("{workoutLogId}/{exerciseLogId}")
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Sets the comment of an existing workout log.")
+  public WorkoutLogDto setExerciseLogComment(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId,
+                                             @Valid @RequestBody(required = false) @Length(max = 1024) String comment)
+      throws InvalidRequestException, DataAccessException {
+    var currentUser = securityService.getCurrentUser();
+    var modifiedWorkoutLog = workoutLogService.setExerciseLogComment(currentUser.getUid(), workoutLogId, exerciseLogId, comment);
     return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 

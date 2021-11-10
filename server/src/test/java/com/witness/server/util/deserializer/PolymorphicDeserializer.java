@@ -51,7 +51,7 @@ public abstract class PolymorphicDeserializer<T> extends StdDeserializer<T> {
    * list. For instance "Target type Y if properties C and D are present, or target type Z if property E is present" is achieved with the following
    * discriminators: {@code [{properties: [C, D], targetType: Y}, {properties: [E], targetType: Z}]}. This favors the first option over the second
    * option.
-   * <p>
+   * </p>
    *
    * @return a list of {@link DeserializationDiscriminator} that defines which JSON properties uniquely identify target deserializes types
    */
