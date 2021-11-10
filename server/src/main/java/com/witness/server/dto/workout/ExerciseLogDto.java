@@ -4,10 +4,12 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class ExerciseLogDto extends ExerciseReferenceDto {
   @NotNull
   private Long id;

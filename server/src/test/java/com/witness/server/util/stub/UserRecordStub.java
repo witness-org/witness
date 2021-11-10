@@ -1,12 +1,13 @@
 package com.witness.server.util.stub;
 
+import com.google.firebase.auth.UserRecord;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * A JSON-deserializable representation of {@link com.google.firebase.auth.UserRecord} for test purposes. The original class does not provide a
- * default constructor and is not easily extensible via inheritance due do its base constructor that requires complex arguments, making it
- * non-eligible for default deserialization using Jackson.
+ * A JSON-deserializable representation of {@link UserRecord} for test purposes. The original class does not provide a default constructor and is not
+ * easily extensible via inheritance due do its base constructor that requires complex arguments, making it non-eligible for default deserialization
+ * using Jackson.
  */
 @Data
 @NoArgsConstructor

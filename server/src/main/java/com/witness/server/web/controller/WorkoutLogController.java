@@ -1,28 +1,36 @@
 package com.witness.server.web.controller;
 
+import com.witness.server.dto.workout.ExerciseLogCreateDto;
 import com.witness.server.dto.workout.SetLogCreateDto;
 import com.witness.server.dto.workout.SetLogDto;
 import com.witness.server.dto.workout.WorkoutLogCreateDto;
 import com.witness.server.dto.workout.WorkoutLogDto;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.InvalidRequestException;
+import com.witness.server.mapper.ExerciseLogMapper;
 import com.witness.server.mapper.SetLogMapper;
 import com.witness.server.mapper.WorkoutLogMapper;
 import com.witness.server.service.SecurityService;
 import com.witness.server.service.WorkoutLogService;
 import com.witness.server.web.meta.SecuredValidatedRestController;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import java.time.ZonedDateTime;
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @SecuredValidatedRestController
@@ -37,14 +45,27 @@ public class WorkoutLogController {
   private final WorkoutLogService workoutLogService;
   private final SetLogMapper setLogMapper;
   private final WorkoutLogMapper workoutLogMapper;
+  private final ExerciseLogMapper exerciseLogMapper;
 
   @Autowired
   public WorkoutLogController(SecurityService securityService, WorkoutLogService workoutLogService, SetLogMapper setLogMapper,
-                              WorkoutLogMapper workoutLogMapper) {
+                              WorkoutLogMapper workoutLogMapper, ExerciseLogMapper exerciseLogMapper) {
     this.securityService = securityService;
     this.workoutLogService = workoutLogService;
     this.setLogMapper = setLogMapper;
     this.workoutLogMapper = workoutLogMapper;
+    this.exerciseLogMapper = exerciseLogMapper;
+  }
+
+  @GetMapping
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Gets the workout logs of the current user which were logged on a given day.")
+  public List<WorkoutLogDto> getWorkoutLogs(
+      @Parameter(description = "Day to fetch workout logs from. (ISO-8601 date-time)", example = "2021-10-08T14:15:55.3007597+02:00")
+      @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime date) {
+    var currentUser = securityService.getCurrentUser();
+    var workoutLogs = workoutLogService.getWorkoutLogs(currentUser.getUid(), date);
+    return workoutLogMapper.entitiesToDtos(workoutLogs);
   }
 
   @PostMapping
@@ -77,11 +98,12 @@ public class WorkoutLogController {
 
   @PostMapping("{workoutLogId}")
   @ResponseStatus(HttpStatus.CREATED)
-  @Operation(summary = "Add an exercise log to an existing workout log.")
-  public WorkoutLogDto addExerciseLog(@PathVariable Long workoutLogId, @Valid @RequestBody Long exerciseId)
+  @Operation(summary = "Adds an exercise log to an existing workout log.")
+  public WorkoutLogDto addExerciseLog(@PathVariable Long workoutLogId, @Valid @RequestBody ExerciseLogCreateDto exerciseLog)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
-    var modifiedWorkoutLog = workoutLogService.addExerciseLog(currentUser.getUid(), workoutLogId, exerciseId);
+    var exerciseLogToCreate = exerciseLogMapper.createDtoToEntity(exerciseLog);
+    var modifiedWorkoutLog = workoutLogService.addExerciseLog(currentUser.getUid(), workoutLogId, exerciseLogToCreate);
     return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 
