@@ -52,6 +52,7 @@ public abstract class SetLog extends Set {
   @Builder.Default
   @Setter(AccessLevel.NONE)
   @NotNull
+  @SuppressWarnings("checkstyle:MatchXpath") // false-positive "use var" warning
   protected List<ResistanceBand> resistanceBands = new ArrayList<>();
 
   @ManyToOne(targetEntity = ExerciseLog.class, fetch = FetchType.LAZY)

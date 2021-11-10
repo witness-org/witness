@@ -61,7 +61,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
 
     var user = getUser(userService, firebaseId);
 
-    var exerciseLogs = List.copyOf(workoutLog.getExerciseLogs());
+    final var exerciseLogs = List.copyOf(workoutLog.getExerciseLogs());
     workoutLog.getExerciseLogs().clear();
     workoutLog.setUser(user);
     workoutLog.setLoggedOn(timeService.getCurrentTime());
@@ -73,7 +73,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
           .orElseThrow(() -> new DataNotFoundException("Requested exercise could not be found."));
       exerciseLog.setExercise(exercise);
 
-      var setLogs = List.copyOf(exerciseLog.getSetLogs());
+      final var setLogs = List.copyOf(exerciseLog.getSetLogs());
       exerciseLog.getSetLogs().clear();
 
       persistedWorkoutLog.addExerciseLog(exerciseLog);

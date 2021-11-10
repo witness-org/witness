@@ -62,6 +62,7 @@ public class WorkoutLog {
   @Setter(AccessLevel.NONE)
   @Builder.Default
   @ToString.Exclude
+  @SuppressWarnings("checkstyle:MatchXpath") // false-positive "use var" warning
   private List<ExerciseLog> exerciseLogs = new ArrayList<>();
 
   public void addExerciseLog(ExerciseLog exerciseLog) {

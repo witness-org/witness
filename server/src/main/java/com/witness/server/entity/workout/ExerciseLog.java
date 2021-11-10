@@ -58,6 +58,7 @@ public class ExerciseLog extends ExerciseReference {
   @NotNull
   @Builder.Default
   @ToString.Exclude
+  @SuppressWarnings("checkstyle:MatchXpath") // false-positive "use var" warning
   private List<SetLog> setLogs = new ArrayList<>();
 
   public void addSetLog(SetLog setLog) {
