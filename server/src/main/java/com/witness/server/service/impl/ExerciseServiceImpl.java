@@ -11,8 +11,8 @@ import com.witness.server.exception.InvalidRequestException;
 import com.witness.server.mapper.ExerciseMapper;
 import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.UserExerciseRepository;
+import com.witness.server.service.EntityAccessor;
 import com.witness.server.service.ExerciseService;
-import com.witness.server.service.UserAccessor;
 import com.witness.server.service.UserService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class ExerciseServiceImpl implements ExerciseService, UserAccessor {
+public class ExerciseServiceImpl implements ExerciseService, EntityAccessor {
 
   private final ExerciseRepository exerciseRepository;
   private final UserExerciseRepository userExerciseRepository;
@@ -66,7 +66,7 @@ public class ExerciseServiceImpl implements ExerciseService, UserAccessor {
     var exerciseId = exercise.getId();
     log.info("Updating initial exercise with ID {}.", exerciseId);
 
-    var exerciseToUpdate = exerciseRepository.findById(exerciseId).orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist."));
+    var exerciseToUpdate = getExerciseById(exerciseId);
 
     var newName = exercise.getName();
     if (!exerciseToUpdate.getName().equals(newName)) {
@@ -81,9 +81,7 @@ public class ExerciseServiceImpl implements ExerciseService, UserAccessor {
     var exerciseId = exercise.getId();
     log.info("Updating user exercise with ID {}.", exerciseId);
 
-    var exerciseToUpdate = userExerciseRepository
-        .findById(exerciseId)
-        .orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist."));
+    var exerciseToUpdate = getUserExerciseById(exerciseId);
 
     var user = getUser(userService, firebaseId);
     if (!Role.ADMIN.equals(user.getRole()) && !exerciseToUpdate.getCreatedBy().equals(user)) {
@@ -115,6 +113,20 @@ public class ExerciseServiceImpl implements ExerciseService, UserAccessor {
 
     log.info("Fetching exercises created by user with ID {}.", user.getId());
     return exerciseRepository.findAllByUser(user);
+  }
+
+  @Override
+  public Exercise getExerciseById(Long exerciseId) throws DataNotFoundException {
+    return exerciseRepository
+        .findById(exerciseId)
+        .orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist."));
+  }
+
+  @Override
+  public UserExercise getUserExerciseById(Long exerciseId) throws DataNotFoundException {
+    return userExerciseRepository
+        .findById(exerciseId)
+        .orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist."));
   }
 
   private void throwIfInitialExerciseWithNameExists(String name) throws InvalidRequestException {

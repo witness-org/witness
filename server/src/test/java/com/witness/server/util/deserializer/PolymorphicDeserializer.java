@@ -18,7 +18,7 @@ import java.util.List;
  * {@code @JsonSubType} annotation on entity classes do not really make sense), we use custom deserializers that enable us to deserialize to the
  * desired entity (sub-)type based on the presence of discriminating properties that identify the target (sub-)type.
  *
- * @param <T> the most general type of the subtype hierarchy to be supported by this deserializer, might be an abstract class.
+ * @param <T> the most general type of the subtype hierarchy to be supported by this deserializer, might be an abstract class
  */
 public abstract class PolymorphicDeserializer<T> extends StdDeserializer<T> {
   @SuppressWarnings("checkstyle:MatchXpath") // false-positive "use var" warning
@@ -40,7 +40,7 @@ public abstract class PolymorphicDeserializer<T> extends StdDeserializer<T> {
    * resolved by multiple list entries (e.g. [{properties: A, targetType: X, properties: B, targetType: X}]). Precedences are defined by order of
    * insertion into the list.
    *
-   * @return a list of {@link DeserializationDiscriminator} that defines which JSON properties uniquely identify target deserializes types.
+   * @return a list of {@link DeserializationDiscriminator} that defines which JSON properties uniquely identify target deserializes types
    */
   abstract List<DeserializationDiscriminator<T>> getDiscriminators();
 

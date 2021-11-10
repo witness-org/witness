@@ -1,9 +1,7 @@
 package com.witness.server.service.impl;
 
 import com.witness.server.entity.workout.ExerciseLog;
-import com.witness.server.entity.workout.RepsSetLog;
 import com.witness.server.entity.workout.SetLog;
-import com.witness.server.entity.workout.TimeSetLog;
 import com.witness.server.entity.workout.WorkoutLog;
 import com.witness.server.enumeration.LoggingType;
 import com.witness.server.enumeration.Role;
@@ -13,11 +11,11 @@ import com.witness.server.exception.InvalidRequestException;
 import com.witness.server.mapper.ExerciseLogMapper;
 import com.witness.server.mapper.WorkoutLogMapper;
 import com.witness.server.repository.ExerciseLogRepository;
-import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.SetLogRepository;
 import com.witness.server.repository.WorkoutLogRepository;
+import com.witness.server.service.EntityAccessor;
+import com.witness.server.service.ExerciseService;
 import com.witness.server.service.TimeService;
-import com.witness.server.service.UserAccessor;
 import com.witness.server.service.UserService;
 import com.witness.server.service.WorkoutLogService;
 import java.util.List;
@@ -27,11 +25,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
+public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor {
 
   // TODO properly handle ordering of exercise/set logs (upon DELETE, fix ordering etc.)
 
-  private final ExerciseRepository exerciseRepository;
+  private final ExerciseService exerciseService;
   private final WorkoutLogRepository workoutLogRepository;
   private final ExerciseLogRepository exerciseLogRepository;
   private final SetLogRepository setLogRepository;
@@ -41,11 +39,10 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
   private final ExerciseLogMapper exerciseLogMapper;
 
   @Autowired
-  public WorkoutLogServiceImpl(ExerciseRepository exerciseRepository,
-                               WorkoutLogRepository workoutLogRepository, ExerciseLogRepository exerciseLogRepository,
-                               SetLogRepository setLogRepository, UserService userService, TimeService timeService,
-                               WorkoutLogMapper workoutLogMapper, ExerciseLogMapper exerciseLogMapper) {
-    this.exerciseRepository = exerciseRepository;
+  public WorkoutLogServiceImpl(ExerciseService exerciseService, WorkoutLogRepository workoutLogRepository,
+                               ExerciseLogRepository exerciseLogRepository, SetLogRepository setLogRepository, UserService userService,
+                               TimeService timeService, WorkoutLogMapper workoutLogMapper, ExerciseLogMapper exerciseLogMapper) {
+    this.exerciseService = exerciseService;
     this.workoutLogRepository = workoutLogRepository;
     this.exerciseLogRepository = exerciseLogRepository;
     this.setLogRepository = setLogRepository;
@@ -69,8 +66,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
     var persistedWorkoutLog = workoutLogRepository.save(workoutLog);
 
     for (ExerciseLog exerciseLog : exerciseLogs) {
-      var exercise = exerciseRepository.findById(exerciseLog.getExercise().getId())
-          .orElseThrow(() -> new DataNotFoundException("Requested exercise could not be found."));
+      var exercise = getExercise(exerciseService, exerciseLog.getExercise().getId());
       exerciseLog.setExercise(exercise);
 
       final var setLogs = List.copyOf(exerciseLog.getSetLogs());
@@ -119,9 +115,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
     throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
 
-    var exercise = exerciseRepository
-        .findById(exerciseId)
-        .orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist."));
+    var exercise = getExercise(exerciseService, exerciseId);
     var exerciseLog = exerciseLogMapper.fromExercise(exercise);
 
     // TODO validate logging type
@@ -272,10 +266,10 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, UserAccessor {
 
   private void addSetLogToExerciseLog(ExerciseLog exerciseLog, SetLog setLog) throws InvalidRequestException {
     var loggingTypes = exerciseLog.getExercise().getLoggingTypes();
-    if ((setLog instanceof RepsSetLog && !loggingTypes.contains(LoggingType.REPS))
-        || (setLog instanceof TimeSetLog && !loggingTypes.contains(LoggingType.TIME))) {
-      log.error("Invalid log!");
-      throw new InvalidRequestException("Invalid log!");
+    var setLogType = LoggingType.fromLog(setLog.getClass());
+    if (!loggingTypes.contains(setLogType)) {
+      log.error("Logging type {} is not valid for exercise with ID {}.", setLog.getClass().getSimpleName(), exerciseLog.getExercise().getId());
+      throw new InvalidRequestException("Requested log is not valid for the specified exercise");
     }
 
     exerciseLog.addSetLog(setLog);
