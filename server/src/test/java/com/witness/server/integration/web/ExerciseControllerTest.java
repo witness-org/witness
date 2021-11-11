@@ -624,7 +624,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
 
   private void persistExercisesForLoggedInUser(UserExercise... exercises) {
-    for (UserExercise exercise : exercises) {
+    for (var exercise : exercises) {
       var user = getLoggedInUser();
       exercise.setCreatedBy(user);
       persistEntities(userExerciseRepository, exercise);

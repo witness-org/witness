@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface WorkoutLogService {
 
-  List<WorkoutLog> getWorkoutLogs(String firebaseId, ZonedDateTime date);
+  List<WorkoutLog> getWorkoutLogsOfDay(String firebaseId, ZonedDateTime date);
 
   WorkoutLog createWorkoutLog(WorkoutLog workoutLog, String firebaseId) throws DataAccessException, InvalidRequestException;
 

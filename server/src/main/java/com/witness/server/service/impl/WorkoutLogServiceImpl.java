@@ -1,5 +1,6 @@
 package com.witness.server.service.impl;
 
+import com.google.common.collect.Iterables;
 import com.witness.server.entity.exercise.Exercise;
 import com.witness.server.entity.workout.ExerciseLog;
 import com.witness.server.entity.workout.SetLog;
@@ -19,6 +20,7 @@ import com.witness.server.service.UserService;
 import com.witness.server.service.WorkoutLogService;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +53,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
   }
 
   @Override
-  public List<WorkoutLog> getWorkoutLogs(String firebaseId, ZonedDateTime date) {
+  public List<WorkoutLog> getWorkoutLogsOfDay(String firebaseId, ZonedDateTime date) {
     var startOfDay = date.with(LocalTime.MIN);
     var endOfDay = date.with(LocalTime.MAX);
     return workoutLogRepository.findByLoggedOnBetweenAndUserFirebaseIdEquals(startOfDay, endOfDay, firebaseId);
@@ -62,15 +64,15 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     log.info("Creating new workout for user with Firebase ID {}", firebaseId);
 
     var user = getUser(userService, firebaseId);
+    var workoutLogToPersist = workoutLog
+        .toBuilder()
+        .exerciseLogs(new ArrayList<>()) // persist with empty list, add ExerciseLogs only later on to establish bidirectional relationships
+        .user(user)
+        .loggedOn(timeService.getCurrentTime())
+        .build();
 
-    final var exerciseLogs = List.copyOf(workoutLog.getExerciseLogs());
-    workoutLog.getExerciseLogs().clear();
-    workoutLog.setUser(user);
-    workoutLog.setLoggedOn(timeService.getCurrentTime());
-
-    var persistedWorkoutLog = workoutLogRepository.save(workoutLog);
-
-    for (ExerciseLog exerciseLog : exerciseLogs) {
+    var persistedWorkoutLog = workoutLogRepository.save(workoutLogToPersist);
+    for (var exerciseLog : workoutLog.getExerciseLogs()) {
       persistedWorkoutLog = addExerciseLogToWorkoutLog(persistedWorkoutLog, exerciseLog);
     }
 
@@ -158,8 +160,6 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
 
     setLog.setPosition(exerciseLog.getSetLogs().size() + 1);
     addSetLogToExerciseLog(exerciseLog, setLog);
-
-    exerciseLogRepository.save(exerciseLog);
 
     return workoutLog;
   }
@@ -263,40 +263,38 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     }
   }
 
-  private void validateLoggingType(Exercise exercise, SetLog setLog) throws InvalidRequestException {
-    var loggingTypes = exercise.getLoggingTypes();
-    var setLogType = LoggingType.fromLog(setLog.getClass());
-    if (!loggingTypes.contains(setLogType)) {
-      log.error("Logging type {} is not valid for exercise with ID {}.", setLog.getClass().getSimpleName(), exercise.getId());
-      throw new InvalidRequestException("Requested logging type is not valid for the specified exercise.");
+  private WorkoutLog addExerciseLogToWorkoutLog(WorkoutLog workoutLog, ExerciseLog newExerciseLog)
+      throws DataNotFoundException, InvalidRequestException {
+    var exercise = getExercise(exerciseService, newExerciseLog.getExercise().getId());
+    var exerciseLogToPersist = newExerciseLog
+        .toBuilder()
+        .exercise(exercise)
+        .setLogs(new ArrayList<>()) // persist with empty list, add SetLogs only later on to establish bidirectional relationships
+        .build();
+
+    workoutLog.addExerciseLog(exerciseLogToPersist);
+    var workoutLogWithNewExerciseLog = workoutLogRepository.save(workoutLog);
+
+    var persistedExerciseLog = Iterables.getLast(workoutLogWithNewExerciseLog.getExerciseLogs());
+    for (var setLog : newExerciseLog.getSetLogs()) {
+      addSetLogToExerciseLog(persistedExerciseLog, setLog);
     }
+
+    return workoutLogWithNewExerciseLog;
   }
 
   private void addSetLogToExerciseLog(ExerciseLog exerciseLog, SetLog setLog) throws InvalidRequestException {
     validateLoggingType(exerciseLog.getExercise(), setLog);
     exerciseLog.addSetLog(setLog);
+    exerciseLogRepository.save(exerciseLog);
   }
 
-  private WorkoutLog addExerciseLogToWorkoutLog(WorkoutLog persistedWorkoutLog, ExerciseLog exerciseLog)
-      throws DataNotFoundException, InvalidRequestException {
-    var exercise = getExercise(exerciseService, exerciseLog.getExercise().getId());
-    exerciseLog.setExercise(exercise);
-
-    final var setLogs = List.copyOf(exerciseLog.getSetLogs());
-    exerciseLog.getSetLogs().clear();
-
-    persistedWorkoutLog.addExerciseLog(exerciseLog);
-    persistedWorkoutLog = workoutLogRepository.save(persistedWorkoutLog);
-
-    for (SetLog setLog : setLogs) {
-      // TODO: Relies on the fact that the newly added exercise log is the last item of the ExerciseLog list in the WorkoutLog object returned by the
-      //  workoutLogRepository.save() call. Is this guaranteed to be the case or do we need a bit of extra code so that we can be absolutely sure?
-      var workoutExerciseLogs = persistedWorkoutLog.getExerciseLogs();
-      var persistedExerciseLog = workoutExerciseLogs.get(workoutExerciseLogs.size() - 1);
-      addSetLogToExerciseLog(persistedExerciseLog, setLog);
-      exerciseLogRepository.save(persistedExerciseLog);
+  private void validateLoggingType(Exercise exercise, SetLog setLog) throws InvalidRequestException {
+    var loggingTypes = exercise.getLoggingTypes();
+    var setLogType = LoggingType.fromSetLog(setLog);
+    if (!loggingTypes.contains(setLogType)) {
+      log.error("Logging type {} is not valid for exercise with ID {}.", setLog.getClass().getSimpleName(), exercise.getId());
+      throw new InvalidRequestException("Requested logging type is not valid for the specified exercise.");
     }
-
-    return persistedWorkoutLog;
   }
 }

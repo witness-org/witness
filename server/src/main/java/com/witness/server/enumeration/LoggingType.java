@@ -5,6 +5,7 @@ import com.witness.server.entity.workout.SetLog;
 import com.witness.server.entity.workout.TimeSetLog;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 public enum LoggingType {
@@ -17,14 +18,16 @@ public enum LoggingType {
   );
 
   /**
-   * Determines the {@link LoggingType} associated with a concrete {@link SetLog} manifestation.
+   * Determines the {@link LoggingType} associated with a concrete {@link SetLog} instance.
    *
-   * @param clazz class of a {@link SetLog} derived type whose {@link LoggingType} should be determined
-   * @return Returns the {@link LoggingType} member which corresponds to the concrete {@link SetLog} type represented by {@code clazz}.
+   * @param setLog {@link SetLog} instance whose {@link LoggingType} should be determined
+   * @return Returns the {@link LoggingType} member which corresponds to the concrete {@link SetLog} type represented by {@code setLog}.
+   * @throws NullPointerException   if {@code setLog} is {@code null}
    * @throws NoSuchElementException if there exists no known association between {@code clazz} and a {@link LoggingType} member
    */
-  public static LoggingType fromLog(Class<? extends SetLog> clazz) {
-    return Optional.ofNullable(KNOWN_LOGGING_TYPES.get(clazz))
-        .orElseThrow(() -> new NoSuchElementException("There is no LoggingType defined for the class \"%s\".".formatted(clazz)));
+  public static LoggingType fromSetLog(SetLog setLog) {
+    Objects.requireNonNull(setLog);
+    return Optional.ofNullable(KNOWN_LOGGING_TYPES.get(setLog.getClass()))
+        .orElseThrow(() -> new NoSuchElementException("There is no LoggingType defined for the class \"%s\".".formatted(setLog.getClass())));
   }
 }

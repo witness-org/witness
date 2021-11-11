@@ -65,7 +65,7 @@ public class WorkoutLogController {
       @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, fallbackPatterns = {"yyyy-MM-dd'T'HH:mm:ss.SSSSSSXX"})
           ZonedDateTime date) {
     var currentUser = securityService.getCurrentUser();
-    var workoutLogs = workoutLogService.getWorkoutLogs(currentUser.getUid(), date);
+    var workoutLogs = workoutLogService.getWorkoutLogsOfDay(currentUser.getUid(), date);
     return workoutLogMapper.entitiesToDtos(workoutLogs);
   }
 
