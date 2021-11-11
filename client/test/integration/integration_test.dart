@@ -1,5 +1,6 @@
 import 'package:client/services/exercise_service.dart';
 import 'package:client/services/server_response.dart';
+import 'package:client/services/workout_log_service.dart';
 import 'package:client/widgets/common/image_provider_facade.dart';
 import 'package:client/widgets/exercises/exercises_by_muscle_group_screen.dart';
 import 'package:client/widgets/exercises/exercises_screen.dart';
@@ -17,7 +18,7 @@ import 'mock_data/exercises.dart' as mock_exercises;
 
 const _sutName = 'integration_test';
 
-@GenerateMocks([ExerciseService], customMocks: [MockSpec<ImageProviderFacade>(returnNullOnMissingStub: true)])
+@GenerateMocks([ExerciseService, WorkoutLogService], customMocks: [MockSpec<ImageProviderFacade>(returnNullOnMissingStub: true)])
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 

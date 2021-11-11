@@ -1,12 +1,10 @@
 import 'package:client/extensions/async_snapshot_extensions.dart';
 import 'package:client/extensions/cast_extensions.dart';
-import 'package:client/extensions/date_time_extensions.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/models/training_programs/overview/training_day_overview.dart';
 import 'package:client/models/training_programs/overview/training_program_overview.dart';
 import 'package:client/models/training_programs/overview/training_week_overview.dart';
-import 'package:client/models/workouts/workout_log.dart';
 import 'package:client/providers/auth_provider.dart';
 import 'package:client/widgets/authentication/error_screen.dart';
 import 'package:client/widgets/authentication/login_screen.dart';
@@ -23,6 +21,9 @@ import 'package:client/widgets/training_programs/training_programs/training_prog
 import 'package:client/widgets/training_programs/training_programs_overview_screen.dart';
 import 'package:client/widgets/training_programs/weeks/training_week_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:timezone/timezone.dart';
+
+final vienna = getLocation('Europe/Vienna'); // TODO(lea): set location globally
 
 Route<dynamic>? selectRoute(final RouteSettings routeSettings, final AuthProvider auth) {
   return MaterialPageRoute<void>(
@@ -32,7 +33,7 @@ Route<dynamic>? selectRoute(final RouteSettings routeSettings, final AuthProvide
         // home
         case '/':
           return auth.isAuthenticated
-              ? TrainingLogScreen(DateTime.now().dateOnly(), routeSettings.arguments.castOrNull<WorkoutLog>())
+              ? TrainingLogScreen(TZDateTime.now(vienna))
               : FutureBuilder(
                   future: auth.reloadAuthentication(),
                   builder: (final ctx, final snapshot) => snapshot.waitSwitch(
@@ -44,8 +45,7 @@ Route<dynamic>? selectRoute(final RouteSettings routeSettings, final AuthProvide
 
         // training logs
         case TrainingLogScreen.routeName:
-          final args = routeSettings.arguments.castOrNull<List<Object?>>();
-          return TrainingLogScreen(args?[0].castOrFallback(DateTime.now().dateOnly()), args?[1].castOrNull<WorkoutLog>());
+          return TrainingLogScreen(routeSettings.arguments.castOrFallback<TZDateTime>(TZDateTime.now(vienna)));
 
         // exercises
         case ExercisesScreen.routeName:

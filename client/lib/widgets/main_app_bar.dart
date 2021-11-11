@@ -8,6 +8,8 @@ import 'package:client/widgets/training_logs/training_log_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/timezone.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 final _logger = getLogger('main_app_bar');
 
@@ -17,7 +19,7 @@ class MainAppBar extends StatelessWidget with LogMessagePreparer, StringLocalize
 
   final double preferredHeight;
   final String? preferredTitle;
-  final DateTime? currentlyViewedDate;
+  final TZDateTime? currentlyViewedDate;
 
   @override
   Size get preferredSize {
@@ -56,7 +58,8 @@ class MainAppBar extends StatelessWidget with LogMessagePreparer, StringLocalize
       lastDate: referenceDate.addYears(1),
     ).then((final pickedDate) {
       if (pickedDate != null) {
-        Navigator.of(context).pushReplacementNamed(TrainingLogScreen.routeName, arguments: [pickedDate.dateOnly(), null]);
+        final date = tz.TZDateTime.local(pickedDate.year, pickedDate.month, pickedDate.day);
+        Navigator.of(context).pushReplacementNamed(TrainingLogScreen.routeName, arguments: date);
       }
     });
   }
