@@ -83,7 +83,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     }
 
     var currentPositions = getExerciseLogPositions(persistedWorkoutLog.getExerciseLogs());
-    return updateExerciseLogPositions(persistedWorkoutLog, currentPositions);
+    return updateAndSimplifyExerciseLogPositions(persistedWorkoutLog, currentPositions);
   }
 
   @Override
@@ -128,7 +128,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
     throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
 
-    return updateExerciseLogPositions(workoutLog, newPositions);
+    return updateAndSimplifyExerciseLogPositions(workoutLog, newPositions);
   }
 
   @Override
@@ -148,7 +148,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
 
     // after removal of exercise log, fill gaps in positions (from {a->1, b->2, c->3, d->4} to {a->1, c->3, d->4} to {a->1, c->2, d->3})
     var currentPositions = getExerciseLogPositions(workoutLog.getExerciseLogs());
-    return updateExerciseLogPositions(workoutLog, currentPositions);
+    return updateAndSimplifyExerciseLogPositions(workoutLog, currentPositions);
   }
 
   @Override
@@ -222,7 +222,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     var exerciseLog = getExerciseLogOrThrow(exerciseLogId);
     throwIfLoggedExerciseNotInWorkoutLog(exerciseLog, workoutLog);
 
-    return updateSetLogPositions(workoutLog, exerciseLog, newPositions);
+    return updateAndSimplifySetLogPositions(workoutLog, exerciseLog, newPositions);
   }
 
   @Override
@@ -246,7 +246,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
 
     // after removal of set log, fill gaps in positions (from {a->1, b->2, c->3, d->4} to {a->1, c->3, d->4} to {a->1, c->2, d->3})
     var currentPositions = getSetLogPositions(exerciseLog.getSetLogs());
-    updateSetLogPositions(workoutLog, exerciseLog, currentPositions);
+    updateAndSimplifySetLogPositions(workoutLog, exerciseLog, currentPositions);
 
     exerciseLogRepository.save(exerciseLog);
     return workoutLog;
@@ -324,7 +324,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     }
 
     var currentPositions = getSetLogPositions(persistedExerciseLog.getSetLogs());
-    return updateSetLogPositions(workoutLogWithNewExerciseLog, persistedExerciseLog, currentPositions);
+    return updateAndSimplifySetLogPositions(workoutLogWithNewExerciseLog, persistedExerciseLog, currentPositions);
   }
 
   private void addSetLogToExerciseLog(ExerciseLog exerciseLog, SetLog setLog) throws InvalidRequestException {
@@ -361,7 +361,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     newPositionsApplicator.accept(newPositionsWithoutGaps);
   }
 
-  private WorkoutLog updateExerciseLogPositions(WorkoutLog workoutLog, Map<Long, Integer> newPositions) throws InvalidRequestException {
+  private WorkoutLog updateAndSimplifyExerciseLogPositions(WorkoutLog workoutLog, Map<Long, Integer> newPositions) throws InvalidRequestException {
     updateLogPositions(() -> getExerciseLogPositions(workoutLog.getExerciseLogs()),
         newPositions,
         "The map of new exercise log positions must exactly cover the exercise logs of the given workout log.",
@@ -371,7 +371,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     return workoutLogRepository.save(workoutLog);
   }
 
-  private WorkoutLog updateSetLogPositions(WorkoutLog workoutLog, ExerciseLog exerciseLog, Map<Long, Integer> newPositions)
+  private WorkoutLog updateAndSimplifySetLogPositions(WorkoutLog workoutLog, ExerciseLog exerciseLog, Map<Long, Integer> newPositions)
       throws InvalidRequestException {
     updateLogPositions(() -> getSetLogPositions(exerciseLog.getSetLogs()),
         newPositions,
