@@ -61,31 +61,6 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
   }
 
   @Override
-  public WorkoutLog updateExerciseLogPositions(String firebaseId, Long workoutLogId, Map<Long, Integer> newPositions)
-      throws DataAccessException, InvalidRequestException {
-    log.info("Updating the positions of exercise logs in workout log with ID {}", workoutLogId);
-
-    var workoutLog = getWorkoutLogOrThrow(workoutLogId);
-    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
-
-    return updateExerciseLogPositions(workoutLog, newPositions);
-  }
-
-  @Override
-  public WorkoutLog updateSetLogPositions(String firebaseId, Long workoutLogId, Long exerciseLogId, Map<Long, Integer> newPositions)
-      throws DataAccessException, InvalidRequestException {
-    log.info("Updating the positions of set logs in exercise log with ID {}", exerciseLogId);
-
-    var workoutLog = getWorkoutLogOrThrow(workoutLogId);
-    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
-
-    var exerciseLog = getExerciseLogOrThrow(exerciseLogId);
-    throwIfLoggedExerciseNotInWorkoutLog(exerciseLog, workoutLog);
-
-    return updateSetLogPositions(workoutLog, exerciseLog, newPositions);
-  }
-
-  @Override
   public List<WorkoutLog> getWorkoutLogsOfDay(String firebaseId, ZonedDateTime date) {
     var startOfDay = date.with(LocalTime.MIN);
     var endOfDay = date.with(LocalTime.MAX);
@@ -144,6 +119,17 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     workoutLog = addExerciseLogToWorkoutLog(workoutLog, exerciseLog);
 
     return workoutLogRepository.save(workoutLog);
+  }
+
+  @Override
+  public WorkoutLog updateExerciseLogPositions(String firebaseId, Long workoutLogId, Map<Long, Integer> newPositions)
+      throws DataAccessException, InvalidRequestException {
+    log.info("Updating the positions of exercise logs in workout log with ID {}", workoutLogId);
+
+    var workoutLog = getWorkoutLogOrThrow(workoutLogId);
+    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+
+    return updateExerciseLogPositions(workoutLog, newPositions);
   }
 
   @Override
@@ -226,6 +212,20 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     setLogRepository.save(setLog);
 
     return workoutLog;
+  }
+
+  @Override
+  public WorkoutLog updateSetLogPositions(String firebaseId, Long workoutLogId, Long exerciseLogId, Map<Long, Integer> newPositions)
+      throws DataAccessException, InvalidRequestException {
+    log.info("Updating the positions of set logs in exercise log with ID {}", exerciseLogId);
+
+    var workoutLog = getWorkoutLogOrThrow(workoutLogId);
+    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+
+    var exerciseLog = getExerciseLogOrThrow(exerciseLogId);
+    throwIfLoggedExerciseNotInWorkoutLog(exerciseLog, workoutLog);
+
+    return updateSetLogPositions(workoutLog, exerciseLog, newPositions);
   }
 
   @Override

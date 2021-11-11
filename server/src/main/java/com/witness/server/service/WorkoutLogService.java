@@ -14,12 +14,6 @@ import java.util.Map;
  */
 public interface WorkoutLogService {
 
-  WorkoutLog updateExerciseLogPositions(String firebaseId, Long workoutLogId, Map<Long, Integer> newPositions)
-      throws DataAccessException, InvalidRequestException;
-
-  WorkoutLog updateSetLogPositions(String firebaseId, Long workoutLogId, Long exerciseLogId, Map<Long, Integer> newPositions)
-      throws DataAccessException, InvalidRequestException;
-
   List<WorkoutLog> getWorkoutLogsOfDay(String firebaseId, ZonedDateTime date);
 
   WorkoutLog createWorkoutLog(WorkoutLog workoutLog, String firebaseId) throws DataAccessException, InvalidRequestException;
@@ -30,6 +24,9 @@ public interface WorkoutLogService {
 
   WorkoutLog addExerciseLog(String firebaseId, Long workoutLogId, ExerciseLog exerciseLog) throws DataAccessException, InvalidRequestException;
 
+  WorkoutLog updateExerciseLogPositions(String firebaseId, Long workoutLogId, Map<Long, Integer> newPositions)
+      throws DataAccessException, InvalidRequestException;
+
   WorkoutLog deleteExerciseLog(String firebaseId, Long workoutLogId, Long exerciseLogId) throws DataAccessException, InvalidRequestException;
 
   WorkoutLog setExerciseLogComment(String firebaseId, Long workoutLogId, Long exerciseLogId, String comment)
@@ -38,6 +35,9 @@ public interface WorkoutLogService {
   WorkoutLog addSetLog(String firebaseId, Long workoutLogId, Long exerciseLogId, SetLog setLog) throws DataAccessException, InvalidRequestException;
 
   WorkoutLog updateSetLog(String firebaseId, Long workoutLogId, Long exerciseLogId, SetLog setLog)
+      throws DataAccessException, InvalidRequestException;
+
+  WorkoutLog updateSetLogPositions(String firebaseId, Long workoutLogId, Long exerciseLogId, Map<Long, Integer> newPositions)
       throws DataAccessException, InvalidRequestException;
 
   WorkoutLog deleteSetLog(String firebaseId, Long workoutLogId, Long exerciseLogId, Long setLogId) throws DataAccessException,

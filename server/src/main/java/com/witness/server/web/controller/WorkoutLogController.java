@@ -54,33 +54,12 @@ public class WorkoutLogController {
     this.exerciseLogMapper = exerciseLogMapper;
   }
 
-  @PutMapping("{workoutLogId}/positions")
-  @ResponseStatus(HttpStatus.OK)
-  @Operation(summary = "Updates the positions of exercise logs in a workout logout.")
-  public WorkoutLogDto updateExerciseLogPositions(@PathVariable Long workoutLogId, @Valid @RequestBody Map<Long, Integer> positions)
-      throws InvalidRequestException, DataAccessException {
-    var currentUser = securityService.getCurrentUser();
-    var modifiedWorkoutLog = workoutLogService.updateExerciseLogPositions(currentUser.getUid(), workoutLogId, positions);
-    return workoutLogMapper.entityToDto(modifiedWorkoutLog);
-  }
-
-  @PutMapping("{workoutLogId}/{exerciseLogId}/positions")
-  @ResponseStatus(HttpStatus.OK)
-  @Operation(summary = "Updates the positions of exercise logs in a workout logout.")
-  public WorkoutLogDto updateSetLogPositions(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId,
-                                             @Valid @RequestBody Map<Long, Integer> positions)
-      throws InvalidRequestException, DataAccessException {
-    var currentUser = securityService.getCurrentUser();
-    var modifiedWorkoutLog = workoutLogService.updateSetLogPositions(currentUser.getUid(), workoutLogId, exerciseLogId, positions);
-    return workoutLogMapper.entityToDto(modifiedWorkoutLog);
-  }
-
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   @Operation(summary = "Gets the workout logs of the current user which were logged on a given day.")
   public List<WorkoutLogDto> getWorkoutLogs(
       @Parameter(description = "Day to fetch workout logs from. (ISO-8601 date-time)", example = "2021-10-08T14:15:55.3007597+02:00")
-      @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, fallbackPatterns = {"yyyy-MM-dd'T'HH:mm:ss.SSSSSSXX"})
+      @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, fallbackPatterns = {"yyyy-MM-dd'T'HH:mm:ss[.SSSSSS][.SSS]XX"})
           ZonedDateTime date) {
     var currentUser = securityService.getCurrentUser();
     var workoutLogs = workoutLogService.getWorkoutLogsOfDay(currentUser.getUid(), date);
@@ -126,6 +105,16 @@ public class WorkoutLogController {
     return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 
+  @PutMapping("{workoutLogId}/positions")
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Updates the positions of exercise logs in a workout logout.")
+  public WorkoutLogDto updateExerciseLogPositions(@PathVariable Long workoutLogId, @Valid @RequestBody Map<Long, Integer> positions)
+      throws InvalidRequestException, DataAccessException {
+    var currentUser = securityService.getCurrentUser();
+    var modifiedWorkoutLog = workoutLogService.updateExerciseLogPositions(currentUser.getUid(), workoutLogId, positions);
+    return workoutLogMapper.entityToDto(modifiedWorkoutLog);
+  }
+
   @DeleteMapping("{workoutLogId}/{exerciseLogId}")
   @ResponseStatus(HttpStatus.OK)
   @Operation(summary = "Delete an exercise log from an existing workout log.")
@@ -166,6 +155,17 @@ public class WorkoutLogController {
     var currentUser = securityService.getCurrentUser();
     var setLog = setLogMapper.dtoToEntity(setLogDto);
     var modifiedWorkoutLog = workoutLogService.updateSetLog(currentUser.getUid(), workoutLogId, exerciseLogId, setLog);
+    return workoutLogMapper.entityToDto(modifiedWorkoutLog);
+  }
+
+  @PutMapping("{workoutLogId}/{exerciseLogId}/positions")
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Updates the positions of exercise logs in a workout logout.")
+  public WorkoutLogDto updateSetLogPositions(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId,
+                                             @Valid @RequestBody Map<Long, Integer> positions)
+      throws InvalidRequestException, DataAccessException {
+    var currentUser = securityService.getCurrentUser();
+    var modifiedWorkoutLog = workoutLogService.updateSetLogPositions(currentUser.getUid(), workoutLogId, exerciseLogId, positions);
     return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 
