@@ -6,7 +6,7 @@
     "durationMinutes": 183,
     "exerciseLogs": [
       {
-        "position": 2,
+        "position": null,
         "exercise": {
           "id": 12
         },
@@ -15,7 +15,7 @@
         "workoutLog": null,
         "setLogs": [
           {
-            "position": 3,
+            "position": null,
             "rpe": 7,
             "id": null,
             "weightKg": 23,
@@ -27,7 +27,7 @@
             "reps": 20
           },
           {
-            "position": 3,
+            "position": null,
             "rpe": 7,
             "id": null,
             "weightKg": 23,
@@ -46,7 +46,7 @@
     "durationMinutes": 183,
     "exerciseLogs": [
       {
-        "position": 2,
+        "position": null,
         "exercise": {
           "id": 12
         },

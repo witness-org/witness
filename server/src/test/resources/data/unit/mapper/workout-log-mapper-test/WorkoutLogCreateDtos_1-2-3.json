@@ -3,13 +3,11 @@
     "durationMinutes": 183,
     "exerciseLogs": [
       {
-        "position": 2,
         "exerciseId": 12,
         "comment": "logComment",
         "setLogs": [
           {
             "type": "repsCreate",
-            "position": 3,
             "rpe": 7,
             "weightKg": 23,
             "resistanceBands": [
@@ -20,7 +18,6 @@
           },
           {
             "type": "timeCreate",
-            "position": 3,
             "rpe": 7,
             "weightKg": 23,
             "resistanceBands": [],
@@ -34,7 +31,6 @@
     "durationMinutes": 183,
     "exerciseLogs": [
       {
-        "position": 2,
         "exerciseId": 12,
         "comment": null,
         "setLogs": []
