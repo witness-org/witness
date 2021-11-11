@@ -40,8 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Transactional(rollbackFor = Throwable.class)
 public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor {
-  // TODO validate positions upon create
-  // TODO forbid position change in other requests then explicit updatePositions
   private final ExerciseService exerciseService;
   private final WorkoutLogRepository workoutLogRepository;
   private final ExerciseLogRepository exerciseLogRepository;
@@ -84,7 +82,8 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
       persistedWorkoutLog = addExerciseLogToWorkoutLog(persistedWorkoutLog, exerciseLog);
     }
 
-    return persistedWorkoutLog;
+    var currentPositions = getExerciseLogPositions(persistedWorkoutLog.getExerciseLogs());
+    return updateExerciseLogPositions(persistedWorkoutLog, currentPositions);
   }
 
   @Override
@@ -148,10 +147,8 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     }
 
     // after removal of exercise log, fill gaps in positions (from {a->1, b->2, c->3, d->4} to {a->1, c->3, d->4} to {a->1, c->2, d->3})
-    var currentPositions = getExerciseLogPositions(workoutLog);
-    updateExerciseLogPositions(workoutLog, currentPositions);
-
-    return workoutLogRepository.save(workoutLog);
+    var currentPositions = getExerciseLogPositions(workoutLog.getExerciseLogs());
+    return updateExerciseLogPositions(workoutLog, currentPositions);
   }
 
   @Override
@@ -248,7 +245,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     }
 
     // after removal of set log, fill gaps in positions (from {a->1, b->2, c->3, d->4} to {a->1, c->3, d->4} to {a->1, c->2, d->3})
-    var currentPositions = getSetLogPositions(exerciseLog);
+    var currentPositions = getSetLogPositions(exerciseLog.getSetLogs());
     updateSetLogPositions(workoutLog, exerciseLog, currentPositions);
 
     exerciseLogRepository.save(exerciseLog);
@@ -313,6 +310,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     var exerciseLogToPersist = newExerciseLog
         .toBuilder()
         .exercise(exercise)
+        .position(workoutLog.getExerciseLogs().size() + 1)
         .setLogs(new ArrayList<>()) // persist with empty list, add SetLogs only later on to establish bidirectional relationships
         .build();
 
@@ -321,10 +319,12 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
 
     var persistedExerciseLog = Iterables.getLast(workoutLogWithNewExerciseLog.getExerciseLogs());
     for (var setLog : newExerciseLog.getSetLogs()) {
+      setLog.setPosition(persistedExerciseLog.getSetLogs().size() + 1);
       addSetLogToExerciseLog(persistedExerciseLog, setLog);
     }
 
-    return workoutLogWithNewExerciseLog;
+    var currentPositions = getSetLogPositions(persistedExerciseLog.getSetLogs());
+    return updateSetLogPositions(workoutLogWithNewExerciseLog, persistedExerciseLog, currentPositions);
   }
 
   private void addSetLogToExerciseLog(ExerciseLog exerciseLog, SetLog setLog) throws InvalidRequestException {
@@ -362,7 +362,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
   }
 
   private WorkoutLog updateExerciseLogPositions(WorkoutLog workoutLog, Map<Long, Integer> newPositions) throws InvalidRequestException {
-    updateLogPositions(() -> getExerciseLogPositions(workoutLog),
+    updateLogPositions(() -> getExerciseLogPositions(workoutLog.getExerciseLogs()),
         newPositions,
         "The map of new exercise log positions must exactly cover the exercise logs of the given workout log.",
         "The assignment of exercise logs to new positions must be unique.",
@@ -373,7 +373,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
 
   private WorkoutLog updateSetLogPositions(WorkoutLog workoutLog, ExerciseLog exerciseLog, Map<Long, Integer> newPositions)
       throws InvalidRequestException {
-    updateLogPositions(() -> getSetLogPositions(exerciseLog),
+    updateLogPositions(() -> getSetLogPositions(exerciseLog.getSetLogs()),
         newPositions,
         "The map of new set log positions must exactly cover the set logs of the given exercise log.",
         "The assignment of set logs to new positions must be unique.",
@@ -382,15 +382,13 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     return workoutLogRepository.save(workoutLog);
   }
 
-  private Map<Long, Integer> getExerciseLogPositions(WorkoutLog workoutLog) {
-    return workoutLog
-        .getExerciseLogs().stream()
+  private Map<Long, Integer> getExerciseLogPositions(List<ExerciseLog> exerciseLogs) {
+    return exerciseLogs.stream()
         .collect(Collectors.toMap(ExerciseLog::getId, ExerciseReference::getPosition));
   }
 
-  private Map<Long, Integer> getSetLogPositions(ExerciseLog exerciseLog) {
-    return exerciseLog
-        .getSetLogs().stream()
+  private Map<Long, Integer> getSetLogPositions(List<SetLog> setLogs) {
+    return setLogs.stream()
         .collect(Collectors.toMap(SetLog::getId, Set::getPosition));
   }
 

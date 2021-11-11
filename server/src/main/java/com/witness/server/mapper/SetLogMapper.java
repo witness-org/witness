@@ -66,10 +66,12 @@ public abstract class SetLogMapper {
   public abstract List<SetLog> createDtosToEntities(List<SetLogCreateDto> setLogs);
 
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "position", ignore = true)
   @Mapping(target = "exerciseLog", ignore = true)
   public abstract TimeSetLog timeCreateDtoToEntity(TimeSetLogCreateDto setLog);
 
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "position", ignore = true)
   @Mapping(target = "exerciseLog", ignore = true)
   public abstract RepsSetLog repsCreateDtoToEntity(RepsSetLogCreateDto setLog);
 

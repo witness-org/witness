@@ -1,6 +1,7 @@
 package com.witness.server.dto.workout;
 
 import java.util.List;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,6 +16,7 @@ public class ExerciseLogCreateDto extends ExerciseReferenceDto {
   private String comment;
 
   @NotNull
+  @Valid
   private List<SetLogCreateDto> setLogs;
 }
 

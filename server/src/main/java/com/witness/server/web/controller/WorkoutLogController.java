@@ -59,8 +59,8 @@ public class WorkoutLogController {
   @Operation(summary = "Gets the workout logs of the current user which were logged on a given day.")
   public List<WorkoutLogDto> getWorkoutLogs(
       @Parameter(description = "Day to fetch workout logs from. (ISO-8601 date-time)", example = "2021-10-08T14:15:55.3007597+02:00")
-      @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, fallbackPatterns = {"yyyy-MM-dd'T'HH:mm:ss[.SSSSSS][.SSS]XX"})
-          ZonedDateTime date) {
+      @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME,
+          fallbackPatterns = "yyyy-MM-dd'T'HH:mm:ss[.SSSSSSSSS][.SSSSSSSS][.SSSSSSS][.SSSSSS][.SSSSS][.SSSS][.SSS][.SS][.S]XX") ZonedDateTime date) {
     var currentUser = securityService.getCurrentUser();
     var workoutLogs = workoutLogService.getWorkoutLogsOfDay(currentUser.getUid(), date);
     return workoutLogMapper.entitiesToDtos(workoutLogs);

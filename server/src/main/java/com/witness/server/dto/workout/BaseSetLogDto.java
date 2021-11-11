@@ -9,10 +9,6 @@ import lombok.Data;
 
 @Data
 public abstract class BaseSetLogDto {
-  @NotNull
-  @Min(1)
-  protected Integer position;
-
   @Min(0)
   @Max(10)
   protected Integer rpe;
