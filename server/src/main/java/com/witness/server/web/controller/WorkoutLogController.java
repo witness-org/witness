@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @SecuredValidatedRestController
-@RequestMapping("workouts")
+@RequestMapping("workout")
 public class WorkoutLogController {
 
   // TODO change position of exercises (PUT request)
