@@ -7,11 +7,18 @@ import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.InvalidRequestException;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provides methods related to logging a workout.
  */
 public interface WorkoutLogService {
+
+  WorkoutLog updateExerciseLogPositions(String firebaseId, Long workoutLogId, Map<Long, Integer> newPositions)
+      throws DataAccessException, InvalidRequestException;
+
+  WorkoutLog updateSetLogPositions(String firebaseId, Long workoutLogId, Long exerciseLogId, Map<Long, Integer> newPositions)
+      throws DataAccessException, InvalidRequestException;
 
   List<WorkoutLog> getWorkoutLogsOfDay(String firebaseId, ZonedDateTime date);
 

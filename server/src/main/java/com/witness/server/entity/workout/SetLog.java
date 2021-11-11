@@ -35,7 +35,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @ToString(callSuper = true)
 public abstract class SetLog extends Set {
-  
+
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "set_log_id_generator")
   @SequenceGenerator(name = "set_log_id_generator", sequenceName = "set_log_id_sequence")
@@ -52,7 +52,6 @@ public abstract class SetLog extends Set {
   @Builder.Default
   @Setter(AccessLevel.NONE)
   @NotNull
-  @SuppressWarnings("checkstyle:MatchXpath") // false-positive "use var" warning
   protected List<ResistanceBand> resistanceBands = new ArrayList<>();
 
   @ManyToOne(targetEntity = ExerciseLog.class, fetch = FetchType.LAZY)

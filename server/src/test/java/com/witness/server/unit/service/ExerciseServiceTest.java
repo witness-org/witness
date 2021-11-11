@@ -314,7 +314,7 @@ class ExerciseServiceTest extends BaseUnitTest {
       @JsonFileSource(value = DATA_ROOT + "Exercises_1-2.json", type = Exercise[].class, arrayToList = true)
   })
   void getExercisesCreatedByUser_user_returnList(User user, List<Exercise> exercises) throws DataAccessException {
-    String firebaseId = user.getFirebaseId();
+    var firebaseId = user.getFirebaseId();
     when(userService.findByFirebaseId(firebaseId)).thenReturn(user);
     when(exerciseRepository.findAllByUser(user)).thenReturn(exercises);
 

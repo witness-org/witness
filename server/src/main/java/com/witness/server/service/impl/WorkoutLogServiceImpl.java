@@ -3,6 +3,8 @@ package com.witness.server.service.impl;
 import com.google.common.collect.Iterables;
 import com.witness.server.entity.exercise.Exercise;
 import com.witness.server.entity.workout.ExerciseLog;
+import com.witness.server.entity.workout.ExerciseReference;
+import com.witness.server.entity.workout.Set;
 import com.witness.server.entity.workout.SetLog;
 import com.witness.server.entity.workout.WorkoutLog;
 import com.witness.server.enumeration.LoggingType;
@@ -21,7 +23,11 @@ import com.witness.server.service.WorkoutLogService;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +56,94 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     this.setLogRepository = setLogRepository;
     this.userService = userService;
     this.timeService = timeService;
+  }
+
+  @Override
+  public WorkoutLog updateExerciseLogPositions(String firebaseId, Long workoutLogId, Map<Long, Integer> newPositions)
+      throws DataAccessException, InvalidRequestException {
+    log.info("Updating the positions of exercise logs in workout log with ID {}", workoutLogId);
+
+    var workoutLog = getWorkoutLogOrThrow(workoutLogId);
+    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+
+    var currentPositions = workoutLog
+        .getExerciseLogs().stream()
+        .collect(Collectors.toMap(ExerciseLog::getId, ExerciseReference::getPosition));
+
+    if (!newPositions.keySet().equals(currentPositions.keySet())) {
+      log.error("Map of new positions does not exactly cover exercise logs.");
+      throw new InvalidRequestException("The map of new exercise log positions must exactly cover the exercise logs of the given workout log.");
+    }
+
+    if (!newPositions.values().stream().allMatch(new HashSet<>()::add)) {
+      log.error("Map of new positions contains duplicate values.");
+      throw new InvalidRequestException("The assignment of exercise logs to new positions must be unique.");
+    }
+
+    var newPositionsWithoutGaps = simplifyPositionSpecification(newPositions);
+    for (ExerciseLog exerciseLog : workoutLog.getExerciseLogs()) {
+      exerciseLog.setPosition(newPositionsWithoutGaps.get(exerciseLog.getId()));
+    }
+
+    return workoutLogRepository.save(workoutLog);
+  }
+
+  @Override
+  public WorkoutLog updateSetLogPositions(String firebaseId, Long workoutLogId, Long exerciseLogId, Map<Long, Integer> newPositions)
+      throws DataAccessException, InvalidRequestException {
+    log.info("Updating the positions of set logs in exercise log with ID {}", exerciseLogId);
+    var workoutLog = getWorkoutLogOrThrow(workoutLogId);
+    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+
+    var exerciseLog = getExerciseLogOrThrow(exerciseLogId);
+    throwIfLoggedExerciseNotInWorkoutLog(exerciseLog, workoutLog);
+
+    var currentPositions = exerciseLog
+        .getSetLogs().stream()
+        .collect(Collectors.toMap(SetLog::getId, Set::getPosition));
+
+    if (!newPositions.keySet().equals(currentPositions.keySet())) {
+      log.error("Map of new positions does not exactly cover set logs.");
+      throw new InvalidRequestException("The map of new set log positions must exactly cover the set logs of the given exercise log.");
+    }
+
+    if (!newPositions.values().stream().allMatch(new HashSet<>()::add)) {
+      log.error("Map of new positions contains duplicate values.");
+      throw new InvalidRequestException("The assignment of set logs to new positions must be unique.");
+    }
+
+    var newPositionsWithoutGaps = simplifyPositionSpecification(newPositions);
+    for (var setLog : exerciseLog.getSetLogs()) {
+      setLog.setPosition(newPositionsWithoutGaps.get(setLog.getId()));
+    }
+
+    return workoutLogRepository.save(workoutLog);
+  }
+
+  /**
+   * <p>
+   * Simplifies a position specification by removing gaps in the integers denoting positions of items. Example:
+   * </p>
+   * <pre>
+   *    {2->2, 5->66, 23->34, 7->23, 55->1, 13->7}
+   * => {2->2, 5->6,  23->5,  7->4,  55->1, 13->3}
+   * </pre>
+   * <p>
+   * <b>Note:</b> If two (ID) keys map to the same (position) value, their resulting relative order is undefined.
+   * </p>
+   *
+   * @param positions a map that relates items (or their IDs) with positions
+   * @return a map that has the same keys as {@code positions}, but the value set is modified such that it represents a gapless integer sequence from
+   *     {@code 1} to {@code n} where {@code n} is the number of entries in {@code positions}.
+   */
+  private Map<Long, Integer> simplifyPositionSpecification(Map<Long, Integer> positions) {
+    var sortedEntries = positions.entrySet().stream()
+        .sorted(Map.Entry.comparingByValue())
+        .collect(Collectors.toList());
+
+    return IntStream.range(0, sortedEntries.size())
+        .boxed()
+        .collect(Collectors.toMap(i -> sortedEntries.get(i).getKey(), i -> i + 1));
   }
 
   @Override

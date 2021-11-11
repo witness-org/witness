@@ -27,7 +27,6 @@ import java.util.List;
  * @param <T> the most general type of the subtype hierarchy to be supported by this deserializer, might be an abstract class
  */
 public abstract class PolymorphicDeserializer<T> extends StdDeserializer<T> {
-  @SuppressWarnings("checkstyle:MatchXpath") // false-positive "use var" warning
   private static final ObjectMapper defaultDeserializer = new ObjectMapper();
 
   public PolymorphicDeserializer() {

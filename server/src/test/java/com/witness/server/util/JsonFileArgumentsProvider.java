@@ -47,7 +47,7 @@ public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationC
     var parameters = new Object[files.length];
 
     for (var i = 0; i < files.length; i++) {
-      Object deserializedObject = deserializeObject(files[i]);
+      var deserializedObject = deserializeObject(files[i]);
       parameters[i] = deserializedObject;
     }
 

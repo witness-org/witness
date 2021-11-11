@@ -189,8 +189,12 @@
                      value="Parameter name ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="MatchXpath">
+            <!-- Violations are local variable definitions (i.e. VARIABLE_DEF tokens that are within a method, i.e. children of a
+             METHOD_DEF token) that are not declared using 'var'. Exceptions are variable definitions whose assigned expressions
+             is the 'null' literal - in that case, one cannot use var and therefore the explicit type declaration is tolerated.
+             Note: The XPath expression '/(* except LITERAL_NULL)' is a shorthand for '/*[not(self::LITERAL_NULL)]'. -->
             <property name="query"
-                      value="//VARIABLE_DEF[./ASSIGN/EXPR/LITERAL_NEW and not(./TYPE/IDENT[@text='var'])]"/>
+                      value="//METHOD_DEF//VARIABLE_DEF[./ASSIGN/EXPR/(* except LITERAL_NULL) and not(./TYPE/IDENT[@text='var'])]"/>
             <message key="matchxpath.match" value="Use the ''var'' keyword for instantiations."/>
         </module>
         <module name="LambdaParameterName">

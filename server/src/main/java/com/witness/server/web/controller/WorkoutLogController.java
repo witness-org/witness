@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import org.hibernate.validator.constraints.Length;
@@ -37,10 +38,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @SecuredValidatedRestController
 @RequestMapping("workout")
 public class WorkoutLogController {
-
-  // TODO change position of exercises (PUT request)
-  // TODO maybe change position of sets (PUT request)
-
   private final SecurityService securityService;
   private final WorkoutLogService workoutLogService;
   private final SetLogMapper setLogMapper;
@@ -55,6 +52,27 @@ public class WorkoutLogController {
     this.setLogMapper = setLogMapper;
     this.workoutLogMapper = workoutLogMapper;
     this.exerciseLogMapper = exerciseLogMapper;
+  }
+
+  @PutMapping("{workoutLogId}/positions")
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Updates the positions of exercise logs in a workout logout.")
+  public WorkoutLogDto updateExerciseLogPositions(@PathVariable Long workoutLogId, @Valid @RequestBody Map<Long, Integer> positions)
+      throws InvalidRequestException, DataAccessException {
+    var currentUser = securityService.getCurrentUser();
+    var modifiedWorkoutLog = workoutLogService.updateExerciseLogPositions(currentUser.getUid(), workoutLogId, positions);
+    return workoutLogMapper.entityToDto(modifiedWorkoutLog);
+  }
+
+  @PutMapping("{workoutLogId}/{exerciseLogId}/positions")
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Updates the positions of exercise logs in a workout logout.")
+  public WorkoutLogDto updateSetLogPositions(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId,
+                                             @Valid @RequestBody Map<Long, Integer> positions)
+      throws InvalidRequestException, DataAccessException {
+    var currentUser = securityService.getCurrentUser();
+    var modifiedWorkoutLog = workoutLogService.updateSetLogPositions(currentUser.getUid(), workoutLogId, exerciseLogId, positions);
+    return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 
   @GetMapping

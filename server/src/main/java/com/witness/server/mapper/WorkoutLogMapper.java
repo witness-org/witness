@@ -16,5 +16,7 @@ public abstract class WorkoutLogMapper {
   public abstract List<WorkoutLogDto> entitiesToDtos(List<WorkoutLog> workoutLogs);
 
   @Mapping(target = "user", ignore = true)
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "loggedOn", ignore = true)
   public abstract WorkoutLog createDtoToEntity(WorkoutLogCreateDto workoutLogCreateDto);
 }
