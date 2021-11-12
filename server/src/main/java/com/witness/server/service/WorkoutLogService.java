@@ -147,7 +147,7 @@ public interface WorkoutLogService {
    * @param exerciseLogId the ID of the {@link ExerciseLog} to delete
    * @return the modified {@link WorkoutLog} without the {@link ExerciseLog} represented by {@code exerciseLogId}
    * @throws DataNotFoundException   if the workout log identified by {@code workoutLogId}, the user represented by {@code firebaseId} or the exercise
-   *                                 log referenced by {@code exerciseLogId} does not exist
+   *                                 log represented by {@code exerciseLogId} does not exist
    * @throws DataAccessException     if the user lookup fails or the exercise log represented by {@code exerciseLogId} could not be removed from the
    *                                 workout log represented by {@code workoutLogId}
    * @throws InvalidRequestException if one of the following is true:
@@ -234,7 +234,7 @@ public interface WorkoutLogService {
    * @param setLog        the updated {@link SetLog}
    * @return the modified {@link WorkoutLog} with updated {@link SetLog} as specified by {@code setlog}
    * @throws DataNotFoundException   if the workout log identified by {@code workoutLogId}, the user represented by {@code firebaseId}, the exercise
-   *                                 log referenced by {@code exerciseLogId} or the set log identified by the ID of {@code setLog} does not exist
+   *                                 log represented by {@code exerciseLogId} or the set log identified by the ID of {@code setLog} does not exist
    * @throws DataAccessException     if the user lookup fails
    * @throws InvalidRequestException if one of the following is true:
    *                                 <ul>
@@ -311,7 +311,7 @@ public interface WorkoutLogService {
    * @param setLogId      the ID of the {@link SetLog} to be removed
    * @return the modified {@link WorkoutLog} without the {@link SetLog} represented by {@code setLogId}
    * @throws DataNotFoundException   if the workout log identified by {@code workoutLogId}, the user represented by {@code firebaseId}, the exercise
-   *                                 log referenced by {@code exerciseLogId} or the set log referenced by {@code setLogId} does not exist
+   *                                 log represented by {@code exerciseLogId} or the set log represented by {@code setLogId} does not exist
    * @throws DataAccessException     if the user lookup fails or the set log represented by {@code setLogId} could not be removed from the
    *                                 exercise log represented by {@code exerciseLogId}
    * @throws InvalidRequestException if one of the following is true:

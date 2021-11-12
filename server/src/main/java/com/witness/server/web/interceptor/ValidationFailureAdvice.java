@@ -3,6 +3,7 @@ package com.witness.server.web.interceptor;
 import com.witness.server.enumeration.ServerError;
 import com.witness.server.service.TimeService;
 import com.witness.server.web.interceptor.ValidationFailureAdvice.ValidationErrorsHolder.ValidationError;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -113,13 +114,27 @@ public class ValidationFailureAdvice {
   }
 
   @Data
+  @Schema(description = "Bundles one or more validation errors.")
   static class ValidationErrorsHolder {
+    @Schema(description = "Number of the HTTP status code induced by the validation errors.", example = "400")
     private final int status;
+
+    @Schema(description = "Phrase describing the HTTP status code induced by the validation errors.", example = "Bad Request")
     private final String error;
+
+    @Schema(description = "Unique identification of a common error (group) that may be used for more sophisticated handling on the client-side.",
+        example = "VALIDATION_ERROR")
     private final ServerError errorKey;
 
+    @Schema(description = "Compact summary of validation errors.",
+        example = "There were validation errors: [durationMinutes: must be greater than 0 (value='0')]")
     private String message;
+
+    @Schema(description = "Timezone-aware date and time of the response informing about the validation errors.",
+        example = "2021-11-12T22:08:58.1590085+01:00")
     private final ZonedDateTime timestamp;
+
+    @Schema(description = "Detailed representation of encountered validation errors.")
     private final List<ValidationError> validationErrors;
 
     ValidationErrorsHolder(ZonedDateTime timestamp) {
@@ -156,10 +171,18 @@ public class ValidationFailureAdvice {
 
     @Data
     @AllArgsConstructor
+    @Schema(description = "Encapsulates information about a validation error.")
     static class ValidationError {
+      @Schema(description = "Representation of the object causing the validation error.", example = "workoutLogCreateDto")
       private final String rootBean;
+
+      @Schema(description = "Location of the violating property in the member hierarchy of rootBean.", example = "durationMinutes")
       private final String propertyPath;
+
+      @Schema(description = "Property value that caused the validation error.", example = "0")
       private final Object invalidValue;
+
+      @Schema(description = "Description of the validation error.", example = "must be greater than 0")
       private final String message;
     }
   }

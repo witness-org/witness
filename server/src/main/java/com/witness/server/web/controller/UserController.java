@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @SecuredValidatedRestController
 @RequestMapping("user")
-@Tag(name = "Users", description = "This controller provides endpoint methods for operations regarding the user management.")
+@Tag(name = "Users", description = "Provides endpoint methods for operations regarding the user management.")
 public class UserController {
   private final SecurityService securityService;
   private final UserService userService;

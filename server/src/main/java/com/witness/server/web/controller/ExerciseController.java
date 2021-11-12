@@ -32,8 +32,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @SecuredValidatedRestController
 @RequestMapping("exercise")
-@Tag(name = "Exercises",
-    description = "This controller provides endpoint methods for operations regarding the management of initial and user exercises.")
+@Tag(name = "Exercises", description = "Provides endpoint methods for operations regarding the management of initial and user exercises.")
 public class ExerciseController {
 
   private final ExerciseService exerciseService;
