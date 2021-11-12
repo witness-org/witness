@@ -1,5 +1,8 @@
 package com.witness.server.configuration;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+import com.witness.server.enumeration.ServerError;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.ExternalDocumentation;
@@ -9,7 +12,10 @@ import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import java.util.Arrays;
 import java.util.Collections;
@@ -98,6 +104,8 @@ public class OpenApiConfig {
   public OpenApiCustomiser getApiCustomiser() {
     return openApi -> {
       openApi.getPaths().forEach(OpenApiConfig::clearSecuritySchemeOfPublicMethods);
+      openApi.getPaths().forEach(OpenApiConfig::addDefaultUnauthorizedResponseForNonPublicMethods);
+      openApi.getPaths().forEach(OpenApiConfig::setMediaTypeJsonForApiResponses);
       openApi.getComponents().setSchemas(sortSchemas(openApi));
     };
   }
@@ -114,12 +122,61 @@ public class OpenApiConfig {
         .forEach(operation -> operation.setSecurity(Collections.emptyList()));
   }
 
+  private static void addDefaultUnauthorizedResponseForNonPublicMethods(String path, PathItem pathItem) {
+    OPERATION_GETTERS.stream()
+        .map(getter -> getter.apply(pathItem))
+        .filter(OpenApiConfig::isProtectedOperation)
+        .forEach(operation -> operation.getResponses().addApiResponse("401",
+            new ApiResponse()
+                .description("Unauthorized request to protected resource, Bearer token missing.")
+                .content(
+                    new Content().addMediaType(APPLICATION_JSON_VALUE,
+                        new MediaType().example(Map.of(
+                            "errorKey", ServerError.AUTHORIZATION_NOT_GRANTED.name(),
+                            "message", "Unauthorized access of protected resource.",
+                            "error", "UNAUTHORIZED",
+                            "status", 401,
+                            "timestamp", "2021-11-12T22:47:29.0767629+01:00"
+                        )))
+                )));
+  }
+
+  private static void setMediaTypeJsonForApiResponses(String path, PathItem pathItem) {
+    OPERATION_GETTERS.stream()
+        .map(getter -> getter.apply(pathItem))
+        .filter(OpenApiConfig::isAccessibleOperation)
+        .forEach(operation -> operation
+            .getResponses().forEach((statusCode, apiResponse) -> {
+              // if there is no response content or not exactly one media type, leave definition untouched
+              if (apiResponse.getContent() == null || apiResponse.getContent().size() != 1) {
+                return;
+              }
+
+              var responseContent = apiResponse.getContent().values().iterator().next();
+              apiResponse.setContent(new Content().addMediaType(APPLICATION_JSON_VALUE, responseContent));
+            })
+        );
+  }
+
+  private static boolean isAccessibleOperation(Operation operation) {
+    return operation != null;
+  }
+
   private static boolean isPublicOperation(Operation operation) {
-    if (operation == null) {
+    if (!isAccessibleOperation(operation)) {
       return false;
     }
 
     var requirements = operation.getSecurity();
-    return (requirements == null || requirements.stream().anyMatch(requirement -> requirement.containsKey(SECURITY_SCHEME_NONE)));
+    return (requirements == null || requirements.isEmpty()
+            || requirements.stream().anyMatch(requirement -> requirement.containsKey(SECURITY_SCHEME_NONE)));
+  }
+
+  private static boolean isProtectedOperation(Operation operation) {
+    if (!isAccessibleOperation(operation)) {
+      return false;
+    }
+
+    return !isPublicOperation(operation);
   }
 }

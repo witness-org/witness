@@ -52,7 +52,9 @@ public class ExerciseController {
   @Operation(summary = "Creates a new initial exercise. Only possible for admins.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "The initial exercise was successfully created."),
-      @ApiResponse(responseCode = "400", description = "The initial exercise could not be created because the request was invalid.")
+      @ApiResponse(responseCode = "400", description = "The initial exercise could not be created because the request was invalid."),
+      @ApiResponse(responseCode = "403", description = "The initial exercise could not be created because the requester does not have the required "
+                                                       + "permission.")
   })
   public ExerciseDto createInitialExercise(@Valid @RequestBody
                                            @Parameter(description = "The exercise that should be created.") ExerciseCreateDto exercise)
@@ -68,10 +70,10 @@ public class ExerciseController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "The user exercise was successfully created."),
       @ApiResponse(responseCode = "400", description = "The user exercise could not be created because the request was invalid."),
-      @ApiResponse(responseCode = "404",
-          description = "The exercise could not be created because the Firebase ID of the logged-in user cannot be found in the database."),
-      @ApiResponse(responseCode = "500",
-          description = "The user exercise could not be created because the logged-in user could not be found in the database.")
+      @ApiResponse(responseCode = "404", description = "The exercise could not be created because the Firebase ID of the logged-in user cannot be "
+                                                       + "found in the database."),
+      @ApiResponse(responseCode = "500", description = "The user exercise could not be created because the logged-in user could not be found in "
+                                                       + "the database.")
   })
   public UserExerciseDto createUserExercise(@Valid @RequestBody
                                             @Parameter(description = "The exercise that should be created.") ExerciseCreateDto exercise)
@@ -89,6 +91,8 @@ public class ExerciseController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The initial exercise was successfully updated."),
       @ApiResponse(responseCode = "400", description = "The initial exercise could not be updated because the request was invalid."),
+      @ApiResponse(responseCode = "403", description = "The initial exercise could not be updated because the requester does not have the required "
+                                                       + "permission."),
       @ApiResponse(responseCode = "404", description = "The requested initial exercise does not exist.")
   })
   public ExerciseDto updateInitialExercise(@Valid @RequestBody
@@ -105,10 +109,10 @@ public class ExerciseController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The user exercise was successfully updated."),
       @ApiResponse(responseCode = "400", description = "The user exercise could not be updated because the request was invalid."),
-      @ApiResponse(responseCode = "404",
-          description = "The requested exercise does not exist or the Firebase ID of the logged-in user cannot be found in the database."),
-      @ApiResponse(responseCode = "500",
-          description = "The user exercise could not be updated because the logged-in user could not be found in the database.")
+      @ApiResponse(responseCode = "404", description = "The requested exercise does not exist or the Firebase ID of the logged-in user cannot be "
+                                                       + "found in the database."),
+      @ApiResponse(responseCode = "500", description = "The user exercise could not be updated because the logged-in user could not be found in "
+                                                       + "the database.")
   })
   public UserExerciseDto updateUserExercise(@Valid @RequestBody
                                             @Parameter(description = "The exercise that should be updated.") ExerciseDto exercise)
@@ -123,10 +127,10 @@ public class ExerciseController {
   @Operation(summary = "Fetches all exercises which are either public or only visible to the logged-in user which train the given muscle group.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The operation was successful."),
-      @ApiResponse(responseCode = "404",
-          description = "The exercises could not be fetched because the Firebase ID of the logged-in user cannot be found in the database."),
-      @ApiResponse(responseCode = "500",
-          description = "The exercises could not be fetched because the logged-in user could not be found in the database.")
+      @ApiResponse(responseCode = "404", description = "The exercises could not be fetched because the Firebase ID of the logged-in user cannot be "
+                                                       + "found in the database."),
+      @ApiResponse(responseCode = "500", description = "The exercises could not be fetched because the logged-in user could not be found in the "
+                                                       + "database.")
   })
   public List<ExerciseDto> getAllForUserByMuscleGroup(
       @RequestParam(name = "muscleGroup") @NotNull
@@ -141,10 +145,10 @@ public class ExerciseController {
   @Operation(summary = "Fetches all exercises created by the logged-in user.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The operation was successful."),
-      @ApiResponse(responseCode = "404",
-          description = "The exercise could not be fetched because the Firebase ID of the logged-in user cannot be found in the database."),
-      @ApiResponse(responseCode = "500",
-          description = "The exercises could not be fetched because the logged-in user could not be found in the database.")
+      @ApiResponse(responseCode = "404", description = "The exercise could not be fetched because the Firebase ID of the logged-in user cannot be "
+                                                       + "found in the database."),
+      @ApiResponse(responseCode = "500", description = "The exercises could not be fetched because the logged-in user could not be found in the "
+                                                       + "database.")
   })
   public List<ExerciseDto> getAllCreatedByUser() throws DataAccessException {
     var currentUser = securityService.getCurrentUser();

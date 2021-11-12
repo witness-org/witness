@@ -59,11 +59,11 @@ public class UserController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "The user was successfully created."),
       @ApiResponse(responseCode = "400", description = "The user could not be created because the request body is invalid."),
-      @ApiResponse(responseCode = "403",
-          description = "The user could not be created because the requester does not have permission to set the role of the registered user."),
+      @ApiResponse(responseCode = "403", description = "The user could not be created because the requester does not have permission to set the role "
+                                                       + "of the registered user."),
       @ApiResponse(responseCode = "404", description = "The user could not be created because the created Firebase user could not be found."),
-      @ApiResponse(responseCode = "500",
-          description = "The user could not be created because the corresponding Firebase user could not be created/modified.")
+      @ApiResponse(responseCode = "500", description = "The user could not be created because the corresponding Firebase user could not be "
+                                                       + "created/modified.")
   })
   public UserDto registerUser(@Valid @RequestBody @Parameter(description = "The user that should be registered.") UserCreateDto user,
                               Authentication authentication) throws DataCreationException, DataNotFoundException, DataModificationException,
@@ -86,6 +86,7 @@ public class UserController {
       @ApiResponse(responseCode = "200", description = "The user was successfully fetched."),
       @ApiResponse(responseCode = "400", description = "The user could not be fetched because the request was invalid."),
       @ApiResponse(responseCode = "404", description = "There is no user with the requested ID."),
+      @ApiResponse(responseCode = "403", description = "The user could not be fetched because the requester does not have the required permission."),
       @ApiResponse(responseCode = "500", description = "The user could not be fetched because an error occurred.")
   })
   public UserDto findById(@PathVariable(name = "id") @Positive
@@ -100,6 +101,7 @@ public class UserController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The user was successfully fetched."),
       @ApiResponse(responseCode = "400", description = "The user could not be fetched because the request was invalid."),
+      @ApiResponse(responseCode = "403", description = "The user could not be fetched because the requester does not have the required permission."),
       @ApiResponse(responseCode = "404", description = "There is no user with the requested email address."),
       @ApiResponse(responseCode = "500", description = "The user could not be fetched because an error occurred.")
   })
@@ -117,6 +119,7 @@ public class UserController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The role of the user was successfully updated."),
       @ApiResponse(responseCode = "400", description = "The role could not be set because the request was invalid."),
+      @ApiResponse(responseCode = "403", description = "The role could not be set because the requester does not have the required permission."),
       @ApiResponse(responseCode = "404", description = "There is no user with the provided Firebase ID."),
       @ApiResponse(responseCode = "500", description = "The user could not be fetched because an error occurred.")
   })
@@ -135,6 +138,7 @@ public class UserController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The role of the user was successfully removed."),
       @ApiResponse(responseCode = "400", description = "The role could not be removed because the request was invalid."),
+      @ApiResponse(responseCode = "403", description = "The role could not be removed because the requester does not have the required permission."),
       @ApiResponse(responseCode = "404", description = "There is no user with the provided Firebase ID."),
       @ApiResponse(responseCode = "500", description = "The user could not be fetched because an error occurred.")
   })

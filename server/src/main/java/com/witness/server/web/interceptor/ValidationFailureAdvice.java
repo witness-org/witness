@@ -119,7 +119,7 @@ public class ValidationFailureAdvice {
     @Schema(description = "Number of the HTTP status code induced by the validation errors.", example = "400")
     private final int status;
 
-    @Schema(description = "Phrase describing the HTTP status code induced by the validation errors.", example = "Bad Request")
+    @Schema(description = "Phrase describing the HTTP status code induced by the validation errors.", example = "BAD REQUEST")
     private final String error;
 
     @Schema(description = "Unique identification of a common error (group) that may be used for more sophisticated handling on the client-side.",
@@ -141,7 +141,7 @@ public class ValidationFailureAdvice {
       this.timestamp = timestamp;
 
       this.status = HttpStatus.BAD_REQUEST.value();
-      this.error = HttpStatus.BAD_REQUEST.getReasonPhrase();
+      this.error = HttpStatus.BAD_REQUEST.getReasonPhrase().toUpperCase();
       this.errorKey = ServerError.VALIDATION_ERROR;
       this.validationErrors = new ArrayList<>();
     }
