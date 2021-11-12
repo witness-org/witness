@@ -82,7 +82,7 @@ public interface ExerciseService {
    * Fetches the exercise with the provided {@code exerciseId}.
    *
    * @param exerciseId ID of the exercise to fetch
-   * @return a {@link Exercise} instance whose {@link Exercise#getId()} property is equal to the provided {@code exerciseId}
+   * @return an {@link Exercise} instance whose {@link Exercise#getId()} property is equal to the provided {@code exerciseId}
    * @throws DataNotFoundException if there is no {@link Exercise} with the given {@code exerciseId}
    */
   Exercise getExerciseById(Long exerciseId) throws DataNotFoundException;
@@ -91,7 +91,7 @@ public interface ExerciseService {
    * Fetches the user exercise with the provided {@code exerciseId}.
    *
    * @param exerciseId ID of the exercise to fetch
-   * @return a {@link UserExercise} instance whose {@link UserExercise#getId()} property is equal to the provided {@code exerciseId}
+   * @return an {@link UserExercise} instance whose {@link UserExercise#getId()} property is equal to the provided {@code exerciseId}
    * @throws DataNotFoundException if there is no {@link UserExercise} with the given {@code exerciseId}
    */
   UserExercise getUserExerciseById(Long exerciseId) throws DataNotFoundException;

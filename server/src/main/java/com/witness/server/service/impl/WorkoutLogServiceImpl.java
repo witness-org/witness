@@ -60,6 +60,8 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
 
   @Override
   public List<WorkoutLog> getWorkoutLogsOfDay(String firebaseId, ZonedDateTime date) {
+    log.info("Getting workout logs of user with Firebase ID {} from day {}", firebaseId, date);
+
     var startOfDay = date.with(LocalTime.MIN);
     var endOfDay = date.with(LocalTime.MAX);
     return workoutLogRepository.findByLoggedOnBetweenAndUserFirebaseIdEquals(startOfDay, endOfDay, firebaseId);
@@ -91,7 +93,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     log.info("Setting workout duration for workout with ID {}", workoutLogId);
 
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
-    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+    throwIfWorkoutLogNotByUser(firebaseId, workoutLog);
 
     workoutLog.setDurationMinutes(duration);
     return workoutLogRepository.save(workoutLog);
@@ -102,7 +104,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     log.info("Deleting workout with ID {}", workoutLogId);
 
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
-    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+    throwIfWorkoutLogNotByUser(firebaseId, workoutLog);
 
     workoutLogRepository.delete(workoutLog);
   }
@@ -113,7 +115,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     log.info("Adding exercise log to workout log with ID {}", workoutLogId);
 
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
-    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+    throwIfWorkoutLogNotByUser(firebaseId, workoutLog);
 
     workoutLog = addExerciseLogToWorkoutLog(workoutLog, exerciseLog);
 
@@ -126,7 +128,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     log.info("Updating the positions of exercise logs in workout log with ID {}", workoutLogId);
 
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
-    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+    throwIfWorkoutLogNotByUser(firebaseId, workoutLog);
 
     return updateAndSimplifyExerciseLogPositions(workoutLog, newPositions);
   }
@@ -136,10 +138,10 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     log.info("Deleting exercise log with ID {} from workout with ID {}", exerciseLogId, workoutLogId);
 
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
-    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+    throwIfWorkoutLogNotByUser(firebaseId, workoutLog);
 
     var exerciseLog = getExerciseLogOrThrow(exerciseLogId);
-    throwIfLoggedExerciseNotInWorkoutLog(exerciseLog, workoutLog);
+    throwIfExerciseLogNotInWorkoutLog(exerciseLog, workoutLog);
 
     if (!workoutLog.removeExerciseLog(exerciseLog)) {
       log.error("Failed to remove exercise log with ID {} from workout log with ID {}", exerciseLogId, workoutLogId);
@@ -157,10 +159,10 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     log.info("Setting the comment of exercise log with ID {} form workout with ID {}", exerciseLogId, workoutLogId);
 
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
-    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+    throwIfWorkoutLogNotByUser(firebaseId, workoutLog);
 
     var exerciseLog = getExerciseLogOrThrow(exerciseLogId);
-    throwIfLoggedExerciseNotInWorkoutLog(exerciseLog, workoutLog);
+    throwIfExerciseLogNotInWorkoutLog(exerciseLog, workoutLog);
 
     exerciseLog.setComment(comment);
 
@@ -173,10 +175,10 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     log.info("Adding set log to exercise log with ID {}", exerciseLogId);
 
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
-    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+    throwIfWorkoutLogNotByUser(firebaseId, workoutLog);
 
     var exerciseLog = getExerciseLogOrThrow(exerciseLogId);
-    throwIfLoggedExerciseNotInWorkoutLog(exerciseLog, workoutLog);
+    throwIfExerciseLogNotInWorkoutLog(exerciseLog, workoutLog);
 
     setLog.setPosition(exerciseLog.getSetLogs().size() + 1);
     addSetLogToExerciseLog(exerciseLog, setLog);
@@ -191,13 +193,13 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     log.info("Editing set log with ID {}", setLogId);
 
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
-    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+    throwIfWorkoutLogNotByUser(firebaseId, workoutLog);
 
     var exerciseLog = getExerciseLogOrThrow(exerciseLogId);
-    throwIfLoggedExerciseNotInWorkoutLog(exerciseLog, workoutLog);
+    throwIfExerciseLogNotInWorkoutLog(exerciseLog, workoutLog);
 
     var setLogToUpdate = getSetLogOrThrow(setLogId);
-    throwIfLoggedSetNotInExerciseLog(setLogToUpdate, exerciseLog);
+    throwIfSetLogNotInExerciseLog(setLogToUpdate, exerciseLog);
 
     if (!Objects.equals(setLogToUpdate.getPosition(), setLog.getPosition())) {
       log.error("Position of set log must not be changed during update.");
@@ -217,10 +219,10 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     log.info("Updating the positions of set logs in exercise log with ID {}", exerciseLogId);
 
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
-    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+    throwIfWorkoutLogNotByUser(firebaseId, workoutLog);
 
     var exerciseLog = getExerciseLogOrThrow(exerciseLogId);
-    throwIfLoggedExerciseNotInWorkoutLog(exerciseLog, workoutLog);
+    throwIfExerciseLogNotInWorkoutLog(exerciseLog, workoutLog);
 
     return updateAndSimplifySetLogPositions(workoutLog, exerciseLog, newPositions);
   }
@@ -231,13 +233,13 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     log.info("Deleting set log with ID {} from exercise log with ID {}", setLogId, exerciseLogId);
 
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
-    throwIfLoggedWorkoutNotByUser(firebaseId, workoutLog);
+    throwIfWorkoutLogNotByUser(firebaseId, workoutLog);
 
     var exerciseLog = getExerciseLogOrThrow(exerciseLogId);
-    throwIfLoggedExerciseNotInWorkoutLog(exerciseLog, workoutLog);
+    throwIfExerciseLogNotInWorkoutLog(exerciseLog, workoutLog);
 
     var setLog = getSetLogOrThrow(setLogId);
-    throwIfLoggedSetNotInExerciseLog(setLog, exerciseLog);
+    throwIfSetLogNotInExerciseLog(setLog, exerciseLog);
 
     if (!exerciseLog.removeSetLog(setLog)) {
       log.error("Failed to remove set log with ID {} from exercise log with ID {}", setLogId, exerciseLogId);
@@ -270,7 +272,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
         .orElseThrow(() -> new DataNotFoundException("Requested set log does not exist."));
   }
 
-  private void throwIfLoggedWorkoutNotByUser(String firebaseId, WorkoutLog workoutLog) throws InvalidRequestException, DataAccessException {
+  private void throwIfWorkoutLogNotByUser(String firebaseId, WorkoutLog workoutLog) throws InvalidRequestException, DataAccessException {
     var user = getUser(userService, firebaseId);
 
     if (!Role.ADMIN.equals(user.getRole()) && !workoutLog.getUser().equals(user)) {
@@ -279,7 +281,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     }
   }
 
-  private void throwIfLoggedExerciseNotInWorkoutLog(ExerciseLog exerciseLog, WorkoutLog workoutLog)
+  private void throwIfExerciseLogNotInWorkoutLog(ExerciseLog exerciseLog, WorkoutLog workoutLog)
       throws InvalidRequestException, DataAccessException {
     if (!workoutLog.getExerciseLogs().contains(exerciseLog)) {
       log.error("Requested exercise log with ID {} is not part of requested workout log with ID {}.", exerciseLog.getId(), workoutLog.getId());
@@ -292,7 +294,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     }
   }
 
-  private void throwIfLoggedSetNotInExerciseLog(SetLog setLog, ExerciseLog exerciseLog) throws InvalidRequestException, DataAccessException {
+  private void throwIfSetLogNotInExerciseLog(SetLog setLog, ExerciseLog exerciseLog) throws InvalidRequestException, DataAccessException {
     if (!exerciseLog.getSetLogs().contains(setLog)) {
       log.error("Requested set log with ID {} is not part of requested exercise log with ID {}.", setLog.getId(), exerciseLog.getId());
       throw new InvalidRequestException("The requested set is not part of the requested exercise.");

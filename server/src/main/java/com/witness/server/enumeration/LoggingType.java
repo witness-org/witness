@@ -12,7 +12,7 @@ public enum LoggingType {
   REPS,
   TIME;
 
-  private static final Map<Class<? extends SetLog>, LoggingType> KNOWN_LOGGING_TYPES = Map.of(
+  private static final Map<Class<? extends SetLog>, LoggingType> LOGGING_TYPE_ASSOCIATIONS = Map.of(
       RepsSetLog.class, REPS,
       TimeSetLog.class, TIME
   );
@@ -26,8 +26,8 @@ public enum LoggingType {
    * @throws NoSuchElementException if there exists no known association between {@code clazz} and a {@link LoggingType} member
    */
   public static LoggingType fromSetLog(SetLog setLog) {
-    Objects.requireNonNull(setLog);
-    return Optional.ofNullable(KNOWN_LOGGING_TYPES.get(setLog.getClass()))
+    Objects.requireNonNull(setLog, "SetLog instance to determine LoggingType from must not be null.");
+    return Optional.ofNullable(LOGGING_TYPE_ASSOCIATIONS.get(setLog.getClass()))
         .orElseThrow(() -> new NoSuchElementException("There is no LoggingType defined for the class \"%s\".".formatted(setLog.getClass())));
   }
 }
