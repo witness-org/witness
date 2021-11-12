@@ -40,8 +40,8 @@ public class OpenApiConfig {
    * <p>
    * Defines an OpenAPI 3.0 specification with general metadata and a security scheme for the REST API exposed by this application. The security
    * scheme defined by this bean makes that consumers of this metadata (e.g. Swagger UI) understand that it is secured using bearer authentication.
-   * More specifically, the {@link SecurityRequirement} annotation with a reference to the scheme identified
-   * by {@link OpenApiConfig#SECURITY_SCHEME_BEARER_TOKEN} on a REST controller leads to a padlock in the UI and an opportunity to provide a bearer
+   * More specifically, the {@link SecurityRequirement} annotation with a reference to the scheme identified by
+   * {@link OpenApiConfig#SECURITY_SCHEME_BEARER_TOKEN} on a REST controller leads to a padlock in the UI and an opportunity to provide a bearer
    * token such that requests sent via Swagger UI are properly authenticated.
    * </p>
    * <p>
@@ -87,7 +87,7 @@ public class OpenApiConfig {
    * it is kept untouched.
    * </p>
    * <p>
-   * Secondly, it applies a natural ordering to the schema definitions which are generally found at the bottom of the Swagger UI.
+   * Secondly, it applies a natural ordering to the schema definitions which are generally found at the bottom of Swagger UI.
    * </p>
    *
    * @return a possibly modified version of the {@link OpenAPI} object populated by springdoc with removed security requirements operations that are

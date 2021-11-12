@@ -11,12 +11,13 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
     @JsonSubTypes.Type(value = TimeSetLogCreateDto.class, name = "timeCreate"),
     @JsonSubTypes.Type(value = RepsSetLogCreateDto.class, name = "repsCreate")
 })
 @Schema(
+    description = "Represents an abstract supertype for different representations of a request to create a set log.",
     subTypes = {TimeSetLogCreateDto.class, RepsSetLogCreateDto.class},
     discriminatorMapping = {
         @DiscriminatorMapping(value = "timeCreate", schema = TimeSetLogCreateDto.class),
@@ -25,4 +26,6 @@ import lombok.ToString;
     discriminatorProperty = "type"
 )
 public abstract class SetLogCreateDto extends BaseSetLogDto {
+  @Schema(description = "Determines the concrete type of the set log to create. See respective documentation for values designating each type.")
+  protected String type;
 }

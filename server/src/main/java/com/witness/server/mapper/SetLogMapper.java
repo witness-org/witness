@@ -82,8 +82,10 @@ public abstract class SetLogMapper {
   public abstract RepsSetLog repsDtoToEntity(RepsSetLogDto setLog);
 
   @Mapping(source = "exerciseLog.id", target = "exerciseLogId")
+  @Mapping(target = "type", constant = "time")
   public abstract TimeSetLogDto timeEntityToDto(TimeSetLog setLog);
 
   @Mapping(source = "exerciseLog.id", target = "exerciseLogId")
+  @Mapping(target = "type", constant = "reps")
   public abstract RepsSetLogDto repsEntityToDto(RepsSetLog setLog);
 }

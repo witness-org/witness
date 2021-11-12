@@ -1,22 +1,21 @@
 package com.witness.server.dto.workout;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.hibernate.validator.constraints.Length;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ExerciseLogCreateDto extends ExerciseReferenceDto {
-  @Length(max = 1024)
-  private String comment;
-
+@Schema(description = "Represents a request for the creation of a new exercise log.")
+public class ExerciseLogCreateDto extends BaseExerciseLogDto {
   @NotNull
   @Valid
+  @Schema(description = "The sets to be logged which were completed with this exercise.")
   private List<SetLogCreateDto> setLogs;
 }
 

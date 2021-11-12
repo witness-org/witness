@@ -18,6 +18,7 @@ public abstract class ExerciseLogMapper {
   @Mapping(source = "exerciseId", target = "exercise.id")
   @Mapping(source = "setLogs", target = "logs")
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "position", ignore = true)
   @Mapping(target = "workoutLog", ignore = true)
   public abstract ExerciseLog createDtoToEntity(ExerciseLogCreateDto exerciseLog);
 
