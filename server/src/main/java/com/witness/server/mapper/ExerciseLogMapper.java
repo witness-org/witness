@@ -22,7 +22,7 @@ public abstract class ExerciseLogMapper {
   @Mapping(target = "workoutLog", ignore = true)
   public abstract ExerciseLog createDtoToEntity(ExerciseLogCreateDto exerciseLog);
 
-  public abstract List<ExerciseLogDto> entitiesToDto(List<ExerciseLog> exerciseLogs);
+  public abstract List<ExerciseLogDto> entitiesToDtos(List<ExerciseLog> exerciseLogs);
 
   public abstract List<ExerciseLog> createDtosToEntities(List<ExerciseLogCreateDto> exerciseLogs);
 }

@@ -1,0 +1,30 @@
+[
+  {
+    "exerciseId": 12,
+    "comment": "logComment",
+    "setLogs": [
+      {
+        "type": "repsCreate",
+        "rpe": 7,
+        "weightKg": 23,
+        "resistanceBands": [
+          "LIGHT",
+          "HEAVY"
+        ],
+        "reps": 20
+      },
+      {
+        "type": "timeCreate",
+        "rpe": 7,
+        "weightKg": 23,
+        "resistanceBands": [],
+        "seconds": 25
+      }
+    ]
+  },
+  {
+    "exerciseId": 12,
+    "comment": null,
+    "setLogs": []
+  }
+]
