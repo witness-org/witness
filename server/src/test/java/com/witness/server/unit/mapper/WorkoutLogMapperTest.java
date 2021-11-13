@@ -12,6 +12,7 @@ import com.witness.server.mapper.WorkoutLogMapperImpl;
 import com.witness.server.unit.BaseUnitTest;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
+import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,11 +34,20 @@ class WorkoutLogMapperTest extends BaseUnitTest {
   }
 
   @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "WorkoutLogs_1-2-3.json", type = WorkoutLog[].class, arrayToList = true),
+      @JsonFileSource(value = DATA_ROOT + "WorkoutLogDtos_1-2-3.json", type = WorkoutLogDto[].class, arrayToList = true)
+  })
+  void entitiesToDtos(List<WorkoutLog> entities, List<WorkoutLogDto> dtos) {
+    assertThat(mapper.entitiesToDtos(entities)).usingRecursiveComparison().isEqualTo(dtos);
+  }
+
+  @ParameterizedTest
   @JsonFileSources(unwrapArrays = true, parameters = {
       @JsonFileSource(value = DATA_ROOT + "WorkoutLogCreateDtos_1-2-3.json", type = WorkoutLogCreateDto[].class),
       @JsonFileSource(value = DATA_ROOT + "WorkoutLogsFromCreateDtos_1-2-3.json", type = WorkoutLog[].class)
   })
-  void createDtoToEntity(WorkoutLogCreateDto workoutLogCreateDto, WorkoutLog entity) {
-    assertThat(mapper.createDtoToEntity(workoutLogCreateDto)).usingRecursiveComparison().isEqualTo(entity);
+  void createDtoToEntity(WorkoutLogCreateDto createDto, WorkoutLog entity) {
+    assertThat(mapper.createDtoToEntity(createDto)).usingRecursiveComparison().isEqualTo(entity);
   }
 }

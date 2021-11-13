@@ -1,0 +1,25 @@
+[
+  {
+    "type": "time",
+    "position": 3,
+    "rpe": null,
+    "id": 13,
+    "weightKg": 23,
+    "resistanceBands": [
+      "LIGHT",
+      "HEAVY"
+    ],
+    "exerciseLogId": 1,
+    "seconds": 20
+  },
+  {
+    "type": "time",
+    "position": 4,
+    "rpe": 2,
+    "id": 8,
+    "weightKg": 45,
+    "resistanceBands": [],
+    "exerciseLogId": 1,
+    "seconds": 25
+  }
+]

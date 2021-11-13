@@ -86,13 +86,13 @@ public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationC
   private Object readObjectFromFile(JsonFileSource file, InputStream jsonStream, Class<? extends ArgumentConverter<?, ?>> argumentConverter)
       throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
     var converter = ReflectionUtils.accessibleConstructor(argumentConverter).newInstance();
-    var noOpConverter = converter instanceof NoOpArgumentConverter;
-    var sourceType = noOpConverter ? file.type() : converter.intermediateClass(); // JSON deserialization target type
-    var targetType = noOpConverter ? file.type() : converter.targetClass(); // method return type
+    var isNoOpConverter = converter instanceof NoOpArgumentConverter;
+    var sourceType = isNoOpConverter ? file.type() : converter.intermediateClass(); // JSON deserialization target type
+    var targetType = isNoOpConverter ? file.type() : converter.targetClass(); // method return type
 
     if (!targetType.equals(file.type())) {
       log.error("The specified test argument converter is not NoOpArgumentConverter, but its target class differs from the class specified by the "
-          + "\"type\" argument of the @JsonFileSource annotation. Supplying arguments to the test will fail due to incompatible types.");
+          + "\"type\" argument of the @JsonFileSource annotation. Supplying arguments to the test will likely fail due to incompatible types.");
     }
 
     var intermediateObject = objectMapper.readValue(jsonStream, sourceType);

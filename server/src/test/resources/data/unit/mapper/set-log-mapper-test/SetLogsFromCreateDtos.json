@@ -1,0 +1,23 @@
+[
+  {
+    "position": null,
+    "rpe": 6,
+    "id": null,
+    "weightKg": 24,
+    "resistanceBands": [
+      "LIGHT",
+      "HEAVY"
+    ],
+    "exerciseLog": null,
+    "reps": 20
+  },
+  {
+    "position": null,
+    "rpe": 7,
+    "id": null,
+    "weightKg": 23,
+    "resistanceBands": [],
+    "exerciseLog": null,
+    "seconds": 25
+  }
+]
