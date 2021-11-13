@@ -15,11 +15,11 @@ import 'package:client/widgets/exercises/exercises_by_muscle_group_screen.dart';
 import 'package:client/widgets/exercises/exercises_screen.dart';
 import 'package:client/widgets/settings/settings_screen.dart';
 import 'package:client/widgets/statistics/statistics_screen.dart';
-import 'package:client/widgets/training_logs/training_log_screen.dart';
 import 'package:client/widgets/training_programs/days/training_day_detail_screen.dart';
 import 'package:client/widgets/training_programs/training_programs/training_program_detail_screen.dart';
 import 'package:client/widgets/training_programs/training_programs_overview_screen.dart';
 import 'package:client/widgets/training_programs/weeks/training_week_detail_screen.dart';
+import 'package:client/widgets/workouts/workout_log_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/timezone.dart';
 
@@ -33,7 +33,7 @@ Route<dynamic>? selectRoute(final RouteSettings routeSettings, final AuthProvide
         // home
         case '/':
           return auth.isAuthenticated
-              ? TrainingLogScreen(TZDateTime.now(vienna))
+              ? WorkoutLogScreen(TZDateTime.now(vienna))
               : FutureBuilder(
                   future: auth.reloadAuthentication(),
                   builder: (final ctx, final snapshot) => snapshot.waitSwitch(
@@ -44,8 +44,8 @@ Route<dynamic>? selectRoute(final RouteSettings routeSettings, final AuthProvide
                 );
 
         // training logs
-        case TrainingLogScreen.routeName:
-          return TrainingLogScreen(routeSettings.arguments.castOrFallback<TZDateTime>(TZDateTime.now(vienna)));
+        case WorkoutLogScreen.routeName:
+          return WorkoutLogScreen(routeSettings.arguments.castOrFallback<TZDateTime>(TZDateTime.now(vienna)));
 
         // exercises
         case ExercisesScreen.routeName:

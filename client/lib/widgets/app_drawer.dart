@@ -5,7 +5,7 @@ import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/exercises/exercises_screen.dart';
 import 'package:client/widgets/settings/settings_screen.dart';
 import 'package:client/widgets/statistics/statistics_screen.dart';
-import 'package:client/widgets/training_logs/training_log_screen.dart';
+import 'package:client/widgets/workouts/workout_log_screen.dart';
 import 'package:client/widgets/training_programs/training_programs_overview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,9 +47,9 @@ class AppDrawer extends StatelessWidget with LogMessagePreparer, StringLocalizer
             ),
           ),
           _buildListTile(
-            uiStrings.appDrawer_tile_trainingLog,
+            uiStrings.appDrawer_tile_workoutLog,
             Icons.date_range,
-            () => Navigator.of(context).pushReplacementNamed(TrainingLogScreen.routeName),
+            () => Navigator.of(context).pushReplacementNamed(WorkoutLogScreen.routeName),
             const Key('app_drawer.training_log'),
           ),
           _buildListTile(

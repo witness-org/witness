@@ -20,9 +20,9 @@
   "@appDrawer_tile_statistics": {
     "description": "Label of tile in `AppDrawer` that represents a link to the statistics screen."
   },
-  "appDrawer_tile_trainingLog": "Training Log",
-  "@appDrawer_tile_trainingLog": {
-    "description": "Label of tile in `AppDrawer` that represents a link to the training log screen."
+  "appDrawer_tile_workoutLog": "Workout Log",
+  "@appDrawer_tile_workoutLog": {
+    "description": "Label of tile in `AppDrawer` that represents a link to the workout log screen."
   },
   "appTitle": "witness",
   "@appTitle": {
@@ -206,7 +206,7 @@
   },
   "mainAppBar_action_selectDay": "Go to Day",
   "@mainAppBar_action_selectDay": {
-    "description": "Tooltip of floating action button in `TrainingLogScreen` that allows to select a specific day to view workouts of."
+    "description": "Tooltip of floating action button in `WorkoutLogScreen` that allows to select a specific day to view workouts of."
   },
   "mainAppBar_generateToken": "Get Token",
   "@mainAppBar_generateToken": {
@@ -288,25 +288,25 @@
   "@trainingDayHeader_dayNumber_prefix": {
     "description": "Text to be displayed before the day number in `TrainingDayHeader`, making up the header of `TrainingDayDetailScreen`."
   },
-  "trainingLogScreen_error_noDaySelected": "You have not selected a date to display.",
-  "@trainingLogScreen_error_noDaySelected": {
-    "description": "Text to display in `TrainingLogScreen` if no date was selected."
+  "workoutLogScreen_error_noDaySelected": "You have not selected a date to display.",
+  "@workoutLogScreen_error_noDaySelected": {
+    "description": "Text to display in `WorkoutLogScreen` if no date was selected."
   },
-  "trainingLogScreen_placeholder": "You have not logged a workout on this day.",
-  "@trainingLogScreen_placeholder": {
-    "description": "Text to display in `TrainingLogScreen` if no workout has been logged for the given day."
+  "workoutLogScreen_placeholder": "You have not logged a workout on this day.",
+  "@workoutLogScreen_placeholder": {
+    "description": "Text to display in `WorkoutLogScreen` if no workout has been logged for the given day."
   },
-  "trainingLogScreen_speedDial_copyWorkout": "Copy Previous Workout",
-  "@trainingLogScreen_speedDial_copyWorkout": {
-    "description": "Label of `SpeedDialChild` in `TrainingLogScreen` that is used to create a workout log from a previously logged workout."
+  "workoutLogScreen_speedDial_copyWorkout": "Copy Previous Workout",
+  "@workoutLogScreen_speedDial_copyWorkout": {
+    "description": "Label of `SpeedDialChild` in `WorkoutLogScreen` that is used to create a workout log from a previously logged workout."
   },
-  "trainingLogScreen_speedDial_logWorkoutFromProgram": "Log Workout From Program",
-  "@trainingLogScreen_speedDial_logWorkoutFromProgram": {
-    "description": "Label of `SpeedDialChild` in `TrainingLogScreen` that is used to log a workout from a training program."
+  "workoutLogScreen_speedDial_logWorkoutFromProgram": "Log Workout From Program",
+  "@workoutLogScreen_speedDial_logWorkoutFromProgram": {
+    "description": "Label of `SpeedDialChild` in `WorkoutLogScreen` that is used to log a workout from a training program."
   },
-  "trainingLogScreen_speedDial_logNewWorkout": "Log New Workout",
-  "@trainingLogScreen_speedDial_logNewWorkout": {
-    "description": "Label of `SpeedDialChild` in `TrainingLogScreen` that is used to create a new workout from scratch."
+  "workoutLogScreen_speedDial_logNewWorkout": "Log New Workout",
+  "@workoutLogScreen_speedDial_logNewWorkout": {
+    "description": "Label of `SpeedDialChild` in `WorkoutLogScreen` that is used to create a new workout from scratch."
   },
   "trainingProgramCard_deleteDialog_cancel": "Cancel",
   "@trainingProgramCard_deleteDialog_cancel": {

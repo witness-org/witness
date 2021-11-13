@@ -4,7 +4,7 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/providers/auth_provider.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/settings/settings_screen.dart';
-import 'package:client/widgets/training_logs/training_log_screen.dart';
+import 'package:client/widgets/workouts/workout_log_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -59,7 +59,7 @@ class MainAppBar extends StatelessWidget with LogMessagePreparer, StringLocalize
     ).then((final pickedDate) {
       if (pickedDate != null) {
         final date = tz.TZDateTime.local(pickedDate.year, pickedDate.month, pickedDate.day);
-        Navigator.of(context).pushReplacementNamed(TrainingLogScreen.routeName, arguments: date);
+        Navigator.of(context).pushReplacementNamed(WorkoutLogScreen.routeName, arguments: date);
       }
     });
   }
