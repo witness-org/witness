@@ -21,6 +21,7 @@ import com.witness.server.service.TimeService;
 import com.witness.server.service.UserService;
 import com.witness.server.service.impl.TimeServiceImpl;
 import com.witness.server.service.impl.UserServiceImpl;
+import com.witness.server.unit.BaseUnitTest;
 import com.witness.server.util.FirebaseServiceMocks;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
@@ -37,7 +38,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
 @SpringBootTest(classes = {UserServiceImpl.class, TimeServiceImpl.class})
-class UserServiceTest {
+class UserServiceTest extends BaseUnitTest {
   private static final String DATA_ROOT = "data/unit/service/user-service-test/";
 
   @Autowired

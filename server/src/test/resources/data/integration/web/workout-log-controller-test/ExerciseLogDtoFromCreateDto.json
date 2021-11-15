@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "position": 1,
+  "exerciseName": "Exercise 1",
+  "exerciseId": 1,
+  "workoutLogId": 1,
+  "comment": "Test comment.",
+  "setLogs": []
+}

@@ -31,6 +31,7 @@ import com.witness.server.model.Credentials;
 import com.witness.server.model.FirebaseUser;
 import com.witness.server.service.FirebaseService;
 import com.witness.server.service.impl.FirebaseServiceImpl;
+import com.witness.server.unit.BaseUnitTest;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
 import com.witness.server.util.converter.FirebaseTokenArgumentConverter;
@@ -47,7 +48,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest(classes = {FirebaseServiceImpl.class, SecurityProperties.class, FirebaseMapperImpl.class})
-class FirebaseServiceTest {
+class FirebaseServiceTest extends BaseUnitTest {
   private static final String DATA_ROOT = "data/unit/service/firebase-service-test/";
 
   @Autowired

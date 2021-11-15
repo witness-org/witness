@@ -56,6 +56,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.UriUtils;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest {
@@ -155,12 +156,15 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
         new MediaType("application", "vnd.oai.openapi", StandardCharsets.UTF_8),
         new MediaType("application", "vnd.oai.openapi+json", StandardCharsets.UTF_8)));
 
-    var uriBuilder = UriComponentsBuilder
+    var requestUri = UriComponentsBuilder
         .fromHttpUrl(url)
-        .queryParams(queryParams);
+        .encode(StandardCharsets.UTF_8)
+        .queryParams(encodeQueryParameters(queryParams))
+        .build(true)
+        .toUri();
     var requestEntity = new HttpEntity<>(requestBody, headers);
 
-    return restTemplate.exchange(uriBuilder.toUriString(), method, requestEntity, responseType);
+    return restTemplate.exchange(requestUri, method, requestEntity, responseType);
   }
 
   protected static <K, V> MultiValueMap<K, V> toMultiValueMap(Map<K, V> map) {
@@ -169,15 +173,15 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
     return multiValueMap;
   }
 
-  protected void persistUser(User user) {
-    userRepository.save(user);
+  protected void persistUsers(User... users) {
+    persistEntities(userRepository, users);
   }
 
   @SneakyThrows(DataAccessException.class)
   protected void persistUserAndMockLoggedIn(User user) {
     var firebaseUser = getFirebaseUser(user);
 
-    persistUser(user);
+    persistUsers(user);
     when(securityService.getCurrentUser()).thenReturn(firebaseUser);
     when(firebaseService.findUserById(firebaseUser.getUid())).thenReturn(firebaseUser);
   }
@@ -241,7 +245,7 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
   }
 
   private static FirebaseUser getFirebaseUser(User user) {
-    return new FirebaseUser().builder()
+    return FirebaseUser.builder()
         .name(user.getUsername())
         .email(user.getEmail())
         .uid(user.getFirebaseId())
@@ -249,5 +253,17 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
         .issuer("TestUserIssuer")
         .picture("TestUserPicture")
         .build();
+  }
+
+  private MultiValueMap<String, String> encodeQueryParameters(MultiValueMap<String, String> queryParams) {
+    if (queryParams == null) {
+      return null;
+    }
+
+    var encodedQueryParams = new LinkedMultiValueMap<String, String>();
+    queryParams.forEach((key, value) -> encodedQueryParams.put(key, value.stream()
+        .map(item -> UriUtils.encode(item, StandardCharsets.UTF_8))
+        .collect(Collectors.toList())));
+    return encodedQueryParams;
   }
 }

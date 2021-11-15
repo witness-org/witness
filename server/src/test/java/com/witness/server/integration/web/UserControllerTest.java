@@ -384,7 +384,6 @@ class UserControllerTest extends BaseControllerIntegrationTest {
 
   @ParameterizedTest
   @NullAndEmptySource
-  @ValueSource(strings = {"     "})
   void setRole_invalidIdSpecification_return4xx(String firebaseId) {
     // We cannot use Map.of() here because that does not support null values. Since @NullAndEmptySource is in place, we create the map differently.
     var params = toMultiValueMap(Map.of("role", "ADMIN"));
@@ -456,7 +455,6 @@ class UserControllerTest extends BaseControllerIntegrationTest {
 
   @ParameterizedTest
   @NullAndEmptySource
-  @ValueSource(strings = {"     "})
   void removeRole_invalidIdSpecification_return4xx(String firebaseId) {
     var response = exchange(TestAuthentication.ADMIN,
         requestUrl(REMOVE_ROLE_URL, firebaseId),

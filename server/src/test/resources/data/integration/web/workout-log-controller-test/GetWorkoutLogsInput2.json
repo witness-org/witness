@@ -1,0 +1,81 @@
+{
+  "currentUser": {
+    "id": 1,
+    "firebaseId": "firebaseRegular",
+    "username": "regularUser",
+    "email": "regular@test.com",
+    "role": null,
+    "sex": "MALE",
+    "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+    "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+    "height": 183
+  },
+  "persistedUsers": [
+    {
+      "id": 2,
+      "firebaseId": "user123Id",
+      "username": "user123",
+      "email": "user123@example.com",
+      "role": "PREMIUM",
+      "sex": "FEMALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 173
+    }
+  ],
+  "searchDate": "2021-10-08T14:15:55.3007597+02:00",
+  "persistedWorkoutLogs": [
+    {
+      "id": 1,
+      "user": {
+        "id": 2,
+        "firebaseId": "user123Id",
+        "username": "user123",
+        "email": "user123@example.com",
+        "role": "PREMIUM",
+        "sex": "FEMALE",
+        "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+        "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+        "height": 173
+      },
+      "loggedOn": "2021-10-08T04:14:16.3515671+02:00",
+      "durationMinutes": 183,
+      "exerciseLogs": []
+    },
+    {
+      "id": 2,
+      "user": {
+        "id": 2,
+        "firebaseId": "user123Id",
+        "username": "user123",
+        "email": "user123@example.com",
+        "role": "PREMIUM",
+        "sex": "FEMALE",
+        "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+        "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+        "height": 173
+      },
+      "loggedOn": "2021-10-08T04:14:16.3515671+02:00",
+      "durationMinutes": 183,
+      "exerciseLogs": []
+    },
+    {
+      "id": 3,
+      "user": {
+        "id": 2,
+        "firebaseId": "user123Id",
+        "username": "user123",
+        "email": "user123@example.com",
+        "role": "PREMIUM",
+        "sex": "FEMALE",
+        "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+        "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+        "height": 173
+      },
+      "loggedOn": "2021-11-08T04:14:16.3515671+02:00",
+      "durationMinutes": 183,
+      "exerciseLogs": []
+    }
+  ],
+  "expectedWorkoutLogs": []
+}
