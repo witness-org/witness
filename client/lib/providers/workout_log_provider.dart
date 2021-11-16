@@ -1,6 +1,8 @@
 import 'package:client/logging/logger_factory.dart';
+import 'package:client/models/workout_log_form_input.dart';
 import 'package:client/models/workouts/workout_log.dart';
 import 'package:client/providers/auth_provider.dart';
+import 'package:client/services/server_response.dart';
 import 'package:client/services/workout_log_service.dart';
 import 'package:collection/collection.dart' as collection;
 import 'package:flutter/material.dart';
@@ -46,9 +48,13 @@ class WorkoutLogProvider with ChangeNotifier {
     }
 
     if (resultList != null) {
-      _logger.i('Received ${resultList.length} exercises');
+      _logger.i('Received ${resultList.length} workout logs');
     } else {
-      _logger.w('Fetching exercises failed');
+      _logger.w('Fetching workout logs failed');
     }
+  }
+
+  Future<ServerResponse<WorkoutLog, String>> patchWorkoutLogDuration(final WorkoutLogFormInput data) async {
+    return _workoutLogService.patchWorkoutLogDuration(data, await _auth?.getToken());
   }
 }

@@ -2,6 +2,7 @@ import 'package:client/extensions/async_snapshot_extensions.dart';
 import 'package:client/extensions/date_time_extensions.dart';
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
+import 'package:client/models/workout_log_form_input.dart';
 import 'package:client/models/workouts/workout_log.dart';
 import 'package:client/providers/workout_log_provider.dart';
 import 'package:client/widgets/app_drawer.dart';
@@ -9,7 +10,9 @@ import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/main_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:progress_loader_overlay/progress_loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/timezone.dart';
 
@@ -28,19 +31,21 @@ class WorkoutLogScreen extends StatelessWidget with LogMessagePreparer, StringLo
   }
 
   Widget _buildHeader(final BuildContext context, final StringLocalizations uiStrings, final TZDateTime date) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          // TODO(raffaelfoidl): fix UI when text too long
-          _date.getStringRepresentation(
-            todayText: uiStrings.dateFormat_today,
-            yesterdayText: uiStrings.dateFormat_yesterday,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            // TODO(raffaelfoidl): fix UI when text too long
+            _date.getStringRepresentation(
+              todayText: uiStrings.dateFormat_today,
+              yesterdayText: uiStrings.dateFormat_yesterday,
+            ),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const Spacer(),
-      ],
+        ],
+      ),
     );
   }
 
@@ -53,7 +58,7 @@ class WorkoutLogScreen extends StatelessWidget with LogMessagePreparer, StringLo
           if (snapshot.hasError) {
             return Center(
               child: Text(
-                'Could not fetch workout logs:\n ' + snapshot.error.toString(),
+                uiStrings.workoutLogScreen_workoutLogList_errorMessage(snapshot.error.toString()),
                 textAlign: TextAlign.center,
               ),
             );
@@ -177,37 +182,135 @@ class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButt
   }
 }
 
-class _WorkoutLogItem extends StatelessWidget with LogMessagePreparer {
-  const _WorkoutLogItem(this._index, this._workoutLog, {final Key? key}) : super(key: key);
-  final int _index;
-  final WorkoutLog _workoutLog;
+class _WorkoutLogItem extends StatefulWidget with LogMessagePreparer {
+  _WorkoutLogItem(this.index, this.workoutLog, {final Key? key}) : super(key: key);
+  final int index;
+  final WorkoutLog workoutLog;
+
+  @override
+  _WorkoutLogItemState createState() => _WorkoutLogItemState();
+}
+
+class _WorkoutLogItemState<T extends _WorkoutLogItem> extends State<T> with StringLocalizer, LogMessagePreparer {
+  final _formKey = GlobalKey<FormState>();
+  WorkoutLogFormInput _formInput = WorkoutLogFormInput();
+  int _index = -1;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _formInput = WorkoutLogFormInput.editForm(widget.workoutLog);
+    _index = widget.index;
+  }
 
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Workout ${_index + 1}',
+    final uiStrings = getLocalizedStrings(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              uiStrings.workoutLogScreen_workoutLog_heading(_index + 1),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            TextButton.icon(
+              icon: const Icon(Icons.timer),
+              label: Text(
+                uiStrings.workoutLogScreen_workoutLog_duration(_formInput.durationMinutes ?? 0),
                 style: const TextStyle(
                   fontSize: 16,
                 ),
               ),
-              Text(
-                'Duration: ${_workoutLog.durationMinutes} min.',
-                style: const TextStyle(
-                  fontSize: 16,
-                ),
+              onPressed: () => showDialog<String>(
+                context: context,
+                builder: (final BuildContext context) => _WorkoutDurationDialog(_formKey, _formInput, _submitForm),
               ),
-            ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Future<void> _submitForm(final BuildContext context, final StringLocalizations uiStrings, final WorkoutLogFormInput formInput) async {
+    final provider = Provider.of<WorkoutLogProvider>(context, listen: false);
+
+    if (_formKey.currentState == null || !_formKey.currentState!.validate()) {
+      return;
+    }
+
+    _formKey.currentState!.save();
+
+    await ProgressLoader().show(context);
+    final response = await provider.patchWorkoutLogDuration(formInput);
+    await ProgressLoader().dismiss();
+
+    if (response.isSuccessAndResponse) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {});
+    }
+  }
+}
+
+class _WorkoutDurationDialog extends StatelessWidget with StringLocalizer, LogMessagePreparer {
+  const _WorkoutDurationDialog(this._formKey, this._formInput, this._submitFormFunction);
+
+  final GlobalKey<FormState> _formKey;
+  final WorkoutLogFormInput _formInput;
+  final Future<void> Function(BuildContext, StringLocalizations, WorkoutLogFormInput) _submitFormFunction;
+
+  @override
+  Widget build(final BuildContext context) {
+    _logger.v(prepare('build()'));
+    final uiStrings = getLocalizedStrings(context);
+    return AlertDialog(
+      title: Text(uiStrings.workoutLogScreen_workoutDurationDialog_title),
+      content: Form(
+        key: _formKey,
+        child: TextFormField(
+          decoration: InputDecoration(
+            icon: const Icon(Icons.timer),
+            hintText: uiStrings.workoutLogScreen_workoutDurationDialog_durationHint,
+            labelText: uiStrings.workoutLogScreen_workoutDurationDialog_durationLabel,
+            border: const OutlineInputBorder(),
+            suffix: Text(uiStrings.workoutLogScreen_workoutDurationDialog_durationSuffix),
           ),
-        ],
+          keyboardType: TextInputType.number,
+          initialValue: _formInput.durationMinutes.toString(),
+          validator: (final value) {
+            if (value != null && int.parse(value) < 0) {
+              return uiStrings.workoutLogScreen_workoutDurationDialog_durationError;
+            }
+
+            return null;
+          },
+          onSaved: (final value) => _formInput.durationMinutes = value != null ? int.parse(value) : null,
+        ),
       ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(uiStrings.workoutLogScreen_workoutDurationDialog_cancel),
+        ),
+        TextButton(
+          onPressed: () {
+            _submitFormFunction(context, uiStrings, _formInput);
+            Navigator.pop(context);
+          },
+          child: Text(uiStrings.workoutLogScreen_workoutDurationDialog_confirm),
+        ),
+      ],
     );
   }
 }

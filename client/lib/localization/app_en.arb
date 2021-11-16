@@ -308,6 +308,64 @@
   "@workoutLogScreen_speedDial_logNewWorkout": {
     "description": "Label of `SpeedDialChild` in `WorkoutLogScreen` that is used to create a new workout from scratch."
   },
+  "workoutLogScreen_workoutLogList_errorMessage": "Could not fetch workout logs:\n{error}",
+  "@workoutLogScreen_workoutLogList_errorMessage": {
+    "description": "Formatted error message that describes why the workout logs could not be fetched.",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "An internal error occurred."
+      }
+    }
+  },
+  "workoutLogScreen_workoutLog_heading": "Workout {number}",
+  "@workoutLogScreen_workoutLog_heading": {
+    "description": "Heading for a workout log with a given number.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "workoutLogScreen_workoutLog_duration": "{duration} min.",
+  "@workoutLogScreen_workoutLog_duration": {
+    "description": "Formatted text for button describing workout duration in minutes.",
+    "placeholders": {
+      "duration": {
+        "type": "int",
+        "example": "30"
+      }
+    }
+  },
+  "workoutLogScreen_workoutDurationDialog_title": "Workout Duration",
+  "@workoutLogScreen_workoutDurationDialog_title": {
+    "description": "Title for the workout duration dialog."
+  },
+  "workoutLogScreen_workoutDurationDialog_durationHint": "60",
+  "@workoutLogScreen_workoutDurationDialog_durationHint": {
+    "description": "Hint text for field for setting workout duration."
+  },
+  "workoutLogScreen_workoutDurationDialog_durationLabel": "duration",
+  "@workoutLogScreen_workoutDurationDialog_durationLabel": {
+    "description": "Label text for field for setting workout duration."
+  },
+  "workoutLogScreen_workoutDurationDialog_durationSuffix": "min.",
+  "@workoutLogScreen_workoutDurationDialog_durationSuffix": {
+    "description": "Suffix text for field for setting workout duration."
+  },
+  "workoutLogScreen_workoutDurationDialog_durationError": "Invalid workout duration.",
+  "@workoutLogScreen_workoutDurationDialog_durationError": {
+    "description": "Error message when provided duration is not valid."
+  },
+  "workoutLogScreen_workoutDurationDialog_cancel": "Cancel",
+  "@workoutLogScreen_workoutDurationDialog_cancel": {
+    "description": "Text for the button for cancelling setting the workout duration."
+  },
+  "workoutLogScreen_workoutDurationDialog_confirm": "OK",
+  "@workoutLogScreen_workoutDurationDialog_confirm": {
+    "description": "Text for the button for confirming the set workout duration."
+  },
   "trainingProgramCard_deleteDialog_cancel": "Cancel",
   "@trainingProgramCard_deleteDialog_cancel": {
     "description": "The text of the cancel button in the dialog in `TrainingProgramCard` that asks the user to confirm the deletion of the respective training program."
