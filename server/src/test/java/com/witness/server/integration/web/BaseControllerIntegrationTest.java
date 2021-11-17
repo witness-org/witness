@@ -36,7 +36,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Answers;
 import org.mockito.invocation.InvocationOnMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +93,7 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
   @Qualifier("H2")
   private DatabaseResetService databaseResetService;
 
-  @AfterEach
+  @BeforeEach
   void afterEach() {
     databaseResetService.resetDatabase();
   }

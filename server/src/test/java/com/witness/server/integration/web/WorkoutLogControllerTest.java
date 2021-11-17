@@ -7,6 +7,7 @@ import com.witness.server.dto.workout.ExerciseLogDto;
 import com.witness.server.dto.workout.RepsSetLogCreateDto;
 import com.witness.server.dto.workout.RepsSetLogDto;
 import com.witness.server.dto.workout.SetLogCreateDto;
+import com.witness.server.dto.workout.SetLogDto;
 import com.witness.server.dto.workout.TimeSetLogCreateDto;
 import com.witness.server.dto.workout.TimeSetLogDto;
 import com.witness.server.dto.workout.WorkoutLogCreateDto;
@@ -40,7 +41,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
   private static final String UPDATE_EXERCISE_LOG_POSITIONS_URL = "%s/positions";
   private static final String DELETE_EXERCISE_LOG_URL = "%s/%s";
   private static final String ADD_SET_LOG_URL = "%s/%s";
-  private static final String UPDATE_SET_LOG_URL = "%s/%s";
+  private static final String UPDATE_SET_LOG_URL = "%s/%s/update";
   private static final String UPDATE_SET_LOG_POSITIONS_URL = "%s/%s/positions";
   private static final String DELETE_SET_LOG_URL = "%s/%s/%s";
 
@@ -641,7 +642,119 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
 
-  // TODO UPDATE SET LOG
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
+      @JsonFileSource(value = DATA_ROOT + "WorkoutLogWithOneSetLog.json", type = WorkoutLog.class),
+      @JsonFileSource(value = DATA_ROOT + "UpdateSetLogDto.json", type = SetLogDto.class)
+  })
+  void updateSetLog_changeLoggingType_return201AndModifiedWorkoutLog(User currentUser, Exercise referencedExercise, WorkoutLog workoutLogWithSetLogs,
+                                                                     SetLogDto updateSetLog) {
+    persistUserAndMockLoggedIn(currentUser);
+    persistEntities(exerciseRepository, referencedExercise);
+    persistEntities(workoutLogRepository, workoutLogWithSetLogs.toBuilder().exerciseLogs(new ArrayList<>()).build());
+    workoutLogWithSetLogs.getExerciseLogs()
+        .forEach(log -> persistEntities(exerciseLogRepository, log.toBuilder().setLogs(new ArrayList<>()).build()));
+    workoutLogWithSetLogs.getExerciseLogs().forEach(log -> persistEntities(setLogRepository, log.getSetLogs()));
+
+    var response = exchange(TestAuthentication.REGULAR,
+        requestUrl(UPDATE_SET_LOG_URL, workoutLogWithSetLogs.getId(), workoutLogWithSetLogs.getExerciseLogs().get(0).getSetLogs().get(0).getId()),
+        HttpMethod.POST,
+        updateSetLog,
+        WorkoutLogDto.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().getExerciseLogs()).hasSize(1);
+    assertThat(response.getBody().getExerciseLogs().get(0).getSetLogs()).hasSize(1);
+    assertThat(response.getBody().getExerciseLogs().get(0).getSetLogs().get(0))
+        .usingRecursiveComparison()
+        .ignoringFields("id")
+        .isEqualTo(updateSetLog);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
+      @JsonFileSource(value = DATA_ROOT + "WorkoutLogWithOneSetLog.json", type = WorkoutLog.class),
+      @JsonFileSource(value = DATA_ROOT + "UpdateSetLogDto2.json", type = SetLogDto.class)
+  })
+  void updateSetLog_changeProperties_return201AndModifiedWorkoutLog(User currentUser, Exercise referencedExercise, WorkoutLog workoutLogWithSetLogs,
+                                                                    SetLogDto updateSetLog) {
+    persistUserAndMockLoggedIn(currentUser);
+    persistEntities(exerciseRepository, referencedExercise);
+    persistEntities(workoutLogRepository, workoutLogWithSetLogs.toBuilder().exerciseLogs(new ArrayList<>()).build());
+    workoutLogWithSetLogs.getExerciseLogs()
+        .forEach(log -> persistEntities(exerciseLogRepository, log.toBuilder().setLogs(new ArrayList<>()).build()));
+    workoutLogWithSetLogs.getExerciseLogs().forEach(log -> persistEntities(setLogRepository, log.getSetLogs()));
+
+    var response = exchange(TestAuthentication.REGULAR,
+        requestUrl(UPDATE_SET_LOG_URL, workoutLogWithSetLogs.getId(), workoutLogWithSetLogs.getExerciseLogs().get(0).getSetLogs().get(0).getId()),
+        HttpMethod.POST,
+        updateSetLog,
+        WorkoutLogDto.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().getExerciseLogs()).hasSize(1);
+    assertThat(response.getBody().getExerciseLogs().get(0).getSetLogs()).hasSize(1);
+    assertThat(response.getBody().getExerciseLogs().get(0).getSetLogs().get(0))
+        .usingRecursiveComparison()
+        .ignoringFields("id")
+        .isEqualTo(updateSetLog);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "Exercise2.json", type = Exercise.class),
+      @JsonFileSource(value = DATA_ROOT + "WorkoutLogWithOneSetLog.json", type = WorkoutLog.class),
+      @JsonFileSource(value = DATA_ROOT + "UpdateSetLogDto2.json", type = SetLogDto.class)
+  })
+  void updateSetLog_changeToInvalidLoggingType_return400(User currentUser, Exercise referencedExercise, WorkoutLog workoutLogWithSetLogs,
+                                                         SetLogDto updateSetLog) {
+    persistUserAndMockLoggedIn(currentUser);
+    persistEntities(exerciseRepository, referencedExercise);
+    persistEntities(workoutLogRepository, workoutLogWithSetLogs.toBuilder().exerciseLogs(new ArrayList<>()).build());
+    workoutLogWithSetLogs.getExerciseLogs()
+        .forEach(log -> persistEntities(exerciseLogRepository, log.toBuilder().setLogs(new ArrayList<>()).build()));
+    workoutLogWithSetLogs.getExerciseLogs().forEach(log -> persistEntities(setLogRepository, log.getSetLogs()));
+
+    var response = exchange(TestAuthentication.REGULAR,
+        requestUrl(UPDATE_SET_LOG_URL, workoutLogWithSetLogs.getId(), workoutLogWithSetLogs.getExerciseLogs().get(0).getSetLogs().get(0).getId()),
+        HttpMethod.POST,
+        updateSetLog,
+        Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "Exercise2.json", type = Exercise.class),
+      @JsonFileSource(value = DATA_ROOT + "WorkoutLogWithOneSetLog.json", type = WorkoutLog.class),
+      @JsonFileSource(value = DATA_ROOT + "UpdateSetLogDto3.json", type = SetLogDto.class)
+  })
+  void updateSetLog_changePosition_return400(User currentUser, Exercise referencedExercise, WorkoutLog workoutLogWithSetLogs,
+                                                         SetLogDto updateSetLog) {
+    persistUserAndMockLoggedIn(currentUser);
+    persistEntities(exerciseRepository, referencedExercise);
+    persistEntities(workoutLogRepository, workoutLogWithSetLogs.toBuilder().exerciseLogs(new ArrayList<>()).build());
+    workoutLogWithSetLogs.getExerciseLogs()
+        .forEach(log -> persistEntities(exerciseLogRepository, log.toBuilder().setLogs(new ArrayList<>()).build()));
+    workoutLogWithSetLogs.getExerciseLogs().forEach(log -> persistEntities(setLogRepository, log.getSetLogs()));
+
+    var response = exchange(TestAuthentication.REGULAR,
+        requestUrl(UPDATE_SET_LOG_URL, workoutLogWithSetLogs.getId(), workoutLogWithSetLogs.getExerciseLogs().get(0).getSetLogs().get(0).getId()),
+        HttpMethod.POST,
+        updateSetLog,
+        Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
 
   //endregion
 
@@ -726,6 +839,61 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
         Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  //endregion
+
+  //region /{workoutLogId}/{exerciseLogId}/{setLogId}
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
+      @JsonFileSource(value = DATA_ROOT + "WorkoutLogWithOneSetLog.json", type = WorkoutLog.class)
+  })
+  void deleteSetLog_validRequest_return200AndModifiedWorkoutLog(User currentUser, Exercise referencedExercise, WorkoutLog persistedWorkoutLog) {
+    persistUserAndMockLoggedIn(currentUser);
+    persistEntities(exerciseRepository, referencedExercise);
+    persistEntities(workoutLogRepository, persistedWorkoutLog.toBuilder().exerciseLogs(new ArrayList<>()).build());
+    persistedWorkoutLog.getExerciseLogs()
+        .forEach(log -> persistEntities(exerciseLogRepository, log.toBuilder().setLogs(new ArrayList<>()).build()));
+    persistedWorkoutLog.getExerciseLogs().forEach(log -> persistEntities(setLogRepository, log.getSetLogs()));
+
+    var response = exchange(TestAuthentication.REGULAR,
+        requestUrl(DELETE_SET_LOG_URL,
+            persistedWorkoutLog.getId(),
+            persistedWorkoutLog.getExerciseLogs().get(0).getId(),
+            persistedWorkoutLog.getExerciseLogs().get(0).getSetLogs().get(0).getId()),
+        HttpMethod.DELETE,
+        WorkoutLogDto.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().getExerciseLogs()).hasSize(1);
+    assertThat(response.getBody().getExerciseLogs().get(0).getSetLogs()).isEmpty();
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
+      @JsonFileSource(value = DATA_ROOT + "WorkoutLogWithOneExerciseLog.json", type = WorkoutLog.class)
+  })
+  void deleteSetLog_setLogDoesNotExist_return400(User currentUser, Exercise referencedExercise, WorkoutLog persistedWorkoutLog) {
+    persistUserAndMockLoggedIn(currentUser);
+    persistEntities(exerciseRepository, referencedExercise);
+    persistEntities(workoutLogRepository, persistedWorkoutLog.toBuilder().exerciseLogs(new ArrayList<>()).build());
+    persistEntities(exerciseLogRepository, persistedWorkoutLog.getExerciseLogs());
+
+    var response = exchange(TestAuthentication.REGULAR,
+        requestUrl(DELETE_SET_LOG_URL,
+            persistedWorkoutLog.getId(),
+            persistedWorkoutLog.getExerciseLogs().get(0).getId(),
+            1L),
+        HttpMethod.DELETE,
+        WorkoutLogDto.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
   //endregion

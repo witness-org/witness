@@ -65,6 +65,11 @@ public class ExerciseLog extends ExerciseReference {
     setLog.setExerciseLog(this);
   }
 
+  public void addSetLog(int index, SetLog setLog) {
+    setLogs.add(index, setLog);
+    setLog.setExerciseLog(this);
+  }
+
   public boolean removeSetLog(SetLog setLog) {
     if (setLogs.remove(setLog)) {
       setLog.setExerciseLog(null);
@@ -72,6 +77,10 @@ public class ExerciseLog extends ExerciseReference {
     }
 
     return false;
+  }
+
+  public boolean removeSetLog(int index) {
+    return removeSetLog(setLogs.get(index));
   }
 
   @Override
@@ -87,7 +96,7 @@ public class ExerciseLog extends ExerciseReference {
     }
     var that = (ExerciseLog) o;
     return Objects.equals(id, that.id) && Objects.equals(comment, that.comment) && Objects.equals(workoutLog, that.workoutLog)
-        && Objects.equals(setLogs, that.setLogs);
+           && Objects.equals(setLogs, that.setLogs);
   }
 
   @Override

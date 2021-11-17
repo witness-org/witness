@@ -207,8 +207,10 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     }
 
     validateLoggingType(exerciseLog.getExercise(), setLog);
-    setLog.setExerciseLog(exerciseLog);
-    setLogRepository.save(setLog);
+    var indexToUpdate = exerciseLog.getSetLogs().indexOf(setLogToUpdate);
+    exerciseLog.removeSetLog(indexToUpdate);
+    exerciseLog.addSetLog(indexToUpdate, setLog);
+    exerciseLogRepository.save(exerciseLog);
 
     return workoutLog;
   }
