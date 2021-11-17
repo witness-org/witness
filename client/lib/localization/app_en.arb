@@ -354,9 +354,13 @@
   "@workoutLogScreen_workoutDurationDialog_durationSuffix": {
     "description": "Suffix text for field for setting workout duration."
   },
-  "workoutLogScreen_workoutDurationDialog_durationError": "Invalid workout duration.",
-  "@workoutLogScreen_workoutDurationDialog_durationError": {
+  "workoutLogScreen_workoutDurationDialog_durationInvalidError": "Invalid workout duration.",
+  "@workoutLogScreen_workoutDurationDialog_durationInvalidError": {
     "description": "Error message when provided duration is not valid."
+  },
+  "workoutLogScreen_workoutDurationDialog_durationDefaultError": "Setting the workout duration failed.",
+  "@workoutLogScreen_workoutDurationDialog_durationDefaultError": {
+    "description": "Default error message for when the request to set the workout duration fails."
   },
   "workoutLogScreen_workoutDurationDialog_cancel": "Cancel",
   "@workoutLogScreen_workoutDurationDialog_cancel": {
