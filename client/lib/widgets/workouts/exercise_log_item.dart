@@ -1,9 +1,12 @@
 import 'package:client/logging/log_message_preparer.dart';
+import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/workouts/exercise_log.dart';
 import 'package:client/models/workouts/set_log.dart';
 import 'package:client/widgets/common/string_localizer.dart';
-import 'package:client/widgets/workouts/set_log_item.dart';
+import 'package:client/widgets/workouts/set_logs_table.dart';
 import 'package:flutter/material.dart';
+
+final _logger = getLogger('exercise_log_item');
 
 class ExerciseLogItem extends StatefulWidget with LogMessagePreparer {
   const ExerciseLogItem(this.exerciseLog, {final Key? key}) : super(key: key);
@@ -19,50 +22,51 @@ class ExerciseLogItemState extends State<ExerciseLogItem> with StringLocalizer, 
   Widget _buildExerciseCardTitleAndSubtitle(final ExerciseLog exerciseLog) {
     return ListTile(
       title: Text(exerciseLog.exerciseName),
-      subtitle: TextButton(
-        child: Row(children: [
-          const Icon(Icons.align_horizontal_left_outlined, size: 15),
-          const SizedBox(width: 5),
-          Text(
-            exerciseLog.comment ?? '',
-          ),
-        ]),
-        style: TextButton.styleFrom(
-          primary: Colors.grey,
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        ),
-        onPressed: () {},
-      ),
+      subtitle: exerciseLog.comment != null
+          ? TextButton(
+              child: Row(
+                children: [
+                  const Icon(Icons.align_horizontal_left_outlined, size: 15),
+                  const SizedBox(width: 5),
+                  Text(
+                    exerciseLog.comment!,
+                  ),
+                ],
+              ),
+              style: TextButton.styleFrom(
+                primary: Colors.grey,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              onPressed: () {},
+            )
+          : null,
     );
   }
 
   Widget _buildSetLogList(final List<SetLog> setLogs) {
     return Padding(
-      padding: const EdgeInsets.only(left: 7, right: 7),
-      child: Column(
-        children: [
-          ...setLogs.map((final item) {
-            return SetLogItem(item);
-          }).toList()
-        ],
-      ),
+      padding: const EdgeInsets.only(left: 14, right: 14),
+      child: SetLogTable(setLogs),
     );
   }
 
-  Widget _buildButtonRow() {
+  List<Widget> _buildButton(final String text) {
+    return [
+      TextButton(
+        child: Text(text),
+        onPressed: () {},
+      ),
+      const SizedBox(width: 8),
+    ];
+  }
+
+  Widget _buildButtonRow(final bool addCommentButton, final StringLocalizations uiStrings) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        TextButton(
-          child: const Text('DELETE'),
-          onPressed: () {},
-        ),
-        const SizedBox(width: 8),
-        TextButton(
-          child: const Text('ADD SET'),
-          onPressed: () {},
-        ),
-        const SizedBox(width: 8),
+      children: [
+        ..._buildButton(uiStrings.exerciseLogItem_delete),
+        ..._buildButton(uiStrings.exerciseLogItem_addSet),
+        if (addCommentButton) ..._buildButton(uiStrings.exerciseLogItem_addComment),
       ],
     );
   }
@@ -76,10 +80,16 @@ class ExerciseLogItemState extends State<ExerciseLogItem> with StringLocalizer, 
 
   @override
   Widget build(final BuildContext context) {
+    _logger.v(prepare('build()'));
+    final uiStrings = getLocalizedStrings(context);
     return Card(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[_buildExerciseCardTitleAndSubtitle(_exerciseLog!), _buildSetLogList(_exerciseLog!.setLogs), _buildButtonRow()],
+        children: <Widget>[
+          _buildExerciseCardTitleAndSubtitle(_exerciseLog!),
+          _buildSetLogList(_exerciseLog!.setLogs),
+          _buildButtonRow(_exerciseLog!.comment == null, uiStrings),
+        ],
       ),
     );
   }

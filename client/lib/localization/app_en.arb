@@ -72,7 +72,7 @@
   "@createExerciseForm_body_heading_loggingTypes": {
     "description": "Text for heading above choice chips for logging types for exercise."
   },
-  "createExerciseForm_body_save_buttonText": "Save",
+  "createExerciseForm_body_save_buttonText": "SAVE",
   "@createExerciseForm_body_save_buttonText": {
     "description": "Text for button that submits form for creating new exercise."
   },
@@ -140,7 +140,7 @@
   "@exerciseInformation_body_heading_muscleGroups": {
     "description": "Text of the heading related to the muscle groups in `ExerciseInformation`."
   },
-  "exerciseInformation_footer_editButton_text": "Edit",
+  "exerciseInformation_footer_editButton_text": "EDIT",
   "@exerciseInformation_footer_editButton_text": {
     "description": "Text of the button that allows editing an exercise in `ExerciseInformation`."
   },
@@ -248,7 +248,7 @@
   "@trainingDayCard_dayNumber_prefix": {
     "description": "Text before the day number and name in a `TrainingDayCard`."
   },
-  "trainingDayCard_deleteDialog_cancel": "Cancel",
+  "trainingDayCard_deleteDialog_cancel": "CANCEL",
   "@trainingDayCard_deleteDialog_cancel": {
     "description": "The text of the cancel button in the dialog in `TrainingDayCard` that asks the user to confirm the deletion of the respective day from the respective training week."
   },
@@ -256,7 +256,7 @@
   "@trainingDayCard_deleteDialog_content_prefix": {
     "description": "The content to be displayed before the day number in the dialog in `TrainingDayCard` that asks the user to confirm the deletion of the respective day from the respective training week."
   },
-  "trainingDayCard_deleteDialog_delete": "Delete",
+  "trainingDayCard_deleteDialog_delete": "DELETE",
   "@trainingDayCard_deleteDialog_delete": {
     "description": "The text of the delete (confirm) button in the dialog in `TrainingDayCard` that asks the user to confirm the deletion of the respective day from the respective training week."
   },
@@ -362,13 +362,49 @@
   "@workoutLogScreen_workoutDurationDialog_durationDefaultError": {
     "description": "Default error message for when the request to set the workout duration fails."
   },
-  "workoutLogScreen_workoutDurationDialog_cancel": "Cancel",
+  "workoutLogScreen_workoutDurationDialog_cancel": "CANCEL",
   "@workoutLogScreen_workoutDurationDialog_cancel": {
     "description": "Text for the button for cancelling setting the workout duration."
   },
   "workoutLogScreen_workoutDurationDialog_confirm": "OK",
   "@workoutLogScreen_workoutDurationDialog_confirm": {
-    "description": "Text for the button for confirming the set workout duration."
+    "description": "Text for the button for confirming setting the workout duration."
+  },
+  "exerciseLogItem_delete": "DELETE",
+  "@exerciseLogItem_delete": {
+    "description": "Text for the button for deleting an exercise log."
+  },
+  "exerciseLogItem_addSet": "ADD SET",
+  "@exerciseLogItem_addSet": {
+    "description": "Text for the button for adding a set log to an exercise log."
+  },
+  "exerciseLogItem_addComment": "ADD COMMENT",
+  "@exerciseLogItem_addComment": {
+    "description": "Text for the button for adding a comment to an exercise log."
+  },
+  "setLogsTable_crossSeparator": "×",
+  "@setLogsTable_crossSeparator": {
+    "description": "Multiplication sign (cross) separator."
+  },
+  "setLogsTable_dotSeparator": "•",
+  "@setLogsTable_dotSeparator": {
+    "description": "Multiplication sign (dot) separator."
+  },
+  "setLogsTable_kgSuffix": "kg",
+  "@setLogsTable_kgSuffix": {
+    "description": "Suffix for display of weight in kg."
+  },
+  "setLogsTable_secondsSuffix": "s.",
+  "@setLogsTable_secondsSuffix": {
+    "description": "Suffix for display of seconds."
+  },
+  "setLogsTable_rpePrefix": "RPE: ",
+  "@setLogsTable_rpePrefix": {
+    "description": "Prefix for display of RPE."
+  },
+  "setLogsTable_noResistanceBandsPlaceholder": "—",
+  "@setLogsTable_noResistanceBandsPlaceholder": {
+    "description": "Placeholder for when no resistance bands are provided in a set log."
   },
   "trainingProgramCard_deleteDialog_cancel": "Cancel",
   "@trainingProgramCard_deleteDialog_cancel": {

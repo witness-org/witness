@@ -73,7 +73,6 @@ class WorkoutLogScreen extends StatelessWidget with LogMessagePreparer, StringLo
                             child: Text(uiStrings.workoutLogScreen_placeholder),
                           )
                         : Scrollbar(
-                            isAlwaysShown: true,
                             child: ListView.builder(
                               itemCount: logs.length,
                               itemBuilder: (final _, final index) {
