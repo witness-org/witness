@@ -65,6 +65,7 @@ test:server:
   artifacts:
     when: always
     paths:
+      - './server/logs/'
       - './server/target/surefire-reports/'
       # Filename (without extension) of API artifacts has to be kept in sync with the value of the LOCAL_FILE_NAME
       # constant in the server/src/test/java/com/witness/server/integration/web/ApiGenerationTest.java file.
