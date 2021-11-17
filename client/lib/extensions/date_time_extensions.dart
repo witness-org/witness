@@ -1,4 +1,4 @@
-import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -15,7 +15,8 @@ extension DateTimeExtensions on TZDateTime {
   }
 
   /// Retrieves a string representation from the current instance, leaving the time components untouched.
-  // TODO(lea): test, write documentation and refactor (use intl)
+  // TODO(lea): test + write documentation
+  // TODO(lea-raffael): localize date format?
   String getStringRepresentation({final String? yesterdayText, final String? todayText}) {
     final now = TZDateTime.now(tz.local);
     final difference = TZDateTime(tz.local, year, month, day).difference(TZDateTime(tz.local, now.year, now.month, now.day)).inDays;
@@ -26,7 +27,7 @@ extension DateTimeExtensions on TZDateTime {
       return todayText;
     }
 
-    final formatList = difference > 365 ? [MM, ' ', dd, ', ', yyyy] : [MM, ' ', dd]; // add year if log is from over a year ago
-    return formatDate(this, formatList);
+    final format = difference >= -365 ? DateFormat.MMMMd() : DateFormat.yMMMMd();
+    return format.format(this);
   }
 }
