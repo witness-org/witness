@@ -22,8 +22,7 @@ import 'package:client/widgets/training_programs/weeks/training_week_detail_scre
 import 'package:client/widgets/workouts/workout_log_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/timezone.dart';
-
-final vienna = getLocation('Europe/Vienna'); // TODO(lea): set location globally
+import 'package:timezone/timezone.dart' as tz;
 
 Route<dynamic>? selectRoute(final RouteSettings routeSettings, final AuthProvider auth) {
   return MaterialPageRoute<void>(
@@ -33,7 +32,7 @@ Route<dynamic>? selectRoute(final RouteSettings routeSettings, final AuthProvide
         // home
         case '/':
           return auth.isAuthenticated
-              ? WorkoutLogScreen(TZDateTime.now(vienna))
+              ? WorkoutLogScreen(TZDateTime.now(tz.local))
               : FutureBuilder(
                   future: auth.reloadAuthentication(),
                   builder: (final ctx, final snapshot) => snapshot.waitSwitch(
@@ -43,9 +42,9 @@ Route<dynamic>? selectRoute(final RouteSettings routeSettings, final AuthProvide
                   ),
                 );
 
-        // training logs
+        // workout logs
         case WorkoutLogScreen.routeName:
-          return WorkoutLogScreen(routeSettings.arguments.castOrFallback<TZDateTime>(TZDateTime.now(vienna)));
+          return WorkoutLogScreen(routeSettings.arguments.castOrFallback<TZDateTime>(TZDateTime.now(tz.local)));
 
         // exercises
         case ExercisesScreen.routeName:
