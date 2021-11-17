@@ -1,9 +1,12 @@
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/workout_log_form_input.dart';
+import 'package:client/models/workouts/exercise_log.dart';
 import 'package:client/models/workouts/workout_log.dart';
 import 'package:client/providers/workout_log_provider.dart';
 import 'package:client/widgets/common/string_localizer.dart';
+import 'package:client/widgets/workouts/exercise_log_item.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_loader_overlay/progress_loader_overlay.dart';
 import 'package:provider/provider.dart';
@@ -16,20 +19,55 @@ class WorkoutLogItem extends StatefulWidget with LogMessagePreparer {
   final WorkoutLog workoutLog;
 
   @override
-  WorkoutLogItemState createState() => WorkoutLogItemState();
+  State<StatefulWidget> createState() => WorkoutLogItemState();
 }
 
-class WorkoutLogItemState<T extends WorkoutLogItem> extends State<T> with StringLocalizer, LogMessagePreparer {
+class WorkoutLogItemState extends State<WorkoutLogItem> with StringLocalizer, LogMessagePreparer {
   final _formKey = GlobalKey<FormState>();
-  WorkoutLogFormInput _formInput = WorkoutLogFormInput();
-  int _index = -1;
+  WorkoutLog? _workoutLog;
+  WorkoutLogFormInput? _formInput;
+  int? _index;
 
   @override
   void initState() {
     super.initState();
 
-    _formInput = WorkoutLogFormInput.editForm(widget.workoutLog);
+    _workoutLog = widget.workoutLog;
+    _formInput = WorkoutLogFormInput.editForm(_workoutLog!);
     _index = widget.index;
+  }
+
+  Widget _buildWorkoutHeader(final String heading) {
+    return Text(
+      heading,
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+    );
+  }
+
+  Widget _buildWorkoutDurationButton(final String buttonText, final Function() onPressed) {
+    return TextButton.icon(
+      icon: const Icon(Icons.timer),
+      label: Text(
+        buttonText,
+        style: const TextStyle(
+          fontSize: 16,
+        ),
+      ),
+      onPressed: onPressed,
+    );
+  }
+
+  Widget _buildExerciseLogList(final List<ExerciseLog> exerciseLogs) {
+    return Column(
+      children: <Widget>[
+        ...exerciseLogs.map((final item) {
+          return ExerciseLogItem(item);
+        }).toList()
+      ],
+    );
   }
 
   @override
@@ -42,28 +80,19 @@ class WorkoutLogItemState<T extends WorkoutLogItem> extends State<T> with String
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              uiStrings.workoutLogScreen_workoutLog_heading(_index + 1),
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+            _buildWorkoutHeader(
+              uiStrings.workoutLogScreen_workoutLog_heading(_index! + 1),
             ),
-            TextButton.icon(
-              icon: const Icon(Icons.timer),
-              label: Text(
-                uiStrings.workoutLogScreen_workoutLog_duration(_formInput.durationMinutes ?? 0),
-                style: const TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              onPressed: () => showDialog<String>(
+            _buildWorkoutDurationButton(
+              uiStrings.workoutLogScreen_workoutLog_duration(_formInput!.durationMinutes ?? 0),
+              () => showDialog<String>(
                 context: context,
-                builder: (final BuildContext context) => _WorkoutDurationDialog(_formKey, _formInput, _submitForm),
+                builder: (final BuildContext context) => _WorkoutDurationDialog(_formKey, _formInput!, _submitForm),
               ),
             ),
           ],
         ),
+        _buildExerciseLogList(_workoutLog!.exerciseLogs),
       ],
     );
   }
@@ -107,6 +136,18 @@ class _WorkoutDurationDialog extends StatelessWidget with StringLocalizer, LogMe
   final WorkoutLogFormInput _formInput;
   final Future<void> Function(BuildContext, StringLocalizations, WorkoutLogFormInput) _submitFormFunction;
 
+  String? _validateDuration(final String? value, final StringLocalizations uiStrings) {
+    try {
+      if (value != null && int.parse(value) < 0) {
+        return uiStrings.workoutLogScreen_workoutDurationDialog_durationInvalidError;
+      }
+    } on FormatException {
+      return uiStrings.workoutLogScreen_workoutDurationDialog_durationInvalidError;
+    }
+
+    return null;
+  }
+
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
@@ -125,17 +166,7 @@ class _WorkoutDurationDialog extends StatelessWidget with StringLocalizer, LogMe
           ),
           keyboardType: TextInputType.number,
           initialValue: _formInput.durationMinutes.toString(),
-          validator: (final value) {
-            try {
-              if (value != null && int.parse(value) < 0) {
-                return uiStrings.workoutLogScreen_workoutDurationDialog_durationInvalidError;
-              }
-            } on FormatException {
-              return uiStrings.workoutLogScreen_workoutDurationDialog_durationInvalidError;
-            }
-
-            return null;
-          },
+          validator: (final value) => _validateDuration(value, uiStrings),
           onSaved: (final value) => _formInput.durationMinutes = value != null ? int.parse(value) : null,
         ),
       ),
