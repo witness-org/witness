@@ -22,6 +22,7 @@ import com.witness.server.repository.UserRepository;
 import com.witness.server.service.FirebaseService;
 import com.witness.server.service.SecurityService;
 import com.witness.server.service.UserService;
+import com.witness.server.util.isolation.DatabaseResetService;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -35,10 +36,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterEach;
 import org.mockito.Answers;
 import org.mockito.invocation.InvocationOnMock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -51,13 +53,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD) // TODO proper reset of database (see GitLab issue #51)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest {
   @LocalServerPort
@@ -88,6 +87,15 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
 
   @Autowired
   private TestRestTemplate restTemplate;
+
+  @Autowired
+  @Qualifier("H2")
+  private DatabaseResetService databaseResetService;
+
+  @AfterEach
+  void afterEach() {
+    databaseResetService.resetDatabase();
+  }
 
   abstract String getEndpointUrl();
 
