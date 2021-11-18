@@ -664,7 +664,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
         updateSetLog,
         WorkoutLogDto.class);
 
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody().getExerciseLogs()).hasSize(1);
     assertThat(response.getBody().getExerciseLogs().get(0).getSetLogs()).hasSize(1);
@@ -696,7 +696,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
         updateSetLog,
         WorkoutLogDto.class);
 
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody().getExerciseLogs()).hasSize(1);
     assertThat(response.getBody().getExerciseLogs().get(0).getSetLogs()).hasSize(1);

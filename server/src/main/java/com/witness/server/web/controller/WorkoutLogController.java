@@ -253,10 +253,10 @@ public class WorkoutLogController {
   }
 
   @PostMapping("{workoutLogId}/{exerciseLogId}/update")
-  @ResponseStatus(HttpStatus.CREATED)
+  @ResponseStatus(HttpStatus.OK)
   @Operation(summary = "Updates a set log within an existing exercise log in an existing workout log")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "The old set log has been successfully replaced with the new set log."),
+      @ApiResponse(responseCode = "200", description = "The old set log has been successfully replaced with the new set log."),
       @ApiResponse(responseCode = "400", description = "The current user is not the owner of the workout log containing the set log to be updated, "
                                                        + "the specified exercise log containing the set log to update is not part of the specified "
                                                        + "workout log, the updated set log is not part of the specified exercise log, the updated "
