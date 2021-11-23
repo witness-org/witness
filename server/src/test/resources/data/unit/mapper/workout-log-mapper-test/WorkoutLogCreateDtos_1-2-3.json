@@ -1,0 +1,44 @@
+[
+  {
+    "durationMinutes": 183,
+    "exerciseLogs": [
+      {
+        "exerciseId": 12,
+        "comment": "logComment",
+        "setLogs": [
+          {
+            "type": "repsCreate",
+            "rpe": 7,
+            "weightKg": 23,
+            "resistanceBands": [
+              "LIGHT",
+              "HEAVY"
+            ],
+            "reps": 20
+          },
+          {
+            "type": "timeCreate",
+            "rpe": 7,
+            "weightKg": 23,
+            "resistanceBands": [],
+            "seconds": 25
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "durationMinutes": 183,
+    "exerciseLogs": [
+      {
+        "exerciseId": 12,
+        "comment": null,
+        "setLogs": []
+      }
+    ]
+  },
+  {
+    "durationMinutes": 183,
+    "exerciseLogs": []
+  }
+]

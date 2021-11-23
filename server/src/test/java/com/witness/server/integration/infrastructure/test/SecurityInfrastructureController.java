@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * This REST controller is only activated during integration tests and is used to test basic security functionalities such as authentication modes
+ * (no authentication, regular users, premium or admin users) as well as basic validation enabled by the {@link SecuredValidatedRestController}
+ * annotation.
+ */
 @SecuredValidatedRestController
 @RequestMapping("/security-infrastructure")
 @Profile("integration-test & !api-generation")
@@ -57,7 +62,7 @@ public class SecurityInfrastructureController {
   }
 
   @PostMapping
-  public MessageDto createGreeting(@Valid @RequestBody MessageDto dto) {
+  public MessageDto createMessage(@Valid @RequestBody MessageDto dto) {
     return dto;
   }
 

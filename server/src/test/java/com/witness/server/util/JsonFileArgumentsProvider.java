@@ -2,9 +2,12 @@ package com.witness.server.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.witness.server.util.converters.ArgumentConverter;
-import com.witness.server.util.converters.NoOpArgumentConverter;
+import com.witness.server.entity.workout.SetLog;
+import com.witness.server.util.converter.ArgumentConverter;
+import com.witness.server.util.converter.NoOpArgumentConverter;
+import com.witness.server.util.deserializer.SetLogDeserializer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -26,6 +29,8 @@ import org.springframework.util.ReflectionUtils;
 public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<JsonFileSources> {
   private static final ObjectMapper objectMapper = new ObjectMapper()
       .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+      .registerModule(new SimpleModule("CUSTOM_DESERIALIZERS")
+          .addDeserializer(SetLog.class, new SetLogDeserializer()))
       .registerModule(new JavaTimeModule());
 
   private JsonFileSource[] files;
@@ -42,14 +47,7 @@ public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationC
     var parameters = new Object[files.length];
 
     for (var i = 0; i < files.length; i++) {
-      var file = files[i];
-      var jsonStream = new ClassPathResource(file.value()).getInputStream();
-
-      var deserializedObject = getDeserializedObject(file, jsonStream, file.converter());
-      if (file.arrayToList() && file.type().isArray()) {
-        deserializedObject = Arrays.stream((Object[]) deserializedObject).collect(Collectors.toList());
-      }
-
+      var deserializedObject = deserializeObject(files[i]);
       parameters[i] = deserializedObject;
     }
 
@@ -68,16 +66,33 @@ public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationC
     }
   }
 
-  private Object getDeserializedObject(JsonFileSource file, InputStream jsonStream, Class<? extends ArgumentConverter<?, ?>> argumentConverter)
+  private Object deserializeObject(JsonFileSource file) throws Exception {
+    try {
+      var jsonStream = new ClassPathResource(file.value()).getInputStream();
+
+      var deserializedObject = readObjectFromFile(file, jsonStream, file.converter());
+      if (file.arrayToList() && file.type().isArray()) {
+        deserializedObject = Arrays.stream((Object[]) deserializedObject).collect(Collectors.toList());
+      }
+      return deserializedObject;
+    } catch (IOException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+      throw new Exception(
+          "Could not deserialize object from @JsonFileSource(value=%s, type=%s, converter=%s, arrayToList=%b)"
+              .formatted(file.value(), file.type().getSimpleName(), file.converter().getSimpleName(), file.arrayToList()),
+          e);
+    }
+  }
+
+  private Object readObjectFromFile(JsonFileSource file, InputStream jsonStream, Class<? extends ArgumentConverter<?, ?>> argumentConverter)
       throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
     var converter = ReflectionUtils.accessibleConstructor(argumentConverter).newInstance();
-    var noOpConverter = converter instanceof NoOpArgumentConverter;
-    var sourceType = noOpConverter ? file.type() : converter.intermediateClass(); // JSON deserialization target type
-    var targetType = noOpConverter ? file.type() : converter.targetClass(); // method return type
+    var isNoOpConverter = converter instanceof NoOpArgumentConverter;
+    var sourceType = isNoOpConverter ? file.type() : converter.intermediateClass(); // JSON deserialization target type
+    var targetType = isNoOpConverter ? file.type() : converter.targetClass(); // method return type
 
     if (!targetType.equals(file.type())) {
       log.error("The specified test argument converter is not NoOpArgumentConverter, but its target class differs from the class specified by the "
-          + "\"type\" argument of the @JsonFileSource annotation. Supplying arguments to the test will fail due to incompatible types.");
+          + "\"type\" argument of the @JsonFileSource annotation. Supplying arguments to the test will likely fail due to incompatible types.");
     }
 
     var intermediateObject = objectMapper.readValue(jsonStream, sourceType);

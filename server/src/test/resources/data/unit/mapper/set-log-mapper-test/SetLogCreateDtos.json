@@ -1,0 +1,19 @@
+[
+  {
+    "type": "repsCreate",
+    "rpe": 6,
+    "weightKg": 24,
+    "resistanceBands": [
+      "LIGHT",
+      "HEAVY"
+    ],
+    "reps": 20
+  },
+  {
+    "type": "timeCreate",
+    "rpe": 7,
+    "weightKg": 23,
+    "resistanceBands": [],
+    "seconds": 25
+  }
+]

@@ -27,7 +27,7 @@ abstract class BaseRepositoryTest extends BaseUnitTest {
    * @param sequenceNames sequences whose values should be changed
    */
   protected void setSequenceValues(int value, String... sequenceNames) {
-    for (String sequenceName : sequenceNames) {
+    for (var sequenceName : sequenceNames) {
       setSequenceValue(value, sequenceName);
     }
   }

@@ -5,7 +5,7 @@ date-times:
 logging:
   config: "./logback-test.xml"
   directory: "./logs/test"
-  file-name: "server-integration-test"
+  file-name: "server-test"
 
 security:
   check-token-revoked: true

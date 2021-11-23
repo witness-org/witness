@@ -1,6 +1,5 @@
 import 'package:client/extensions/async_snapshot_extensions.dart';
 import 'package:client/extensions/cast_extensions.dart';
-import 'package:client/extensions/date_time_extensions.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/models/training_programs/overview/training_day_overview.dart';
@@ -16,12 +15,14 @@ import 'package:client/widgets/exercises/exercises_by_muscle_group_screen.dart';
 import 'package:client/widgets/exercises/exercises_screen.dart';
 import 'package:client/widgets/settings/settings_screen.dart';
 import 'package:client/widgets/statistics/statistics_screen.dart';
-import 'package:client/widgets/training_logs/training_log_screen.dart';
 import 'package:client/widgets/training_programs/days/training_day_detail_screen.dart';
 import 'package:client/widgets/training_programs/training_programs/training_program_detail_screen.dart';
 import 'package:client/widgets/training_programs/training_programs_overview_screen.dart';
 import 'package:client/widgets/training_programs/weeks/training_week_detail_screen.dart';
+import 'package:client/widgets/workouts/workout_log_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:timezone/timezone.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 Route<dynamic>? selectRoute(final RouteSettings routeSettings, final AuthProvider auth) {
   return MaterialPageRoute<void>(
@@ -31,7 +32,7 @@ Route<dynamic>? selectRoute(final RouteSettings routeSettings, final AuthProvide
         // home
         case '/':
           return auth.isAuthenticated
-              ? TrainingLogScreen(routeSettings.arguments.castOrFallback<DateTime>(DateTime.now().dateOnly()))
+              ? WorkoutLogScreen(TZDateTime.now(tz.local))
               : FutureBuilder(
                   future: auth.reloadAuthentication(),
                   builder: (final ctx, final snapshot) => snapshot.waitSwitch(
@@ -41,9 +42,9 @@ Route<dynamic>? selectRoute(final RouteSettings routeSettings, final AuthProvide
                   ),
                 );
 
-        // training logs
-        case TrainingLogScreen.routeName:
-          return TrainingLogScreen(routeSettings.arguments.castOrFallback<DateTime>(DateTime.now().dateOnly()));
+        // workout logs
+        case WorkoutLogScreen.routeName:
+          return WorkoutLogScreen(routeSettings.arguments.castOrFallback<TZDateTime>(TZDateTime.now(tz.local)));
 
         // exercises
         case ExercisesScreen.routeName:

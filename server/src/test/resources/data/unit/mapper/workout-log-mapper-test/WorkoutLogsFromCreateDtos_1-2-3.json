@@ -1,0 +1,67 @@
+[
+  {
+    "id": null,
+    "user": null,
+    "loggedOn": null,
+    "durationMinutes": 183,
+    "exerciseLogs": [
+      {
+        "position": null,
+        "exercise": {
+          "id": 12
+        },
+        "id": null,
+        "comment": "logComment",
+        "workoutLog": null,
+        "setLogs": [
+          {
+            "position": null,
+            "rpe": 7,
+            "id": null,
+            "weightKg": 23,
+            "resistanceBands": [
+              "LIGHT",
+              "HEAVY"
+            ],
+            "exerciseLog": null,
+            "reps": 20
+          },
+          {
+            "position": null,
+            "rpe": 7,
+            "id": null,
+            "weightKg": 23,
+            "resistanceBands": [],
+            "exerciseLog": null,
+            "seconds": 25
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": null,
+    "user": null,
+    "loggedOn": null,
+    "durationMinutes": 183,
+    "exerciseLogs": [
+      {
+        "position": null,
+        "exercise": {
+          "id": 12
+        },
+        "id": null,
+        "comment": null,
+        "workoutLog": null,
+        "setLogs": []
+      }
+    ]
+  },
+  {
+    "id": null,
+    "user": null,
+    "loggedOn": null,
+    "durationMinutes": 183,
+    "exerciseLogs": []
+  }
+]

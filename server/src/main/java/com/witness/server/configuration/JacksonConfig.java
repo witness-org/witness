@@ -1,5 +1,6 @@
 package com.witness.server.configuration;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -34,7 +35,7 @@ public class JacksonConfig {
   public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder) {
     return builder
         .featuresToEnable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY)
-        .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, DeserializationFeature.ACCEPT_FLOAT_AS_INT)
         .indentOutput(true)
         .findModulesViaServiceLoader(true)
         .modules(new JavaTimeModule())

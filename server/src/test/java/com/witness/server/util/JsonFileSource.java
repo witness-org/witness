@@ -1,7 +1,7 @@
 package com.witness.server.util;
 
-import com.witness.server.util.converters.ArgumentConverter;
-import com.witness.server.util.converters.NoOpArgumentConverter;
+import com.witness.server.util.converter.ArgumentConverter;
+import com.witness.server.util.converter.NoOpArgumentConverter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

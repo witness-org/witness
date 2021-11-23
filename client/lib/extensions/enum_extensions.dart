@@ -2,6 +2,8 @@ import 'package:client/extensions/cast_extensions.dart';
 import 'package:client/extensions/number_extensions.dart';
 import 'package:client/models/exercises/logging_type.dart';
 import 'package:client/models/exercises/muscle_group.dart';
+import 'package:client/models/workouts/resistance_band.dart';
+import 'package:flutter/material.dart';
 
 extension LoggingTypeExtensions on LoggingType {
   // TODO(raffaelfoidl-leabrugger): also localize enum representations
@@ -31,7 +33,7 @@ extension LoggingTypeExtensions on LoggingType {
   }
 }
 
-extension MuscleGroupExtension on MuscleGroup {
+extension MuscleGroupExtensions on MuscleGroup {
   String toUiString() {
     switch (this) {
       case MuscleGroup.chest:
@@ -77,6 +79,27 @@ extension MuscleGroupExtension on MuscleGroup {
         return 'OTHER';
       default:
         throw Exception('No string representation for enum member "${this}" available.');
+    }
+  }
+}
+
+extension ResistanceBandExtensions on ResistanceBand {
+  /// This method is used for [Widget] representations of different resistance bands. The bands are distinguished in the UI by a color. The mapping
+  /// of the band "value" to the color is done here.
+  Color mapToColor() {
+    switch (this) {
+      case ResistanceBand.light:
+        return Colors.green;
+      case ResistanceBand.medium:
+        return Colors.blue;
+      case ResistanceBand.heavy:
+        return Colors.yellow;
+      case ResistanceBand.xHeavy:
+        return Colors.red;
+      case ResistanceBand.xxHeavy:
+        return Colors.black;
+      default:
+        throw Exception('No color mapping for enum member "${this}" available.');
     }
   }
 }
