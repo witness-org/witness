@@ -1,7 +1,7 @@
 package com.witness.server.setup;
 
-import com.witness.server.entity.Exercise;
-import com.witness.server.entity.User;
+import com.witness.server.entity.exercise.Exercise;
+import com.witness.server.entity.user.User;
 import com.witness.server.enumeration.LoggingType;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.enumeration.Role;

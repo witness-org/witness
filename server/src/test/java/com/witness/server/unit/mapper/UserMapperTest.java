@@ -2,9 +2,9 @@ package com.witness.server.unit.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.witness.server.dto.UserCreateDto;
-import com.witness.server.dto.UserDto;
-import com.witness.server.entity.User;
+import com.witness.server.dto.user.UserCreateDto;
+import com.witness.server.dto.user.UserDto;
+import com.witness.server.entity.user.User;
 import com.witness.server.mapper.UserMapper;
 import com.witness.server.unit.BaseUnitTest;
 import com.witness.server.util.JsonFileSource;
@@ -23,7 +23,6 @@ class UserMapperTest extends BaseUnitTest {
   })
   void entityToDto(User entity, UserDto dto) {
     assertThat(mapper.entityToDto(entity)).isEqualTo(dto);
-
   }
 
   @ParameterizedTest

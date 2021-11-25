@@ -34,7 +34,7 @@
     attributes that are defined via annotations in the production code.
     -->
 
-    <entity class="com.witness.server.entity.Exercise">
+    <entity class="com.witness.server.entity.exercise.Exercise">
         <attributes>
             <id name="id">
                 <generated-value strategy="SEQUENCE" generator="exercise_id_generator"/>
@@ -44,11 +44,41 @@
         </attributes>
     </entity>
 
-    <entity class="com.witness.server.entity.User">
+    <entity class="com.witness.server.entity.user.User">
         <attributes>
             <id name="id">
                 <generated-value strategy="SEQUENCE" generator="user_id_generator"/>
                 <sequence-generator name="user_id_generator" sequence-name="user_id_sequence" allocation-size="1"/>
+            </id>
+        </attributes>
+    </entity>
+
+    <entity class="com.witness.server.entity.workout.ExerciseLog">
+        <attributes>
+            <id name="id">
+                <generated-value strategy="SEQUENCE" generator="exercise_log_id_generator"/>
+                <sequence-generator name="exercise_log_id_generator" sequence-name="exercise_log_id_sequence"
+                                    allocation-size="1"/>
+            </id>
+        </attributes>
+    </entity>
+
+    <entity class="com.witness.server.entity.workout.SetLog">
+        <attributes>
+            <id name="id">
+                <generated-value strategy="SEQUENCE" generator="set_log_id_generator"/>
+                <sequence-generator name="set_log_id_generator" sequence-name="set_log_id_sequence"
+                                    allocation-size="1"/>
+            </id>
+        </attributes>
+    </entity>
+
+    <entity class="com.witness.server.entity.workout.WorkoutLog">
+        <attributes>
+            <id name="id">
+                <generated-value strategy="SEQUENCE" generator="workout_log_id_generator"/>
+                <sequence-generator name="workout_log_id_generator" sequence-name="workout_log_id_sequence"
+                                    allocation-size="1"/>
             </id>
         </attributes>
     </entity>

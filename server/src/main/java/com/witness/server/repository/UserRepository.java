@@ -1,6 +1,6 @@
 package com.witness.server.repository;
 
-import com.witness.server.entity.User;
+import com.witness.server.entity.user.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

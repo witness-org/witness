@@ -6,11 +6,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import com.witness.server.entity.Exercise;
-import com.witness.server.entity.User;
-import com.witness.server.entity.UserExercise;
+import com.witness.server.entity.exercise.Exercise;
+import com.witness.server.entity.exercise.UserExercise;
+import com.witness.server.entity.user.User;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;
@@ -26,6 +27,7 @@ import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +35,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest(classes = {ExerciseServiceImpl.class, ExerciseMapperImpl.class})
 class ExerciseServiceTest extends BaseUnitTest {
-
   private static final String DATA_ROOT = "data/unit/service/exercise-service-test/";
 
   @Autowired
@@ -314,7 +315,7 @@ class ExerciseServiceTest extends BaseUnitTest {
       @JsonFileSource(value = DATA_ROOT + "Exercises_1-2.json", type = Exercise[].class, arrayToList = true)
   })
   void getExercisesCreatedByUser_user_returnList(User user, List<Exercise> exercises) throws DataAccessException {
-    String firebaseId = user.getFirebaseId();
+    var firebaseId = user.getFirebaseId();
     when(userService.findByFirebaseId(firebaseId)).thenReturn(user);
     when(exerciseRepository.findAllByUser(user)).thenReturn(exercises);
 
@@ -322,5 +323,41 @@ class ExerciseServiceTest extends BaseUnitTest {
 
     verify(exerciseRepository, times(1)).findAllByUser(user);
     verify(userService, times(1)).findByFirebaseId(user.getFirebaseId());
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class)
+  })
+  void getExerciseById_existingId_returnExercise(Exercise persistedExercise) throws DataNotFoundException {
+    var exerciseId = persistedExercise.getId();
+    when(exerciseRepository.findById(exerciseId)).thenReturn(Optional.of(persistedExercise));
+
+    assertThat(target.getExerciseById(exerciseId)).usingRecursiveComparison().isEqualTo(persistedExercise);
+    verify(exerciseRepository, times(1)).findById(exerciseId);
+    verifyNoInteractions(userExerciseRepository);
+  }
+
+  @Test
+  void getExerciseById_nonExistingId_throwException() {
+    assertThatThrownBy(() -> target.getExerciseById(-233L)).isInstanceOf(DataNotFoundException.class);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class)
+  })
+  void getUserExerciseById_existingId_returnExercise(UserExercise persistedUserExercise) throws DataNotFoundException {
+    var userExerciseId = persistedUserExercise.getId();
+    when(userExerciseRepository.findById(userExerciseId)).thenReturn(Optional.of(persistedUserExercise));
+
+    assertThat(target.getUserExerciseById(userExerciseId)).usingRecursiveComparison().isEqualTo(persistedUserExercise);
+    verify(userExerciseRepository, times(1)).findById(userExerciseId);
+    verifyNoInteractions(exerciseRepository);
+  }
+
+  @Test
+  void getUserExerciseById_nonExistingId_throwException() {
+    assertThatThrownBy(() -> target.getUserExerciseById(-233L)).isInstanceOf(DataNotFoundException.class);
   }
 }

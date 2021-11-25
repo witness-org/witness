@@ -29,7 +29,7 @@
     </module>
     <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->
     <module name="SuppressionFilter">
-        <property name="file" value="checkstyle-suppressions.xml" />
+        <property name="file" value="checkstyle-suppressions.xml"/>
         <property name="optional" value="true"/>
     </module>
 
@@ -189,7 +189,12 @@
                      value="Parameter name ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="MatchXpath">
-            <property name="query" value="//VARIABLE_DEF[./ASSIGN/EXPR/LITERAL_NEW and not(./TYPE/IDENT[@text='var'])]"/>
+            <!-- Violations are local variable definitions (i.e. VARIABLE_DEF tokens that are within a method, i.e. children of a
+             METHOD_DEF token) that are not declared using 'var'. Exceptions are variable definitions whose assigned expressions
+             is the 'null' literal - in that case, one cannot use var and therefore the explicit type declaration is tolerated.
+             Note: The XPath expression '/(* except LITERAL_NULL)' is a shorthand for '/*[not(self::LITERAL_NULL)]'. -->
+            <property name="query"
+                      value="//METHOD_DEF//VARIABLE_DEF[./ASSIGN/EXPR/(* except LITERAL_NULL) and not(./TYPE/IDENT[@text='var'])]"/>
             <message key="matchxpath.match" value="Use the ''var'' keyword for instantiations."/>
         </module>
         <module name="LambdaParameterName">
@@ -334,7 +339,7 @@
         </module>
         <module name="MissingJavadocMethod">
             <property name="scope" value="public"/>
-            <property name="minLineCount" value="2"/>
+            <property name="minLineCount" value="4"/>
             <property name="allowedAnnotations"
                       value="Override, Test, Autowired, GetMapping, RequestMapping, PostMapping, PutMapping, DeleteMapping, PatchMapping"/>
             <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF"/>
@@ -363,5 +368,13 @@
                       default="checkstyle-xpath-suppressions.xml"/>
             <property name="optional" value="true"/>
         </module>
+        <!-- more information: https://stackoverflow.com/a/4023351 -->
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="CHECKSTYLE.OFF\: ([\w\|]+)"/>
+            <property name="onCommentFormat" value="CHECKSTYLE.ON\: ([\w\|]+)"/>
+            <property name="checkFormat" value="$1"/>
+        </module>
+        <module name="SuppressWarningsHolder"/>
     </module>
+    <module name="SuppressWarningsFilter"/>
 </module>

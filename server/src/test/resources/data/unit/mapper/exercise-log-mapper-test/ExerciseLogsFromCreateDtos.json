@@ -1,0 +1,44 @@
+[
+  {
+    "position": null,
+    "exercise": {
+      "id": 12
+    },
+    "id": null,
+    "comment": "logComment",
+    "workoutLog": null,
+    "setLogs": [
+      {
+        "position": null,
+        "rpe": 7,
+        "id": null,
+        "weightKg": 23,
+        "resistanceBands": [
+          "LIGHT",
+          "HEAVY"
+        ],
+        "exerciseLog": null,
+        "reps": 20
+      },
+      {
+        "position": null,
+        "rpe": 7,
+        "id": null,
+        "weightKg": 23,
+        "resistanceBands": [],
+        "exerciseLog": null,
+        "seconds": 25
+      }
+    ]
+  },
+  {
+    "position": null,
+    "exercise": {
+      "id": 12
+    },
+    "id": null,
+    "comment": null,
+    "workoutLog": null,
+    "setLogs": []
+  }
+]
