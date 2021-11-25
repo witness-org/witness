@@ -21,9 +21,10 @@
     <!-- controllers are documented by springdoc OpenAPI annotations - additional JavaDoc would decrease readability -->
     <suppress files="com[\\/]witness[\\/]server[\\/]web[\\/]controller" checks="MissingJavadocType"/>
 
-    <!-- entities and enums are mostly direct representation of concepts from domain model, no added value in JavaDoc
-     (if an entity or enumeration does not directly stem from the domain model, documentation is to be be added -->
-    <suppress files="com[\\/]witness[\\/]server[\\/](entity|enumeration)" checks="MissingJavadocType"/>
+    <!-- types are mostly direct representation of concepts from domain model, no added value in JavaDoc
+     (if a type or one of its methods does not directly stem from the domain model, documentation is to be be added -->
+    <suppress files="com[\\/]witness[\\/]server[\\/](entity|enumeration)"
+              checks="MissingJavadocType|MissingJavadocMethod"/>
 
     <!-- the purpose of mappers is clear from their name and method signatures, no added value in JavaDoc -->
     <suppress files="com[\\/]witness[\\/]server[\\/](mapper)" checks="MissingJavadocType"/>

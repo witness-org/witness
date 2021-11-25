@@ -1,8 +1,8 @@
 package com.witness.server.mapper;
 
-import com.witness.server.dto.UserCreateDto;
-import com.witness.server.dto.UserDto;
-import com.witness.server.entity.User;
+import com.witness.server.dto.user.UserCreateDto;
+import com.witness.server.dto.user.UserDto;
+import com.witness.server.entity.user.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

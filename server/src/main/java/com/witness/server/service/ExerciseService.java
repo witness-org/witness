@@ -1,7 +1,7 @@
 package com.witness.server.service;
 
-import com.witness.server.entity.Exercise;
-import com.witness.server.entity.UserExercise;
+import com.witness.server.entity.exercise.Exercise;
+import com.witness.server.entity.exercise.UserExercise;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;
@@ -40,7 +40,7 @@ public interface ExerciseService {
    * @param exercise updated exercise
    * @return updated {@link Exercise} object
    * @throws InvalidRequestException if there is already an initial exercise with the updated name of the requested {@code exercise}
-   * @throws DataNotFoundException if the exercise to update does not exist
+   * @throws DataNotFoundException   if the exercise to update does not exist
    */
   Exercise updateInitialExercise(Exercise exercise) throws InvalidRequestException, DataNotFoundException;
 
@@ -62,7 +62,7 @@ public interface ExerciseService {
    * consists of the initial exercises (i.e. {@link Exercise} objects, available to every user) and the user's user exercises (i.e.
    * {@link UserExercise} objects, only available to the user that created them).
    *
-   * @param firebaseId Firebase ID of the user for whom the exercises should be fetched
+   * @param firebaseId  Firebase ID of the user for whom the exercises should be fetched
    * @param muscleGroup that should be trained with the fetched exercises
    * @return list of exercises in the "repertoire" of the user with the provided {@code firebaseId} for the {@code muscleGroup}
    * @throws DataAccessException if the user with the provided {@code firebaseId} is not found in the database
@@ -78,4 +78,21 @@ public interface ExerciseService {
    */
   List<Exercise> getExercisesCreatedByUser(String firebaseId) throws DataAccessException;
 
+  /**
+   * Fetches the exercise with the provided {@code exerciseId}.
+   *
+   * @param exerciseId ID of the exercise to fetch
+   * @return an {@link Exercise} instance whose {@link Exercise#getId()} property is equal to the provided {@code exerciseId}
+   * @throws DataNotFoundException if there is no {@link Exercise} with the given {@code exerciseId}
+   */
+  Exercise getExerciseById(Long exerciseId) throws DataNotFoundException;
+
+  /**
+   * Fetches the user exercise with the provided {@code exerciseId}.
+   *
+   * @param exerciseId ID of the exercise to fetch
+   * @return an {@link UserExercise} instance whose {@link UserExercise#getId()} property is equal to the provided {@code exerciseId}
+   * @throws DataNotFoundException if there is no {@link UserExercise} with the given {@code exerciseId}
+   */
+  UserExercise getUserExerciseById(Long exerciseId) throws DataNotFoundException;
 }

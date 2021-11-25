@@ -1,4 +1,4 @@
-package com.witness.server.entity;
+package com.witness.server.entity.exercise;
 
 import com.witness.server.enumeration.LoggingType;
 import com.witness.server.enumeration.MuscleGroup;
@@ -15,26 +15,29 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
+@Table(name = "exercise")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @ToString
-@Builder(toBuilder = true)
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class Exercise {
+
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exercise_id_generator")
   @SequenceGenerator(name = "exercise_id_generator", sequenceName = "exercise_id_sequence")
