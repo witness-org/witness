@@ -1,0 +1,12 @@
+{
+  "rpe": 2,
+  "weightKg": 12,
+  "resistanceBands": [
+    "MEDIUM"
+  ],
+  "id": 1,
+  "position": 3,
+  "exerciseLogId": 1,
+  "type": "reps",
+  "reps": 20
+}

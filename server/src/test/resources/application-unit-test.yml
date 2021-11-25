@@ -1,10 +1,11 @@
 date-times:
+  # use random timezone for integration tests because, for production code, the actual timezone ought to be irrelevant
   zone-id: "Asia/Kolkata"
 
 logging:
   config: "./logback-test.xml"
   directory: "./logs/test"
-  file-name: "server-unit-test"
+  file-name: "server-test"
 
 springdoc:
   api-docs:

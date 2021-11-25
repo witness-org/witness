@@ -3,9 +3,9 @@ package com.witness.server.integration.web;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import com.witness.server.dto.UserCreateDto;
-import com.witness.server.dto.UserDto;
-import com.witness.server.entity.User;
+import com.witness.server.dto.user.UserCreateDto;
+import com.witness.server.dto.user.UserDto;
+import com.witness.server.entity.user.User;
 import com.witness.server.model.FirebaseUser;
 import com.witness.server.repository.UserRepository;
 import com.witness.server.service.TimeService;
@@ -384,7 +384,6 @@ class UserControllerTest extends BaseControllerIntegrationTest {
 
   @ParameterizedTest
   @NullAndEmptySource
-  @ValueSource(strings = {"     "})
   void setRole_invalidIdSpecification_return4xx(String firebaseId) {
     // We cannot use Map.of() here because that does not support null values. Since @NullAndEmptySource is in place, we create the map differently.
     var params = toMultiValueMap(Map.of("role", "ADMIN"));
@@ -456,7 +455,6 @@ class UserControllerTest extends BaseControllerIntegrationTest {
 
   @ParameterizedTest
   @NullAndEmptySource
-  @ValueSource(strings = {"     "})
   void removeRole_invalidIdSpecification_return4xx(String firebaseId) {
     var response = exchange(TestAuthentication.ADMIN,
         requestUrl(REMOVE_ROLE_URL, firebaseId),

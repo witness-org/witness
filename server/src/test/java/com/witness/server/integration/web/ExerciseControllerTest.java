@@ -2,12 +2,12 @@ package com.witness.server.integration.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.witness.server.dto.ExerciseCreateDto;
-import com.witness.server.dto.ExerciseDto;
-import com.witness.server.dto.UserExerciseDto;
-import com.witness.server.entity.Exercise;
-import com.witness.server.entity.User;
-import com.witness.server.entity.UserExercise;
+import com.witness.server.dto.exercise.ExerciseCreateDto;
+import com.witness.server.dto.exercise.ExerciseDto;
+import com.witness.server.dto.exercise.UserExerciseDto;
+import com.witness.server.entity.exercise.Exercise;
+import com.witness.server.entity.exercise.UserExercise;
+import com.witness.server.entity.user.User;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.UserExerciseRepository;
@@ -47,7 +47,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "ExerciseCreateDto1.json", type = ExerciseCreateDto.class),
       @JsonFileSource(value = DATA_ROOT + "ExerciseDto1.json", type = ExerciseDto.class)
   })
-  void createInitialExercise_validExerciseDtoAsAdmin_return201AndReturnCorrectDto(ExerciseCreateDto createDto, ExerciseDto exerciseDto) {
+  void createInitialExercise_validExerciseDtoAsAdmin_return201AndCorrectDto(ExerciseCreateDto createDto, ExerciseDto exerciseDto) {
     var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, ExerciseDto.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -188,7 +188,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "UserExerciseCreateDto1.json", type = ExerciseCreateDto.class),
       @JsonFileSource(value = DATA_ROOT + "UserExerciseDto1Admin.json", type = UserExerciseDto.class)
   })
-  void createUserExercise_validExerciseDtoAsAdmin_return201AndReturnCorrectDto(User user, ExerciseCreateDto createDto, UserExerciseDto exerciseDto) {
+  void createUserExercise_validExerciseDtoAsAdmin_return201AndCorrectDto(User user, ExerciseCreateDto createDto, UserExerciseDto exerciseDto) {
     persistUserAndMockLoggedIn(user);
 
     var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
@@ -204,8 +204,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "UserExerciseCreateDto1.json", type = ExerciseCreateDto.class),
       @JsonFileSource(value = DATA_ROOT + "UserExerciseDto1Premium.json", type = UserExerciseDto.class)
   })
-  void createUserExercise_validExerciseDtoAsPremium_return201AndReturnCorrectDto(User user, ExerciseCreateDto createDto,
-                                                                                 UserExerciseDto exerciseDto) {
+  void createUserExercise_validExerciseDtoAsPremium_return201AndCorrectDto(User user, ExerciseCreateDto createDto, UserExerciseDto exerciseDto) {
     persistUserAndMockLoggedIn(user);
 
     var response = exchange(TestAuthentication.PREMIUM, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
@@ -221,8 +220,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "UserExerciseCreateDto1.json", type = ExerciseCreateDto.class),
       @JsonFileSource(value = DATA_ROOT + "UserExerciseDto1Regular.json", type = UserExerciseDto.class)
   })
-  void createUserExercise_validExerciseDtoAsRegular_return201AndReturnCorrectDto(User user, ExerciseCreateDto createDto,
-                                                                                 UserExerciseDto exerciseDto) {
+  void createUserExercise_validExerciseDtoAsRegular_return201AndCorrectDto(User user, ExerciseCreateDto createDto, UserExerciseDto exerciseDto) {
     persistUserAndMockLoggedIn(user);
 
     var response = exchange(TestAuthentication.REGULAR, requestUrl(CREATE_USER_EXERCISE_URL), HttpMethod.POST, createDto, UserExerciseDto.class);
@@ -442,8 +440,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
       @JsonFileSource(value = DATA_ROOT + "ExerciseDto1_updatedNewName.json", type = ExerciseDto.class)
   })
-  void updateInitialExercise_validExerciseDtoAsAdmin_return200AndReturnCorrectDto(ExerciseDto request, Exercise persistedExercise,
-                                                                                  ExerciseDto expected) {
+  void updateInitialExercise_validExerciseDtoAsAdmin_return200AndCorrectDto(ExerciseDto request, Exercise persistedExercise, ExerciseDto expected) {
     persistEntities(exerciseRepository, persistedExercise);
 
     var response = exchange(TestAuthentication.ADMIN, requestUrl(UPDATE_INITIAL_EXERCISE_URL), HttpMethod.PUT, request, ExerciseDto.class);
@@ -507,8 +504,8 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class),
       @JsonFileSource(value = DATA_ROOT + "UserExercise1Dto_updatedNewName.json", type = ExerciseDto.class)
   })
-  void updateUserExercise_validExerciseDtoAsAdmin_return200AndReturnCorrectDto(User user, ExerciseDto request, UserExercise persistedExercise,
-                                                                               ExerciseDto expected) {
+  void updateUserExercise_validExerciseDtoAsAdmin_return200AndCorrectDto(User user, ExerciseDto request, UserExercise persistedExercise,
+                                                                         ExerciseDto expected) {
     persistUserAndMockLoggedIn(user);
     persistExercisesForLoggedInUser(persistedExercise);
 
@@ -526,8 +523,8 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class),
       @JsonFileSource(value = DATA_ROOT + "UserExercise1Dto_updatedNewName.json", type = ExerciseDto.class)
   })
-  void updateUserExercise_validExerciseDtoAsPremium_return200AndReturnCorrectDto(User user, ExerciseDto request, UserExercise persistedExercise,
-                                                                                 ExerciseDto expected) {
+  void updateUserExercise_validExerciseDtoAsPremium_return200AndCorrectDto(User user, ExerciseDto request, UserExercise persistedExercise,
+                                                                           ExerciseDto expected) {
     persistUserAndMockLoggedIn(user);
     persistExercisesForLoggedInUser(persistedExercise);
 
@@ -545,8 +542,8 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class),
       @JsonFileSource(value = DATA_ROOT + "UserExercise1Dto_updatedNewName.json", type = ExerciseDto.class)
   })
-  void updateUserExercise_validExerciseDtoAsRegular_return200AndReturnCorrectDto(User user, ExerciseDto request, UserExercise persistedExercise,
-                                                                                 ExerciseDto expected) {
+  void updateUserExercise_validExerciseDtoAsRegular_return200AndCorrectDto(User user, ExerciseDto request, UserExercise persistedExercise,
+                                                                           ExerciseDto expected) {
     persistUserAndMockLoggedIn(user);
     persistExercisesForLoggedInUser(persistedExercise);
 
@@ -579,7 +576,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
   void updateUserExercise_exerciseDtoWrongUserAsRegular_return404(User requester, ExerciseDto request, User persistedUser,
                                                                   UserExercise persistedExercise) {
     persistUserAndMockLoggedIn(requester);
-    persistUser(persistedUser);
+    persistUsers(persistedUser);
     persistEntities(userExerciseRepository, persistedExercise);
     var response = exchange(TestAuthentication.REGULAR, requestUrl(UPDATE_USER_EXERCISE_URL), HttpMethod.PUT, request, Object.class);
 
@@ -624,7 +621,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
 
   private void persistExercisesForLoggedInUser(UserExercise... exercises) {
-    for (UserExercise exercise : exercises) {
+    for (var exercise : exercises) {
       var user = getLoggedInUser();
       exercise.setCreatedBy(user);
       persistEntities(userExerciseRepository, exercise);

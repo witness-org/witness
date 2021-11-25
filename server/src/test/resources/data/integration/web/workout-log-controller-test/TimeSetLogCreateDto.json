@@ -1,0 +1,10 @@
+{
+  "type": "timeCreate",
+  "rpe": 7,
+  "weightKg": 23,
+  "resistanceBands": [
+    "LIGHT",
+    "HEAVY"
+  ],
+  "seconds": 20
+}
