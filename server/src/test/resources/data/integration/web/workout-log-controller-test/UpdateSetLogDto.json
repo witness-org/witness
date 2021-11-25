@@ -1,0 +1,12 @@
+{
+  "rpe": 2,
+  "weightKg": 12,
+  "resistanceBands": [
+    "MEDIUM"
+  ],
+  "id": 1,
+  "position": 1,
+  "exerciseLogId": 1,
+  "type": "time",
+  "seconds": 20
+}

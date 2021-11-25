@@ -51,7 +51,7 @@ public final class Comparators {
    *
    * <p>
    * This intrusive {@link Comparator} instance dynamically inspects the given element via reflection and replaces {@link PersistentBag} instances
-   * with {@link ArrayList} instance if their static type is {@link List}.
+   * with {@link ArrayList} instances if their static type is {@link List}.
    * </p>
    *
    * @param clazz the class of elements compared by this comparator
