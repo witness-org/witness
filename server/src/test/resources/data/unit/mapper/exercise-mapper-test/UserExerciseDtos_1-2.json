@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "name": "UserExercise 1",
+    "description": "Description of UserExercise 1",
+    "muscleGroups": [
+      "ABS"
+    ],
+    "loggingTypes": [
+      "TIME"
+    ],
+    "createdBy": "user1"
+  },
+  {
+    "id": 2,
+    "name": "UserExercise 2",
+    "description": "Description of UserExercise 2",
+    "muscleGroups": [
+      "ARMS",
+      "BACK"
+    ],
+    "loggingTypes": [
+      "REPS",
+      "TIME"
+    ],
+    "createdBy": "user1"
+  }
+]

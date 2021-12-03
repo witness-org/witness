@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "name": "New Exercise 1",
+  "description": "Also New Description of Exercise 1",
+  "muscleGroups": [
+    "LEGS"
+  ],
+  "loggingTypes": [
+    "TIME",
+    "REPS"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": 1,
+  "name": "New UserExercise 1",
+  "description": "Also New Description of UserExercise 1",
+  "muscleGroups": [
+    "LEGS"
+  ],
+  "loggingTypes": [
+    "REPS",
+    "TIME"
+  ],
+  "createdBy": {
+    "id": 1,
+    "firebaseId": "firebase1",
+    "username": "user1",
+    "email": "user1@test.com",
+    "role": null,
+    "sex": "MALE",
+    "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+    "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+    "height": 183
+  }
+}

@@ -1,0 +1,61 @@
+HELP.md
+.jpb
+.jpb/**
+
+database/
+database/**
+
+logs/
+logs/**
+
+# New developers need to obtain the private key files for the
+# authentication servers from a maintainer via a secure channel.
+src/main/resources/auth/private-key-dev.json
+src/main/resources/auth/private-key-prod.json
+
+# These files are created by ApiGenerationTest.downloadApiSpecification() and also available as CI build artifacts
+# on GitLab. The filename (without extension) has to be kept in sync with the value of the LOCAL_FILE_NAME constant in
+# the "server/src/test/java/com/witness/server/integration/web/ApiGenerationTest.java" file.
+server_api.json
+server_api.yaml
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Maven ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# https://github.com/takari/maven-wrapper#usage-without-binary-jar
+.mvn/wrapper/maven-wrapper.jar

@@ -1,0 +1,114 @@
+[
+  {
+    "username": null,
+    "email": "nullUsername@example.com",
+    "sex": "FEMALE",
+    "height": 183,
+    "password": "superSecurePassword"
+  },
+  {
+    "username": "          ",
+    "email": "blankUsername@example.com",
+    "sex": "FEMALE",
+    "height": 183,
+    "password": "superSecurePassword"
+  },
+  {
+    "username": "to",
+    "email": "tooShortUsername@example.com",
+    "sex": "FEMALE",
+    "height": 183,
+    "password": "superSecurePassword"
+  },
+  {
+    "username": "11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+    "email": "tooLongUsername",
+    "sex": "FEMALE",
+    "height": 183,
+    "password": "superSecurePassword"
+  },
+  {
+    "username": "invalidEmailNoAt",
+    "email": "user123",
+    "sex": "FEMALE",
+    "height": 183,
+    "password": "superSecurePassword"
+  },
+  {
+    "username": "invalidEmailNoPrefix",
+    "email": "@example.com",
+    "sex": "FEMALE",
+    "height": 183,
+    "password": "superSecurePassword"
+  },
+  {
+    "username": "invalidEmailNoDomain",
+    "email": "user123@",
+    "sex": "FEMALE",
+    "height": 183,
+    "password": "superSecurePassword"
+  },
+  {
+    "username": "invalidEmailDoubleAt",
+    "email": "use@r123@example.com",
+    "sex": "FEMALE",
+    "height": 183,
+    "password": "superSecurePassword"
+  },
+  {
+    "username": "invalidEmailTooLong",
+    "email": "11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111@example.com",
+    "sex": "FEMALE",
+    "height": 183,
+    "password": "superSecurePassword"
+  },
+  {
+    "username": "missingSex",
+    "email": "user123@example.com",
+    "sex": null,
+    "height": 183,
+    "password": "superSecurePassword"
+  },
+  {
+    "username": "missingHeight",
+    "email": "user123@example.com",
+    "sex": "FEMALE",
+    "height": null,
+    "password": "superSecurePassword"
+  },
+  {
+    "username": "negativeHeight",
+    "email": "user123@example.com",
+    "sex": "FEMALE",
+    "height": -123,
+    "password": "superSecurePassword"
+  },
+  {
+    "username": "zeroHeight",
+    "email": "user123@example.com",
+    "sex": "FEMALE",
+    "height": 0,
+    "password": "superSecurePassword"
+  },
+  {
+    "username": "missingPassword",
+    "email": "user123@example.com",
+    "sex": "FEMALE",
+    "height": 183,
+    "password": null
+  },
+  {
+    "username": "blankPassword",
+    "email": "user123@example.com",
+    "sex": "FEMALE",
+    "height": 183,
+    "password": "               "
+  },
+  {
+    "username": "tooShortPassword",
+    "email": "user123@example.com",
+    "sex": "FEMALE",
+    "height": 183,
+    "password": "12345"
+  }
+]

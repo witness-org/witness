@@ -1,0 +1,30 @@
+date-times:
+  # use random timezone for integration tests because, for production code, the actual timezone ought to be irrelevant
+  zone-id: "Pacific/Rarotonga"
+
+logging:
+  config: "./logback-test.xml"
+  directory: "./logs/test"
+  file-name: "server-test"
+
+security:
+  check-token-revoked: true
+  allowed-public-apis:
+    - /swagger-ui*
+    - /swagger-ui*/**
+    - /security-infrastructure/public
+    - /user/register
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./database/server-integration-test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: user
+    password: password
+  jpa:
+    show-sql: true
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true

@@ -1,0 +1,41 @@
+{
+  "durationMinutes": 183,
+  "id": 1,
+  "userId": 1,
+  "loggedOn": 1637062936.901689400,
+  "exerciseLogs": [
+    {
+      "exerciseId": 1,
+      "comment": "logComment",
+      "id": 1,
+      "position": 1,
+      "exerciseName": "Exercise 1",
+      "workoutLogId": 1,
+      "setLogs": [
+        {
+          "type": "reps",
+          "rpe": 7,
+          "weightKg": 23,
+          "resistanceBands": [
+            "LIGHT",
+            "HEAVY"
+          ],
+          "id": 1,
+          "position": 1,
+          "exerciseLogId": 1,
+          "reps": 20
+        },
+        {
+          "type": "time",
+          "rpe": 7,
+          "weightKg": 23,
+          "resistanceBands": [],
+          "id": 2,
+          "position": 2,
+          "exerciseLogId": 1,
+          "seconds": 25
+        }
+      ]
+    }
+  ]
+}

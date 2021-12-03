@@ -1,0 +1,13 @@
+{
+  "type": "time",
+  "rpe": 7,
+  "weightKg": 23,
+  "resistanceBands": [
+    "LIGHT",
+    "HEAVY"
+  ],
+  "id": 1,
+  "position": 1,
+  "exerciseLogId": 1,
+  "seconds": 20
+}

@@ -1,0 +1,10 @@
+{
+  "type": "repsCreate",
+  "rpe": 7,
+  "weightKg": 23,
+  "resistanceBands": [
+    "LIGHT",
+    "HEAVY"
+  ],
+  "reps": 20
+}

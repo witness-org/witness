@@ -1,0 +1,55 @@
+setup:
+  create-local-and-firebase:
+    admin:
+      - email: admin1@witness.com
+        password: adminadmin
+    premium:
+      - email: premium@witness.com
+        password: premium
+      - email: premium1@witness.com
+        password: premium
+    regular:
+      - email: regular1@witness.com
+        password: regular
+  create-local-with-firebase-id:
+    admin: [ ]
+    premium: [ ]
+    regular:
+      - email: regular@witness.com
+        firebaseId: S53QmhSXOxVSTcfImYL4cFI6Rs63
+  create-local-with-firebase-id-and-set-firebase-role:
+    admin:
+      - email: admin@witness.com
+        firebaseId: 4szW9pDWpVNePmnEPPrrOTN7ofh1
+    premium: [ ]
+    regular: [ ]
+  create-exercises:
+    exercises:
+      - name: Barbell Bench Press
+        description: Lie down flat on your back on a bench. Keep your feet on the ground. As you breathe in, bring the bar down to your chest. As you breathe out, push up.
+        muscleGroups: [ CHEST, ARMS ]
+        loggingTypes: [ REPS ]
+      - name: Overhead Press
+        description: Stand with your body upright and core muscles braced. Hold the bar on your upper chest, gripping it with hands just wider than shoulder-width apart. Press the bar directly overhead and lower it back down.
+        muscleGroups: [ SHOULDERS, ARMS ]
+        loggingTypes: [ REPS ]
+      - name: Pull-Up
+        description: Grip the pull-up bar with both hands. Hang to the bar with straight arms and your legs off the floor. Pull yourself up until your chin passes the bar. Lower yourself until your arms are straight.
+        muscleGroups: [ BACK, ARMS ]
+        loggingTypes: [ REPS ]
+      - name: Barbell Back Squat
+        description: Fix the barbell on your upper back/traps with your hands. Squat down as you breathe in. Power up as you breathe out.
+        muscleGroups: [ LEGS ]
+        loggingTypes: [ REPS ]
+      - name: Forearm Plank
+        description: Place your forearms on the floor with the elbows aligned below your shoulders and arms parallel to your body at about shoulder width. Lift your knees and torso up so that only your toes and forearms/hands are touching the floor. Hold this position.
+        muscleGroups: [ ABS ]
+        loggingTypes: [ TIME ]
+      - name: Dumbbell Curl
+        description: Hold a dumbbell in your hand and lift your hand up towards your shoulder while keeping the upper arm still.
+        muscleGroups: [ ARMS ]
+        loggingTypes: [ REPS ]
+      - name: Hip Thrust
+        description: Sit on the floor with your back up against a bench. Roll the barbell over your hips until the barbell rests in the crease of your hips. Squeeze your glutes and push your feet into the ground to lift the hips up. Lower your hips down.
+        muscleGroups: [ GLUTES ]
+        loggingTypes: [ REPS ]
