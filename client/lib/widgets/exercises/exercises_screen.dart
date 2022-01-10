@@ -1,6 +1,7 @@
 import 'package:client/extensions/enum_extensions.dart';
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
+import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/widgets/app_drawer.dart';
 import 'package:client/widgets/common/image_provider_facade.dart';
@@ -14,10 +15,14 @@ import 'package:injector/injector.dart';
 final _logger = getLogger('exercises_screen');
 
 class ExercisesScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
-  const ExercisesScreen({final Key? key = _key}) : super(key: key);
+  const ExercisesScreen({
+    final Future<void> Function(BuildContext context, Exercise selectedExercise)? selectExerciseAction,
+    final Key? key = const Key('exercises_screen'),
+  })  : _selectExerciseAction = selectExerciseAction,
+        super(key: key);
 
-  static const _key = Key('exercises_screen');
   static const routeName = '/exercises';
+  final Future<void> Function(BuildContext context, Exercise selectedExercise)? _selectExerciseAction;
 
   Widget _buildMuscleGroupList(final BuildContext context) {
     _logger.v(prepare('_buildMuscleGroupList()'));
@@ -32,7 +37,7 @@ class ExercisesScreen extends StatelessWidget with LogMessagePreparer, StringLoc
             final muscleGroup = MuscleGroup.values[index];
             return Column(
               children: [
-                ExerciseOverviewItem(muscleGroup),
+                ExerciseOverviewItem(muscleGroup, selectExerciseAction: _selectExerciseAction),
                 const Divider(),
               ],
             );
@@ -74,8 +79,12 @@ class ExercisesScreen extends StatelessWidget with LogMessagePreparer, StringLoc
     _logger.v(prepare('build()'));
     final uiStrings = getLocalizedStrings(context);
     return Scaffold(
-      appBar: const MainAppBar(),
-      drawer: const AppDrawer(),
+      appBar: _selectExerciseAction == null
+          ? const MainAppBar()
+          : AppBar(
+              title: Text(uiStrings.exercisesScreen_selectExercise_appBarText),
+            ),
+      drawer: _selectExerciseAction == null ? const AppDrawer() : null,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -89,10 +98,16 @@ class ExercisesScreen extends StatelessWidget with LogMessagePreparer, StringLoc
 }
 
 class ExerciseOverviewItem extends StatelessWidget with LogMessagePreparer {
-  const ExerciseOverviewItem(this._muscleGroup, {final Key? key}) : super(key: key);
+  const ExerciseOverviewItem(
+    this._muscleGroup, {
+    final Future<void> Function(BuildContext context, Exercise selectedExercise)? selectExerciseAction,
+    final Key? key,
+  })  : _selectExerciseAction = selectExerciseAction,
+        super(key: key);
 
   static final Injector _injector = Injector.appInstance;
   final MuscleGroup _muscleGroup;
+  final Future<void> Function(BuildContext context, Exercise selectedExercise)? _selectExerciseAction;
 
   @override
   Widget build(final BuildContext context) {
@@ -105,7 +120,7 @@ class ExerciseOverviewItem extends StatelessWidget with LogMessagePreparer {
         foregroundImage: imageProvider.fromAsset('assets/images/dumbbell.png'),
       ),
       onTap: () {
-        Navigator.of(context).pushNamed(ExercisesByMuscleGroupScreen.routeName, arguments: _muscleGroup);
+        Navigator.of(context).pushNamed(ExercisesByMuscleGroupScreen.routeName, arguments: [_muscleGroup, _selectExerciseAction]);
       },
     );
   }

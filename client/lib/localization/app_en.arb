@@ -1,5 +1,9 @@
 {
   "@@locale": "en",
+  "all_defaultErrorMessage": "An error occurred.",
+  "@all_defaultErrorMessage": {
+    "description": "Default error message to display if no further error message is specified."
+  },
   "appDrawer_tile_exercises": "Exercises",
   "@appDrawer_tile_exercises": {
     "description": "Label of tile in `AppDrawer` that represents a link to the exercises screen."
@@ -20,9 +24,9 @@
   "@appDrawer_tile_statistics": {
     "description": "Label of tile in `AppDrawer` that represents a link to the statistics screen."
   },
-  "appDrawer_tile_trainingLog": "Training Log",
-  "@appDrawer_tile_trainingLog": {
-    "description": "Label of tile in `AppDrawer` that represents a link to the training log screen."
+  "appDrawer_tile_workoutLog": "Workout Log",
+  "@appDrawer_tile_workoutLog": {
+    "description": "Label of tile in `AppDrawer` that represents a link to the workout log screen."
   },
   "appTitle": "witness",
   "@appTitle": {
@@ -48,9 +52,9 @@
   "@createExerciseForm_body_nameInput_placeholder": {
     "description": "Placeholder for input field for exercise name."
   },
-  "createExerciseForm_body_nameInput_emptyErrorMessage": "Please enter a name.",
-  "@createExerciseForm_body_nameInput_emptyErrorMessage": {
-    "description": "Error message that is displayed if the provided exercise name string is empty."
+  "createExerciseForm_body_nameInput_blankErrorMessage": "Please enter a name.",
+  "@createExerciseForm_body_nameInput_blankErrorMessage": {
+    "description": "Error message that is displayed if the provided exercise name string is blank."
   },
   "createExerciseForm_body_heading_description": "Description",
   "@createExerciseForm_body_heading_description": {
@@ -72,7 +76,7 @@
   "@createExerciseForm_body_heading_loggingTypes": {
     "description": "Text for heading above choice chips for logging types for exercise."
   },
-  "createExerciseForm_body_save_buttonText": "Save",
+  "createExerciseForm_body_save_buttonText": "SAVE",
   "@createExerciseForm_body_save_buttonText": {
     "description": "Text for button that submits form for creating new exercise."
   },
@@ -140,11 +144,11 @@
   "@exerciseInformation_body_heading_muscleGroups": {
     "description": "Text of the heading related to the muscle groups in `ExerciseInformation`."
   },
-  "exerciseInformation_footer_editButton_text": "Edit",
+  "exerciseInformation_footer_editButton_text": "EDIT",
   "@exerciseInformation_footer_editButton_text": {
     "description": "Text of the button that allows editing an exercise in `ExerciseInformation`."
   },
-  "exerciseInformation_footer_deleteButton_text": "Delete",
+  "exerciseInformation_footer_deleteButton_text": "DELETE",
   "@exerciseInformation_footer_deleteButton_text": {
     "description": "Text of the button that allows deleting an exercise in `ExerciseInformation`."
   },
@@ -204,6 +208,10 @@
   "@exercisesScreen_search_tooltip": {
     "description": "Tooltip of icon that allows to search muscle groups in `ExercisesScreen`."
   },
+  "exercisesScreen_selectExercise_appBarText": "Select Exercise",
+  "@exercisesScreen_selectExercise_appBarText": {
+    "description": "Text that is displayed in the app bar if an exercise should be selected from the exercise lists."
+  },
   "loginCard_action_login": "LOGIN",
   "@loginCard_action_login": {
     "description": "Text describing the operation of logging a user via `LoginCard`."
@@ -243,6 +251,10 @@
   "loginCard_form_error_passwordTooShort": "Password is too short",
   "@loginCard_form_error_passwordTooShort": {
     "description": "Error message indicating that the password entered to create new account with is too short."
+  },
+  "mainAppBar_action_selectDay": "Go to Day",
+  "@mainAppBar_action_selectDay": {
+    "description": "Tooltip of floating action button in `WorkoutLogScreen` that allows to select a specific day to view workouts of."
   },
   "mainAppBar_generateToken": "Get Token",
   "@mainAppBar_generateToken": {
@@ -284,7 +296,7 @@
   "@trainingDayCard_dayNumber_prefix": {
     "description": "Text before the day number and name in a `TrainingDayCard`."
   },
-  "trainingDayCard_deleteDialog_cancel": "Cancel",
+  "trainingDayCard_deleteDialog_cancel": "CANCEL",
   "@trainingDayCard_deleteDialog_cancel": {
     "description": "The text of the cancel button in the dialog in `TrainingDayCard` that asks the user to confirm the deletion of the respective day from the respective training week."
   },
@@ -292,7 +304,7 @@
   "@trainingDayCard_deleteDialog_content_prefix": {
     "description": "The content to be displayed before the day number in the dialog in `TrainingDayCard` that asks the user to confirm the deletion of the respective day from the respective training week."
   },
-  "trainingDayCard_deleteDialog_delete": "Delete",
+  "trainingDayCard_deleteDialog_delete": "DELETE",
   "@trainingDayCard_deleteDialog_delete": {
     "description": "The text of the delete (confirm) button in the dialog in `TrainingDayCard` that asks the user to confirm the deletion of the respective day from the respective training week."
   },
@@ -324,25 +336,259 @@
   "@trainingDayHeader_dayNumber_prefix": {
     "description": "Text to be displayed before the day number in `TrainingDayHeader`, making up the header of `TrainingDayDetailScreen`."
   },
-  "trainingLogScreen_action_selectDay": "Go to Day",
-  "@trainingLogScreen_action_selectDay": {
-    "description": "Tooltip of floating action button in `TrainingLogScreen` that allows to select a specific day to view workouts of."
+  "workoutLogScreen_error_noDaySelected": "You have not selected a date to display.",
+  "@workoutLogScreen_error_noDaySelected": {
+    "description": "Text to display in `WorkoutLogScreen` if no date was selected."
   },
-  "trainingLogScreen_placeholder_prefix": "Workout Overview for",
-  "@trainingLogScreen_placeholder_prefix": {
-    "description": "Text to display before formatted date of selected day in `TrainingLogScreen` (just a temporary placeholder)."
+  "workoutLogScreen_placeholder": "You have not logged a workout on this day.",
+  "@workoutLogScreen_placeholder": {
+    "description": "Text to display in `WorkoutLogScreen` if no workout has been logged for the given day."
   },
-  "trainingLogScreen_speedDial_copyWorkout": "Copy Workout",
-  "@trainingLogScreen_speedDial_copyWorkout": {
-    "description": "Label of `SpeedDialChild` in `TrainingLogScreen` that is used to create a workout log from a previously logged workout."
+  "workoutLogScreen_speedDial_copyWorkout": "Copy Previous Workout",
+  "@workoutLogScreen_speedDial_copyWorkout": {
+    "description": "Label of `SpeedDialChild` in `WorkoutLogScreen` that is used to create a workout log from a previously logged workout."
   },
-  "trainingLogScreen_speedDial_logExercise": "Log Exercise",
-  "@trainingLogScreen_speedDial_logExercise": {
-    "description": "Label of `SpeedDialChild` in `TrainingLogScreen` that is used to create an exercise log."
+  "workoutLogScreen_speedDial_logWorkoutFromProgram": "Log Workout From Program",
+  "@workoutLogScreen_speedDial_logWorkoutFromProgram": {
+    "description": "Label of `SpeedDialChild` in `WorkoutLogScreen` that is used to log a workout from a training program."
   },
-  "trainingLogScreen_speedDial_logWorkout": "Log Workout",
-  "@trainingLogScreen_speedDial_logWorkout": {
-    "description": "Label of `SpeedDialChild` in `TrainingLogScreen` that is used to create a new workout (from scratch)."
+  "workoutLogScreen_speedDial_logNewWorkout": "Log New Workout",
+  "@workoutLogScreen_speedDial_logNewWorkout": {
+    "description": "Label of `SpeedDialChild` in `WorkoutLogScreen` that is used to create a new workout from scratch."
+  },
+  "workoutLogScreen_workoutLogList_errorMessage": "Could not fetch workout logs:\n{error}",
+  "@workoutLogScreen_workoutLogList_errorMessage": {
+    "description": "Formatted error message that describes why the workout logs could not be fetched.",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "An internal error occurred."
+      }
+    }
+  },
+  "workoutLogItem_workoutLog_heading": "Workout {number}",
+  "@workoutLogItem_workoutLog_heading": {
+    "description": "Heading for a workout log with a given number.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "workoutLogItem_workoutLog_duration": "{duration} min",
+  "@workoutLogItem_workoutLog_duration": {
+    "description": "Formatted text for button describing workout duration in minutes.",
+    "placeholders": {
+      "duration": {
+        "type": "int",
+        "example": "30"
+      }
+    }
+  },
+  "workoutLogItem_workoutDurationDialog_title": "Workout Duration",
+  "@workoutLogItem_workoutDurationDialog_title": {
+    "description": "Title for the workout duration dialog."
+  },
+  "workoutLogItem_workoutDurationDialog_durationHint": "60",
+  "@workoutLogItem_workoutDurationDialog_durationHint": {
+    "description": "Hint text for field for setting workout duration."
+  },
+  "workoutLogItem_workoutDurationDialog_durationLabel": "duration",
+  "@workoutLogItem_workoutDurationDialog_durationLabel": {
+    "description": "Label text for field for setting workout duration."
+  },
+  "workoutLogItem_workoutDurationDialog_durationSuffix": "min",
+  "@workoutLogItem_workoutDurationDialog_durationSuffix": {
+    "description": "Suffix text for field for setting workout duration."
+  },
+  "workoutLogItem_workoutDurationDialog_durationInvalidError": "Invalid workout duration.",
+  "@workoutLogItem_workoutDurationDialog_durationInvalidError": {
+    "description": "Error message when provided duration is not valid."
+  },
+  "workoutLogItem_workoutDurationDialog_durationDefaultError": "Setting the workout duration failed.",
+  "@workoutLogItem_workoutDurationDialog_durationDefaultError": {
+    "description": "Default error message for when the request to set the workout duration fails."
+  },
+  "workoutLogItem_workoutDurationDialog_cancel": "CANCEL",
+  "@workoutLogItem_workoutDurationDialog_cancel": {
+    "description": "Text for the button for cancelling setting the workout duration."
+  },
+  "workoutLogItem_workoutDurationDialog_confirm": "OK",
+  "@workoutLogItem_workoutDurationDialog_confirm": {
+    "description": "Text for the button for confirming setting the workout duration."
+  },
+  "workoutLogItem_addExercise": "ADD EXERCISE",
+  "@workoutLogItem_addExercise": {
+    "description": "Text for the button for adding an exercise log to a workout log."
+  },
+  "workoutLogItem_delete": "DELETE",
+  "@workoutLogItem_delete": {
+    "description": "Text for the button for deleting a workout log."
+  },
+  "workoutLogItem_addExerciseDefaultError": "Adding an exercise failed.",
+  "@workoutLogItem_addExerciseDefaultError": {
+    "description": "Default error message for when the request to add an exercise log fails."
+  },
+  "workoutLogItem_deleteWorkoutLogDefaultError": "Deleting the workout failed.",
+  "@workoutLogItem_deleteWorkoutLogDefaultError": {
+    "description": "Default error message for when the request to delete a workout log fails."
+  },
+  "workoutLogItem_updateExerciseLogPositionsDefaultError": "Updating the order of the exercise logs failed.",
+  "@workoutLogItem_updateExerciseLogPositionsDefaultError": {
+    "description": "Default error message for when the request to update the order of the exercise logs in a workout log fails."
+  },
+  "exerciseLogItem_delete": "DELETE",
+  "@exerciseLogItem_delete": {
+    "description": "Text for the button for deleting an exercise log."
+  },
+  "exerciseLogItem_addSet": "ADD SET",
+  "@exerciseLogItem_addSet": {
+    "description": "Text for the button for adding a set log to an exercise log."
+  },
+  "exerciseLogItem_addComment": "ADD COMMENT",
+  "@exerciseLogItem_addComment": {
+    "description": "Text for the button for adding a comment to an exercise log."
+  },
+  "exerciseLogItem_setCommentDefaultError": "Setting the comment failed.",
+  "@exerciseLogItem_setCommentDefaultError": {
+    "description": "Default error message for when the request to set an exercise log comment fails."
+  },
+  "exerciseLogItem_deleteExerciseLogDefaultError": "Deleting the exercise log failed.",
+  "@exerciseLogItem_deleteExerciseLogDefaultError": {
+    "description": "Default error message for when the request to delete an exercise log fails."
+  },
+  "exerciseLogItem_addNewSetLogDefaultError": "Adding a set log failed.",
+  "@exerciseLogItem_addNewSetLogDefaultError": {
+    "description": "Default error message for when the request to add a set log fails."
+  },
+  "exerciseLogItem_updateSetLogDefaultError": "Updating the set log failed.",
+  "@exerciseLogItem_updateSetLogDefaultError": {
+    "description": "Default error message for when the request to update a set log fails."
+  },
+  "exerciseLogItem_deleteSetLogDefaultError": "Deleting the set log failed.",
+  "@exerciseLogItem_deleteSetLogDefaultError": {
+    "description": "Default error message for when the request to delete a set log fails."
+  },
+  "exerciseLogItem_updateSetLogPositionsDefaultError": "Updating the order of the set logs failed.",
+  "@exerciseLogItem_updateSetLogPositionsDefaultError": {
+    "description": "Default error message for when the request to update the order of the set logs in an exercise log in a workout log fails."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_title": "Exercise Comment",
+  "@exerciseLogItem_exerciseLogCommentDialog_title": {
+    "description": "Title for the exercise comment dialog."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_commentBlankError": "Please enter a comment.",
+  "@exerciseLogItem_exerciseLogCommentDialog_commentBlankError": {
+    "description": "Error message when provided comment is blank string."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_commentTooLongError": "The comment must not be longer than 256 characters.",
+  "@exerciseLogItem_exerciseLogCommentDialog_commentTooLongError": {
+    "description": "Error message when provided comment is too long."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_commentLabel": "comment",
+  "@exerciseLogItem_exerciseLogCommentDialog_commentLabel": {
+    "description": "Label text for field for setting exercise log comment."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_cancel": "CANCEL",
+  "@exerciseLogItem_exerciseLogCommentDialog_cancel": {
+    "description": "Text for the button for cancelling setting the exercise log comment."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_delete": "DELETE",
+  "@exerciseLogItem_exerciseLogCommentDialog_delete": {
+    "description": "Text for the button for deleting an exercise log comment."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_confirm": "OK",
+  "@exerciseLogItem_exerciseLogCommentDialog_confirm": {
+    "description": "Text for the button for confirming setting the exercise log comment."
+  },
+  "exerciseLogItem_setLogDialog_error": "An unexpected error occurred.",
+  "@exerciseLogItem_setLogDialog_error": {
+    "description": "Text to display if the set log dialog could not be built properly."
+  },
+  "exerciseLogItem_setLogDialog_weightHint": "100",
+  "@exerciseLogItem_setLogDialog_weightHint": {
+    "description": "Hint text for field for setting set log weight."
+  },
+  "exerciseLogItem_setLogDialog_weightLabel": "weight",
+  "@exerciseLogItem_setLogDialog_weightLabel": {
+    "description": "Label text for field for setting set log weight."
+  },
+  "exerciseLogItem_setLogDialog_weightSuffixKg": "kg",
+  "@exerciseLogItem_setLogDialog_weightSuffixKg": {
+    "description": "Suffix text for field for setting set log weight in kg."
+  },
+  "exerciseLogItem_setLogDialog_weightNotSetError": "The weight must be set.",
+  "@exerciseLogItem_setLogDialog_weightNotSetError": {
+    "description": "Error message when no weight is provided in set log."
+  },
+  "exerciseLogItem_setLogDialog_weightInvalidError": "Invalid weight input.",
+  "@exerciseLogItem_setLogDialog_weightInvalidError": {
+    "description": "Error message when provided weight is not valid."
+  },
+  "exerciseLogItem_setLogDialog_repsTimeHint": "0",
+  "@exerciseLogItem_setLogDialog_repsTimeHint": {
+    "description": "Hint text for field for setting set log reps/seconds."
+  },
+  "exerciseLogItem_setLogDialog_repsTimeNotSetError": "The reps/seconds must be set.",
+  "@exerciseLogItem_setLogDialog_repsTimeNotSetError": {
+    "description": "Error message when no reps/time is provided in set log."
+  },
+  "exerciseLogItem_setLogDialog_repsTimeInvalidError": "Invalid input.",
+  "@exerciseLogItem_setLogDialog_repsTimeInvalidError": {
+    "description": "Error message when provided reps/time value is not valid."
+  },
+  "exerciseLogItem_setLogDialog_rpeLabel": "RPE:",
+  "@exerciseLogItem_setLogDialog_rpeLabel": {
+    "description": "Label text for field for setting set log RPE."
+  },
+  "exerciseLogItem_setLogDialog_resistanceBandsHeading": "Resistance Bands:",
+  "@exerciseLogItem_setLogDialog_resistanceBandsHeading": {
+    "description": "Heading for field for setting resistance bands used in set for set log."
+  },
+  "exerciseLogItem_setLogDialog_cancel": "CANCEL",
+  "@exerciseLogItem_setLogDialog_cancel": {
+    "description": "Text for the button for cancelling adding/updating a set log."
+  },
+  "exerciseLogItem_setLogDialog_delete": "DELETE",
+  "@exerciseLogItem_setLogDialog_delete": {
+    "description": "Text for the button for deleting a set log."
+  },
+  "exerciseLogItem_setLogDialog_confirm": "OK",
+  "@exerciseLogItem_setLogDialog_confirm": {
+    "description": "Text for the button for confirming adding/updating a set log."
+  },
+  "setLogsTable_unknownSetLogsError": "At least one logged set is unknown.",
+  "@setLogsTable_unknownSetLogsError": {
+    "description": "Text to display if unknown set log was found."
+  },
+  "setLogsTable_crossSeparator": "\u00D7",
+  "@setLogsTable_crossSeparator": {
+    "description": "Multiplication sign (cross) separator."
+  },
+  "setLogsTable_dotSeparator": "\u2022",
+  "@setLogsTable_dotSeparator": {
+    "description": "Multiplication sign (dot) separator."
+  },
+  "setLogsTable_kgSuffix": "kg",
+  "@setLogsTable_kgSuffix": {
+    "description": "Suffix for display of weight in kg."
+  },
+  "setLogsTable_secondsSuffix": "s",
+  "@setLogsTable_secondsSuffix": {
+    "description": "Suffix for display of seconds."
+  },
+  "setLogsTable_rpePrefix": "RPE: ",
+  "@setLogsTable_rpePrefix": {
+    "description": "Prefix for display of RPE."
+  },
+  "setLogsTable_noRpePlaceholder": "—",
+  "@setLogsTable_noRpePlaceholder": {
+    "description": "Placeholder for when no RPE is provided in a set log."
+  },
+  "setLogsTable_noResistanceBandsPlaceholder": "—",
+  "@setLogsTable_noResistanceBandsPlaceholder": {
+    "description": "Placeholder for when no resistance bands are provided in a set log."
   },
   "trainingProgramCard_deleteDialog_cancel": "Cancel",
   "@trainingProgramCard_deleteDialog_cancel": {
@@ -463,5 +709,13 @@
   "workoutExpanderItemHeader_workoutNumber_prefix": "Workout",
   "@workoutExpanderItemHeader_workoutNumber_prefix": {
     "description": "Text to be displayed before the workout number in `WorkoutExpanderItemHeader`, representing part of the header line in a workout representation within `TrainingDayDetailScreen`."
+  },
+  "dateFormat_today": "Today",
+  "@dateFormat_today": {
+    "description": "Text to be displayed instead of a date if the given date is today."
+  },
+  "dateFormat_yesterday": "Yesterday",
+  "@dateFormat_yesterday": {
+    "description": "Text to be displayed instead of a date if the given date is yesterday."
   }
 }

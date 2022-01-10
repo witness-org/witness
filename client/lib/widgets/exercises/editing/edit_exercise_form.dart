@@ -39,13 +39,13 @@ class _ExerciseEditFormState extends AbstractExerciseFormState with StringLocali
     );
   }
 
-  Exercise? _getExercise(final ExerciseFormInput formInput) {
+  static Exercise? _getExercise(final ExerciseFormInput formInput) {
     return formInput.id == null
         ? null
         : Exercise(
             id: formInput.id!,
             name: formInput.name,
-            description: formInput.descriptionNullOrNotEmpty,
+            description: formInput.descriptionNullOrNotBlank,
             muscleGroups: formInput.muscleGroupList,
             loggingTypes: formInput.loggingTypeList,
           );

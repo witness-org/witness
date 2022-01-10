@@ -5,7 +5,9 @@ import 'package:client/widgets/app_routing.dart' as app_routing;
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 final _logger = getLogger('app');
 
@@ -17,6 +19,17 @@ class WitnessClient extends StatefulWidget {
 }
 
 class _WitnessClientState extends State<WitnessClient> with LogMessagePreparer, StringLocalizer {
+  Future<void> _initLocalTimezone() async {
+    final String localTimezone = await FlutterNativeTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(localTimezone));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initLocalTimezone(); // TODO(leabrugger): async method call in non-async function - think about solution
+  }
+
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
