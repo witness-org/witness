@@ -18,7 +18,6 @@ import com.witness.server.repository.SetLogRepository;
 import com.witness.server.repository.WorkoutLogRepository;
 import com.witness.server.service.EntityAccessor;
 import com.witness.server.service.ExerciseService;
-import com.witness.server.service.TimeService;
 import com.witness.server.service.UserService;
 import com.witness.server.service.WorkoutLogService;
 import java.time.LocalTime;
@@ -46,17 +45,15 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
   private final ExerciseLogRepository exerciseLogRepository;
   private final SetLogRepository setLogRepository;
   private final UserService userService;
-  private final TimeService timeService;
 
   @Autowired
-  public WorkoutLogServiceImpl(ExerciseService exerciseService, WorkoutLogRepository workoutLogRepository, TimeService timeService,
+  public WorkoutLogServiceImpl(ExerciseService exerciseService, WorkoutLogRepository workoutLogRepository,
                                ExerciseLogRepository exerciseLogRepository, SetLogRepository setLogRepository, UserService userService) {
     this.exerciseService = exerciseService;
     this.workoutLogRepository = workoutLogRepository;
     this.exerciseLogRepository = exerciseLogRepository;
     this.setLogRepository = setLogRepository;
     this.userService = userService;
-    this.timeService = timeService;
   }
 
   @Override
@@ -77,7 +74,6 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
         .toBuilder()
         .exerciseLogs(new ArrayList<>()) // persist with empty list, add ExerciseLogs only later on to establish bidirectional relationships
         .user(user)
-        .loggedOn(timeService.getCurrentTime())
         .build();
 
     var persistedWorkoutLog = workoutLogRepository.save(workoutLogToPersist);

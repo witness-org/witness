@@ -44,7 +44,7 @@ public class ExerciseLog extends ExerciseReference {
   private Long id;
 
   @Column(name = "comment")
-  @Length(max = 1024)
+  @Length(max = 256)
   private String comment;
 
   @ManyToOne(targetEntity = WorkoutLog.class, fetch = FetchType.LAZY)

@@ -2,14 +2,14 @@
   {
     "type": "timeCreate",
     "rpe": 7,
-    "weightKg": 23,
+    "weightG": 23000,
     "resistanceBands": [],
     "seconds": 25
   },
   {
     "type": "timeCreate",
     "rpe": null,
-    "weightKg": 24,
+    "weightG": 24000,
     "resistanceBands": [
       "LIGHT",
       "HEAVY"

@@ -3,7 +3,7 @@
     "position": null,
     "rpe": 7,
     "id": null,
-    "weightKg": 23,
+    "weightG": 23000,
     "resistanceBands": [],
     "exerciseLog": null,
     "reps": 25
@@ -12,7 +12,7 @@
     "position": null,
     "rpe": null,
     "id": null,
-    "weightKg": 24,
+    "weightG": 24000,
     "resistanceBands": [
       "LIGHT",
       "HEAVY"

@@ -23,7 +23,7 @@
         "position": 3,
         "rpe": 7,
         "id": 13,
-        "weightKg": 23,
+        "weightG": 23000,
         "resistanceBands": [
           "LIGHT",
           "HEAVY"
@@ -37,7 +37,7 @@
         "position": 3,
         "rpe": 7,
         "id": 11,
-        "weightKg": 23,
+        "weightG": 23000,
         "resistanceBands": [],
         "exerciseLog": {
           "id": 1

@@ -118,9 +118,8 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody())
         .usingRecursiveComparison()
-        .ignoringFields("loggedOn")
+        .withComparatorForType(Comparators.ZONED_DATE_TIME_COMPARATOR, ZonedDateTime.class)
         .isEqualTo(createdDto);
-    assertThat(response.getBody().getLoggedOn()).isNotNull();
   }
 
   @ParameterizedTest

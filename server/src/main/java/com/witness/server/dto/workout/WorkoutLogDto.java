@@ -1,7 +1,6 @@
 package com.witness.server.dto.workout;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.ZonedDateTime;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -21,10 +20,6 @@ public class WorkoutLogDto extends BaseWorkoutLogDto {
   @NotNull
   @Schema(description = "The ID of the user that logged the workout.", example = "9")
   private Long userId;
-
-  @NotNull
-  @Schema(description = "Date and time at which the workout was logged.", example = "2021-10-08T14:15:55.3007597+02:00")
-  private ZonedDateTime loggedOn;
 
   @NotNull
   @Valid

@@ -12,7 +12,7 @@
       "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
       "height": 173
     },
-    "loggedOn": "2021-11-04T13:31:22.3007597+02:00",
+    "loggedOn": "2021-11-04T13:31:22.300+02:00",
     "durationMinutes": 183,
     "exerciseLogs": [
       {
@@ -39,7 +39,7 @@
             "position": 3,
             "rpe": 7,
             "id": 13,
-            "weightKg": 23,
+            "weightG": 23000,
             "resistanceBands": [
               "LIGHT",
               "HEAVY"
@@ -53,7 +53,7 @@
             "position": 3,
             "rpe": 7,
             "id": 11,
-            "weightKg": 23,
+            "weightG": 23000,
             "resistanceBands": [],
             "exerciseLog": {
               "id": 1
@@ -77,7 +77,7 @@
       "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
       "height": 173
     },
-    "loggedOn": "2021-11-04T13:31:22.3007597+02:00",
+    "loggedOn": "2021-11-04T13:31:22.300+02:00",
     "durationMinutes": 183,
     "exerciseLogs": [
       {
@@ -116,7 +116,7 @@
       "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
       "height": 173
     },
-    "loggedOn": "2021-11-04T13:31:22.3007597+02:00",
+    "loggedOn": "2021-11-04T13:31:22.300+02:00",
     "durationMinutes": 183,
     "exerciseLogs": []
   }
