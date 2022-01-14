@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @SecuredValidatedRestController
-@RequestMapping("exercise")
+@RequestMapping("exercises")
 @Tag(name = "Exercises", description = "Provides endpoint methods for operations regarding the management of initial and user exercises.")
 public class ExerciseController {
 
@@ -46,7 +46,7 @@ public class ExerciseController {
     this.exerciseMapper = exerciseMapper;
   }
 
-  @PostMapping("newInitialExercise")
+  @PostMapping("initial-exercises")
   @ResponseStatus(HttpStatus.CREATED)
   @RequiresAdmin
   @Operation(summary = "Creates a new initial exercise. Only possible for admins.")
@@ -64,7 +64,7 @@ public class ExerciseController {
     return exerciseMapper.entityToDto(createdEntity);
   }
 
-  @PostMapping("newUserExercise")
+  @PostMapping("user-exercises")
   @ResponseStatus(HttpStatus.CREATED)
   @Operation(summary = "Creates a new exercise that is visible only to the requesting user.")
   @ApiResponses(value = {
@@ -84,7 +84,7 @@ public class ExerciseController {
     return exerciseMapper.userEntityToDto(createdEntity);
   }
 
-  @PutMapping("updateInitialExercise")
+  @PutMapping("initial-exercises")
   @ResponseStatus(HttpStatus.OK)
   @RequiresAdmin
   @Operation(summary = "Updates an initial exercise. Only possible for admins.")
@@ -103,7 +103,7 @@ public class ExerciseController {
     return exerciseMapper.entityToDto(createdEntity);
   }
 
-  @PutMapping("updateUserExercise")
+  @PutMapping("user-exercises")
   @ResponseStatus(HttpStatus.OK)
   @Operation(summary = "Updates an exercise that is visible only to the requesting user.")
   @ApiResponses(value = {
@@ -123,7 +123,7 @@ public class ExerciseController {
     return exerciseMapper.userEntityToDto(createdEntity);
   }
 
-  @GetMapping("allByMuscleGroup")
+  @GetMapping
   @Operation(summary = "Fetches all exercises which are either public or only visible to the logged-in user which train the given muscle group.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The operation was successful."),
@@ -133,7 +133,7 @@ public class ExerciseController {
                                                        + "database.")
   })
   public List<ExerciseDto> getAllForUserByMuscleGroup(
-      @RequestParam(name = "muscleGroup") @NotNull
+      @RequestParam(name = "muscle-group") @NotNull
       @Parameter(description = "The muscle group that should be trained.", example = "CHEST") MuscleGroup muscleGroup)
       throws DataAccessException {
     var currentUser = securityService.getCurrentUser();
@@ -141,7 +141,7 @@ public class ExerciseController {
     return exerciseMapper.entitiesToDtos(result);
   }
 
-  @GetMapping("allCreatedByUser")
+  @GetMapping("user-exercises")
   @Operation(summary = "Fetches all exercises created by the logged-in user.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The operation was successful."),

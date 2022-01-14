@@ -152,6 +152,7 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
     //   - "application/vnd.oai.openapi+json" (JSON only variant), not yet registered with IANA
     var headers = new HttpHeaders();
     headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+    headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
     headers.setAccept(List.of(MediaType.APPLICATION_JSON,
         new MediaType("application", "vnd.oai.openapi", StandardCharsets.UTF_8),
         new MediaType("application", "vnd.oai.openapi+json", StandardCharsets.UTF_8)));
