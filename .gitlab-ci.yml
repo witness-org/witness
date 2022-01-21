@@ -29,7 +29,7 @@ check:server:
 
 # Check codestyle, linting and static analysis of client code with dartfmt
 check:client:
-  image: cirrusci/flutter:2.5.2
+  image: cirrusci/flutter:2.8.1
   stage: check
   script:
     - 'cd client'
@@ -74,7 +74,7 @@ test:server:
 
 # Execute Flutter unit tests
 test:client:
-  image: cirrusci/flutter:2.5.2
+  image: cirrusci/flutter:2.8.1
   stage: test
   needs:
     - check:client

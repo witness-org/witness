@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @SecuredValidatedRestController
-@RequestMapping("workout")
+@RequestMapping("workout-logs")
 @Tag(name = "Workouts", description = "Provides endpoint methods for operations regarding the management of workout logs.")
 public class WorkoutLogController {
   private final SecurityService securityService;
@@ -128,7 +128,7 @@ public class WorkoutLogController {
     workoutLogService.deleteWorkoutLog(currentUser.getUid(), workoutLogId);
   }
 
-  @PostMapping("{workoutLogId}")
+  @PostMapping("{workoutLogId}/exercise-logs")
   @ResponseStatus(HttpStatus.CREATED)
   @Operation(summary = "Adds an exercise log to an existing workout log.")
   @ApiResponses(value = {
@@ -150,7 +150,7 @@ public class WorkoutLogController {
     return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 
-  @PutMapping("{workoutLogId}/positions")
+  @PutMapping("{workoutLogId}/exercise-logs-positions")
   @ResponseStatus(HttpStatus.OK)
   @Operation(summary = "Updates the positions of exercise logs in a workout logout.")
   @ApiResponses(value = {
@@ -184,7 +184,7 @@ public class WorkoutLogController {
     return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 
-  @DeleteMapping("{workoutLogId}/{exerciseLogId}")
+  @DeleteMapping("{workoutLogId}/exercise-logs/{exerciseLogId}")
   @ResponseStatus(HttpStatus.OK)
   @Operation(summary = "Delete an exercise log from an existing workout log.")
   @ApiResponses(value = {
@@ -206,7 +206,7 @@ public class WorkoutLogController {
     return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 
-  @PatchMapping("{workoutLogId}/{exerciseLogId}")
+  @PatchMapping("{workoutLogId}/exercise-logs/{exerciseLogId}")
   @ResponseStatus(HttpStatus.OK)
   @Operation(summary = "Sets the comment of an existing workout log.")
   @ApiResponses(value = {
@@ -229,7 +229,7 @@ public class WorkoutLogController {
     return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 
-  @PostMapping("{workoutLogId}/{exerciseLogId}")
+  @PostMapping("{workoutLogId}/exercise-logs/{exerciseLogId}/set-logs")
   @ResponseStatus(HttpStatus.CREATED)
   @Operation(summary = "Add a set log to an existing exercise log in an existing workout log.")
   @ApiResponses(value = {
@@ -252,7 +252,7 @@ public class WorkoutLogController {
     return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 
-  @PostMapping("{workoutLogId}/{exerciseLogId}/update")
+  @PutMapping("{workoutLogId}/exercise-logs/{exerciseLogId}/set-logs")
   @ResponseStatus(HttpStatus.OK)
   @Operation(summary = "Updates a set log within an existing exercise log in an existing workout log")
   @ApiResponses(value = {
@@ -277,7 +277,7 @@ public class WorkoutLogController {
     return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 
-  @PutMapping("{workoutLogId}/{exerciseLogId}/positions")
+  @PutMapping("{workoutLogId}/exercise-logs/{exerciseLogId}/set-logs-positions")
   @ResponseStatus(HttpStatus.OK)
   @Operation(summary = "Updates the positions of exercise logs in a workout logout.")
   @ApiResponses(value = {
@@ -313,7 +313,7 @@ public class WorkoutLogController {
     return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 
-  @DeleteMapping("{workoutLogId}/{exerciseLogId}/{setLogId}")
+  @DeleteMapping("{workoutLogId}/exercise-logs/{exerciseLogId}/set-logs/{setLogId}")
   @ResponseStatus(HttpStatus.OK)
   @Operation(summary = "Deletes a set log from an existing exercise log in an existing workout log.")
   @ApiResponses(value = {

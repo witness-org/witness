@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:client/extensions/enum_extensions.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
-import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/models/exercises/exercise_create.dart';
+import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/services/base_service.dart';
 import 'package:client/services/server_response.dart';
 import 'package:http/http.dart' as http;
@@ -12,8 +12,11 @@ import 'package:http/http.dart' as http;
 final _logger = getLogger('exercise_service');
 
 class ExerciseService extends BaseService {
+  @override
+  String get targetResource => 'exercises';
+
   Future<ServerResponse<List<Exercise>, String>> getExercisesByMuscleGroup(final MuscleGroup group, final String? token) async {
-    final requestUri = getUri('exercise/allByMuscleGroup', queryParameters: {'muscleGroup': group.toDtoString()});
+    final requestUri = getUri('', queryParameters: {'muscle-group': group.toDtoString()});
     _logger
       ..i('Delegating fetching of exercises to server')
       ..i('GET $requestUri');
@@ -35,7 +38,7 @@ class ExerciseService extends BaseService {
   }
 
   Future<ServerResponse<Exercise, String>> postUserExercise(final ExerciseCreate exercise, final String? token) async {
-    final requestUri = getUri('exercise/newUserExercise');
+    final requestUri = getUri('user-exercises');
     _logger
       ..i('Delegating creation of new user exercise to server')
       ..i('POST $requestUri');
@@ -58,7 +61,7 @@ class ExerciseService extends BaseService {
   }
 
   Future<ServerResponse<Exercise, String>> putUserExercise(final Exercise exercise, final String? token) async {
-    final requestUri = getUri('exercise/updateUserExercise');
+    final requestUri = getUri('user-exercises');
     _logger
       ..i('Delegating update of user exercise to server')
       ..i('PUT $requestUri');

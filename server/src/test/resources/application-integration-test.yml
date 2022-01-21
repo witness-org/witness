@@ -13,7 +13,7 @@ security:
     - /swagger-ui*
     - /swagger-ui*/**
     - /security-infrastructure/public
-    - /user/register
+    - /users
 
 spring:
   datasource:

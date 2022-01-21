@@ -22,12 +22,12 @@ import org.springframework.http.HttpStatus;
 class ExerciseControllerTest extends BaseControllerIntegrationTest {
   private static final String DATA_ROOT = "data/integration/web/exercise-controller-test/";
 
-  private static final String CREATE_INITIAL_EXERCISE_URL = "/newInitialExercise";
-  private static final String CREATE_USER_EXERCISE_URL = "/newUserExercise";
-  private static final String UPDATE_INITIAL_EXERCISE_URL = "/updateInitialExercise";
-  private static final String UPDATE_USER_EXERCISE_URL = "/updateUserExercise";
-  private static final String GET_ALL_FOR_USER_BY_MUSCLE_GROUP_URL = "/allByMuscleGroup";
-  private static final String GET_ALL_CREATED_BY_USER_URL = "/allCreatedByUser";
+  private static final String CREATE_INITIAL_EXERCISE_URL = "initial-exercises";
+  private static final String CREATE_USER_EXERCISE_URL = "user-exercises";
+  private static final String UPDATE_INITIAL_EXERCISE_URL = "initial-exercises";
+  private static final String UPDATE_USER_EXERCISE_URL = "user-exercises";
+  private static final String GET_ALL_FOR_USER_BY_MUSCLE_GROUP_URL = "";
+  private static final String GET_ALL_CREATED_BY_USER_URL = "user-exercises";
 
   @Autowired
   private ExerciseRepository exerciseRepository;
@@ -37,10 +37,10 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
   @Override
   String getEndpointUrl() {
-    return "exercise";
+    return "exercises";
   }
 
-  //region /newInitialExercise
+  //region new initial exercise
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -180,7 +180,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region /newUserExercise
+  //region new user exercise
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -353,7 +353,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region /allByMuscleGroup
+  //region all by muscle group
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -362,7 +362,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
   void getAllForUserByMuscleGroup_nonePersistedAsRegular_return200AndEmptyList(User user) {
     persistUserAndMockLoggedIn(user);
 
-    var params = toMultiValueMap(Map.of("muscleGroup", MuscleGroup.CHEST.toString()));
+    var params = toMultiValueMap(Map.of("muscle-group", MuscleGroup.CHEST.toString()));
     var response = get(TestAuthentication.REGULAR, requestUrl(GET_ALL_FOR_USER_BY_MUSCLE_GROUP_URL), params, ExerciseDto[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -383,7 +383,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
     persistEntities(exerciseRepository, persistedInitialExercise);
     persistExercisesForLoggedInUser(persistedUserExercise);
 
-    var params = toMultiValueMap(Map.of("muscleGroup", MuscleGroup.CHEST.toString()));
+    var params = toMultiValueMap(Map.of("muscle-group", MuscleGroup.CHEST.toString()));
     var response = get(TestAuthentication.REGULAR, requestUrl(GET_ALL_FOR_USER_BY_MUSCLE_GROUP_URL), params, ExerciseDto[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -394,7 +394,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region /allCreatedByUser
+  //region all created by user
   @ParameterizedTest
   @JsonFileSources(parameters = {
       @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class)
@@ -432,7 +432,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region /updateInitialExercise
+  //region update initial exercise
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -495,7 +495,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region /updateUserExercise
+  //region update user exercise
 
   @ParameterizedTest
   @JsonFileSources(parameters = {

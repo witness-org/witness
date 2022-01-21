@@ -7,6 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 final _logger = getLogger('firebase_service');
 
 class FirebaseService extends BaseService {
+  @override
+  String get targetResource => '';
+
   static const Map<String, String> _errorMappings = {
     'email-already-in-use': 'There already exists an account with the given email address.',
     'invalid-email': 'Given email address is not valid.',

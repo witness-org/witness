@@ -14,7 +14,6 @@ import com.witness.server.util.FirebaseServiceMocks;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import lombok.Data;
@@ -32,11 +31,10 @@ import org.springframework.http.HttpStatus;
 class UserControllerTest extends BaseControllerIntegrationTest {
   private static final String DATA_ROOT = "data/integration/web/user-controller-test/";
 
-  private static final String REGISTER_USER_URL = "/register";
-  private static final String FIND_BY_ID_URL = "/findById/%s";
-  private static final String FIND_BY_EMAIL_URL = "/byEmail/%s";
-  private static final String SET_ROLE_URL = "/%s/setRole";
-  private static final String REMOVE_ROLE_URL = "/%s/removeRole";
+  private static final String FIND_BY_ID_URL = "%s";
+  private static final String FIND_BY_EMAIL_URL = "";
+  private static final String SET_ROLE_URL = "%s/set-role";
+  private static final String REMOVE_ROLE_URL = "%s/remove-role";
 
   @Autowired
   private UserRepository userRepository;
@@ -46,10 +44,10 @@ class UserControllerTest extends BaseControllerIntegrationTest {
 
   @Override
   String getEndpointUrl() {
-    return "user";
+    return "users";
   }
 
-  //region /registerUser
+  //region register user
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -60,7 +58,7 @@ class UserControllerTest extends BaseControllerIntegrationTest {
     FirebaseServiceMocks.mockFirebaseServiceCreateUser(firebaseService, userDto.getFirebaseId());
     when(timeService.getCurrentTime()).thenReturn(userDto.getCreatedAt());
 
-    var response = exchange(TestAuthentication.NONE, requestUrl(REGISTER_USER_URL), HttpMethod.POST, createDto, UserDto.class);
+    var response = exchange(TestAuthentication.NONE, requestUrl(), HttpMethod.POST, createDto, UserDto.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     assertThat(response.getBody()).isNotNull();
@@ -76,7 +74,7 @@ class UserControllerTest extends BaseControllerIntegrationTest {
   void registerUser_validUserCreateDtoWithoutRoleFirebaseErrorNoAuthentication_return500(UserCreateDto createDto) {
     FirebaseServiceMocks.mockFirebaseServiceCreateUserThrows(firebaseService);
 
-    var response = exchange(TestAuthentication.NONE, requestUrl(REGISTER_USER_URL), HttpMethod.POST, createDto, Object.class);
+    var response = exchange(TestAuthentication.NONE, requestUrl(), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
   }
@@ -90,7 +88,7 @@ class UserControllerTest extends BaseControllerIntegrationTest {
     FirebaseServiceMocks.mockFirebaseServiceCreateUser(firebaseService, userDto.getFirebaseId());
     when(timeService.getCurrentTime()).thenReturn(userDto.getCreatedAt());
 
-    var response = exchange(TestAuthentication.ADMIN, requestUrl(REGISTER_USER_URL), HttpMethod.POST, createDto, UserDto.class);
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(), HttpMethod.POST, createDto, UserDto.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     assertThat(response.getBody()).isNotNull();
@@ -109,7 +107,7 @@ class UserControllerTest extends BaseControllerIntegrationTest {
     FirebaseServiceMocks.mockFirebaseServiceSetRoleThrows(firebaseService);
     when(timeService.getCurrentTime()).thenReturn(userDto.getCreatedAt());
 
-    var response = exchange(TestAuthentication.ADMIN, requestUrl(REGISTER_USER_URL), HttpMethod.POST, createDto, Object.class);
+    var response = exchange(TestAuthentication.ADMIN, requestUrl(), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
@@ -119,7 +117,7 @@ class UserControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "UserCreateDtoWithRole.json", type = UserCreateDto.class)
   })
   void registerUser_validUserCreateDtoWithRoleAsPremium_return403(UserCreateDto createDto) {
-    var response = exchange(TestAuthentication.PREMIUM, requestUrl(REGISTER_USER_URL), HttpMethod.POST, createDto, Object.class);
+    var response = exchange(TestAuthentication.PREMIUM, requestUrl(), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
@@ -129,7 +127,7 @@ class UserControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "UserCreateDtoWithRole.json", type = UserCreateDto.class)
   })
   void registerUser_validUserCreateDtoWithRoleAsRegular_return403(UserCreateDto createDto) {
-    var response = exchange(TestAuthentication.REGULAR, requestUrl(REGISTER_USER_URL), HttpMethod.POST, createDto, Object.class);
+    var response = exchange(TestAuthentication.REGULAR, requestUrl(), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
@@ -139,7 +137,7 @@ class UserControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "UserCreateDtoWithRole.json", type = UserCreateDto.class)
   })
   void registerUser_validUserCreateDtoWithRoleNoAuthentication_return403(UserCreateDto createDto) {
-    var response = exchange(TestAuthentication.NONE, requestUrl(REGISTER_USER_URL), HttpMethod.POST, createDto, Object.class);
+    var response = exchange(TestAuthentication.NONE, requestUrl(), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
@@ -149,14 +147,14 @@ class UserControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "UserCreateDtosWithInvalidProperties.json", type = UserCreateDto[].class)
   })
   void registerUser_invalidUserCreateDtoNoAuthentication_return400(UserCreateDto createDto) {
-    var response = exchange(TestAuthentication.NONE, requestUrl(REGISTER_USER_URL), HttpMethod.POST, createDto, Object.class);
+    var response = exchange(TestAuthentication.NONE, requestUrl(), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
 
   //endregion
 
-  //region /findById/{id}
+  //region find by ID
 
   @ParameterizedTest
   @CsvSource({"NONE,UNAUTHORIZED", "REGULAR,FORBIDDEN", "PREMIUM,FORBIDDEN"})
@@ -225,27 +223,30 @@ class UserControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region /findByEmail/{email}
+  //region find by email
 
   @ParameterizedTest
   @CsvSource({"NONE,UNAUTHORIZED", "REGULAR,FORBIDDEN", "PREMIUM,FORBIDDEN"})
   void findByEmail_nonePersistedInsufficientPermissions_return401Or403(TestAuthentication authMode, HttpStatus expectedStatusCode) {
-    var response = get(authMode, requestUrl(FIND_BY_EMAIL_URL, "some@email.com"), Object.class);
+    var params = toMultiValueMap(Map.of("email", "some@email.com"));
+    var response = get(authMode, requestUrl(FIND_BY_EMAIL_URL), params, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(expectedStatusCode);
   }
 
   @ParameterizedTest
   @ValueSource(strings = {"someString", "@@@", "@test.com", "test@", "test@test@test.com", "1", "-3", "2.3"})
-  void findByEmail_invalidEmailAsAdmin_return400(String invalidId) {
-    var response = get(TestAuthentication.ADMIN, requestUrl(FIND_BY_EMAIL_URL, invalidId), Object.class);
+  void findByEmail_invalidEmailAsAdmin_return400(String invalidEmail) {
+    var params = toMultiValueMap(Map.of("email", invalidEmail));
+    var response = get(TestAuthentication.ADMIN, requestUrl(FIND_BY_EMAIL_URL), params, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
 
   @Test
   void findByEmail_nonePersistedAsAdmin_return404() {
-    var response = get(TestAuthentication.ADMIN, requestUrl(FIND_BY_EMAIL_URL, "does.not.exist@test.com"), Object.class);
+    var params = toMultiValueMap(Map.of("email", "does.not.exist@test.com"));
+    var response = get(TestAuthentication.ADMIN, requestUrl(FIND_BY_EMAIL_URL), params, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
@@ -257,7 +258,8 @@ class UserControllerTest extends BaseControllerIntegrationTest {
   void findByEmail_fourPersistedIdNotFoundAsAdmin_return404(User[] persistedUsers) {
     persistEntities(userRepository, persistedUsers);
 
-    var response = get(TestAuthentication.ADMIN, requestUrl(FIND_BY_EMAIL_URL, "does.not.exist@test.com"), Object.class);
+    var params = toMultiValueMap(Map.of("email", "does.not.exist@test.com"));
+    var response = get(TestAuthentication.ADMIN, requestUrl(FIND_BY_EMAIL_URL), params, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
@@ -270,7 +272,8 @@ class UserControllerTest extends BaseControllerIntegrationTest {
     persistEntities(userRepository, specification.persistedUsers);
     FirebaseServiceMocks.mockFirebaseServiceFindUserById(firebaseService, specification.firebaseUser.getUid(), specification.firebaseUser);
 
-    var response = get(TestAuthentication.ADMIN, requestUrl(FIND_BY_EMAIL_URL, specification.lookupEmail), UserDto.class);
+    var params = toMultiValueMap(Map.of("email", specification.lookupEmail));
+    var response = get(TestAuthentication.ADMIN, requestUrl(FIND_BY_EMAIL_URL), params, UserDto.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody())
@@ -287,7 +290,8 @@ class UserControllerTest extends BaseControllerIntegrationTest {
     persistEntities(userRepository, specification.persistedUsers);
     FirebaseServiceMocks.mockFirebaseServiceFindUserByIdThrows(firebaseService);
 
-    var response = get(TestAuthentication.ADMIN, requestUrl(FIND_BY_EMAIL_URL, specification.lookupEmail), Object.class);
+    var params = toMultiValueMap(Map.of("email", specification.lookupEmail));
+    var response = get(TestAuthentication.ADMIN, requestUrl(FIND_BY_EMAIL_URL), params, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
   }
@@ -301,14 +305,15 @@ class UserControllerTest extends BaseControllerIntegrationTest {
     FirebaseServiceMocks.mockFirebaseServiceFindUserById(firebaseService, specification.firebaseUser.getUid(),
         specification.firebaseUser.toBuilder().email("anotherUser@example.com").build());
 
-    var response = get(TestAuthentication.ADMIN, requestUrl(FIND_BY_EMAIL_URL, specification.lookupEmail), Object.class);
+    var params = toMultiValueMap(Map.of("email", specification.lookupEmail));
+    var response = get(TestAuthentication.ADMIN, requestUrl(FIND_BY_EMAIL_URL), params, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   //endregion
 
-  //region /{id}/setRole
+  //region set role
 
   @ParameterizedTest
   @JsonFileSources(unwrapArrays = true, parameters = {
@@ -318,11 +323,10 @@ class UserControllerTest extends BaseControllerIntegrationTest {
     persistEntities(userRepository, specification.persistedUser);
     FirebaseServiceMocks.mockFirebaseServiceFindUserById(firebaseService, specification.firebaseUser.getUid(), specification.firebaseUser);
 
-    var params = toMultiValueMap(Map.of("role", specification.expectedUserDto.getRole().name()));
     var response = exchange(TestAuthentication.ADMIN,
         requestUrl(SET_ROLE_URL, specification.persistedUser.getFirebaseId()),
         HttpMethod.PATCH,
-        params,
+        String.format("\"%s\"", specification.expectedUserDto.getRole().name()),
         UserDto.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -338,11 +342,10 @@ class UserControllerTest extends BaseControllerIntegrationTest {
   @ParameterizedTest
   @CsvSource({"NONE,UNAUTHORIZED", "REGULAR,FORBIDDEN", "PREMIUM,FORBIDDEN"})
   void setRole_insufficientPermissions_return401Or403(TestAuthentication authMode, HttpStatus expectedStatusCode) {
-    var params = toMultiValueMap(Map.of("role", "ADMIN"));
     var response = exchange(authMode,
         requestUrl(SET_ROLE_URL, "anyFirebaseUserId"),
         HttpMethod.PATCH,
-        params,
+        "\"ADMIN\"",
         Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(expectedStatusCode);
@@ -356,11 +359,10 @@ class UserControllerTest extends BaseControllerIntegrationTest {
     persistEntities(userRepository, specification.persistedUser);
     FirebaseServiceMocks.mockFirebaseServiceFindUserById(firebaseService, specification.firebaseUser.getUid(), specification.firebaseUser);
 
-    var params = toMultiValueMap(Map.of("role", specification.expectedUserDto.getRole().name()));
     var response = exchange(TestAuthentication.ADMIN,
         requestUrl(SET_ROLE_URL, "nonExistingFirebaseUserId"),
         HttpMethod.PATCH,
-        params,
+        String.format("\"%s\"", specification.expectedUserDto.getRole().name()),
         Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -369,14 +371,12 @@ class UserControllerTest extends BaseControllerIntegrationTest {
   @ParameterizedTest
   @NullAndEmptySource
   @ValueSource(strings = {"admin", "premium", "invalidRole", "ROLE_ADMIN", "ROLE_PREMIUM", "      "})
-  void setRole_invalidRoleSpecification_return400(String roleQueryParameter) {
+  void setRole_invalidRoleSpecification_return400(String role) {
     // We cannot use Map.of() here because that does not support null values. Since @NullAndEmptySource is in place, we create the map differently.
-    var params = toMultiValueMap(Collections.singletonMap("role", roleQueryParameter));
-
     var response = exchange(TestAuthentication.ADMIN,
         requestUrl(SET_ROLE_URL, "nonExistingFirebaseUserId"),
         HttpMethod.PATCH,
-        params,
+        String.format("\"%s\"", role),
         Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -386,12 +386,10 @@ class UserControllerTest extends BaseControllerIntegrationTest {
   @NullAndEmptySource
   void setRole_invalidIdSpecification_return4xx(String firebaseId) {
     // We cannot use Map.of() here because that does not support null values. Since @NullAndEmptySource is in place, we create the map differently.
-    var params = toMultiValueMap(Map.of("role", "ADMIN"));
-
     var response = exchange(TestAuthentication.ADMIN,
         requestUrl(SET_ROLE_URL, firebaseId),
         HttpMethod.PATCH,
-        params,
+        "\"ADMIN\"",
         Object.class);
 
     assertThat(response.getStatusCode().is4xxClientError()).isTrue();
@@ -405,11 +403,10 @@ class UserControllerTest extends BaseControllerIntegrationTest {
     persistEntities(userRepository, specification.persistedUser);
     FirebaseServiceMocks.mockFirebaseServiceFindUserByIdThrows(firebaseService);
 
-    var params = toMultiValueMap(Map.of("role", specification.expectedUserDto.getRole().name()));
     var response = exchange(TestAuthentication.ADMIN,
         requestUrl(SET_ROLE_URL, specification.persistedUser.getFirebaseId()),
         HttpMethod.PATCH,
-        params,
+        String.format("\"%s\"", specification.expectedUserDto.getRole().name()),
         Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -417,7 +414,7 @@ class UserControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region /{id}/removeRole
+  //region remove role
 
   @ParameterizedTest
   @JsonFileSources(unwrapArrays = true, parameters = {

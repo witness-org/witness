@@ -58,7 +58,7 @@ security:
     - /api-docs*/**
     - /h2-console*
     - /h2-console/**
-    - /user/register
+    - /users
   valid-roles:
     - ROLE_ADMIN
     - ROLE_PREMIUM
