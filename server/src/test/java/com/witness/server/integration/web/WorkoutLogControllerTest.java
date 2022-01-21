@@ -35,15 +35,15 @@ import org.springframework.http.HttpStatus;
 class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
   private static final String DATA_ROOT = "data/integration/web/workout-log-controller-test/";
 
-  private static final String SET_WORKOUT_DURATION_URL = "/%s";
-  private static final String DELETE_WORKOUT_LOG_URL = "/%s";
-  private static final String ADD_EXERCISE_LOG_URL = "/%s";
-  private static final String UPDATE_EXERCISE_LOG_POSITIONS_URL = "%s/positions";
-  private static final String DELETE_EXERCISE_LOG_URL = "%s/%s";
-  private static final String ADD_SET_LOG_URL = "%s/%s";
-  private static final String UPDATE_SET_LOG_URL = "%s/%s/update";
-  private static final String UPDATE_SET_LOG_POSITIONS_URL = "%s/%s/positions";
-  private static final String DELETE_SET_LOG_URL = "%s/%s/%s";
+  private static final String SET_WORKOUT_DURATION_URL = "%s";
+  private static final String DELETE_WORKOUT_LOG_URL = "%s";
+  private static final String ADD_EXERCISE_LOG_URL = "%s/exercise-logs";
+  private static final String UPDATE_EXERCISE_LOG_POSITIONS_URL = "%s/exercise-logs-positions";
+  private static final String DELETE_EXERCISE_LOG_URL = "%s/exercise-logs/%s";
+  private static final String ADD_SET_LOG_URL = "%s/exercise-logs/%s/set-logs";
+  private static final String UPDATE_SET_LOG_URL = "%s/exercise-logs/%s/set-logs";
+  private static final String UPDATE_SET_LOG_POSITIONS_URL = "%s/exercise-logs/%s/set-logs-positions";
+  private static final String DELETE_SET_LOG_URL = "%s/exercise-logs/%s/set-logs/%s";
 
   @Autowired
   private WorkoutLogRepository workoutLogRepository;
@@ -59,10 +59,10 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
   @Override
   String getEndpointUrl() {
-    return "workout";
+    return "workout-logs";
   }
 
-  //region /
+  //region all workout logs by date
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -168,7 +168,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region /{workoutLogId}
+  //region find workout log by ID
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -376,7 +376,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region /{workoutLogId}/positions
+  //region update exercise log order
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -456,7 +456,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region /{workoutLogId}/{exerciseLogId}
+  //region delete exercise log
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -660,7 +660,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
     var response = exchange(TestAuthentication.REGULAR,
         requestUrl(UPDATE_SET_LOG_URL, workoutLogWithSetLogs.getId(), workoutLogWithSetLogs.getExerciseLogs().get(0).getSetLogs().get(0).getId()),
-        HttpMethod.POST,
+        HttpMethod.PUT,
         updateSetLog,
         WorkoutLogDto.class);
 
@@ -692,7 +692,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
     var response = exchange(TestAuthentication.REGULAR,
         requestUrl(UPDATE_SET_LOG_URL, workoutLogWithSetLogs.getId(), workoutLogWithSetLogs.getExerciseLogs().get(0).getSetLogs().get(0).getId()),
-        HttpMethod.POST,
+        HttpMethod.PUT,
         updateSetLog,
         WorkoutLogDto.class);
 
@@ -724,7 +724,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
     var response = exchange(TestAuthentication.REGULAR,
         requestUrl(UPDATE_SET_LOG_URL, workoutLogWithSetLogs.getId(), workoutLogWithSetLogs.getExerciseLogs().get(0).getSetLogs().get(0).getId()),
-        HttpMethod.POST,
+        HttpMethod.PUT,
         updateSetLog,
         Object.class);
 
@@ -749,7 +749,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
     var response = exchange(TestAuthentication.REGULAR,
         requestUrl(UPDATE_SET_LOG_URL, workoutLogWithSetLogs.getId(), workoutLogWithSetLogs.getExerciseLogs().get(0).getSetLogs().get(0).getId()),
-        HttpMethod.POST,
+        HttpMethod.PUT,
         updateSetLog,
         Object.class);
 
@@ -758,7 +758,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region /{workoutLogId}/{exerciseLogId}/positions
+  //region update set log order
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -843,7 +843,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region /{workoutLogId}/{exerciseLogId}/{setLogId}
+  //region delete set log
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
