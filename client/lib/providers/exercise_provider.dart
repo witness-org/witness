@@ -66,11 +66,84 @@ class ExerciseProvider with ChangeNotifier {
     }
   }
 
-  Future<ServerResponse<Exercise, String>> postUserExercise(final ExerciseCreate data) async {
-    return _exerciseService.postUserExercise(data, await _auth?.getToken());
+  Future<ServerResponse<Exercise, String>> postUserExercise(final ExerciseCreate newExercise) async {
+    _logger.i('Creating new user exercise');
+
+    final response = await _exerciseService.postUserExercise(newExercise, await _auth?.getToken());
+    if (response.isSuccessAndResponse) {
+      _logger.i('Creation of exercise succeeded');
+
+      final createdExercise = response.success!;
+      for (final muscleGroup in createdExercise.muscleGroups) {
+        _exercises[muscleGroup] ??= [];
+        _exercises[muscleGroup]!.add(createdExercise);
+      }
+
+      notifyListeners();
+    } else {
+      _logger.e('Creation of exercise failed: ${response.error}');
+    }
+    return response;
   }
 
   Future<ServerResponse<Exercise, String>> putUserExercise(final Exercise data) async {
-    return _exerciseService.putUserExercise(data, await _auth?.getToken());
+    _logger.i('Updating user exercise with ID "${data.id}"');
+
+    final response = await _exerciseService.putUserExercise(data, await _auth?.getToken());
+    if (response.isSuccessAndResponse) {
+      _logger.i('Update of exercise succeeded');
+
+      final updatedExercise = response.success!;
+      for (final muscleGroup in MuscleGroup.values) {
+        final indexInMuscleGroupList = _exercises[muscleGroup]?.indexWhere((final exercise) => exercise.id == updatedExercise.id);
+        final hasMuscleGroup = updatedExercise.muscleGroups.contains(muscleGroup);
+
+        if (hasMuscleGroup) {
+          // updated exercise is part of muscle group
+
+          if (indexInMuscleGroupList == null) {
+            // exercise was added to muscle group as first exercise, create list
+            _exercises[muscleGroup] = [updatedExercise];
+          } else if (indexInMuscleGroupList == -1) {
+            // muscle group already contains exercises, updated one is now also part of it, append it
+            _exercises[muscleGroup]!.add(updatedExercise);
+          } else {
+            // exercise was already part of muscle group, it only needs to be replaced
+            _exercises[muscleGroup]![indexInMuscleGroupList] = updatedExercise;
+          }
+        } else {
+          // updated exercise is not part of muscle group
+
+          if (indexInMuscleGroupList == null) {
+            // muscle group list was empty, nothing to do
+          } else if (indexInMuscleGroupList == -1) {
+            // muscle group did not contain exercise, nothing to do
+          } else {
+            // exercise was part of muscle group, but is not anymore, remove it
+            _exercises[muscleGroup]!.removeAt(indexInMuscleGroupList);
+          }
+        }
+      }
+      notifyListeners();
+    } else {
+      _logger.e('Update of exercise failed: ${response.error}');
+    }
+    return response;
+  }
+
+  Future<ServerResponse<void, String>> deleteUserExercise(final int exerciseId) async {
+    _logger.i('Deleting user exercise with ID "$exerciseId"');
+
+    final response = await _exerciseService.deleteUserExercise(exerciseId, await _auth?.getToken());
+    if (response.isSuccessNoResponse) {
+      _logger.i('Deletion of user exercise succeeded');
+      for (final muscleGroup in MuscleGroup.values) {
+        _exercises[muscleGroup]?.removeWhere((final exercise) => exercise.id == exerciseId);
+      }
+      notifyListeners();
+    } else if (response.isError) {
+      _logger.e('Deletion of user exercise failed: ${response.error}');
+    }
+    return response;
   }
 }

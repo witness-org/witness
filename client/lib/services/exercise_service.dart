@@ -81,4 +81,21 @@ class ExerciseService extends BaseService {
       return ServerResponse.failure(responseMap['message'].toString());
     }
   }
+
+  Future<ServerResponse<void, String>> deleteUserExercise(final int id, final String? token) async {
+    final requestUri = getUri('exercise/user-exercises/$id');
+    _logger
+      ..i('Delegating deletion of user exercise to server')
+      ..i('DELETE $requestUri');
+
+    final response = await http.delete(requestUri, headers: getHttpHeaders(authorization: token));
+
+    if (response.statusCode == 204) {
+      return const ServerResponse.success(null);
+    } else {
+      final responseMap = decodeResponse<Map<String, dynamic>>(response);
+      _logger.e('Could not delete user exercise: ${responseMap['message']}');
+      return ServerResponse.failure(responseMap['message'].toString());
+    }
+  }
 }

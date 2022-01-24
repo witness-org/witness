@@ -144,6 +144,46 @@
   "@exerciseInformation_footer_editButton_text": {
     "description": "Text of the button that allows editing an exercise in `ExerciseInformation`."
   },
+  "exerciseInformation_footer_deleteButton_text": "Delete",
+  "@exerciseInformation_footer_deleteButton_text": {
+    "description": "Text of the button that allows deleting an exercise in `ExerciseInformation`."
+  },
+  "exerciseInformation_deleteDialog_title": "Delete Exercise",
+  "@exerciseInformation_deleteDialog_title": {
+    "description": "Title of the dialog in `ExerciseInformation` that asks the user to confirm the deletion of the respective exercise."
+  },
+  "exerciseInformation_deleteDialog_delete": "DELETE",
+  "@exerciseInformation_deleteDialog_delete": {
+    "description": "Text of the delete (confirm) button in the dialog in `ExerciseInformation` that asks the user to confirm the deletion of the respective exercise."
+  },
+  "exerciseInformation_deleteDialog_cancel": "CANCEL",
+  "@exerciseInformation_deleteDialog_cancel": {
+    "description": "Text of the cancel button in the dialog in `ExerciseInformation` that asks the user to confirm the deletion of the respective exercise."
+  },
+  "exerciseInformation_deleteDialog_content": "Are you sure you want to delete \"{exerciseName}\"?",
+  "@exerciseInformation_deleteDialog_content": {
+    "description": "Content of the dialog in `ExerciseInformation` that asks the user to confirm the deletion of the respective exercise.",
+    "placeholders": {
+      "exerciseName": {
+        "type": "String",
+        "example": "Barbell Curl"
+      }
+    }
+  },
+  "exerciseInformation_deleteSuccess": "The exercise was deleted successfully.",
+  "@exerciseInformation_deleteSuccess": {
+    "description": "Text displayed after an exercise has been successfully deleted in `ExerciseInformation`."
+  },
+  "exerciseInformation_deleteFailure": "Could not delete exercise: {error}",
+  "@exerciseInformation_deleteFailure": {
+    "description": "Text displayed after an exercise could not be deleted in `ExerciseInformation`.",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "The requested exercise does not exist."
+      }
+    }
+  },
   "exerciseStatistics_placeholder_suffix": "statistics",
   "@exerciseStatistics_placeholder_suffix": {
     "description": "Text to display after exercise name in `ExerciseStatistics` (just a temporary placeholder)."
