@@ -27,7 +27,7 @@ import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_account")
 @Getter
 @Setter
 @ToString

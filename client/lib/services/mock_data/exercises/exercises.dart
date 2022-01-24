@@ -88,6 +88,13 @@ final data = [
     description: 'I will not tell you how it works.',
     muscleGroups: [],
     loggingTypes: [],
+  ),
+  const Exercise(
+    id: 12,
+    name: 'Second Special Exercise',
+    description: 'I will not tell you how it works, either.',
+    muscleGroups: [],
+    loggingTypes: [],
   )
 ];
 

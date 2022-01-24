@@ -360,4 +360,103 @@ class ExerciseServiceTest extends BaseUnitTest {
   void getUserExerciseById_nonExistingId_throwException() {
     assertThatThrownBy(() -> target.getUserExerciseById(-233L)).isInstanceOf(DataNotFoundException.class);
   }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class)
+  })
+  void deleteInitialExercise_existingId_succeeds(Exercise persistedExercise) throws DataNotFoundException {
+    var userExerciseId = persistedExercise.getId();
+    when(exerciseRepository.findInitialExerciseById(userExerciseId)).thenReturn(Optional.of(persistedExercise));
+
+    target.deleteInitialExercise(userExerciseId);
+    verify(exerciseRepository, times(1)).findInitialExerciseById(userExerciseId);
+    verify(exerciseRepository, times(1)).delete(persistedExercise);
+    verifyNoInteractions(userExerciseRepository);
+  }
+
+  @Test
+  void deleteInitialExercise_nonExistingId_throwException() {
+    assertThatThrownBy(() -> target.deleteInitialExercise(3L)).isInstanceOf(DataNotFoundException.class);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class)
+  })
+  void deleteInitialExercise_idOfUserExercise_throwException(Exercise persistedExercise, UserExercise persistedUserExercise) {
+    when(exerciseRepository.findById(persistedExercise.getId())).thenReturn(Optional.of(persistedExercise));
+    when(userExerciseRepository.findById(persistedUserExercise.getId())).thenReturn(Optional.of(persistedUserExercise));
+
+    assertThatThrownBy(() -> target.deleteInitialExercise(persistedUserExercise.getId())).isInstanceOf(DataNotFoundException.class);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "UserExercise2.json", type = UserExercise.class),
+      @JsonFileSource(value = DATA_ROOT + "User1.json", type = User.class),
+  })
+  void deleteUserExercise_existingId_succeeds(UserExercise persistedUserExercise, User user) throws DataAccessException, InvalidRequestException {
+    var userExerciseId = persistedUserExercise.getId();
+    var firebaseId = user.getFirebaseId();
+    when(userExerciseRepository.findById(userExerciseId)).thenReturn(Optional.of(persistedUserExercise));
+    when(userService.findByFirebaseId(firebaseId)).thenReturn(user);
+
+    target.deleteUserExercise(firebaseId, userExerciseId);
+    verify(userExerciseRepository, times(1)).findById(userExerciseId);
+    verify(userExerciseRepository, times(1)).delete(persistedUserExercise);
+    verify(userService, times(1)).findByFirebaseId(firebaseId);
+    verifyNoInteractions(exerciseRepository);
+  }
+
+  @Test
+  void deleteUserExercise_nonExistingId_throwException() {
+    assertThatThrownBy(() -> target.deleteUserExercise("irrelevant", 3L)).isInstanceOf(DataNotFoundException.class);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
+      @JsonFileSource(value = DATA_ROOT + "UserExercise2.json", type = UserExercise.class),
+      @JsonFileSource(value = DATA_ROOT + "User1.json", type = User.class)
+  })
+  void deleteUserExercise_idOfInitialExercise_throwException(Exercise persistedInitialExercise, UserExercise persistedUserExercise, User user) {
+    when(exerciseRepository.findById(persistedInitialExercise.getId())).thenReturn(Optional.of(persistedInitialExercise));
+    when(userExerciseRepository.findById(persistedUserExercise.getId())).thenReturn(Optional.of(persistedUserExercise));
+
+    assertThatThrownBy(() -> target.deleteUserExercise(user.getFirebaseId(), persistedInitialExercise.getId()))
+        .isInstanceOf(DataNotFoundException.class);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "UserExercise2.json", type = UserExercise.class),
+      @JsonFileSource(value = DATA_ROOT + "User3.json", type = User.class)
+  })
+  void deleteUserExercise_userNotCreatorButAdmin_succeeds(UserExercise persistedUserExercise, User user)
+      throws DataAccessException, InvalidRequestException {
+    when(userExerciseRepository.findById(persistedUserExercise.getId())).thenReturn(Optional.of(persistedUserExercise));
+    when(userService.findByFirebaseId(user.getFirebaseId())).thenReturn(user);
+
+    target.deleteUserExercise(user.getFirebaseId(), persistedUserExercise.getId());
+    verify(userExerciseRepository, times(1)).findById(persistedUserExercise.getId());
+    verify(userExerciseRepository, times(1)).delete(persistedUserExercise);
+    verify(userService, times(1)).findByFirebaseId(user.getFirebaseId());
+    verifyNoInteractions(exerciseRepository);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "UserExercise2.json", type = UserExercise.class),
+      @JsonFileSource(value = DATA_ROOT + "User4.json", type = User.class)
+  })
+  void deleteUserExercise_userNeitherCreatorNorAdmin_throwException(UserExercise persistedUserExercise, User user)
+      throws DataAccessException {
+    when(userExerciseRepository.findById(persistedUserExercise.getId())).thenReturn(Optional.of(persistedUserExercise));
+    when(userService.findByFirebaseId(user.getFirebaseId())).thenReturn(user);
+
+    assertThatThrownBy(() -> target.deleteUserExercise(user.getFirebaseId(), persistedUserExercise.getId()))
+        .isInstanceOf(InvalidRequestException.class);
+  }
 }

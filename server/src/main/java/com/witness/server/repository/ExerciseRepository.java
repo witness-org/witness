@@ -1,15 +1,33 @@
 package com.witness.server.repository;
 
 import com.witness.server.entity.exercise.Exercise;
+import com.witness.server.entity.exercise.UserExercise;
 import com.witness.server.entity.user.User;
 import com.witness.server.enumeration.MuscleGroup;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
+
+  /**
+   * Tries to find an initial exercise, i.e. an {@link Exercise} object which was not created by a user.
+   *
+   * @param id ID of the exercise to find
+   * @return the {@link Exercise} with the ID {@code id} or {@link Optional#empty()} if none found. Will never be a {@link UserExercise} instance.
+   */
+  @Query("""
+        SELECT
+          e
+        FROM
+          Exercise e
+        WHERE
+          e.id = :id AND NOT EXISTS (SELECT 1 FROM UserExercise ue WHERE ue.id = :id)
+      """)
+  Optional<Exercise> findInitialExerciseById(Long id);
 
   /**
    * Queries all initial exercises (i.e. Exercise objects) and user exercises (i.e. UserExercise objects) created by the given user which train a
@@ -42,7 +60,8 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
         e
       FROM
         Exercise e
-      JOIN UserExercise u ON e.id = u.id
+      JOIN
+        UserExercise u ON e.id = u.id
       WHERE u.createdBy = :user
       """)
   List<Exercise> findAllByUser(User user);

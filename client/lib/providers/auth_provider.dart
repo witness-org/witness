@@ -70,7 +70,7 @@ class AuthProvider with ChangeNotifier {
         return;
       }
 
-      _logger.i('Logging out user with id "${_loggedInUser!.uid}"');
+      _logger.i('Logging out user with ID "${_loggedInUser!.uid}"');
       await _firebaseService.logout(firebaseAuth);
     });
   }

@@ -40,7 +40,7 @@ class TrainingProgramProvider with ChangeNotifier {
   /* TODO instead of the Map-approach, one could opt for creating separate Providers (TrainingWeekProvider, TrainingDayProvider, WorkoutProvider)
    This heavily depends on the underlying Domain Model, e.g. if TrainingDays and TrainingWeeks have their own primary key IDs.
    I did it like this for the sake of creating mockups more quickly. However, there would be two main benefits in creating separate providers:
-   Firstly, accessing the data in the widgets a bit nicer (no need for maps and map lookups, can directly define getters). Secondly, the scope of
+   Firstly, accessing the data in the widgets is a bit nicer (no need for maps and map lookups, can directly define getters). Secondly, the scope of
    the providers is narrowed down, which is important for change notifications: In the current form, when calling notifyListeners(), all
    training-program-related widgets may be rebuilt instead of only the affected one (i.e. TrainingWeekDetailScreen).*/
   Map<int, List<TrainingWeekOverview>> _trainingWeeks;
@@ -74,12 +74,12 @@ class TrainingProgramProvider with ChangeNotifier {
   }
 
   Future<void> deleteTrainingProgram(final int programId) async {
-    _logger.i('Deleting training program with id "$programId"');
+    _logger.i('Deleting training program with ID "$programId"');
 
     final programToDeleteIndex = _trainingPrograms.indexWhere((final program) => program.id == programId);
 
     if (programToDeleteIndex == -1) {
-      _logger.d('There is no program with id "$programId", aborting delete');
+      _logger.d('There is no program with ID "$programId", aborting delete');
       return;
     }
 
@@ -87,11 +87,11 @@ class TrainingProgramProvider with ChangeNotifier {
     _trainingPrograms.removeAt(programToDeleteIndex);
     notifyListeners();
 
-    _logger.i('Successfully deleted training program with id" $programId"');
+    _logger.i('Successfully deleted training program with ID" $programId"');
   }
 
   Future<void> fetchTrainingWeeks(final int programId) async {
-    _logger.i('Fetching training weeks of program with id "$programId"');
+    _logger.i('Fetching training weeks of program with ID "$programId"');
 
     final fetchedWeeks = await _trainingProgramService.getWeeksOverviewOfProgram(programId);
     _trainingWeeks[programId] = fetchedWeeks;
@@ -101,7 +101,7 @@ class TrainingProgramProvider with ChangeNotifier {
   }
 
   Future<void> fetchTrainingDays(final int weekId) async {
-    _logger.i('Fetching training days of week with id "$weekId"');
+    _logger.i('Fetching training days of week with ID "$weekId"');
 
     final fetchedDays = await _trainingProgramService.getDaysOfWeek(weekId);
     _trainingDays[weekId] = fetchedDays;
@@ -111,7 +111,7 @@ class TrainingProgramProvider with ChangeNotifier {
   }
 
   Future<void> fetchWorkouts(final int dayId) async {
-    _logger.i('Fetching workouts of day with id "$dayId"');
+    _logger.i('Fetching workouts of day with ID "$dayId"');
 
     final fetchedWorkouts = await _trainingProgramService.getWorkoutsOfDay(dayId);
     _workouts[dayId] = fetchedWorkouts;
