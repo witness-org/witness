@@ -121,10 +121,35 @@ public class ExerciseServiceImpl implements ExerciseService, EntityAccessor {
   }
 
   @Override
-  public UserExercise getUserExerciseById(Long exerciseId) throws DataNotFoundException {
+  public Exercise getInitialExerciseById(Long initialExerciseId) throws DataNotFoundException {
+    return exerciseRepository
+        .findInitialExerciseById(initialExerciseId)
+        .orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist", ServerError.EXERCISE_NOT_FOUND));
+  }
+
+  @Override
+  public UserExercise getUserExerciseById(Long userExerciseId) throws DataNotFoundException {
     return userExerciseRepository
-        .findById(exerciseId)
+        .findById(userExerciseId)
         .orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist.", ServerError.EXERCISE_NOT_FOUND));
+  }
+
+  @Override
+  public void deleteInitialExercise(Long initialExerciseId) throws DataNotFoundException {
+    log.info("Deleting initial exercise with ID {}", initialExerciseId);
+
+    var initialExercise = getInitialExerciseById(initialExerciseId);
+    exerciseRepository.delete(initialExercise);
+  }
+
+  @Override
+  public void deleteUserExercise(String firebaseId, Long userExerciseId) throws DataAccessException, InvalidRequestException {
+    log.info("Deleting user exercise with ID {}", userExerciseId);
+
+    var currentUser = getUser(userService, firebaseId);
+    var userExercise = getUserExerciseById(userExerciseId);
+    throwIfUserExerciseNotCreatedByUserAndNotAdmin(userExercise, currentUser);
+    userExerciseRepository.delete(userExercise);
   }
 
   private void throwIfInitialExerciseWithNameExists(String name) throws InvalidRequestException {
@@ -142,8 +167,8 @@ public class ExerciseServiceImpl implements ExerciseService, EntityAccessor {
     }
   }
 
-  private void throwIfUserExerciseNotCreatedByUserAndNotAdmin(UserExercise exerciseToUpdate, User user) throws InvalidRequestException {
-    if (!Role.ADMIN.equals(user.getRole()) && !exerciseToUpdate.getCreatedBy().equals(user)) {
+  private void throwIfUserExerciseNotCreatedByUserAndNotAdmin(UserExercise affectedUserExercise, User user) throws InvalidRequestException {
+    if (!Role.ADMIN.equals(user.getRole()) && !affectedUserExercise.getCreatedBy().equals(user)) {
       log.error("Requested exercise was not created by user with provided Firebase ID {}.", user.getFirebaseId());
       throw new InvalidRequestException("The requested exercise was not created by the provided user.",
           ServerError.USER_EXERCISE_NOT_CREATED_BY_USER);

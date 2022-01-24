@@ -14,6 +14,7 @@ import com.witness.server.repository.UserExerciseRepository;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
 import java.util.Map;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -23,7 +24,9 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
   private static final String DATA_ROOT = "data/integration/web/exercise-controller-test/";
 
   private static final String CREATE_INITIAL_EXERCISE_URL = "initial-exercises";
+  private static final String DELETE_INITIAL_EXERCISE_URL = "initial-exercises/%s";
   private static final String CREATE_USER_EXERCISE_URL = "user-exercises";
+  private static final String DELETE_USER_EXERCISE_URL = "user-exercises/%s";
   private static final String UPDATE_INITIAL_EXERCISE_URL = "initial-exercises";
   private static final String UPDATE_USER_EXERCISE_URL = "user-exercises";
   private static final String GET_ALL_FOR_USER_BY_MUSCLE_GROUP_URL = "";
@@ -176,6 +179,115 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
     var response = exchange(TestAuthentication.ADMIN, requestUrl(CREATE_INITIAL_EXERCISE_URL), HttpMethod.POST, createDto, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
+      @JsonFileSource(value = DATA_ROOT + "AdminUser.json", type = User.class)
+  })
+  void deleteInitialExercise_existingExerciseAsAdmin_return204(Exercise persistedExercise, User currentUser) {
+    persistUserAndMockLoggedIn(currentUser);
+    persistEntities(exerciseRepository, persistedExercise);
+
+    var response = exchange(TestAuthentication.ADMIN,
+        requestUrl(DELETE_INITIAL_EXERCISE_URL, persistedExercise.getId()),
+        HttpMethod.DELETE,
+        Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Test
+  void deleteInitialExercise_existingExerciseAsPremium_return403() {
+    var response = exchange(TestAuthentication.PREMIUM,
+        requestUrl(DELETE_INITIAL_EXERCISE_URL, 1L),
+        HttpMethod.DELETE,
+        Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  @Test
+  void deleteInitialExercise_nonExistingAsAdmin_return404() {
+    var response = exchange(TestAuthentication.ADMIN,
+        requestUrl(DELETE_INITIAL_EXERCISE_URL, 1L),
+        HttpMethod.DELETE,
+        Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class),
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class)
+  })
+  void deleteUserExercise_existingExerciseAsRegular_return204(UserExercise persistedExercise, User currentUser) {
+    persistUserAndMockLoggedIn(currentUser);
+    persistExercisesForLoggedInUser(persistedExercise);
+
+    var response = exchange(TestAuthentication.REGULAR,
+        requestUrl(DELETE_USER_EXERCISE_URL, persistedExercise.getId()),
+        HttpMethod.DELETE,
+        Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class),
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "PremiumUser2.json", type = User.class)
+  })
+  void deleteUserExercise_existingExerciseByOtherUserAsRegular_return400(UserExercise persistedExercise, User currentUser, User creator) {
+    persistUserAndMockLoggedIn(currentUser);
+    persistUsers(creator);
+    persistedExercise.setCreatedBy(creator);
+    persistEntities(userExerciseRepository, persistedExercise);
+
+    var response = exchange(TestAuthentication.REGULAR,
+        requestUrl(DELETE_USER_EXERCISE_URL, persistedExercise.getId()),
+        HttpMethod.DELETE,
+        Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "UserExercise1.json", type = UserExercise.class),
+      @JsonFileSource(value = DATA_ROOT + "AdminUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "PremiumUser2.json", type = User.class)
+  })
+  void deleteUserExercise_existingExerciseByOtherUserAsAdmin_return204(UserExercise persistedExercise, User currentUser, User creator) {
+    persistUserAndMockLoggedIn(currentUser);
+    persistUsers(creator);
+    persistedExercise.setCreatedBy(creator);
+    persistEntities(userExerciseRepository, persistedExercise);
+
+    var response = exchange(TestAuthentication.ADMIN,
+        requestUrl(DELETE_USER_EXERCISE_URL, persistedExercise.getId()),
+        HttpMethod.DELETE,
+        Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+  })
+  void deleteUserExercise_nonExistingAsRegular_return404(User currentUser) {
+    persistUserAndMockLoggedIn(currentUser);
+
+    var response = exchange(TestAuthentication.REGULAR,
+        requestUrl(DELETE_USER_EXERCISE_URL, 1L),
+        HttpMethod.DELETE,
+        Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
   //endregion
@@ -618,7 +730,6 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
   }
 
   //endregion
-
 
   private void persistExercisesForLoggedInUser(UserExercise... exercises) {
     for (var exercise : exercises) {

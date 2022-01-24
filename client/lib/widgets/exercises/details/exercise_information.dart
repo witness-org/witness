@@ -2,9 +2,13 @@ import 'package:client/extensions/enum_extensions.dart';
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
+import 'package:client/providers/exercise_provider.dart';
+import 'package:client/widgets/common/dialog_helper.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/exercises/editing/edit_exercise_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_loader_overlay/progress_loader_overlay.dart';
+import 'package:provider/provider.dart';
 
 final _logger = getLogger('exercise_information');
 
@@ -12,6 +16,43 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer, Strin
   const ExerciseInformation(this._exercise, {final Key? key}) : super(key: key);
 
   final Exercise _exercise;
+
+  void _deleteUserExercise(final BuildContext context, final StringLocalizations uiStrings, final ThemeData theme) {
+    DialogHelper.getBool(
+      context,
+      title: uiStrings.exerciseInformation_deleteDialog_title,
+      content: uiStrings.exerciseInformation_deleteDialog_content(_exercise.name),
+      falseOption: uiStrings.exerciseInformation_deleteDialog_cancel,
+      trueOption: uiStrings.exerciseInformation_deleteDialog_delete,
+      trueOptionStyle: TextStyle(color: theme.errorColor),
+    ).then(
+      (final deleteExercise) {
+        if (deleteExercise != true) {
+          return;
+        }
+        ProgressLoader()
+            .show(context)
+            .then((final _) => Provider.of<ExerciseProvider>(context, listen: false).deleteUserExercise(_exercise.id))
+            .then((final response) {
+          ProgressLoader().dismiss();
+          if (response.isError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(uiStrings.exerciseInformation_deleteFailure(response.error!)),
+              ),
+            );
+          } else {
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(uiStrings.exerciseInformation_deleteSuccess),
+              ),
+            );
+          }
+        });
+      },
+    );
+  }
 
   Widget _buildHeading(final String text) {
     return Container(
@@ -42,9 +83,8 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer, Strin
     );
   }
 
-  Widget _buildExerciseInformation(final BuildContext context, final StringLocalizations uiStrings) {
+  Widget _buildExerciseInformation(final BuildContext context, final StringLocalizations uiStrings, final ThemeData theme) {
     _logger.v(prepare('_buildExerciseInformation()'));
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -71,16 +111,31 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer, Strin
     );
   }
 
-  Widget _buildStickyFooter(final BuildContext context, final StringLocalizations uiStrings) {
+  Widget _buildStickyFooter(final BuildContext context, final StringLocalizations uiStrings, final ThemeData theme) {
     _logger.v(prepare('_buildStickyFooter()'));
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, bottom: 7),
       child: SizedBox(
         width: double.infinity,
-        child: ElevatedButton.icon(
-          onPressed: () => Navigator.of(context).pushNamed(EditExerciseScreen.routeName, arguments: _exercise),
-          icon: const Icon(Icons.edit),
-          label: Text(uiStrings.exerciseInformation_footer_editButton_text),
+        child: Row(
+          children: [
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () => Navigator.of(context).pushNamed(EditExerciseScreen.routeName, arguments: _exercise),
+                icon: const Icon(Icons.edit),
+                label: Text(uiStrings.exerciseInformation_footer_editButton_text),
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () => _deleteUserExercise(context, uiStrings, theme),
+                icon: const Icon(Icons.delete),
+                label: Text(uiStrings.exerciseInformation_footer_deleteButton_text),
+                style: ElevatedButton.styleFrom(primary: theme.errorColor),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -90,6 +145,7 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer, Strin
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
     final uiStrings = getLocalizedStrings(context);
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -97,7 +153,7 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer, Strin
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-              child: _buildExerciseInformation(context, uiStrings),
+              child: _buildExerciseInformation(context, uiStrings, theme),
             ),
           ),
         ),
@@ -105,7 +161,7 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer, Strin
           Column(
             children: [
               const Divider(),
-              _buildStickyFooter(context, uiStrings),
+              _buildStickyFooter(context, uiStrings, theme),
             ],
           ),
       ],

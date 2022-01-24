@@ -22,7 +22,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -154,5 +156,36 @@ public class ExerciseController {
     var currentUser = securityService.getCurrentUser();
     var result = exerciseService.getExercisesCreatedByUser(currentUser.getUid());
     return exerciseMapper.entitiesToDtos(result);
+  }
+
+  @DeleteMapping("initial-exercises/{exerciseId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @RequiresAdmin
+  @Operation(summary = "Deletes an initial exercise. Only allowed for admins.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "The initial exercise was successfully deleted."),
+      @ApiResponse(responseCode = "403", description = "The initial exercise could not be deleted because the requester does not have the required "
+                                                       + "permission."),
+      @ApiResponse(responseCode = "404", description = "No initial exercise with the given ID could be found.")
+  })
+  public void deleteInitialExercise(@PathVariable @Parameter(description = "ID of the initial exercise to delete.", example = "3") Long exerciseId)
+      throws DataNotFoundException {
+    exerciseService.deleteInitialExercise(exerciseId);
+  }
+
+  @DeleteMapping("user-exercises/{userExerciseId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @Operation(summary = "Deletes a user exercise specific to the requesting account.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "The user exercise was successfully deleted."),
+      @ApiResponse(responseCode = "403", description = "The user exercise could not be deleted because the requester is not its owner."),
+      @ApiResponse(responseCode = "404", description = "No user exercise with the given ID could be found."),
+      @ApiResponse(responseCode = "500", description = "The exercises could not be fetched because the logged-in user could not be found in the "
+                                                       + "database."),
+  })
+  public void deleteUserExercise(@PathVariable @Parameter(description = "ID of the user exercise to delete.", example = "8") Long userExerciseId)
+      throws InvalidRequestException, DataAccessException {
+    var currentUser = securityService.getCurrentUser();
+    exerciseService.deleteUserExercise(currentUser.getUid(), userExerciseId);
   }
 }

@@ -21,6 +21,8 @@ spring:
     username: user
     password: password
   jpa:
+    hibernate:
+      ddl-auto: create-drop
     show-sql: true
 
 springdoc:
