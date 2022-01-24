@@ -82,17 +82,51 @@ public interface ExerciseService {
    * Fetches the exercise with the provided {@code exerciseId}.
    *
    * @param exerciseId ID of the exercise to fetch
-   * @return an {@link Exercise} instance whose {@link Exercise#getId()} property is equal to the provided {@code exerciseId}
+   * @return an {@link Exercise} instance whose {@link Exercise#getId()} property is equal to the provided {@code exerciseId}. Might also be a
+   *     {@link UserExercise} instance. In order to search initial exercises only, use {@link ExerciseService#getInitialExerciseById(Long)}. In order
+   *     to search user exercises only, use {@link ExerciseService#getUserExerciseById(Long)}.
    * @throws DataNotFoundException if there is no {@link Exercise} with the given {@code exerciseId}
    */
   Exercise getExerciseById(Long exerciseId) throws DataNotFoundException;
 
   /**
+   * Fetches the initial exercise with the provided {@code exerciseId}.
+   *
+   * @param initialExerciseId ID of the initial exercise to fetch
+   * @return an {@link Exercise} instance whose {@link Exercise#getId()} property is equal to the provided {@code exerciseId}. Is never an instance
+   *     of {@link UserExercise}. In order to search both initial and user exercises, use {@link ExerciseService#getExerciseById(Long)}
+   * @throws DataNotFoundException if there is no initial {@link Exercise} with the given {@code exerciseId}
+   */
+  Exercise getInitialExerciseById(Long initialExerciseId) throws DataNotFoundException;
+
+  /**
    * Fetches the user exercise with the provided {@code exerciseId}.
    *
-   * @param exerciseId ID of the exercise to fetch
-   * @return an {@link UserExercise} instance whose {@link UserExercise#getId()} property is equal to the provided {@code exerciseId}
-   * @throws DataNotFoundException if there is no {@link UserExercise} with the given {@code exerciseId}
+   * @param userExerciseId ID of the user exercise to fetch
+   * @return a {@link UserExercise} instance whose {@link UserExercise#getId()} property is equal to the provided {@code userExerciseId}. In order to
+   *     search initial exercises only, use {@link ExerciseService#getInitialExerciseById(Long)}. In order to search both initial and user exercises,
+   *     use {@link ExerciseService#getExerciseById(Long)}.
+   * @throws DataNotFoundException if there is no {@link UserExercise} with the given {@code userExerciseId}
    */
-  UserExercise getUserExerciseById(Long exerciseId) throws DataNotFoundException;
+  UserExercise getUserExerciseById(Long userExerciseId) throws DataNotFoundException;
+
+  /**
+   * Deletes the initial exercise with the given id.
+   *
+   * @param initialExerciseId the ID of the {@link Exercise} to be deleted
+   * @throws DataNotFoundException if there is no initial {@link Exercise} with the given {@code exerciseId}
+   */
+  void deleteInitialExercise(Long initialExerciseId) throws DataNotFoundException;
+
+  /**
+   * Deletes the user exercise with the given id.
+   *
+   * @param firebaseId     the Firebase ID of the user executing the operation
+   * @param userExerciseId the ID of the {@link UserExercise} to be deleted
+   * @throws DataNotFoundException   if there is no {@link UserExercise} with the given {@code userExerciseId}
+   * @throws DataAccessException     if the user lookup fails
+   * @throws InvalidRequestException if the user represented by {@code firebaseId} is neither admin nor the one who created the user exercise
+   *                                 identified by {@code userExerciseId}
+   */
+  void deleteUserExercise(String firebaseId, Long userExerciseId) throws DataNotFoundException, DataAccessException, InvalidRequestException;
 }

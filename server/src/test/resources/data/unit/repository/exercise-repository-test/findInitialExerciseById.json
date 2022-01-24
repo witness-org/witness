@@ -1,0 +1,261 @@
+[
+  {
+    "user": {
+      "id": 1,
+      "firebaseId": "firebase1",
+      "username": "user1",
+      "email": "user1@test.com",
+      "role": null,
+      "sex": "MALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 183
+    },
+    "exercises": [],
+    "userExercises": [],
+    "id": 1,
+    "expectsResult": false
+  },
+  {
+    "user": {
+      "id": 1,
+      "firebaseId": "firebase1",
+      "username": "user1",
+      "email": "user1@test.com",
+      "role": null,
+      "sex": "MALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 183
+    },
+    "exercises": [
+      {
+        "id": 1,
+        "name": "Exercise 1",
+        "description": "Description of Exercise 1",
+        "muscleGroups": [
+          "CHEST"
+        ],
+        "loggingTypes": [
+          "TIME"
+        ]
+      }
+    ],
+    "userExercises": [],
+    "id": 1,
+    "expectsResult": true
+  },
+  {
+    "user": {
+      "id": 1,
+      "firebaseId": "firebase1",
+      "username": "user1",
+      "email": "user1@test.com",
+      "role": null,
+      "sex": "MALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 183
+    },
+    "exercises": [
+      {
+        "id": 1,
+        "name": "Exercise 1",
+        "description": "Description of Exercise 1",
+        "muscleGroups": [
+          "CHEST"
+        ],
+        "loggingTypes": [
+          "TIME"
+        ]
+      }
+    ],
+    "userExercises": [
+      {
+        "id": 2,
+        "name": "Exercise 2",
+        "description": "Description of Exercise 2",
+        "createdBy": {
+          "id": 1,
+          "firebaseId": "firebase1",
+          "username": "user1",
+          "email": "user1@test.com",
+          "role": null,
+          "sex": "MALE",
+          "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+          "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+          "height": 183
+        },
+        "muscleGroups": [
+          "CHEST"
+        ],
+        "loggingTypes": [
+          "TIME"
+        ]
+      }
+    ],
+    "id": 1,
+    "expectsResult": true
+  },
+  {
+    "user": {
+      "id": 1,
+      "firebaseId": "firebase1",
+      "username": "user1",
+      "email": "user1@test.com",
+      "role": null,
+      "sex": "MALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 183
+    },
+    "exercises": [],
+    "userExercises": [
+      {
+        "id": 1,
+        "name": "Exercise 1",
+        "description": "Description of Exercise 1",
+        "createdBy": {
+          "id": 1,
+          "firebaseId": "firebase1",
+          "username": "user1",
+          "email": "user1@test.com",
+          "role": null,
+          "sex": "MALE",
+          "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+          "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+          "height": 183
+        },
+        "muscleGroups": [
+          "CHEST"
+        ],
+        "loggingTypes": [
+          "TIME"
+        ]
+      }
+    ],
+    "id": 1,
+    "expectsResult": false
+  },
+  {
+    "user": {
+      "id": 1,
+      "firebaseId": "firebase1",
+      "username": "user1",
+      "email": "user1@test.com",
+      "role": null,
+      "sex": "MALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 183
+    },
+    "exercises": [
+      {
+        "id": 1,
+        "name": "Exercise 1",
+        "description": "Description of Exercise 1",
+        "muscleGroups": [
+          "CHEST"
+        ],
+        "loggingTypes": [
+          "TIME"
+        ]
+      }
+    ],
+    "userExercises": [],
+    "id": 2,
+    "expectsResult": false
+  },
+  {
+    "user": {
+      "id": 1,
+      "firebaseId": "firebase1",
+      "username": "user1",
+      "email": "user1@test.com",
+      "role": null,
+      "sex": "MALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 183
+    },
+    "exercises": [],
+    "userExercises": [
+      {
+        "id": 1,
+        "name": "Exercise 1",
+        "description": "Description of Exercise 1",
+        "createdBy": {
+          "id": 1,
+          "firebaseId": "firebase1",
+          "username": "user1",
+          "email": "user1@test.com",
+          "role": null,
+          "sex": "MALE",
+          "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+          "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+          "height": 183
+        },
+        "muscleGroups": [
+          "CHEST"
+        ],
+        "loggingTypes": [
+          "TIME"
+        ]
+      }
+    ],
+    "id": 2,
+    "expectsResult": false
+  },
+  {
+    "user": {
+      "id": 1,
+      "firebaseId": "firebase1",
+      "username": "user1",
+      "email": "user1@test.com",
+      "role": null,
+      "sex": "MALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 183
+    },
+    "exercises": [
+      {
+        "id": 1,
+        "name": "Exercise 1",
+        "description": "Description of Exercise 1",
+        "muscleGroups": [
+          "CHEST"
+        ],
+        "loggingTypes": [
+          "TIME"
+        ]
+      }
+    ],
+    "userExercises": [
+      {
+        "id": 2,
+        "name": "Exercise 2",
+        "description": "Description of Exercise 2",
+        "createdBy": {
+          "id": 1,
+          "firebaseId": "firebase1",
+          "username": "user1",
+          "email": "user1@test.com",
+          "role": null,
+          "sex": "MALE",
+          "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+          "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+          "height": 183
+        },
+        "muscleGroups": [
+          "CHEST"
+        ],
+        "loggingTypes": [
+          "TIME"
+        ]
+      }
+    ],
+    "id": 3,
+    "expectsResult": false
+  }
+]
