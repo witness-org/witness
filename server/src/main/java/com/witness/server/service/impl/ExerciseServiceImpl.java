@@ -5,6 +5,7 @@ import com.witness.server.entity.exercise.UserExercise;
 import com.witness.server.entity.user.User;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.enumeration.Role;
+import com.witness.server.enumeration.ServerError;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;
 import com.witness.server.exception.InvalidRequestException;
@@ -55,7 +56,7 @@ public class ExerciseServiceImpl implements ExerciseService, EntityAccessor {
     throwIfInitialExerciseWithNameExists(exerciseName);
 
     var user = getUser(userService, firebaseId);
-    throwIfUserExerciseCreatedByWithNameExists(exerciseName, user);
+    throwIfUserExerciseWithNameExistsForUser(exerciseName, user);
 
     exercise.setCreatedBy(user);
     return userExerciseRepository.save(exercise);
@@ -83,19 +84,16 @@ public class ExerciseServiceImpl implements ExerciseService, EntityAccessor {
 
     var exerciseToUpdate = getUserExerciseById(exerciseId);
 
-    var user = getUser(userService, firebaseId);
-    if (!Role.ADMIN.equals(user.getRole()) && !exerciseToUpdate.getCreatedBy().equals(user)) {
-      log.error("Requested exercise was not created by user with provided Firebase ID {}.", firebaseId);
-      throw new InvalidRequestException("The requested exercise was not created by the provided user.");
-    }
+    var currentUser = getUser(userService, firebaseId);
+    throwIfUserExerciseNotCreatedByUserAndNotAdmin(exerciseToUpdate, currentUser);
 
     var newName = exercise.getName();
     if (!exerciseToUpdate.getName().equals(newName)) {
       throwIfInitialExerciseWithNameExists(newName);
-      throwIfUserExerciseCreatedByWithNameExists(newName, user);
+      throwIfUserExerciseWithNameExistsForUser(newName, currentUser);
     }
 
-    var userExercise = exerciseMapper.fromExerciseAndCreatedBy(exercise, user);
+    var userExercise = exerciseMapper.fromExerciseAndCreatedBy(exercise, currentUser);
     return userExerciseRepository.save(userExercise);
   }
 
@@ -119,27 +117,36 @@ public class ExerciseServiceImpl implements ExerciseService, EntityAccessor {
   public Exercise getExerciseById(Long exerciseId) throws DataNotFoundException {
     return exerciseRepository
         .findById(exerciseId)
-        .orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist."));
+        .orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist.", ServerError.EXERCISE_NOT_FOUND));
   }
 
   @Override
   public UserExercise getUserExerciseById(Long exerciseId) throws DataNotFoundException {
     return userExerciseRepository
         .findById(exerciseId)
-        .orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist."));
+        .orElseThrow(() -> new DataNotFoundException("Requested exercise does not exist.", ServerError.EXERCISE_NOT_FOUND));
   }
 
   private void throwIfInitialExerciseWithNameExists(String name) throws InvalidRequestException {
     if (exerciseRepository.existsByName(name)) {
       log.error("There already exists an initial exercise with the name \"{}\".", name);
-      throw new InvalidRequestException("There already exists an initial exercise with this name.");
+      throw new InvalidRequestException("There already exists an initial exercise with this name.", ServerError.INITIAL_EXERCISE_EXISTS);
     }
   }
 
-  private void throwIfUserExerciseCreatedByWithNameExists(String name, User user) throws InvalidRequestException {
+  private void throwIfUserExerciseWithNameExistsForUser(String name, User user) throws InvalidRequestException {
     if (userExerciseRepository.existsByNameAndCreatedBy(name, user)) {
       log.error("There already exists a user exercise with the name \"{}\" created by the provided user with ID {}.", name, user.getId());
-      throw new InvalidRequestException("There already exists an exercise created by the provided user with this name.");
+      throw new InvalidRequestException("There already exists an exercise created by the provided user with this name.",
+          ServerError.USER_EXERCISE_EXISTS);
+    }
+  }
+
+  private void throwIfUserExerciseNotCreatedByUserAndNotAdmin(UserExercise exerciseToUpdate, User user) throws InvalidRequestException {
+    if (!Role.ADMIN.equals(user.getRole()) && !exerciseToUpdate.getCreatedBy().equals(user)) {
+      log.error("Requested exercise was not created by user with provided Firebase ID {}.", user.getFirebaseId());
+      throw new InvalidRequestException("The requested exercise was not created by the provided user.",
+          ServerError.USER_EXERCISE_NOT_CREATED_BY_USER);
     }
   }
 }

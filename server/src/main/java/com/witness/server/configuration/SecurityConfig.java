@@ -3,7 +3,7 @@ package com.witness.server.configuration;
 import com.witness.server.enumeration.ServerError;
 import com.witness.server.exception.AuthenticationException;
 import com.witness.server.service.SecurityService;
-import com.witness.server.web.interceptor.SecurityFilter;
+import com.witness.server.web.infrastructure.SecurityFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
