@@ -1,8 +1,8 @@
-package com.witness.server.web.interceptor;
+package com.witness.server.web.infrastructure;
 
 import com.witness.server.enumeration.ServerError;
 import com.witness.server.service.TimeService;
-import com.witness.server.web.interceptor.ValidationFailureAdvice.ValidationErrorsHolder.ValidationError;
+import com.witness.server.web.infrastructure.ValidationFailureControllerAdvice.ValidationErrorsHolder.ValidationError;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -38,12 +39,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 @Slf4j
-public class ValidationFailureAdvice {
+public class ValidationFailureControllerAdvice {
   private final MessageSource messageSource;
   private final TimeService timeService;
 
   @Autowired
-  public ValidationFailureAdvice(MessageSource messageSource, TimeService timeService) {
+  public ValidationFailureControllerAdvice(MessageSource messageSource, TimeService timeService) {
     this.messageSource = messageSource;
     this.timeService = timeService;
   }
@@ -51,41 +52,39 @@ public class ValidationFailureAdvice {
   /**
    * Validation errors with a {@link Valid} annotation as root cause result in {@link MethodArgumentNotValidException} objects.
    *
-   * @param ex information about the validation failure
+   * @param ex      information about the validation failure
+   * @param request the request that triggered the validation advice
    * @return a {@link ValidationErrorsHolder} instance representing information about the validation failure that are relevant to the requester
    */
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ValidationErrorsHolder methodArgumentNotValidException(MethodArgumentNotValidException ex) {
-    return buildValidationFailureResponse(() -> {
-      var validationResult = ex.getBindingResult();
-      var fieldErrors = validationResult.getFieldErrors();
-
-      return fieldErrors.stream()
-          .map(fieldError -> {
-            var errorMessage = messageSource.getMessage(fieldError, Locale.ROOT);
-            return new ValidationError(
-                fieldError.getObjectName(),
-                fieldError.getField(),
-                fieldError.getRejectedValue(),
-                !StringUtils.hasText(errorMessage) ? fieldError.getDefaultMessage() : errorMessage);
-          })
-          .collect(Collectors.toList());
-    }, ex);
+  public ValidationErrorsHolder methodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    return buildValidationFailureResponse(() -> ex.getBindingResult().getFieldErrors().stream()
+            .map(fieldError -> {
+              var errorMessage = messageSource.getMessage(fieldError, Locale.ROOT);
+              return new ValidationError(
+                  fieldError.getObjectName(),
+                  fieldError.getField(),
+                  fieldError.getRejectedValue(),
+                  !StringUtils.hasText(errorMessage) ? fieldError.getDefaultMessage() : errorMessage);
+            })
+            .collect(Collectors.toList()), ex,
+        request);
   }
 
   /**
    * Validation errors with a {@link Validated} annotation or a JPA provider (e.g. Hibernate)as root cause result in
    * {@link ConstraintViolationException} objects.
    *
-   * @param ex information about the validation failure
+   * @param ex      information about the validation failure
+   * @param request the request that triggered the validation advice
    * @return a {@link ValidationErrorsHolder} instance representing information about the validation failure that are relevant to the requester
    */
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
   @ExceptionHandler(ConstraintViolationException.class)
-  public ValidationErrorsHolder constraintViolationException(ConstraintViolationException ex) {
+  public ValidationErrorsHolder constraintViolationException(ConstraintViolationException ex, HttpServletRequest request) {
     return buildValidationFailureResponse(() -> ex.getConstraintViolations().stream()
             .map(violation -> new ValidationError(
                 violation.getRootBeanClass().getSimpleName(),
@@ -93,7 +92,8 @@ public class ValidationFailureAdvice {
                 violation.getInvalidValue(),
                 violation.getMessage()))
             .collect(Collectors.toList()),
-        ex);
+        ex,
+        request);
   }
 
   /**
@@ -102,11 +102,14 @@ public class ValidationFailureAdvice {
    *
    * @param errorCollector a supplier that returns a collection of {@link ValidationError} instances which constitute the errors represented by
    *                       the {@link ValidationErrorsHolder} instance being created
+   * @param cause          the exception that triggered the validation advice
+   * @param request        the request that triggered the validation advice
    * @return a {@link ValidationErrorsHolder} with the current timestamp, a message indicating a validation error and the errors provided
    *     by {@code errorCollector}
    */
-  private ValidationErrorsHolder buildValidationFailureResponse(Supplier<Collection<? extends ValidationError>> errorCollector, Throwable cause) {
-    var errors = new ValidationErrorsHolder(timeService.getCurrentTime());
+  private ValidationErrorsHolder buildValidationFailureResponse(Supplier<Collection<? extends ValidationError>> errorCollector, Throwable cause,
+                                                                HttpServletRequest request) {
+    var errors = new ValidationErrorsHolder(timeService.getCurrentTime(), request.getRequestURI());
     errors.setErrors(errorCollector.get());
 
     log.error("Input validation failed with %d errors: %s".formatted(errors.getValidationErrors().size(), errors), cause);
@@ -116,10 +119,14 @@ public class ValidationFailureAdvice {
   @Data
   @Schema(description = "Bundles one or more validation errors.")
   static class ValidationErrorsHolder {
+    @Schema(description = "The part of this request's URL from the protocol name up to the query string in the first line of the HTTP request.",
+        example = "/exercise/initial-exercise/23")
+    private final String path;
+
     @Schema(description = "Number of the HTTP status code induced by the validation errors.", example = "400")
     private final int status;
 
-    @Schema(description = "Phrase describing the HTTP status code induced by the validation errors.", example = "BAD REQUEST")
+    @Schema(description = "Phrase describing the HTTP status code induced by the validation errors.", example = "Bad request")
     private final String error;
 
     @Schema(description = "Unique identification of a common error (group) that may be used for more sophisticated handling on the client-side.",
@@ -137,11 +144,11 @@ public class ValidationFailureAdvice {
     @Schema(description = "Detailed representation of encountered validation errors.")
     private final List<ValidationError> validationErrors;
 
-    ValidationErrorsHolder(ZonedDateTime timestamp) {
+    ValidationErrorsHolder(ZonedDateTime timestamp, String path) {
       this.timestamp = timestamp;
-
+      this.path = path;
       this.status = HttpStatus.BAD_REQUEST.value();
-      this.error = HttpStatus.BAD_REQUEST.getReasonPhrase().toUpperCase();
+      this.error = HttpStatus.BAD_REQUEST.getReasonPhrase();
       this.errorKey = ServerError.VALIDATION_ERROR;
       this.validationErrors = new ArrayList<>();
     }
