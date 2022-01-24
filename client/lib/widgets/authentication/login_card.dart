@@ -109,6 +109,9 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
                     _loginData.user = value;
                   },
                 ),
+                const SizedBox(
+                  height: 7.0,
+                ),
                 TextFormField(
                   key: const Key('login_card.password'),
                   decoration: InputDecoration(labelText: uiStrings.loginCard_form_password_label),
