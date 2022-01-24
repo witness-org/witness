@@ -12,24 +12,12 @@ public class InvalidRequestException extends ServerException {
   public InvalidRequestException() {
   }
 
-  public InvalidRequestException(String message) {
-    super(message);
-  }
-
   public InvalidRequestException(String message, ServerError errorKey) {
     super(message, errorKey);
   }
 
-  public InvalidRequestException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
   public InvalidRequestException(String message, ServerError errorKey, Throwable cause) {
     super(message, errorKey, cause);
-  }
-
-  public InvalidRequestException(Throwable cause) {
-    super(cause);
   }
 
   public InvalidRequestException(Throwable cause, ServerError errorKey) {

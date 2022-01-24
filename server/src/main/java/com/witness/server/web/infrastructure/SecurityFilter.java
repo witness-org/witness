@@ -1,4 +1,4 @@
-package com.witness.server.web.interceptor;
+package com.witness.server.web.infrastructure;
 
 import com.witness.server.configuration.SecurityProperties;
 import com.witness.server.exception.AuthenticationException;

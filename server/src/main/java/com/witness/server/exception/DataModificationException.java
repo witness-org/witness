@@ -12,24 +12,12 @@ public class DataModificationException extends DataAccessException {
   public DataModificationException() {
   }
 
-  public DataModificationException(String message) {
-    super(message);
-  }
-
   public DataModificationException(String message, ServerError errorKey) {
     super(message, errorKey);
   }
 
-  public DataModificationException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
   public DataModificationException(String message, ServerError errorKey, Throwable cause) {
     super(message, errorKey, cause);
-  }
-
-  public DataModificationException(Throwable cause) {
-    super(cause);
   }
 
   public DataModificationException(Throwable cause, ServerError errorKey) {
