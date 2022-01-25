@@ -15,10 +15,16 @@ import 'package:provider/provider.dart';
 final _logger = getLogger('exercises_by_muscle_group_screen');
 
 class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
-  const ExercisesByMuscleGroupScreen(this._muscleGroup, {final Key? key}) : super(key: key);
+  const ExercisesByMuscleGroupScreen(
+    this._muscleGroup, {
+    final Future<void> Function(BuildContext context, Exercise selectedExercise)? selectExerciseAction,
+    final Key? key,
+  })  : _selectExerciseAction = selectExerciseAction,
+        super(key: key);
 
   static const routeName = '/exercises-by-muscle-group';
   final MuscleGroup? _muscleGroup;
+  final Future<void> Function(BuildContext context, Exercise selectedExercise)? _selectExerciseAction;
 
   Future<void> _fetchExercisesByMuscleGroup(final BuildContext context, final MuscleGroup group) async {
     _logger.v(prepare('_fetchExercisesByMuscleGroup()'));
@@ -81,7 +87,7 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
                           final exercise = exerciseData.getExercisesByMuscleGroup(group)[index];
                           return Column(
                             children: [
-                              ExerciseByMuscleGroupItem(exercise),
+                              ExerciseByMuscleGroupItem(exercise, selectExercise: _selectExerciseAction),
                               const Divider(),
                             ],
                           );
@@ -122,10 +128,13 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
 }
 
 class ExerciseByMuscleGroupItem extends StatelessWidget with LogMessagePreparer {
-  const ExerciseByMuscleGroupItem(this._exercise, {final Key? key}) : super(key: key);
+  const ExerciseByMuscleGroupItem(this._exercise, {final Future<void> Function(BuildContext, Exercise)? selectExercise, final Key? key})
+      : _selectExercise = selectExercise,
+        super(key: key);
 
   static final Injector _injector = Injector.appInstance;
   final Exercise _exercise;
+  final Future<void> Function(BuildContext, Exercise)? _selectExercise;
 
   @override
   Widget build(final BuildContext context) {
@@ -137,9 +146,9 @@ class ExerciseByMuscleGroupItem extends StatelessWidget with LogMessagePreparer 
         backgroundColor: Colors.transparent,
         foregroundImage: imageProvider.fromAsset('assets/images/dumbbell.png'),
       ),
-      onTap: () {
-        Navigator.of(context).pushNamed(ExerciseDetailScreen.routeName, arguments: _exercise);
-      },
+      onTap: () => _selectExercise != null
+          ? _selectExercise!(context, _exercise)
+          : Navigator.of(context).pushNamed(ExerciseDetailScreen.routeName, arguments: _exercise),
     );
   }
 }

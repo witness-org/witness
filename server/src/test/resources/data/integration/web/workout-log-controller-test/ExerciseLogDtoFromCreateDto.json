@@ -1,8 +1,18 @@
 {
   "id": 1,
   "position": 1,
-  "exerciseName": "Exercise 1",
-  "exerciseId": 1,
+  "exercise": {
+    "id": 1,
+    "name": "Exercise 1",
+    "description": "Description of Exercise 1",
+    "muscleGroups": [
+      "LEGS"
+    ],
+    "loggingTypes": [
+      "TIME",
+      "REPS"
+    ]
+  },
   "workoutLogId": 1,
   "comment": "Test comment.",
   "setLogs": []

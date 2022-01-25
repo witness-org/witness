@@ -76,10 +76,6 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> reloadAuthentication() async {
-    await Future<void>.delayed(
-      const Duration(seconds: 1),
-    );
-
     await _initializeFlutterFire();
     _listenToUserChangeStream();
   }

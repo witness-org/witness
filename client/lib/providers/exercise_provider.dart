@@ -13,32 +13,18 @@ import 'package:injector/injector.dart';
 final _logger = getLogger('exercise_provider');
 
 class ExerciseProvider with ChangeNotifier {
-  ExerciseProvider._(this._auth, this._muscleGroups, this._exercises);
+  ExerciseProvider._(this._auth, this._exercises);
 
-  ExerciseProvider.empty()
-      : this._(
-          null,
-          <MuscleGroup>[],
-          <MuscleGroup, List<Exercise>>{},
-        );
+  ExerciseProvider.empty() : this._(null, <MuscleGroup, List<Exercise>>{});
 
   ExerciseProvider.fromProviders(final AuthProvider auth, final ExerciseProvider? instance)
-      : this._(
-          auth,
-          instance?._muscleGroups ?? <MuscleGroup>[],
-          instance?._exercises ?? <MuscleGroup, List<Exercise>>{},
-        );
+      : this._(auth, instance?._exercises ?? <MuscleGroup, List<Exercise>>{});
 
   static final Injector _injector = Injector.appInstance;
   late final ExerciseService _exerciseService = _injector.get<ExerciseService>();
 
-  final List<MuscleGroup> _muscleGroups;
   final Map<MuscleGroup, List<Exercise>> _exercises;
   final AuthProvider? _auth;
-
-  List<MuscleGroup> get muscleGroups {
-    return collection.UnmodifiableListView(_muscleGroups);
-  }
 
   Map<MuscleGroup, List<Exercise>> get exercises {
     return collection.UnmodifiableMapView(_exercises);

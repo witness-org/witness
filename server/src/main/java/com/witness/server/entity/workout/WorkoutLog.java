@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,8 +53,9 @@ public class WorkoutLog {
   @NotNull
   private ZonedDateTime loggedOn;
 
-  @Column(name = "duration_minutes")
-  @Positive
+  @Column(name = "duration_minutes", nullable = false)
+  @NotNull
+  @PositiveOrZero
   private Integer durationMinutes;
 
   @OneToMany(targetEntity = ExerciseLog.class, mappedBy = "workoutLog", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)

@@ -24,7 +24,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -106,7 +106,7 @@ public class WorkoutLogController {
   })
   public WorkoutLogDto setWorkoutDuration(
       @PathVariable @Parameter(description = "ID of the workout log for which the duration should be set.", example = "1") Long workoutLogId,
-      @Valid @RequestBody @Positive @Parameter(description = "New duration of the workout log", example = "45") Integer duration)
+      @Valid @RequestBody @PositiveOrZero @Parameter(description = "New duration of the workout log", example = "45") Integer duration)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     var modifiedWorkoutLog = workoutLogService.setWorkoutDuration(currentUser.getUid(), workoutLogId, duration);
@@ -152,7 +152,7 @@ public class WorkoutLogController {
 
   @PutMapping("{workoutLogId}/exercise-logs-positions")
   @ResponseStatus(HttpStatus.OK)
-  @Operation(summary = "Updates the positions of exercise logs in a workout logout.")
+  @Operation(summary = "Updates the positions of exercise logs in a workout log.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The exercise log positions have been updated successfully."),
       @ApiResponse(responseCode = "400", description = "The current user is not the owner of the workout log whose exercise log positions should "
@@ -221,7 +221,7 @@ public class WorkoutLogController {
   public WorkoutLogDto setExerciseLogComment(
       @PathVariable @Parameter(description = "ID of the workout log containing the exercise log to update.", example = "8") Long workoutLogId,
       @PathVariable @Parameter(description = "ID of the exercise log whose comment should bet set.", example = "3") Long exerciseLogId,
-      @Valid @RequestBody(required = false) @Length(max = 1024)
+      @Valid @RequestBody(required = false) @Length(max = 256)
       @Parameter(description = "New comment of the exercise log.", example = "Skipped legs due to injury.") String comment)
       throws InvalidRequestException, DataAccessException {
     var currentUser = securityService.getCurrentUser();
@@ -279,7 +279,7 @@ public class WorkoutLogController {
 
   @PutMapping("{workoutLogId}/exercise-logs/{exerciseLogId}/set-logs-positions")
   @ResponseStatus(HttpStatus.OK)
-  @Operation(summary = "Updates the positions of exercise logs in a workout logout.")
+  @Operation(summary = "Updates the positions of set logs in an exercise log.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The set log positions have been updated successfully."),
       @ApiResponse(responseCode = "400", description = "The current user is not the owner of the workout log containing the set logs whose positions "

@@ -18,8 +18,6 @@ class UserService extends BaseService {
       ..i('Delegating creation of user "email" to server')
       ..i('POST $requestUri');
 
-    await Future<void>.delayed(const Duration(seconds: 1));
-
     final httpHeaders = getHttpHeaders(jsonContent: true);
     final payload = {
       'username': email,
