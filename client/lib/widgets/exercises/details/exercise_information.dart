@@ -95,8 +95,8 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer, Strin
         _buildChipList(
           context,
           _exercise.muscleGroups.map((final group) => group.toUiString()),
-          theme.primaryColor,
-          theme.colorScheme.onPrimary,
+          theme.colorScheme.secondary,
+          theme.colorScheme.onSecondary,
         ),
         const SizedBox(height: 15),
         _buildHeading(uiStrings.exerciseInformation_body_heading_loggingTypes),

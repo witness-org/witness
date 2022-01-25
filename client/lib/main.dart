@@ -48,9 +48,7 @@ Future<void> bootstrap([final AppArguments arguments = const AppArguments.empty(
           update: (final _, final auth, final previousTrainingPrograms) => TrainingProgramProvider.fromProviders(auth, previousTrainingPrograms),
         ),
       ],
-      child: const WitnessClient(
-        key: Key("root"),
-      ),
+      child: const WitnessClient(),
     ),
   );
 }
