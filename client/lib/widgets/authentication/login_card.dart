@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LoginCard extends StatefulWidget {
-  const LoginCard({final Key? key}) : super(key: key);
+  const LoginCard({final Key? key = const Key('login_card')}) : super(key: key);
 
   @override
   _LoginCardState createState() => _LoginCardState(); // ignore: library_private_types_in_public_api

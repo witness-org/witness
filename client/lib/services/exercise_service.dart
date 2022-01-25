@@ -21,10 +21,6 @@ class ExerciseService extends BaseService {
       ..i('Delegating fetching of exercises to server')
       ..i('GET $requestUri');
 
-    await Future<void>.delayed(
-      const Duration(seconds: 1),
-    );
-
     final response = await http.get(requestUri, headers: getHttpHeaders(authorization: token));
 
     if (response.statusCode == 200) {
@@ -42,10 +38,6 @@ class ExerciseService extends BaseService {
     _logger
       ..i('Delegating creation of new user exercise to server')
       ..i('POST $requestUri');
-
-    await Future<void>.delayed(
-      const Duration(seconds: 1),
-    );
 
     final payload = json.encode(exercise);
     final response = await http.post(requestUri, headers: getHttpHeaders(authorization: token, jsonContent: true), body: payload);
@@ -66,10 +58,6 @@ class ExerciseService extends BaseService {
       ..i('Delegating update of user exercise to server')
       ..i('PUT $requestUri');
 
-    await Future<void>.delayed(
-      const Duration(seconds: 1),
-    );
-
     final payload = json.encode(exercise);
     final response = await http.put(requestUri, headers: getHttpHeaders(authorization: token, jsonContent: true), body: payload);
     final responseMap = decodeResponse<Map<String, dynamic>>(response);
@@ -83,7 +71,7 @@ class ExerciseService extends BaseService {
   }
 
   Future<ServerResponse<void, String>> deleteUserExercise(final int id, final String? token) async {
-    final requestUri = getUri('exercise/user-exercises/$id');
+    final requestUri = getUri('user-exercises/$id');
     _logger
       ..i('Delegating deletion of user exercise to server')
       ..i('DELETE $requestUri');

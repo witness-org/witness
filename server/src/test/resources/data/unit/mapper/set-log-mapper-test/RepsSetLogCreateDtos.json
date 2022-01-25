@@ -2,14 +2,14 @@
   {
     "type": "repsCreate",
     "rpe": 7,
-    "weightKg": 23,
+    "weightG": 23000,
     "resistanceBands": [],
     "reps": 25
   },
   {
     "type": "repsCreate",
     "rpe": null,
-    "weightKg": 24,
+    "weightG": 24000,
     "resistanceBands": [
       "LIGHT",
       "HEAVY"

@@ -6,7 +6,7 @@
       {
         "type": "repsCreate",
         "rpe": 7,
-        "weightKg": 23,
+        "weightG": 23000,
         "resistanceBands": [
           "LIGHT",
           "HEAVY"
@@ -16,7 +16,7 @@
       {
         "type": "timeCreate",
         "rpe": 7,
-        "weightKg": 23,
+        "weightG": 23000,
         "resistanceBands": [],
         "seconds": 25
       }

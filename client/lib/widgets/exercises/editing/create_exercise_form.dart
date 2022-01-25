@@ -28,10 +28,10 @@ class _ExerciseCreateFormState extends AbstractExerciseFormState with StringLoca
     Navigator.of(context).pushReplacementNamed(ExerciseDetailScreen.routeName, arguments: exercise);
   }
 
-  ExerciseCreate _getExerciseCreate(final ExerciseFormInput formInput) {
+  static ExerciseCreate _getExerciseCreate(final ExerciseFormInput formInput) {
     return ExerciseCreate(
       name: formInput.name,
-      description: formInput.descriptionNullOrNotEmpty,
+      description: formInput.descriptionNullOrNotBlank,
       muscleGroups: formInput.muscleGroupList,
       loggingTypes: formInput.loggingTypeList,
     );

@@ -80,8 +80,6 @@ final data = [
     muscleGroups: [MuscleGroup.legs],
     loggingTypes: [LoggingType.reps],
   ),
-  // TODO(raffaelfoidl-leabrugger): Do we want to allow Exercises to not have muscle groups and/or attributes? E.g. allow during creation and server
-  //  automatically assigns group "other"?
   const Exercise(
     id: 11,
     name: 'Special Exercise',

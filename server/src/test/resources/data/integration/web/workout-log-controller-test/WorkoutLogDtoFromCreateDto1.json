@@ -2,20 +2,30 @@
   "durationMinutes": 183,
   "id": 1,
   "userId": 1,
-  "loggedOn": 1637062936.901689400,
+  "loggedOn": "2021-11-04T13:31:22.300+0200",
   "exerciseLogs": [
     {
-      "exerciseId": 1,
+      "exercise": {
+        "id": 1,
+        "name": "Exercise 1",
+        "description": "Description of Exercise 1",
+        "muscleGroups": [
+          "LEGS"
+        ],
+        "loggingTypes": [
+          "TIME",
+          "REPS"
+        ]
+      },
       "comment": "logComment",
       "id": 1,
       "position": 1,
-      "exerciseName": "Exercise 1",
       "workoutLogId": 1,
       "setLogs": [
         {
           "type": "reps",
           "rpe": 7,
-          "weightKg": 23,
+          "weightG": 23000,
           "resistanceBands": [
             "LIGHT",
             "HEAVY"
@@ -28,7 +38,7 @@
         {
           "type": "time",
           "rpe": 7,
-          "weightKg": 23,
+          "weightG": 23000,
           "resistanceBands": [],
           "id": 2,
           "position": 2,
