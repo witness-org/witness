@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class DataModificationException extends DataAccessException {
   public DataModificationException() {
+    super();
   }
 
   public DataModificationException(String message, ServerError errorKey) {

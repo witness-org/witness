@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 /// addition to [PrefixPrinter], this class is also capable of printing a customizable prefix in the form of a logger name, which
 /// preferably corresponds to the name of the instantiating class or its file name. For example,
 ///
-/// ```
+/// ```dart
 /// PrefixPrinter(PrettyPrinter(), 'testClass');
 /// ```
 ///

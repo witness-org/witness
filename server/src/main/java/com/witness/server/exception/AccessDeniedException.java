@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.FORBIDDEN)
 public class AccessDeniedException extends ServerException {
   public AccessDeniedException() {
+    super();
   }
 
   public AccessDeniedException(String message, ServerError errorKey) {

@@ -10,7 +10,7 @@ import 'package:timezone/timezone.dart' as tz;
 /// Note that the actual (de)serialization is delegated to the timezone library.
 ///
 /// To use the converter, simply add an annotation to the class containing a [TZDateTime] class variable that should be serializable:
-/// ```
+/// ```dart
 /// @TZDateTimeConverter()
 /// class TZDateTimeContainer {
 ///   const TZDateTimeContainer({

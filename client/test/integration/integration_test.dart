@@ -46,7 +46,7 @@ final _localTimezone = tz.local;
 /// Note that the fallback values will never be returned from a real method call. They are only used internally by Mockito as valid return values.
 ///
 /// For example, in the [GenerateMocks] annotation, register a custom mock of a service extending BaseService as follows:
-/// ```
+/// ```dart
 /// @GenerateMocks([...], customMocks: [
 ///  ...,
 ///   MockSpec<ExampleService>(fallbackGenerators: {#decodeResponse: mockDecodeResponse}),

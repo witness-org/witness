@@ -40,7 +40,6 @@ class _WorkoutLogItemState extends RequesterState<WorkoutLogItem, WorkoutLog> wi
 
   Future<void> _addExerciseLog(final BuildContext context, final WorkoutLogProvider provider, final Exercise exercise) async {
     final uiStrings = getLocalizedStrings(context);
-
     submitRequestWithResponse(
       () => provider.postNewExerciseLog(_workoutLog, ExerciseLogCreate.empty(exercise.id)),
       defaultErrorMessage: uiStrings.workoutLogItem_addExerciseDefaultError,

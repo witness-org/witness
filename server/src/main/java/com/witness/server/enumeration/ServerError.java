@@ -115,7 +115,7 @@ public enum ServerError {
   INSUFFICIENT_PRIVILEGES,
 
   /**
-   * New User Entry could not be created for undefined reasons.
+   * New user entry could not be created for undefined reasons.
    */
   COULD_NOT_CREATE_USER,
 
@@ -125,7 +125,7 @@ public enum ServerError {
   VALIDATION_ERROR,
 
   /**
-   * The requested role does is not valid in the application context.
+   * The requested role is not valid in the application context.
    */
   INVALID_ROLE,
 

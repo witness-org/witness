@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class InvalidRequestException extends ServerException {
   public InvalidRequestException() {
+    super();
   }
 
   public InvalidRequestException(String message, ServerError errorKey) {

@@ -5,6 +5,7 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/workouts/workout_log_create.dart';
 import 'package:client/providers/workout_log_provider.dart';
 import 'package:client/widgets/app_drawer.dart';
+import 'package:client/widgets/common/error_key_translator.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/main_app_bar.dart';
 import 'package:client/widgets/workouts/workout_log_item.dart';
@@ -25,8 +26,7 @@ class WorkoutLogScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _WorkoutLogScreenState();
 }
 
-class _WorkoutLogScreenState extends State<WorkoutLogScreen> with LogMessagePreparer, StringLocalizer {
-  late final TZDateTime _date = widget._date;
+class _WorkoutLogScreenState extends State<WorkoutLogScreen> with LogMessagePreparer, StringLocalizer, ErrorKeyTranslator {
   String? _error;
 
   Future<void> _fetchWorkoutLogsByDate(final BuildContext context, final TZDateTime date) async {
@@ -34,14 +34,14 @@ class _WorkoutLogScreenState extends State<WorkoutLogScreen> with LogMessagePrep
     await Provider.of<WorkoutLogProvider>(context, listen: false).fetchWorkoutLogsByDate(date);
   }
 
-  Future<void> _createNewWorkoutLog() async {
+  Future<void> _createNewWorkoutLog(final StringLocalizations uiStrings) async {
     _logger.v(prepare('_postNewWorkout()'));
     final response = await Provider.of<WorkoutLogProvider>(context, listen: false).postNewWorkoutLog(
-      WorkoutLogCreate.empty(_date.onlyDate()),
+      WorkoutLogCreate.empty(widget._date.onlyDate()),
     );
 
     if (response.isError) {
-      setState(() => _error = response.error);
+      setState(() => _error = translate(uiStrings, response.error!));
     }
   }
 
@@ -55,7 +55,7 @@ class _WorkoutLogScreenState extends State<WorkoutLogScreen> with LogMessagePrep
             padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
             child: Text(
               // TODO(raffaelfoidl): fix UI when text too long
-              _date.getStringRepresentation(
+              widget._date.getStringRepresentation(
                 todayText: uiStrings.dateFormat_today,
                 yesterdayText: uiStrings.dateFormat_yesterday,
               ),
@@ -73,50 +73,49 @@ class _WorkoutLogScreenState extends State<WorkoutLogScreen> with LogMessagePrep
       child: FutureBuilder<void>(
         future: _fetchWorkoutLogsByDate(context, date),
         builder: (final _, final snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                uiStrings.workoutLogScreen_workoutLogList_errorMessage(snapshot.error.toString()),
-                textAlign: TextAlign.center,
+          return snapshot.waitSwitch(
+            RefreshIndicator(
+              onRefresh: () => _fetchWorkoutLogsByDate(context, date),
+              child: Consumer<WorkoutLogProvider>(
+                builder: (final _, final workoutLogData, final __) {
+                  _logger.v(prepare('_buildWorkoutLogList.Consumer.builder()'));
+                  final logs = workoutLogData.getWorkoutLogsByDay(date);
+                  return logs.isEmpty
+                      ? Center(
+                          child: Text(
+                            _error ?? uiStrings.workoutLogScreen_placeholder,
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      : Scrollbar(
+                          child: ListView.builder(
+                            itemCount: logs.length,
+                            itemBuilder: (final _, final index) {
+                              final log = logs[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
+                                child: Column(
+                                  children: [
+                                    WorkoutLogItem(index, log),
+                                    const Divider(),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                },
               ),
-            );
-          } else {
-            return snapshot.waitSwitch(
-              RefreshIndicator(
-                onRefresh: () => _fetchWorkoutLogsByDate(context, date),
-                child: Consumer<WorkoutLogProvider>(
-                  builder: (final _, final workoutLogData, final __) {
-                    _logger.v(prepare('_buildWorkoutLogList.Consumer.builder()'));
-                    final logs = workoutLogData.getWorkoutLogsByDay(date);
-                    return logs.isEmpty
-                        ? Center(
-                            child: Text(
-                              _error ?? uiStrings.workoutLogScreen_placeholder,
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        : Scrollbar(
-                            child: ListView.builder(
-                              itemCount: logs.length,
-                              itemBuilder: (final _, final index) {
-                                final log = logs[index];
-                                return Padding(
-                                  padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
-                                  child: Column(
-                                    children: [
-                                      WorkoutLogItem(index, log),
-                                      const Divider(),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                  },
+            ),
+            errorWidget: (final error) {
+              return Center(
+                child: Text(
+                  uiStrings.workoutLogScreen_workoutLogList_errorMessage(translate(uiStrings, error.toString())),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-            );
-          }
+              );
+            },
+          );
         },
       ),
     );
@@ -148,14 +147,14 @@ class _WorkoutLogScreenState extends State<WorkoutLogScreen> with LogMessagePrep
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
     final uiStrings = getLocalizedStrings(context);
-    return _buildScreen(context, uiStrings, _date);
+    return _buildScreen(context, uiStrings, widget._date);
   }
 }
 
 class _WorkoutFloatingActionButton extends StatefulWidget {
   const _WorkoutFloatingActionButton(this._createNewWorkoutAction, {final Key? key}) : super(key: key);
 
-  final void Function() _createNewWorkoutAction;
+  final void Function(StringLocalizations uiStrings) _createNewWorkoutAction;
 
   @override
   _WorkoutFloatingActionButtonState createState() => _WorkoutFloatingActionButtonState();
@@ -163,7 +162,6 @@ class _WorkoutFloatingActionButton extends StatefulWidget {
 
 class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButton> with StringLocalizer {
   var _isOpened = false;
-  late final void Function() _createNewWorkoutAction = widget._createNewWorkoutAction;
 
   set isOpened(final bool isOpened) {
     setState(() => _isOpened = isOpened);
@@ -195,7 +193,7 @@ class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButt
       icon: isOpened ? Icons.close : Icons.add,
       spacing: 2,
       children: [
-        _buildSpeedDialChild(theme, Icons.add, uiStrings.workoutLogScreen_speedDial_logNewWorkout, _createNewWorkoutAction),
+        _buildSpeedDialChild(theme, Icons.add, uiStrings.workoutLogScreen_speedDial_logNewWorkout, () => widget._createNewWorkoutAction(uiStrings)),
         _buildSpeedDialChild(theme, Icons.content_paste, uiStrings.workoutLogScreen_speedDial_logWorkoutFromProgram, () {}),
         _buildSpeedDialChild(theme, Icons.copy, uiStrings.workoutLogScreen_speedDial_copyWorkout, () {}),
       ],

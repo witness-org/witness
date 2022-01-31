@@ -104,6 +104,16 @@
   "@exerciseByMuscleGroupScreen_search_tooltip": {
     "description": "Tooltip of icon that allows to search exercises in `ExercisesByMuscleGroupScreen`."
   },
+  "exerciseByMuscleGroupScreen_exerciseList_snapshotError": "Could not fetch exercises: {error}",
+  "@exerciseByMuscleGroupScreen_exerciseList_snapshotError": {
+    "description": "Text in `ExercisesByMuscleGroupScreen` for when the request for retrieving exercises by muscle group did not succeed.",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Could not connect."
+      }
+    }
+  },
   "exerciseDetailScreen_fallback_appBar_title": "Exercise Details",
   "@exerciseDetailScreen_fallback_appBar_title": {
     "description": "Title of `AppBar` in `ExerciseDetailScreen` if no exercise was provided."
@@ -582,11 +592,11 @@
   "@setLogsTable_rpePrefix": {
     "description": "Prefix for display of RPE."
   },
-  "setLogsTable_noRpePlaceholder": "—",
+  "setLogsTable_noRpePlaceholder": "\u2014",
   "@setLogsTable_noRpePlaceholder": {
     "description": "Placeholder for when no RPE is provided in a set log."
   },
-  "setLogsTable_noResistanceBandsPlaceholder": "—",
+  "setLogsTable_noResistanceBandsPlaceholder": "\u2014",
   "@setLogsTable_noResistanceBandsPlaceholder": {
     "description": "Placeholder for when no resistance bands are provided in a set log."
   },
@@ -717,5 +727,177 @@
   "dateFormat_yesterday": "Yesterday",
   "@dateFormat_yesterday": {
     "description": "Text to be displayed instead of a date if the given date is yesterday."
+  },
+  "errorTranslation_certificateFetchFailed": "Failed to retrieve public key certificates required to verify JWTs.",
+  "@errorTranslation_certificateFetchFailed": {
+    "description": "Textual representation of error key `CERTIFICATE_FETCH_FAILED` returned by server."
+  },
+  "errorTranslation_configurationNotFound": "No IdP configuration found for the given identifier.",
+  "@errorTranslation_configurationNotFound": {
+    "description": "Textual representation of error key `CONFIGURATION_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_emailAlreadyExists": "A user already exists with the provided email.",
+  "@errorTranslation_emailAlreadyExists": {
+    "description": "Textual representation of error key `EMAIL_ALREADY_EXISTS` returned by server."
+  },
+  "errorTranslation_emailNotFound": "No user record found for the provided email. This typically happens when generating a password reset link using an email for a user that is not already registered.",
+  "@errorTranslation_emailNotFound": {
+    "description": "Textual representation of error key `EMAIL_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_expiredIdToken": "User authentication failed: The specified ID token has expired.",
+  "@errorTranslation_expiredIdToken": {
+    "description": "Textual representation of error key `EXPIRED_ID_TOKEN` returned by server."
+  },
+  "errorTranslation_expiredSessionCookie": "The specified session cookie is expired.",
+  "@errorTranslation_expiredSessionCookie": {
+    "description": "Textual representation of error key `EXPIRED_SESSION_COOKIE` returned by server."
+  },
+  "errorTranslation_invalidDynamicLinkDomain": "The provided dynamic link domain is not configured or authorized for the current project.",
+  "@errorTranslation_invalidDynamicLinkDomain": {
+    "description": "Textual representation of error key `INVALID_DYNAMIC_LINK_DOMAIN` returned by server."
+  },
+  "errorTranslation_invalidIdToken": "User authentication failed: The specified ID token is invalid.",
+  "@errorTranslation_invalidIdToken": {
+    "description": "Textual representation of error key `INVALID_ID_TOKEN` returned by server."
+  },
+  "errorTranslation_invalidSessionCookie": "The specified session cookie is invalid.",
+  "@errorTranslation_invalidSessionCookie": {
+    "description": "Textual representation of error key `INVALID_SESSION_COOKIE` returned by server."
+  },
+  "errorTranslation_phoneNumberAlreadyExists": "A user already exists with the provided phone number.",
+  "@errorTranslation_phoneNumberAlreadyExists": {
+    "description": "Textual representation of error key `PHONE_NUMBER_ALREADY_EXISTS` returned by server."
+  },
+  "errorTranslation_revokedIdToken": "User authentication failed: The specified ID token has been revoked.",
+  "@errorTranslation_revokedIdToken": {
+    "description": "Textual representation of error key `REVOKED_ID_TOKEN` returned by server."
+  },
+  "errorTranslation_revokedSessionCookie": "The specified session cookie has been revoked.",
+  "@errorTranslation_revokedSessionCookie": {
+    "description": "Textual representation of error key `REVOKED_SESSION_COOKIE` returned by server."
+  },
+  "errorTranslation_tenantIdMismatch": "Tenant ID in the JWT does not match.",
+  "@errorTranslation_tenantIdMismatch": {
+    "description": "Textual representation of error key `TENANT_ID_MISMATCH` returned by server."
+  },
+  "errorTranslation_tenantNotFound": "No tenant found for the given identifier.",
+  "@errorTranslation_tenantNotFound": {
+    "description": "Textual representation of error key `TENANT_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_uidAlreadyExists": "A user already exists with the provided UID.",
+  "@errorTranslation_uidAlreadyExists": {
+    "description": "Textual representation of error key `UID_ALREADY_EXISTS` returned by server."
+  },
+  "errorTranslation_unauthorizedContinueUrl": "The domain of the continue URL is not whitelisted. Whitelist the domain in the Firebase console.",
+  "@errorTranslation_unauthorizedContinueUrl": {
+    "description": "Textual representation of error key `UNAUTHORIZED_CONTINUE_URL` returned by server."
+  },
+  "errorTranslation_userNotFound": "No user found for given email address.",
+  "@errorTranslation_userNotFound": {
+    "description": "Textual representation of error key `USER_NOT_FOUND` returned by server or Firebase Auth server."
+  },
+  "errorTranslation_userDisabled": "User with given email address has been disabled.",
+  "@errorTranslation_userDisabled": {
+    "description": "Textual representation of error key `USER_DISABLED` returned by server or Firebase Auth server."
+  },
+  "errorTranslation_userInconsistency": "The persisted Firebase ID of a user does not point to an actually existing user at the Firebase Auth server or the email addresses do not match.",
+  "@errorTranslation_userInconsistency": {
+    "description": "Textual representation of error key `USER_INCONSISTENCY` returned by server."
+  },
+  "errorTranslation_authorizationNotGranted": "Request not authorized or another authorization-related operation failed, e.g. due to missing token.",
+  "@errorTranslation_authorizationNotGranted": {
+    "description": "Textual representation of error key `AUTHORIZATION_NOT_GRANTED` returned by server."
+  },
+  "errorTranslation_insufficientPrivileges": "Request was valid and operation exists, but user does not have required rights.",
+  "@errorTranslation_insufficientPrivileges": {
+    "description": "Textual representation of error key `INSUFFICIENT_PRIVILEGES` returned by server."
+  },
+  "errorTranslation_couldNotCreateUser": "New user entry could not be created.",
+  "@errorTranslation_couldNotCreateUser": {
+    "description": "Textual representation of error key `COULD_NOT_CREATE_USER` returned by server."
+  },
+  "errorTranslation_validationError": "Request was not handled because the request parameters were invalid.",
+  "@errorTranslation_validationError": {
+    "description": "Textual representation of error key `VALIDATION_ERROR` returned by server."
+  },
+  "errorTranslation_invalidRole": "The requested role is not valid in the application context.",
+  "@errorTranslation_invalidRole": {
+    "description": "Textual representation of error key `INVALID_ROLE` returned by server."
+  },
+  "errorTranslation_lookupFailure": "An undefined error during the lookup of a data record occurred.",
+  "@errorTranslation_lookupFailure": {
+    "description": "Textual representation of error key `LOOKUP_FAILURE` returned by server."
+  },
+  "errorTranslation_exerciseNotFound": "The requested exercise could not be found.",
+  "@errorTranslation_exerciseNotFound": {
+    "description": "Textual representation of error key `EXERCISE_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_initialExerciseExists": "There already exists an initial exercise with the given name.",
+  "@errorTranslation_initialExerciseExists": {
+    "description": "Textual representation of error key `INITIAL_EXERCISE_EXISTS` returned by server."
+  },
+  "errorTranslation_userExerciseExists": "There already exists a user exercise with the given name.",
+  "@errorTranslation_userExerciseExists": {
+    "description": "Textual representation of error key `USER_EXERCISE_EXISTS` returned by server."
+  },
+  "errorTranslation_userExerciseNotCreatedByUser": "You are not the creator of the given exercise. Therefore, you are not allowed the modify or delete it.",
+  "@errorTranslation_userExerciseNotCreatedByUser": {
+    "description": "Textual representation of error key `USER_EXERCISE_NOT_CREATED_BY_USER` returned by server."
+  },
+  "errorTranslation_setLogPositionChangeForbidden": "The position of a set log must not be changed with the current request.",
+  "@errorTranslation_setLogPositionChangeForbidden": {
+    "description": "Textual representation of error key `SET_LOG_POSITION_CHANGE_FORBIDDEN` returned by server."
+  },
+  "errorTranslation_workoutLogNotFound": "The requested workout log could not be found.",
+  "@errorTranslation_workoutLogNotFound": {
+    "description": "Textual representation of error key `WORKOUT_LOG_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_exerciseLogNotFound": "The requested exercise log could not be found.",
+  "@errorTranslation_exerciseLogNotFound": {
+    "description": "Textual representation of error key `EXERCISE_LOG_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_setLogNotFound": "The requested set log could not be found.",
+  "@errorTranslation_setLogNotFound": {
+    "description": "Textual representation of error key `SET_LOG_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_workoutLogNotByUser": "You cannot not access or modify workout logs created by other users.",
+  "@errorTranslation_workoutLogNotByUser": {
+    "description": "Textual representation of error key `WORKOUT_LOG_NOT_BY_USER` returned by server."
+  },
+  "errorTranslation_exerciseLogNotInWorkoutLog": "The specified exercise log is not part of the given workout log.",
+  "@errorTranslation_exerciseLogNotInWorkoutLog": {
+    "description": "Textual representation of error key `EXERCISE_LOG_NOT_IN_WORKOUT_LOG` returned by server."
+  },
+  "errorTranslation_setLogNotInExerciseLog": "The specified set log is not part of the given exercise log.",
+  "@errorTranslation_setLogNotInExerciseLog": {
+    "description": "Textual representation of error key `SET_LOG_NOT_IN_EXERCISE_LOG` returned by server."
+  },
+  "errorTranslation_invalidLoggingType": "The logging type is not applicable to the given exercise.",
+  "@errorTranslation_invalidLoggingType": {
+    "description": "Textual representation of error key `INVALID_LOGGING_TYPE` returned by server."
+  },
+  "errorTranslation_positionMapInvalid": "The new assignment of positions to log entries contains too few or too many entries.",
+  "@errorTranslation_positionMapInvalid": {
+    "description": "Textual representation of error key `POSITION_MAP_INVALID` returned by server."
+  },
+  "errorTranslation_positionMapNotUnique": "The new assignment of positions to log entries contains duplicates.",
+  "@errorTranslation_positionMapNotUnique": {
+    "description": "Textual representation of error key `POSITION_MAP_NOT_UNIQUE` returned by server."
+  },
+  "errorTranslation_undefinedError": "An unexpected error occurred.",
+  "@errorTranslation_undefinedError": {
+    "description": "Textual representation of error key `UNDEFINED_ERROR` returned by server."
+  },
+  "errorTranslation_invalidEmail": "The provided email address is not valid.",
+  "@errorTranslation_invalidEmail": {
+    "description": "Textual representation of error key `invalid-email` returned by the Firebase Auth server."
+  },
+  "errorTranslation_operationNotAllowed": "The requested login method is not allowed. Enable it in the Firebase Console.",
+  "@errorTranslation_operationNotAllowed": {
+    "description": "Textual representation of error key `operation-not-allowed` returned by the Firebase Auth server."
+  },
+  "errorTranslation_wrongPassword": "The provided password is invalid for the given user.",
+  "@errorTranslation_wrongPassword": {
+    "description": "Textual representation of error key `wrong-password` returned by the Firebase Auth server."
   }
 }

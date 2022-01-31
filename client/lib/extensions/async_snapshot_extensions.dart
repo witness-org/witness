@@ -7,7 +7,7 @@ extension AsyncSnapshotExtensions<T> on AsyncSnapshot<T> {
   /// the current instance is [ConnectionState.waiting], the widget represented by the [waitingWidget] parameter is returned. If
   /// [waitingWidget] is `null`,
   ///
-  /// ```
+  /// ```dart
   /// Center(
   ///       child: CircularProgressIndicator(),
   /// )
@@ -17,7 +17,7 @@ extension AsyncSnapshotExtensions<T> on AsyncSnapshot<T> {
   /// widget represented by the [defaultWidget] parameter is returned. However, if the current instance is in an error state, the widget that is
   /// returned by the function represented by the [errorWidget] parameter is returned. If [errorWidget] is `null`,
   ///
-  /// ```
+  /// ```dart
   /// (final Object? error) => Center(
   ///   child: Text('Error: $error'),
   /// )

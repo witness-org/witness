@@ -5,6 +5,7 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/providers/exercise_provider.dart';
+import 'package:client/widgets/common/error_key_translator.dart';
 import 'package:client/widgets/common/image_provider_facade.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/exercises/details/exercise_detail_screen.dart';
@@ -14,7 +15,7 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('exercises_by_muscle_group_screen');
 
-class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
+class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer, ErrorKeyTranslator {
   const ExercisesByMuscleGroupScreen(
     this._muscleGroup, {
     final Future<void> Function(BuildContext context, Exercise selectedExercise)? selectExerciseAction,
@@ -68,37 +69,37 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
       child: FutureBuilder<void>(
         future: _fetchExercisesByMuscleGroup(context, group),
         builder: (final _, final snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text('Could not fetch exercises: ' + snapshot.error.toString()),
-            );
-          } else {
-            return snapshot.waitSwitch(
-              RefreshIndicator(
-                onRefresh: () => _fetchExercisesByMuscleGroup(context, group),
-                child: Consumer<ExerciseProvider>(
-                  builder: (final _, final exerciseData, final __) {
-                    _logger.v(prepare('_buildExerciseList.Consumer.builder()'));
-                    return Scrollbar(
-                      isAlwaysShown: true,
-                      child: ListView.builder(
-                        itemCount: exerciseData.getExercisesByMuscleGroup(group).length,
-                        itemBuilder: (final _, final index) {
-                          final exercise = exerciseData.getExercisesByMuscleGroup(group)[index];
-                          return Column(
-                            children: [
-                              ExerciseByMuscleGroupItem(exercise, selectExercise: _selectExerciseAction),
-                              const Divider(),
-                            ],
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
+          return snapshot.waitSwitch(
+            RefreshIndicator(
+              onRefresh: () => _fetchExercisesByMuscleGroup(context, group),
+              child: Consumer<ExerciseProvider>(
+                builder: (final _, final exerciseData, final __) {
+                  _logger.v(prepare('_buildExerciseList.Consumer.builder()'));
+                  return Scrollbar(
+                    isAlwaysShown: true,
+                    child: ListView.builder(
+                      itemCount: exerciseData.getExercisesByMuscleGroup(group).length,
+                      itemBuilder: (final _, final index) {
+                        final exercise = exerciseData.getExercisesByMuscleGroup(group)[index];
+                        return Column(
+                          children: [
+                            ExerciseByMuscleGroupItem(exercise, selectExercise: _selectExerciseAction),
+                            const Divider(),
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
-            );
-          }
+            ),
+            errorWidget: (final error) => Center(
+              child: Text(
+                uiStrings.exerciseByMuscleGroupScreen_exerciseList_snapshotError(translate(uiStrings, error.toString())),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
         },
       ),
     );
