@@ -35,7 +35,7 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
    *
    * @param user        user that created the user exercises
    * @param muscleGroup that should be trained with the queried exercises
-   * @return list of Exercise objects that fulfill the given criteria
+   * @return list of {@link Exercise} objects that fulfill the given criteria
    */
   @Query("""
       SELECT

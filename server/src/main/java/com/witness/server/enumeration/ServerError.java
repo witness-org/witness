@@ -204,6 +204,12 @@ public enum ServerError {
    */
   POSITION_MAP_NOT_UNIQUE,
 
+
+  /**
+   * The start date of a workout logging period lies after its end date.
+   */
+  WORKOUT_LOGGING_START_DATE_AFTER_END_DATE,
+
   /**
    * Not further defined error.
    */

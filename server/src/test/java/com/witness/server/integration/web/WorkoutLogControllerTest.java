@@ -24,17 +24,21 @@ import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
   private static final String DATA_ROOT = "data/integration/web/workout-log-controller-test/";
 
+  private static final String GET_LOGGING_DAYS_URL = "/logging-days";
   private static final String SET_WORKOUT_DURATION_URL = "%s";
   private static final String DELETE_WORKOUT_LOG_URL = "%s";
   private static final String ADD_EXERCISE_LOG_URL = "%s/exercise-logs";
@@ -73,7 +77,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
     persistUsers(specification.persistedUsers);
     persistEntities(workoutLogRepository, specification.persistedWorkoutLogs);
 
-    var queryParams = toMultiValueMap(Map.of("date", "2021-10-08T14:15:55.3007597+02:00"));
+    var queryParams = toMultiValueMap(Map.of("date", specification.searchDate));
     var response = get(TestAuthentication.REGULAR, requestUrl(), queryParams, WorkoutLogDto[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -92,13 +96,80 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
     persistUsers(specification.persistedUsers);
     persistEntities(workoutLogRepository, specification.persistedWorkoutLogs);
 
-    var queryParams = toMultiValueMap(Map.of("date", "2021-10-08T14:15:55.3007597+02:00"));
+    var queryParams = toMultiValueMap(Map.of("date", specification.searchDate));
     var response = get(TestAuthentication.REGULAR, requestUrl(), queryParams, WorkoutLogDto[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody()).isEmpty();
   }
+
+  //endregion
+
+  //region all logging days in period
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "GetLoggingDaysInput1.json", type = GetByPeriodTestSpecification.class)
+  })
+  void getLoggingDays_matchingNonEmptyPersistedWorkoutLogs_return200AndMap(GetByPeriodTestSpecification specification) {
+    persistUserAndMockLoggedIn(specification.currentUser);
+    persistUsers(specification.persistedUsers);
+    persistEntities(exerciseRepository, specification.persistedExercises);
+    persistEntities(workoutLogRepository, specification.persistedWorkoutLogs);
+
+    var queryParams = toMultiValueMap(Map.of("startDate", specification.startDate, "endDate", specification.endDate));
+    var response = get(TestAuthentication.REGULAR, requestUrl(GET_LOGGING_DAYS_URL), queryParams,
+        new ParameterizedTypeReference<HashMap<ZonedDateTime, Integer>>() {
+        });
+    var responseMap = response.getBody();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(responseMap).hasSameSizeAs(specification.expectedMapping);
+    assertThat(responseMap).isNotEmpty();
+    assertThat(responseMap.entrySet())
+        .usingElementComparator(Comparators.LOGGING_DAY_COMPARATOR)
+        .isEqualTo(specification.expectedMapping.entrySet());
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "GetLoggingDaysInput2.json", type = GetByPeriodTestSpecification.class)
+  })
+  void getLoggingDays_noNonEmptyPersistedWorkoutLogs_return200AndEmptyMap(GetByPeriodTestSpecification specification) {
+    persistUserAndMockLoggedIn(specification.currentUser);
+    persistUsers(specification.persistedUsers);
+    persistEntities(exerciseRepository, specification.persistedExercises);
+    persistEntities(workoutLogRepository, specification.persistedWorkoutLogs);
+
+    var queryParams = toMultiValueMap(Map.of("startDate", specification.startDate, "endDate", specification.endDate));
+    var response = get(TestAuthentication.REGULAR, requestUrl(GET_LOGGING_DAYS_URL), queryParams,
+        new ParameterizedTypeReference<HashMap<ZonedDateTime, Integer>>() {
+        });
+
+    var responseMap = response.getBody();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(responseMap).isNotNull();
+    assertThat(responseMap).isEmpty();
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "GetLoggingDaysInputStartDateAfterEndDate.json", type = GetByPeriodTestSpecification.class)
+  })
+  void getLoggingDays_startDateAfterEndDate_return400(GetByPeriodTestSpecification specification) {
+    persistUserAndMockLoggedIn(specification.currentUser);
+
+    var queryParams = toMultiValueMap(Map.of("startDate", specification.startDate, "endDate", specification.endDate));
+    var response = get(TestAuthentication.REGULAR, requestUrl(GET_LOGGING_DAYS_URL), queryParams, Map.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  //endregion
+
+  //region create workout log
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -167,7 +238,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region find workout log by ID
+  //region set workout log duration
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -254,6 +325,10 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
+  //endregion
+
+  //region delete workout log
+
   @ParameterizedTest
   @JsonFileSources(parameters = {
       @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
@@ -286,17 +361,21 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
+  //endregion
+
+  //region add exercise logs to workout log
+
   @ParameterizedTest
   @JsonFileSources(parameters = {
       @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
       @JsonFileSource(value = DATA_ROOT + "WorkoutLogWithoutExerciseLogs.json", type = WorkoutLog.class),
       @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
-      @JsonFileSource(value = DATA_ROOT + "ExerciseLogCreateDto.json", type = ExerciseLogCreateDto.class),
+      @JsonFileSource(value = DATA_ROOT + "ExerciseLogCreateDtos.json", type = ExerciseLogCreateDto[].class, arrayToList = true),
       @JsonFileSource(value = DATA_ROOT + "ExerciseLogDtoFromCreateDto.json", type = ExerciseLogDto.class),
   })
-  void addExerciseLog_validRequest_return201AndWorkoutLogWithNewExerciseLog(User currentUser, WorkoutLog persistedWorkoutLog,
-                                                                            Exercise referencedExercise, ExerciseLogCreateDto createDto,
-                                                                            ExerciseLogDto createdExerciseLog) {
+  void addExerciseLogs_validRequest_return201AndWorkoutLogWithNewExerciseLog(User currentUser, WorkoutLog persistedWorkoutLog,
+                                                                             Exercise referencedExercise, List<ExerciseLogCreateDto> createDtos,
+                                                                             ExerciseLogDto createdExerciseLog) {
     persistUserAndMockLoggedIn(currentUser);
     persistEntities(exerciseRepository, referencedExercise);
     persistEntities(workoutLogRepository, persistedWorkoutLog);
@@ -304,7 +383,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
     var response = exchange(TestAuthentication.REGULAR,
         requestUrl(ADD_EXERCISE_LOG_URL, persistedWorkoutLog.getId()),
         HttpMethod.POST,
-        createDto,
+        createDtos,
         WorkoutLogDto.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -319,10 +398,10 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
       @JsonFileSource(value = DATA_ROOT + "WorkoutLogWithoutExerciseLogs.json", type = WorkoutLog.class),
       @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
-      @JsonFileSource(value = DATA_ROOT + "ExerciseLogCreateDto.json", type = ExerciseLogCreateDto.class),
+      @JsonFileSource(value = DATA_ROOT + "ExerciseLogCreateDtos.json", type = ExerciseLogCreateDto[].class, arrayToList = true),
   })
-  void addExerciseLog_nonOwnerRegularRequest_return400(User currentUser, User workoutOwner, WorkoutLog persistedWorkoutLog,
-                                                       Exercise referencedExercise, ExerciseLogCreateDto createDto) {
+  void addExerciseLogs_nonOwnerRegularRequest_return400(User currentUser, User workoutOwner, WorkoutLog persistedWorkoutLog,
+                                                        Exercise referencedExercise, List<ExerciseLogCreateDto> createDtos) {
     persistUsers(workoutOwner); // must be persisted before currentUser because otherwise ID in persistedWorkoutLog references wrong User
     persistUserAndMockLoggedIn(currentUser);
     persistEntities(exerciseRepository, referencedExercise);
@@ -331,7 +410,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
     var response = exchange(TestAuthentication.REGULAR,
         requestUrl(ADD_EXERCISE_LOG_URL, persistedWorkoutLog.getId()),
         HttpMethod.POST,
-        createDto,
+        createDtos,
         Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -340,15 +419,15 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
   @ParameterizedTest
   @JsonFileSources(parameters = {
       @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
-      @JsonFileSource(value = DATA_ROOT + "ExerciseLogCreateDto.json", type = ExerciseLogCreateDto.class),
+      @JsonFileSource(value = DATA_ROOT + "ExerciseLogCreateDtos.json", type = ExerciseLogCreateDto[].class, arrayToList = true),
   })
-  void addExerciseLog_workoutLogDoesNotExist_return404(User currentUser, ExerciseLogCreateDto createDto) {
+  void addExerciseLogs_workoutLogDoesNotExist_return404(User currentUser, List<ExerciseLogCreateDto> createDtos) {
     persistUserAndMockLoggedIn(currentUser);
 
     var response = exchange(TestAuthentication.REGULAR,
         requestUrl(ADD_EXERCISE_LOG_URL, 1L),
         HttpMethod.POST,
-        createDto,
+        createDtos,
         Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -358,16 +437,16 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
   @JsonFileSources(parameters = {
       @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
       @JsonFileSource(value = DATA_ROOT + "WorkoutLogWithoutExerciseLogs.json", type = WorkoutLog.class),
-      @JsonFileSource(value = DATA_ROOT + "ExerciseLogCreateDto.json", type = ExerciseLogCreateDto.class)
+      @JsonFileSource(value = DATA_ROOT + "ExerciseLogCreateDtos.json", type = ExerciseLogCreateDto[].class, arrayToList = true)
   })
-  void addExerciseLog_exerciseDoesNotExist_return404(User currentUser, WorkoutLog persistedWorkoutLog, ExerciseLogCreateDto createDto) {
+  void addExerciseLogs_exerciseDoesNotExist_return404(User currentUser, WorkoutLog persistedWorkoutLog, List<ExerciseLogCreateDto> createDtos) {
     persistUserAndMockLoggedIn(currentUser);
     persistEntities(workoutLogRepository, persistedWorkoutLog);
 
     var response = exchange(TestAuthentication.REGULAR,
         requestUrl(ADD_EXERCISE_LOG_URL, persistedWorkoutLog.getId()),
         HttpMethod.POST,
-        createDto,
+        createDtos,
         Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -455,7 +534,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region delete exercise log
+  //region delete exercise log from workout log
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -513,6 +592,10 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
+  //endregion
+
+  //region set exercise log comment
+
   @ParameterizedTest
   @JsonFileSources(parameters = {
       @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
@@ -559,6 +642,10 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
+
+  //endregion
+
+  //region add set log to exericse log
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -640,6 +727,10 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
+
+  //endregion
+
+  //region update set log in exercise log
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -738,7 +829,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
       @JsonFileSource(value = DATA_ROOT + "UpdateSetLogDto3.json", type = SetLogDto.class)
   })
   void updateSetLog_changePosition_return400(User currentUser, Exercise referencedExercise, WorkoutLog workoutLogWithSetLogs,
-                                                         SetLogDto updateSetLog) {
+                                             SetLogDto updateSetLog) {
     persistUserAndMockLoggedIn(currentUser);
     persistEntities(exerciseRepository, referencedExercise);
     persistEntities(workoutLogRepository, workoutLogWithSetLogs.toBuilder().exerciseLogs(new ArrayList<>()).build());
@@ -757,7 +848,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region update set log order
+  //region update set log order in exercise log
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -842,7 +933,7 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
 
   //endregion
 
-  //region delete set log
+  //region delete set log from exercise log
 
   @ParameterizedTest
   @JsonFileSources(parameters = {
@@ -905,6 +996,18 @@ class WorkoutLogControllerTest extends BaseControllerIntegrationTest {
     private String searchDate;
     private WorkoutLog[] persistedWorkoutLogs;
     private WorkoutLogDto[] expectedWorkoutLogs;
+  }
+
+  @Data
+  @NoArgsConstructor
+  static class GetByPeriodTestSpecification {
+    private User currentUser;
+    private User[] persistedUsers;
+    private String startDate;
+    private String endDate;
+    private Exercise[] persistedExercises;
+    private WorkoutLog[] persistedWorkoutLogs;
+    private Map<ZonedDateTime, Integer> expectedMapping;
   }
 
   @Data

@@ -22,11 +22,13 @@ import com.witness.server.service.UserService;
 import com.witness.server.service.WorkoutLogService;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -60,9 +62,23 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
   public List<WorkoutLog> getWorkoutLogsOfDay(String firebaseId, ZonedDateTime date) {
     log.info("Getting workout logs of user with Firebase ID {} from day {}", firebaseId, date);
 
-    var startOfDay = date.with(LocalTime.MIN);
-    var endOfDay = date.with(LocalTime.MAX);
-    return workoutLogRepository.findByLoggedOnBetweenAndUserFirebaseIdEquals(startOfDay, endOfDay, firebaseId);
+    return getWorkoutLogsLoggedByInPeriod(date, date,
+        (start, end) -> workoutLogRepository.findByLoggedOnBetweenAndUserFirebaseIdEquals(start, end, firebaseId));
+  }
+
+  @Override
+  public Map<ZonedDateTime, List<WorkoutLog>> getNonEmptyWorkoutLogsInPeriod(String firebaseId, ZonedDateTime startDate, ZonedDateTime endDate)
+      throws InvalidRequestException {
+    log.info("Getting workout logs of user with Firebase ID {} from {} {}", firebaseId, startDate.getMonth(), startDate.getYear());
+
+    if (startDate.isAfter(endDate)) {
+      throw new InvalidRequestException("The start date of the logging period must lie before the end date.",
+          ServerError.WORKOUT_LOGGING_START_DATE_AFTER_END_DATE);
+    }
+
+    var workoutLogs = getWorkoutLogsLoggedByInPeriod(startDate, endDate,
+        (start, end) -> workoutLogRepository.findNonEmptyByLoggedOnBetweenAndUserFirebaseIdEquals(start, end, firebaseId));
+    return workoutLogs.stream().collect(Collectors.groupingBy(log -> log.getLoggedOn().truncatedTo(ChronoUnit.DAYS)));
   }
 
   @Override
@@ -107,16 +123,19 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
   }
 
   @Override
-  public WorkoutLog addExerciseLog(String firebaseId, Long workoutLogId, ExerciseLog exerciseLog) throws DataAccessException,
+  public WorkoutLog addExerciseLogs(String firebaseId, Long workoutLogId, List<ExerciseLog> exerciseLogs) throws DataAccessException,
       InvalidRequestException {
     log.info("Adding exercise log to workout log with ID {}", workoutLogId);
 
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
     throwIfWorkoutLogNotByUser(firebaseId, workoutLog);
 
-    workoutLog = addExerciseLogToWorkoutLog(workoutLog, exerciseLog);
+    for (var exerciseLog : exerciseLogs) {
+      workoutLog = addExerciseLogToWorkoutLog(workoutLog, exerciseLog);
+    }
 
-    return workoutLogRepository.save(workoutLog);
+    var currentPositions = getExerciseLogPositions(workoutLog.getExerciseLogs());
+    return updateAndSimplifyExerciseLogPositions(workoutLog, currentPositions);
   }
 
   @Override
@@ -252,6 +271,13 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
 
     exerciseLogRepository.save(exerciseLog);
     return workoutLog;
+  }
+
+  private List<WorkoutLog> getWorkoutLogsLoggedByInPeriod(ZonedDateTime startDate, ZonedDateTime endDate,
+                                                          BiFunction<ZonedDateTime, ZonedDateTime, List<WorkoutLog>> workoutLogsGetter) {
+    var startOfStartDay = startDate.with(LocalTime.MIN);
+    var endOfEndDay = endDate.with(LocalTime.MAX);
+    return workoutLogsGetter.apply(startOfStartDay, endOfEndDay);
   }
 
   private WorkoutLog getWorkoutLogOrThrow(Long id) throws DataNotFoundException {
