@@ -120,7 +120,7 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
         children: [
           _buildHeading(heading),
           _buildChipList(
-            MuscleGroup.values.map<Widget>(
+            MuscleGroup.values.map(
               (final group) {
                 return ChoiceChip(
                   label: Text(group.toUiString()),
@@ -144,7 +144,7 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
         children: [
           _buildHeading(heading),
           _buildChipList(
-            LoggingType.values.map<Widget>(
+            LoggingType.values.map(
               (final type) {
                 return ChoiceChip(
                   label: Text(type.toUiString()),

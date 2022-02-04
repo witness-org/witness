@@ -1,5 +1,6 @@
 import 'package:client/models/workouts/workout_log.dart';
 
+/// Provides methods that facilitate [WorkoutLog] handling.
 extension WorkoutLogExtensions on WorkoutLog {
   /// Sorts the log entries of the current [WorkoutLog] according to their positions in ascending order. More precisely, the items of the
   /// `exerciseLogs` collection are sorted based on the `position` property of the respective exercise log items, in ascending order. Furthermore,

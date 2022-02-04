@@ -68,6 +68,12 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer, ErrorKeyTra
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _passwordController.dispose();
+  }
+
+  @override
   Widget build(final BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     final uiStrings = getLocalizedStrings(context);

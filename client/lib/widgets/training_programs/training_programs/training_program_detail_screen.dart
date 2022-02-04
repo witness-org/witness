@@ -11,11 +11,23 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('training_program_detail_screen');
 
-class TrainingProgramDetailScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
+class TrainingProgramDetailScreen extends StatefulWidget {
   const TrainingProgramDetailScreen(this._program, {final Key? key}) : super(key: key);
 
   static const routeName = '/training-program-details';
   final TrainingProgramOverview? _program;
+
+  @override
+  State<StatefulWidget> createState() => _TrainingProgramDetailScreenState();
+}
+
+class _TrainingProgramDetailScreenState extends State<TrainingProgramDetailScreen> with LogMessagePreparer, StringLocalizer {
+  Future<void>? _fetchTrainingWeeksResult;
+
+  Future<void> _fetchTrainingWeeks(final BuildContext context, final int programId) async {
+    _logger.v(prepare('_fetchTrainingWeeks()'));
+    await Provider.of<TrainingProgramProvider>(context, listen: false).fetchTrainingWeeks(programId);
+  }
 
   Widget _buildFallbackScreen(final StringLocalizations uiStrings) {
     _logger.v(prepare('_buildFallbackScreen()'));
@@ -26,12 +38,7 @@ class TrainingProgramDetailScreen extends StatelessWidget with LogMessagePrepare
     );
   }
 
-  Future<void> _fetchTrainingWeeks(final BuildContext context, final int programId) async {
-    _logger.v(prepare('_fetchTrainingWeeks()'));
-    await Provider.of<TrainingProgramProvider>(context, listen: false).fetchTrainingWeeks(programId);
-  }
-
-  Widget _buildScreen(final BuildContext context, final StringLocalizations uiStrings, final TrainingProgramOverview program) {
+  Widget _buildScreen(final StringLocalizations uiStrings, final TrainingProgramOverview program) {
     _logger.v(prepare('_buildScreen()'));
     return Scaffold(
       appBar: AppBar(
@@ -51,7 +58,7 @@ class TrainingProgramDetailScreen extends StatelessWidget with LogMessagePrepare
           Padding(padding: const EdgeInsets.only(left: 16, top: 10, right: 16), child: TrainingProgramHeader(program)),
           Expanded(
             child: FutureBuilder<void>(
-              future: _fetchTrainingWeeks(context, program.id),
+              future: _fetchTrainingWeeksResult,
               builder: (final _, final snapshot) => snapshot.waitSwitch(
                 Consumer<TrainingProgramProvider>(
                   builder: (final _, final providerData, final __) => Scrollbar(
@@ -71,9 +78,18 @@ class TrainingProgramDetailScreen extends StatelessWidget with LogMessagePrepare
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    if (widget._program != null) {
+      _fetchTrainingWeeksResult = _fetchTrainingWeeks(context, widget._program!.id);
+    }
+  }
+
+  @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
     final uiStrings = getLocalizedStrings(context);
-    return _program == null ? _buildFallbackScreen(uiStrings) : _buildScreen(context, uiStrings, _program!);
+    return widget._program == null ? _buildFallbackScreen(uiStrings) : _buildScreen(uiStrings, widget._program!);
   }
 }

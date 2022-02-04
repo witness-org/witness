@@ -30,6 +30,7 @@ extension StringExtensions on String {
   }
 }
 
+/// Provides methods that facilitate handling of nullable [String]s.
 extension NullableStringExtensions on String? {
   /// Return `true` if the given instance is empty or is blank (consists only of whitespaces), otherwise false.
   bool get isNullOrBlank {

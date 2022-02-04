@@ -1,4 +1,4 @@
-import 'package:client/models/common/tz_date_time_converter.dart';
+import 'package:client/models/converters/tz_date_time_converter.dart';
 import 'package:client/models/workouts/exercise_log.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:timezone/timezone.dart';

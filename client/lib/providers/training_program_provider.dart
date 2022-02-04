@@ -1,3 +1,5 @@
+import 'package:client/extensions/list_extensions.dart';
+import 'package:client/extensions/map_extensions.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/training_programs/overview/training_day_overview.dart';
 import 'package:client/models/training_programs/overview/training_program_overview.dart';
@@ -26,10 +28,10 @@ class TrainingProgramProvider with ChangeNotifier {
   TrainingProgramProvider.fromProviders(final AuthProvider auth, final TrainingProgramProvider? instance)
       : this._(
           auth,
-          instance?._trainingPrograms ?? <TrainingProgramOverview>[],
-          instance?._trainingWeeks ?? <int, List<TrainingWeekOverview>>{},
-          instance?._trainingDays ?? <int, List<TrainingDayOverview>>{},
-          instance?._workouts ?? <int, List<Workout>>{},
+          (instance?._trainingPrograms).orEmpty(),
+          (instance?._trainingWeeks).orEmpty(),
+          (instance?._trainingDays).orEmpty(),
+          (instance?._workouts).orEmpty(),
         );
 
   static final Injector _injector = Injector.appInstance;

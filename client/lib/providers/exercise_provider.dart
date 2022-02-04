@@ -1,4 +1,6 @@
 import 'package:client/extensions/enum_extensions.dart';
+import 'package:client/extensions/list_extensions.dart';
+import 'package:client/extensions/map_extensions.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/exercise_create.dart';
@@ -19,7 +21,7 @@ class ExerciseProvider with ChangeNotifier {
   ExerciseProvider.empty() : this._(null, <MuscleGroup, List<Exercise>>{}, <int, ExerciseHistory>{});
 
   ExerciseProvider.fromProviders(final AuthProvider auth, final ExerciseProvider? instance)
-      : this._(auth, instance?._exercises ?? <MuscleGroup, List<Exercise>>{}, instance?._exerciseHistories ?? <int, ExerciseHistory>{});
+      : this._(auth, (instance?._exercises).orEmpty(), (instance?._exerciseHistories).orEmpty());
 
   static final Injector _injector = Injector.appInstance;
   late final ExerciseService _exerciseService = _injector.get<ExerciseService>();
@@ -37,7 +39,7 @@ class ExerciseProvider with ChangeNotifier {
   }
 
   List<Exercise> getExercisesByMuscleGroup(final MuscleGroup group) {
-    return collection.UnmodifiableListView(_exercises[group] ?? <Exercise>[]);
+    return collection.UnmodifiableListView(_exercises[group].orEmpty());
   }
 
   Future<void> fetchExercisesByMuscleGroup(final MuscleGroup group) async {
