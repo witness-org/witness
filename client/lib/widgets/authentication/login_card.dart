@@ -104,6 +104,7 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
                     if (value == null || value.isEmpty || !value.contains('@')) {
                       return uiStrings.loginCard_form_error_invalidEmail;
                     }
+                    return null;
                   },
                   onSaved: (final value) {
                     _loginData.user = value;
@@ -121,6 +122,7 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
                     if (value == null || value.isEmpty || value.length < 6) {
                       return uiStrings.loginCard_form_error_passwordTooShort;
                     }
+                    return null;
                   },
                   onSaved: (final value) {
                     _loginData.password = value;
@@ -144,6 +146,7 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
                               if (value != _passwordController.text) {
                                 return uiStrings.loginCard_form_error_passwordMismatch;
                               }
+                              return null;
                             }
                           : null,
                     ),

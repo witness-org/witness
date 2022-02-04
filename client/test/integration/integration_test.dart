@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/logging_type.dart';
 import 'package:client/models/exercises/muscle_group.dart';
@@ -88,6 +89,7 @@ void main() {
         if (methodCall.method == 'getLocalTimezone') {
           return 'Europe/Vienna';
         }
+        return null;
       },
     );
   });
