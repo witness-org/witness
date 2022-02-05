@@ -70,6 +70,7 @@ class _SetLogDialogState extends RequesterState<SetLogDialog, WorkoutLog> with S
         if (double.tryParse(value) == null) {
           return uiStrings.exerciseLogItem_setLogDialog_weightInvalidError;
         }
+        return null;
       },
       onSaved: (final value) => value != null ? formInput.weightG = double.parse(value).kgInG : 0,
     );
@@ -119,6 +120,7 @@ class _SetLogDialogState extends RequesterState<SetLogDialog, WorkoutLog> with S
               } else if (intValue < 1) {
                 return uiStrings.exerciseLogItem_setLogDialog_repsTimeInvalidError;
               }
+              return null;
             },
             onSaved: (final newValue) => newValue != null ? formInput.loggedValue = int.parse(newValue) : 0,
           ),
