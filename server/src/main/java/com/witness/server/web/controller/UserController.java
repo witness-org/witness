@@ -55,7 +55,7 @@ public class UserController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   @PublicApi
-  @Operation(summary = "Registers a new user. Setting a role for the user is only possible for administrators.")
+  @Operation(summary = "Registers a new user. Setting a role for the user is only possible for admins.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "The user was successfully created."),
       @ApiResponse(responseCode = "400", description = "The user could not be created because the request body is invalid."),
