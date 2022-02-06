@@ -18,7 +18,7 @@ class WorkoutLogService extends BaseService {
   @override
   String get targetResource => 'workout-logs';
 
-  Future<ServerResponse<List<WorkoutLog>, String>> getWorkoutLogsByDate(final TZDateTime date, final String? token) async {
+  Future<ServerResponse<List<WorkoutLog>, String?>> getWorkoutLogsByDate(final TZDateTime date, final String? token) async {
     final requestUri = getUri('', queryParameters: {'date': date.toIso8601String()});
     _logger
       ..i('Delegating fetching of workout logs to server')
@@ -32,11 +32,11 @@ class WorkoutLogService extends BaseService {
     } else {
       final responseMap = decodeResponse<Map<String, dynamic>>(response);
       _logger.e('Could not fetch workout logs: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<WorkoutLog, String>> patchWorkoutLogDuration(
+  Future<ServerResponse<WorkoutLog, String?>> patchWorkoutLogDuration(
       final WorkoutLog workoutLog, final int? durationMinutes, final String? token) async {
     final requestUri = getUri('${workoutLog.id}');
     _logger
@@ -51,11 +51,11 @@ class WorkoutLogService extends BaseService {
       return ServerResponse.success(WorkoutLog.fromJson(responseMap));
     } else {
       _logger.e('Could not update workout log: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<WorkoutLog, String>> putExerciseLogPositions(
+  Future<ServerResponse<WorkoutLog, String?>> putExerciseLogPositions(
       final WorkoutLog workoutLog, final Map<String, int> positions, final String? token) async {
     final requestUri = getUri('${workoutLog.id}/exercise-logs-positions');
     _logger
@@ -70,11 +70,11 @@ class WorkoutLogService extends BaseService {
       return ServerResponse.success(WorkoutLog.fromJson(responseMap));
     } else {
       _logger.e('Could not set exercise log positions in workout log: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<WorkoutLog, String>> postNewWorkoutLog(final WorkoutLogCreate workoutLog, final String? token) async {
+  Future<ServerResponse<WorkoutLog, String?>> postNewWorkoutLog(final WorkoutLogCreate workoutLog, final String? token) async {
     final requestUri = getUri('');
     _logger
       ..i('Delegating creating new workout log to server')
@@ -88,11 +88,11 @@ class WorkoutLogService extends BaseService {
       return ServerResponse.success(WorkoutLog.fromJson(responseMap));
     } else {
       _logger.e('Could not create workout log: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<void, String>> deleteWorkoutLog(final WorkoutLog workoutLog, final String? token) async {
+  Future<ServerResponse<void, String?>> deleteWorkoutLog(final WorkoutLog workoutLog, final String? token) async {
     final requestUri = getUri('${workoutLog.id}');
     _logger
       ..i('Delegating deleting workout log to server')
@@ -104,12 +104,12 @@ class WorkoutLogService extends BaseService {
       return const ServerResponse.success(null);
     } else {
       final responseMap = decodeResponse<Map<String, dynamic>>(response);
-      _logger.e('Could not create workout log: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      _logger.e('Could not delete workout log: ${responseMap['message']}');
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<WorkoutLog, String>> postNewExerciseLog(
+  Future<ServerResponse<WorkoutLog, String?>> postNewExerciseLog(
       final WorkoutLog workoutLog, final ExerciseLogCreate logCreate, final String? token) async {
     final requestUri = getUri('${workoutLog.id}/exercise-logs');
     _logger
@@ -124,11 +124,11 @@ class WorkoutLogService extends BaseService {
       return ServerResponse.success(WorkoutLog.fromJson(responseMap));
     } else {
       _logger.e('Could not create exercise log: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<WorkoutLog, String>> deleteExerciseLog(
+  Future<ServerResponse<WorkoutLog, String?>> deleteExerciseLog(
       final WorkoutLog workoutLog, final ExerciseLog exerciseLog, final String? token) async {
     final requestUri = getUri('${workoutLog.id}/exercise-logs/${exerciseLog.id}');
     _logger
@@ -142,11 +142,11 @@ class WorkoutLogService extends BaseService {
       return ServerResponse.success(WorkoutLog.fromJson(responseMap));
     } else {
       _logger.e('Could not delete exercise log: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<WorkoutLog, String>> postNewSetLog(
+  Future<ServerResponse<WorkoutLog, String?>> postNewSetLog(
       final WorkoutLog workoutLog, final ExerciseLog exerciseLog, final SetLogCreate logCreate, final String? token) async {
     final requestUri = getUri('${workoutLog.id}/exercise-logs/${exerciseLog.id}/set-logs');
     _logger
@@ -161,11 +161,11 @@ class WorkoutLogService extends BaseService {
       return ServerResponse.success(WorkoutLog.fromJson(responseMap));
     } else {
       _logger.e('Could not create set log: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<WorkoutLog, String>> patchExerciseLogComment(
+  Future<ServerResponse<WorkoutLog, String?>> patchExerciseLogComment(
       final WorkoutLog workoutLog, final ExerciseLog exerciseLog, final String? comment, final String? token) async {
     final requestUri = getUri('${workoutLog.id}/exercise-logs/${exerciseLog.id}');
     _logger
@@ -179,11 +179,11 @@ class WorkoutLogService extends BaseService {
       return ServerResponse.success(WorkoutLog.fromJson(responseMap));
     } else {
       _logger.e('Could not update exercise log: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<WorkoutLog, String>> putSetLog(final WorkoutLog workoutLog, final SetLog setLog, final String? token) async {
+  Future<ServerResponse<WorkoutLog, String?>> putSetLog(final WorkoutLog workoutLog, final SetLog setLog, final String? token) async {
     final requestUri = getUri('${workoutLog.id}/exercise-logs/${setLog.exerciseLogId}/set-logs');
     _logger
       ..i('Delegating updating set log to server')
@@ -197,11 +197,11 @@ class WorkoutLogService extends BaseService {
       return ServerResponse.success(WorkoutLog.fromJson(responseMap));
     } else {
       _logger.e('Could not update set log: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<WorkoutLog, String>> deleteSetLog(final WorkoutLog workoutLog, final SetLog setLog, final String? token) async {
+  Future<ServerResponse<WorkoutLog, String?>> deleteSetLog(final WorkoutLog workoutLog, final SetLog setLog, final String? token) async {
     final requestUri = getUri('${workoutLog.id}/exercise-logs/${setLog.exerciseLogId}/set-logs/${setLog.id}');
     _logger
       ..i('Delegating deleting set log to server')
@@ -214,11 +214,11 @@ class WorkoutLogService extends BaseService {
       return ServerResponse.success(WorkoutLog.fromJson(responseMap));
     } else {
       _logger.e('Could not delete set log: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<WorkoutLog, String>> putSetLogPositions(
+  Future<ServerResponse<WorkoutLog, String?>> putSetLogPositions(
       final WorkoutLog workoutLog, final ExerciseLog exerciseLog, final Map<String, int> positions, final String? token) async {
     final requestUri = getUri('${workoutLog.id}/exercise-logs/${exerciseLog.id}/set-logs-positions');
     _logger
@@ -233,7 +233,7 @@ class WorkoutLogService extends BaseService {
       return ServerResponse.success(WorkoutLog.fromJson(responseMap));
     } else {
       _logger.e('Could not set set log positions in exercise log in workout log: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 }

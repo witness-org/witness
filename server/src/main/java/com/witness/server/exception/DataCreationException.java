@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class DataCreationException extends DataAccessException {
   public DataCreationException() {
+    super();
   }
 
   public DataCreationException(String message, ServerError errorKey) {

@@ -14,6 +14,24 @@ abstract class BaseService {
     return json.decode(utf8.decode(httpResponse.bodyBytes)) as T;
   }
 
+  /// Extracts a string describing why a request failed from a JSON response [response]. If the key `errorKey` exists, its value is returned.
+  /// Otherwise, if the key `message` exists, its value is returned. If neither `errorKey` nor `message` are present, `null` is returned.
+  String? getFailureStringFromHttpResponse(final Response response) {
+    return getFailureStringFromResponseMap(decodeResponse<Map<String, dynamic>>(response));
+  }
+
+  /// Extracts a string describing why a request failed from a JSON response [responseMap]. If the key `errorKey` exists, its value is returned.
+  /// Otherwise, if the key `message` exists, its value is returned. If neither `errorKey` nor `message` are present, `null` is returned.
+  String? getFailureStringFromResponseMap(final Map<String, dynamic> responseMap) {
+    if (responseMap.containsKey('errorKey')) {
+      return responseMap['errorKey'].toString();
+    } else if (responseMap.containsKey('message')) {
+      return responseMap['message'].toString();
+    } else {
+      return null;
+    }
+  }
+
   /// Builds a [Map] that represents the HTTP headers to be sent along with an HTTP request. If [authorization] is not `null`, the `Authorization`
   /// header is set to `Bearer $authorization`. If `jsonContent` is `true`, the `Content-Typ` header is set to `application/json; charset=utf-8`.
   Map<String, String> getHttpHeaders({final String? authorization, final bool jsonContent = false}) {
@@ -30,7 +48,7 @@ abstract class BaseService {
   /// is `https://` if [ClientConfiguration.useHttps] is `true`, otherwise `http://`.
   ///
   /// Examples:
-  /// ```
+  /// ```dart
   /// // apiHost = '10.0.2.2:8080', useHttps = false, skipTargetResource = false, targetResource = 'greeting'
   /// getUri('') => http://10.0.2.2:8080/greeting
   /// getUri('public') => http://10.0.2.2:8080/greeting/public

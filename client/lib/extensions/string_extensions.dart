@@ -7,7 +7,7 @@ extension StringExtensions on String {
 
   /// Joins a list of [String] instances with [separator] as separator, if not null. Elements that
   /// are null are ignored and do not contribute to the return value. Examples:
-  /// ```
+  /// ```dart
   /// StringExtensions.join(['string1', 'string2'], separator: ' ') == 'string1 string2'
   /// StringExtensions.join(['string1', null, 'string2']) == 'string1string2'
   /// StringExtensions.join([], separator: ' ') == ''

@@ -12,7 +12,7 @@ class UserService extends BaseService {
   @override
   String get targetResource => "users";
 
-  Future<ServerResponse<User, String>> createUser(final String email, final String password) async {
+  Future<ServerResponse<User, String?>> createUser(final String email, final String password) async {
     final requestUri = getUri('');
     _logger
       ..i('Delegating creation of user "email" to server')
@@ -34,7 +34,7 @@ class UserService extends BaseService {
       return ServerResponse.success(User.fromJson(responseMap));
     } else {
       _logger.e('Could not register new user: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 }

@@ -36,7 +36,7 @@ class AuthProvider with ChangeNotifier {
     return _loggedInUser?.getIdToken();
   }
 
-  Future<ServerResponse<void, String>> signUp(final String email, final String password) async {
+  Future<ServerResponse<void, String?>> signUp(final String email, final String password) async {
     // signing up is a two-step process:
     //   - create the user via the server (which, in turn, creates a user at Firebase
     //   - sign in and receive authentication token via FlutterFire
@@ -54,7 +54,7 @@ class AuthProvider with ChangeNotifier {
     );
   }
 
-  Future<ServerResponse<FirebaseUser, String>> login(final String email, final String password) async {
+  Future<ServerResponse<FirebaseUser, String?>> login(final String email, final String password) async {
     return _firebaseAuthAction(
       (final firebaseAuth) async {
         _logger.i('Trying to login user "$email"');
@@ -116,7 +116,7 @@ class AuthProvider with ChangeNotifier {
     );
   }
 
-  Future<ServerResponse<FirebaseUser, String>> _performLogin(final Future<ServerResponse<FirebaseUser, String>> Function() loginDelegate) async {
+  Future<ServerResponse<FirebaseUser, String?>> _performLogin(final Future<ServerResponse<FirebaseUser, String?>> Function() loginDelegate) async {
     final loginResult = await loginDelegate();
     if (loginResult.isSuccessAndResponse) {
       _loggedInUser = loginResult.success;
