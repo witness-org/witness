@@ -16,7 +16,7 @@ import 'package:json_annotation/json_annotation.dart';
 /// Note that the actual (de)serialization is delegated to the respective subclasses of [SetLog].
 ///
 /// To use the converter, simply add an annotation to the class containing a [SetLog] class variable that should be serializable:
-/// ```
+/// ```dart
 /// @SetLogConverter()
 /// class SetLogContainer {
 ///   const SetLogContainer({

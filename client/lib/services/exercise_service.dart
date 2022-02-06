@@ -15,7 +15,7 @@ class ExerciseService extends BaseService {
   @override
   String get targetResource => 'exercises';
 
-  Future<ServerResponse<List<Exercise>, String>> getExercisesByMuscleGroup(final MuscleGroup group, final String? token) async {
+  Future<ServerResponse<List<Exercise>, String?>> getExercisesByMuscleGroup(final MuscleGroup group, final String? token) async {
     final requestUri = getUri('', queryParameters: {'muscle-group': group.toDtoString()});
     _logger
       ..i('Delegating fetching of exercises to server')
@@ -29,11 +29,11 @@ class ExerciseService extends BaseService {
     } else {
       final responseMap = decodeResponse<Map<String, dynamic>>(response);
       _logger.e('Could not fetch exercises: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<Exercise, String>> postUserExercise(final ExerciseCreate exercise, final String? token) async {
+  Future<ServerResponse<Exercise, String?>> postUserExercise(final ExerciseCreate exercise, final String? token) async {
     final requestUri = getUri('user-exercises');
     _logger
       ..i('Delegating creation of new user exercise to server')
@@ -48,11 +48,11 @@ class ExerciseService extends BaseService {
       return ServerResponse.success(Exercise.fromJson(responseMap));
     } else {
       _logger.e('Could not create user exercise: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<Exercise, String>> putUserExercise(final Exercise exercise, final String? token) async {
+  Future<ServerResponse<Exercise, String?>> putUserExercise(final Exercise exercise, final String? token) async {
     final requestUri = getUri('user-exercises');
     _logger
       ..i('Delegating update of user exercise to server')
@@ -66,11 +66,11 @@ class ExerciseService extends BaseService {
       return ServerResponse.success(Exercise.fromJson(responseMap));
     } else {
       _logger.e('Could not update user exercise: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 
-  Future<ServerResponse<void, String>> deleteUserExercise(final int id, final String? token) async {
+  Future<ServerResponse<void, String?>> deleteUserExercise(final int id, final String? token) async {
     final requestUri = getUri('user-exercises/$id');
     _logger
       ..i('Delegating deletion of user exercise to server')
@@ -83,7 +83,7 @@ class ExerciseService extends BaseService {
     } else {
       final responseMap = decodeResponse<Map<String, dynamic>>(response);
       _logger.e('Could not delete user exercise: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 }

@@ -48,11 +48,12 @@ class ExerciseProvider with ChangeNotifier {
     if (resultList != null) {
       _logger.i('Received ${resultList.length} exercises');
     } else {
-      _logger.w('Fetching exercises failed');
+      _logger.e('Fetching exercises failed');
+      return Future.error(response.error ?? '');
     }
   }
 
-  Future<ServerResponse<Exercise, String>> postUserExercise(final ExerciseCreate newExercise) async {
+  Future<ServerResponse<Exercise, String?>> postUserExercise(final ExerciseCreate newExercise) async {
     _logger.i('Creating new user exercise');
 
     final response = await _exerciseService.postUserExercise(newExercise, await _auth?.getToken());
@@ -72,7 +73,7 @@ class ExerciseProvider with ChangeNotifier {
     return response;
   }
 
-  Future<ServerResponse<Exercise, String>> putUserExercise(final Exercise data) async {
+  Future<ServerResponse<Exercise, String?>> putUserExercise(final Exercise data) async {
     _logger.i('Updating user exercise with ID "${data.id}"');
 
     final response = await _exerciseService.putUserExercise(data, await _auth?.getToken());
@@ -117,7 +118,7 @@ class ExerciseProvider with ChangeNotifier {
     return response;
   }
 
-  Future<ServerResponse<void, String>> deleteUserExercise(final int exerciseId) async {
+  Future<ServerResponse<void, String?>> deleteUserExercise(final int exerciseId) async {
     _logger.i('Deleting user exercise with ID "$exerciseId"');
 
     final response = await _exerciseService.deleteUserExercise(exerciseId, await _auth?.getToken());

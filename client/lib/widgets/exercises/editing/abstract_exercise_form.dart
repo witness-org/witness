@@ -26,7 +26,7 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
   final _formKey = GlobalKey<FormState>();
   var _formInput = ExerciseFormInput.createForm();
 
-  Future<ServerResponse<Exercise, String>> sendRequest(final ExerciseProvider provider, final ExerciseFormInput formInput);
+  Future<ServerResponse<Exercise, String?>> sendRequest(final ExerciseProvider provider, final ExerciseFormInput formInput);
 
   void navigateAfterFormSubmit(final BuildContext context, final Exercise exercise);
 
@@ -82,7 +82,6 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
               if (value.isNullOrBlank) {
                 return blankErrorText;
               }
-
               return null;
             },
             onSaved: (final value) => value != null ? _formInput.name = value : _formInput.name = ''),
@@ -105,7 +104,6 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
               if (value != null && value.length > 1024) {
                 return tooLongErrorText;
               }
-
               return null;
             },
             onSaved: (final value) => _formInput.description = value,
@@ -128,9 +126,7 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
                   label: Text(group.toUiString()),
                   selected: _formInput.muscleGroups[group]!,
                   onSelected: (final selected) {
-                    setState(() {
-                      _formInput.muscleGroups[group] = selected;
-                    });
+                    setState(() => _formInput.muscleGroups[group] = selected);
                   },
                 );
               },
@@ -151,13 +147,12 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
             LoggingType.values.map<Widget>(
               (final type) {
                 return ChoiceChip(
-                    label: Text(type.toUiString()),
-                    selected: _formInput.loggingTypes[type]!,
-                    onSelected: (final selected) {
-                      setState(() {
-                        _formInput.loggingTypes[type] = selected;
-                      });
-                    });
+                  label: Text(type.toUiString()),
+                  selected: _formInput.loggingTypes[type]!,
+                  onSelected: (final selected) {
+                    setState(() => _formInput.loggingTypes[type] = selected);
+                  },
+                );
               },
             ).toList(),
           ),

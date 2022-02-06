@@ -1,4 +1,5 @@
 import 'package:client/services/server_response.dart';
+import 'package:client/widgets/common/error_key_translator.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_loader_overlay/progress_loader_overlay.dart';
@@ -8,7 +9,7 @@ import 'package:progress_loader_overlay/progress_loader_overlay.dart';
 /// deserialized if a request was successful (see also [ServerResponse]).
 ///
 /// Use the state as follows:
-/// ```
+/// ```dart
 /// class Example extends StatefulWidget {
 ///
 ///  @override
@@ -32,7 +33,7 @@ import 'package:progress_loader_overlay/progress_loader_overlay.dart';
 ///
 /// }
 /// ```
-abstract class RequesterState<TWidget extends StatefulWidget, TSuccess> extends State<TWidget> with StringLocalizer {
+abstract class RequesterState<TWidget extends StatefulWidget, TSuccess> extends State<TWidget> with StringLocalizer, ErrorKeyTranslator {
   /// Executes the function provided by [request] which represents a server request that is expected to return a response (i.e. the success type is
   /// not `void` in the [ServerResponse]) and handles the response.
   /// If the request was successful, the function given by the [successAction] parameter is executed (if it is not `null`). Otherwise (i.e. the
@@ -41,7 +42,7 @@ abstract class RequesterState<TWidget extends StatefulWidget, TSuccess> extends 
   /// If [showProgressLoader] is set to `true`, a progress loader is shown before submitting the request and dismissed after having received a
   /// response in order to indicate to the user that the request is in progress.
   Future<void> submitRequestWithResponse(
-    final Future<ServerResponse<TSuccess, String>> Function() request, {
+    final Future<ServerResponse<TSuccess, String?>> Function() request, {
     void Function(TSuccess success)? successAction,
     final String? defaultErrorMessage,
     final bool showProgressLoader = true,
@@ -51,6 +52,7 @@ abstract class RequesterState<TWidget extends StatefulWidget, TSuccess> extends 
       request,
       (final response) => response.isSuccessAndResponse,
       (final response) => successAction!(response.success as TSuccess),
+      defaultErrorMessage: defaultErrorMessage,
       showProgressLoader: showProgressLoader,
     );
   }
@@ -63,7 +65,7 @@ abstract class RequesterState<TWidget extends StatefulWidget, TSuccess> extends 
   /// If [showProgressLoader] is set to `true`, a progress loader is shown before submitting the request and dismissed after having received a
   /// response in order to indicate to the user that the request is in progress.
   Future<void> submitRequestWithoutResponse(
-    final Future<ServerResponse<void, String>> Function() request, {
+    final Future<ServerResponse<void, String?>> Function() request, {
     void Function()? successAction,
     final String? defaultErrorMessage,
     final bool showProgressLoader = true,
@@ -73,6 +75,7 @@ abstract class RequesterState<TWidget extends StatefulWidget, TSuccess> extends 
       request,
       (final response) => response.isSuccessNoResponse,
       (final _) => successAction!(),
+      defaultErrorMessage: defaultErrorMessage,
       showProgressLoader: showProgressLoader,
     );
   }
@@ -85,9 +88,9 @@ abstract class RequesterState<TWidget extends StatefulWidget, TSuccess> extends 
   /// If [showProgressLoader] is set to `true`, a progress loader is shown before submitting the request and dismissed after having received a
   /// response in order to indicate to the user that the request is in progress.
   Future<void> _submitRequest<TResponse>(
-    final Future<ServerResponse<TResponse, String>> Function() request,
-    final bool Function(ServerResponse<TResponse, String> response) successCondition,
-    final void Function(ServerResponse<TResponse, String> response) successAction, {
+    final Future<ServerResponse<TResponse, String?>> Function() request,
+    final bool Function(ServerResponse<TResponse, String?> response) successCondition,
+    final void Function(ServerResponse<TResponse, String?> response) successAction, {
     String? defaultErrorMessage,
     final bool showProgressLoader = true,
   }) async {
@@ -111,7 +114,8 @@ abstract class RequesterState<TWidget extends StatefulWidget, TSuccess> extends 
 
       successAction(response);
     } else {
-      showError(response.error != null ? response.error! : defaultErrorMessage);
+      final errorMessage = response.error != null ? translate(uiStrings, response.error!, fallback: defaultErrorMessage) : defaultErrorMessage;
+      showError(errorMessage);
     }
   }
 

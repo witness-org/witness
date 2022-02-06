@@ -4,6 +4,7 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/providers/exercise_provider.dart';
 import 'package:client/widgets/common/dialog_helper.dart';
+import 'package:client/widgets/common/error_key_translator.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/exercises/editing/edit_exercise_screen.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('exercise_information');
 
-class ExerciseInformation extends StatelessWidget with LogMessagePreparer, StringLocalizer {
+class ExerciseInformation extends StatelessWidget with LogMessagePreparer, StringLocalizer, ErrorKeyTranslator {
   const ExerciseInformation(this._exercise, {final Key? key}) : super(key: key);
 
   final Exercise _exercise;
@@ -38,7 +39,7 @@ class ExerciseInformation extends StatelessWidget with LogMessagePreparer, Strin
           if (response.isError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(uiStrings.exerciseInformation_deleteFailure(response.error!)),
+                content: Text(uiStrings.exerciseInformation_deleteFailure(translate(uiStrings, response.error!))),
               ),
             );
           } else {
