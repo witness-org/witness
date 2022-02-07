@@ -2,6 +2,7 @@ import 'package:client/extensions/enum_extensions.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/exercise_create.dart';
+import 'package:client/models/exercises/exercise_history.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/providers/auth_provider.dart';
 import 'package:client/services/exercise_service.dart';
@@ -13,21 +14,26 @@ import 'package:injector/injector.dart';
 final _logger = getLogger('exercise_provider');
 
 class ExerciseProvider with ChangeNotifier {
-  ExerciseProvider._(this._auth, this._exercises);
+  ExerciseProvider._(this._auth, this._exercises, this._exerciseHistories);
 
-  ExerciseProvider.empty() : this._(null, <MuscleGroup, List<Exercise>>{});
+  ExerciseProvider.empty() : this._(null, <MuscleGroup, List<Exercise>>{}, <int, ExerciseHistory>{});
 
   ExerciseProvider.fromProviders(final AuthProvider auth, final ExerciseProvider? instance)
-      : this._(auth, instance?._exercises ?? <MuscleGroup, List<Exercise>>{});
+      : this._(auth, instance?._exercises ?? <MuscleGroup, List<Exercise>>{}, instance?._exerciseHistories ?? <int, ExerciseHistory>{});
 
   static final Injector _injector = Injector.appInstance;
   late final ExerciseService _exerciseService = _injector.get<ExerciseService>();
 
   final Map<MuscleGroup, List<Exercise>> _exercises;
+  final Map<int, ExerciseHistory> _exerciseHistories;
   final AuthProvider? _auth;
 
   Map<MuscleGroup, List<Exercise>> get exercises {
     return collection.UnmodifiableMapView(_exercises);
+  }
+
+  ExerciseHistory? getExercisesHistory(final int exerciseId) {
+    return _exerciseHistories[exerciseId];
   }
 
   List<Exercise> getExercisesByMuscleGroup(final MuscleGroup group) {
@@ -132,5 +138,26 @@ class ExerciseProvider with ChangeNotifier {
       _logger.e('Deletion of user exercise failed: ${response.error}');
     }
     return response;
+  }
+
+  Future<void> fetchExerciseHistory(final int exerciseId) async {
+    _logger.i('Fetching exercise history for exercise with ID $exerciseId');
+
+    final response = await _exerciseService.getExerciseHistory(exerciseId, await _auth?.getToken());
+    final exerciseHistory = response.success;
+
+    if (response.isSuccessAndResponse) {
+      if (exerciseHistory!.entries.isNotEmpty) {
+        _exerciseHistories[exerciseId] = exerciseHistory;
+      }
+      notifyListeners();
+    }
+
+    if (exerciseHistory != null) {
+      _logger.i('Received ${exerciseHistory.entries.length} exercise history entries');
+    } else {
+      _logger.e('Fetching exercise history failed');
+      return Future.error(response.error ?? '');
+    }
   }
 }

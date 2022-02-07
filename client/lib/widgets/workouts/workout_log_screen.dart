@@ -107,14 +107,12 @@ class _WorkoutLogScreenState extends State<WorkoutLogScreen> with LogMessagePrep
                 },
               ),
             ),
-            errorWidget: (final error) {
-              return Center(
-                child: Text(
-                  uiStrings.workoutLogScreen_workoutLogList_errorMessage(translate(uiStrings, error.toString())),
-                  textAlign: TextAlign.center,
-                ),
-              );
-            },
+            errorWidget: (final error) => Center(
+              child: Text(
+                uiStrings.workoutLogScreen_workoutLogList_errorMessage(translate(uiStrings, error.toString())),
+                textAlign: TextAlign.center,
+              ),
+            ),
           );
         },
       ),
