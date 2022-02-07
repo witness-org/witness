@@ -4,15 +4,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.witness.server.dto.exercise.ExerciseCreateDto;
 import com.witness.server.dto.exercise.ExerciseDto;
+import com.witness.server.dto.exercise.ExerciseHistoryDto;
 import com.witness.server.dto.exercise.UserExerciseDto;
 import com.witness.server.entity.exercise.Exercise;
 import com.witness.server.entity.exercise.UserExercise;
 import com.witness.server.entity.user.User;
+import com.witness.server.entity.workout.WorkoutLog;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.UserExerciseRepository;
+import com.witness.server.repository.WorkoutLogRepository;
+import com.witness.server.util.Comparators;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,9 +36,13 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
   private static final String UPDATE_USER_EXERCISE_URL = "user-exercises";
   private static final String GET_ALL_FOR_USER_BY_MUSCLE_GROUP_URL = "";
   private static final String GET_ALL_CREATED_BY_USER_URL = "user-exercises";
+  private static final String GET_EXERCISE_HISTORY_URL = "history/%s";
 
   @Autowired
   private ExerciseRepository exerciseRepository;
+
+  @Autowired
+  private WorkoutLogRepository workoutLogRepository;
 
   @Autowired
   private UserExerciseRepository userExerciseRepository;
@@ -727,6 +736,47 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
     var response = exchange(TestAuthentication.REGULAR, requestUrl(UPDATE_USER_EXERCISE_URL), HttpMethod.PUT, request, Object.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  //endregion
+
+  //region exercise history
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "RegularUser2.json", type = User.class),
+      @JsonFileSource(value = DATA_ROOT + "Exercise1.json", type = Exercise.class),
+      @JsonFileSource(value = DATA_ROOT + "WorkoutLogs.json", type = WorkoutLog[].class),
+      @JsonFileSource(value = DATA_ROOT + "ExerciseHistory.json", type = ExerciseHistoryDto.class)
+  })
+  void getExerciseHistory_existingUserAndExistingExercise_return200AndExerciseLogs(User user1, User user2, Exercise exercise,
+                                                                                   WorkoutLog[] workoutLogs, ExerciseHistoryDto history) {
+    persistUserAndMockLoggedIn(user1);
+    persistUsers(user2);
+    persistEntities(exerciseRepository, exercise);
+    persistEntities(workoutLogRepository, workoutLogs);
+
+    var response = get(TestAuthentication.REGULAR, requestUrl(GET_EXERCISE_HISTORY_URL, exercise.getId()), ExerciseHistoryDto.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody())
+        .usingRecursiveComparison()
+        .withComparatorForType(Comparators.ZONED_DATE_TIME_COMPARATOR, ZonedDateTime.class)
+        .isEqualTo(history);
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(parameters = {
+      @JsonFileSource(value = DATA_ROOT + "RegularUser.json", type = User.class),
+  })
+  void getExerciseHistory_existingUserNonExistingExercise_return404(User user) {
+    persistUserAndMockLoggedIn(user);
+
+    var response = get(TestAuthentication.REGULAR, requestUrl(GET_EXERCISE_HISTORY_URL, 1L), Object.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
   //endregion

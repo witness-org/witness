@@ -3,6 +3,7 @@ package com.witness.server.service.impl;
 import com.witness.server.entity.exercise.Exercise;
 import com.witness.server.entity.exercise.UserExercise;
 import com.witness.server.entity.user.User;
+import com.witness.server.entity.workout.ExerciseLog;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.enumeration.Role;
 import com.witness.server.enumeration.ServerError;
@@ -10,6 +11,7 @@ import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;
 import com.witness.server.exception.InvalidRequestException;
 import com.witness.server.mapper.ExerciseMapper;
+import com.witness.server.repository.ExerciseLogRepository;
 import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.UserExerciseRepository;
 import com.witness.server.service.EntityAccessor;
@@ -26,13 +28,15 @@ public class ExerciseServiceImpl implements ExerciseService, EntityAccessor {
 
   private final ExerciseRepository exerciseRepository;
   private final UserExerciseRepository userExerciseRepository;
+  private final ExerciseLogRepository exerciseLogRepository;
   private final UserService userService;
   private final ExerciseMapper exerciseMapper;
 
   @Autowired
-  public ExerciseServiceImpl(ExerciseRepository exerciseRepository, UserExerciseRepository userExerciseRepository, UserService userService,
-                             ExerciseMapper exerciseMapper) {
+  public ExerciseServiceImpl(ExerciseRepository exerciseRepository, UserExerciseRepository userExerciseRepository,
+                             ExerciseLogRepository exerciseLogRepository, UserService userService, ExerciseMapper exerciseMapper) {
     this.exerciseRepository = exerciseRepository;
+    this.exerciseLogRepository = exerciseLogRepository;
     this.userExerciseRepository = userExerciseRepository;
     this.userService = userService;
     this.exerciseMapper = exerciseMapper;
@@ -165,6 +169,14 @@ public class ExerciseServiceImpl implements ExerciseService, EntityAccessor {
       throw new InvalidRequestException("There already exists an exercise created by the provided user with this name.",
           ServerError.USER_EXERCISE_EXISTS);
     }
+  }
+
+  @Override
+  public List<ExerciseLog> getExerciseLogs(String firebaseId, Long exerciseId) throws DataAccessException {
+    log.info("Retrieving exercise history of exercise with ID {} for user {}", exerciseId, firebaseId);
+    var user = getUser(userService, firebaseId);
+    var exercise = getExerciseById(exerciseId);
+    return exerciseLogRepository.findExerciseLogsByExerciseIdAndUserId(exercise.getId(), user.getId());
   }
 
   private void throwIfUserExerciseNotCreatedByUserAndNotAdmin(UserExercise affectedUserExercise, User user) throws InvalidRequestException {

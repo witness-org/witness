@@ -2,6 +2,7 @@ package com.witness.server.service;
 
 import com.witness.server.entity.exercise.Exercise;
 import com.witness.server.entity.exercise.UserExercise;
+import com.witness.server.entity.workout.ExerciseLog;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;
@@ -129,4 +130,17 @@ public interface ExerciseService {
    *                                 identified by {@code userExerciseId}
    */
   void deleteUserExercise(String firebaseId, Long userExerciseId) throws DataNotFoundException, DataAccessException, InvalidRequestException;
+
+  /**
+   * Fetches exercise logs with at least one set log that were logged for a given exercise by a given user.
+   *
+   * @param firebaseId the ID of the user whose exercise logs should be fetched
+   * @param exerciseId the ID of the exercise whose exercise logs should be fetched
+   * @return a list of non-empty {@link ExerciseLog} instances of the exercise with ID {@code exerciseID} which were logged by the user with ID
+   *     {@code firebaseId}
+   * @throws DataNotFoundException if the user specified by {@code firebaseId} is not found or the exercise specified by {@code exerciseId} is not
+   *                               found
+   * @throws DataAccessException   if the user lookup fails
+   */
+  List<ExerciseLog> getExerciseLogs(String firebaseId, Long exerciseId) throws DataAccessException;
 }
