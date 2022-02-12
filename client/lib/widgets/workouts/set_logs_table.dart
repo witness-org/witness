@@ -19,9 +19,9 @@ class SetLogsTable extends StatefulWidget {
   const SetLogsTable(this._exerciseLog, this._updateSetLog, this._deleteSetLog, this._updateSetLogPositions, {final Key? key}) : super(key: key);
 
   final ExerciseLog _exerciseLog;
-  final Future<void> Function(BuildContext context, SetLogFormInput setLogForm) _updateSetLog;
-  final Future<void> Function(BuildContext context, SetLog setLog) _deleteSetLog;
-  final Future<void> Function(BuildContext context, Map<String, int> positions) _updateSetLogPositions;
+  final Future<void> Function(BuildContext context, SetLogFormInput setLogForm)? _updateSetLog;
+  final Future<void> Function(BuildContext context, SetLog setLog)? _deleteSetLog;
+  final Future<void> Function(BuildContext context, Map<String, int> positions)? _updateSetLogPositions;
 
   @override
   State<StatefulWidget> createState() => _SetLogsTableState();
@@ -30,7 +30,11 @@ class SetLogsTable extends StatefulWidget {
 class _SetLogsTableState extends State<SetLogsTable> with StringLocalizer, LogMessagePreparer {
   late List<SetLog> _setLogs = widget._exerciseLog.setLogs;
 
-  void _reorderSetLogs(final int oldIndex, final int newIndex) {
+  void _reorderSetLogs(
+    final int oldIndex,
+    final int newIndex,
+    final Future<void> Function(BuildContext context, Map<String, int> positions) positionUpdateAction,
+  ) {
     setState(() {
       // this `setState()` call prevents the set log rows from "jumping around" due to them returning to their original positions before going to
       // their new positions when the server request is successfully completed
@@ -38,7 +42,7 @@ class _SetLogsTableState extends State<SetLogsTable> with StringLocalizer, LogMe
       _setLogs.insert(newIndex, item);
     });
 
-    widget._updateSetLogPositions(context, _createPositionsMap(_setLogs));
+    positionUpdateAction(context, _createPositionsMap(_setLogs));
   }
 
   Widget _buildErrorIndicator(final StringLocalizations uiStrings) {
@@ -117,7 +121,7 @@ class _SetLogsTableState extends State<SetLogsTable> with StringLocalizer, LogMe
     );
   }
 
-  Widget _buildEditButton(final SetLog setLog) {
+  Widget _buildEditButton(final SetLog setLog, final Future<void> Function(BuildContext context, SetLogFormInput setLogForm) updateAction) {
     return IconButton(
       icon: const Icon(Icons.more_vert),
       onPressed: () => showDialog<String>(
@@ -125,11 +129,21 @@ class _SetLogsTableState extends State<SetLogsTable> with StringLocalizer, LogMe
         builder: (final BuildContext context) => SetLogDialog(
           widget._exerciseLog,
           setLog,
-          widget._updateSetLog,
+          updateAction,
           deleteSetLog: widget._deleteSetLog,
         ),
       ),
     );
+  }
+
+  List<Widget> _buildSetLogChildren(final StringLocalizations uiStrings, final SetLog setLog) {
+    return [
+      ..._buildFieldWithTexts([setLog.weightG.gInKg.toString(), uiStrings.setLogsTable_kgSuffix]),
+      ..._buildRepsTimeIndicatorField(setLog, uiStrings),
+      _buildBandsField(setLog.resistanceBands, uiStrings.setLogsTable_noResistanceBandsPlaceholder),
+      ..._buildRpeField(setLog.rpe, uiStrings.setLogsTable_rpePrefix, uiStrings.setLogsTable_noRpePlaceholder),
+      if (widget._updateSetLog != null) _buildEditButton(setLog, widget._updateSetLog!)
+    ];
   }
 
   // override needed because otherwise, changes in the set logs would not be passed on from the widget to the state and hence, not displayed in the UI
@@ -145,27 +159,43 @@ class _SetLogsTableState extends State<SetLogsTable> with StringLocalizer, LogMe
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
     final uiStrings = getLocalizedStrings(context);
-    final allValidSetLogs = _setLogs.every((final log) => (log is RepsSetLog) || (log is TimeSetLog));
-    return allValidSetLogs
+    final allSetLogsValid = _setLogs.every((final log) => (log is RepsSetLog) || (log is TimeSetLog));
+    if (!allSetLogsValid) {
+      return _buildErrorIndicator(uiStrings);
+    }
+
+    return widget._updateSetLogPositions != null
         ? ReorderableTable(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            onReorder: _reorderSetLogs,
-            children: _setLogs.map((final setLog) {
-              return ReorderableTableRow(
-                key: ValueKey(setLog.id),
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ..._buildFieldWithTexts([setLog.weightG.gInKg.toString(), uiStrings.setLogsTable_kgSuffix]),
-                  ..._buildRepsTimeIndicatorField(setLog, uiStrings),
-                  _buildBandsField(setLog.resistanceBands, uiStrings.setLogsTable_noResistanceBandsPlaceholder),
-                  ..._buildRpeField(setLog.rpe, uiStrings.setLogsTable_rpePrefix, uiStrings.setLogsTable_noRpePlaceholder),
-                  _buildEditButton(setLog)
-                ],
-              );
-            }).toList(),
+            onReorder: (final int oldIndex, final int newIndex) => _reorderSetLogs(oldIndex, newIndex, widget._updateSetLogPositions!),
+            children: _setLogs
+                .map((final setLog) => ReorderableTableRow(
+                      key: ValueKey(setLog.id),
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: _buildSetLogChildren(uiStrings, setLog),
+                    ))
+                .toList(),
           )
-        : _buildErrorIndicator(uiStrings);
+        : Table(
+            columnWidths: const {
+              0: FlexColumnWidth(1), // 55.5
+              1: FlexColumnWidth(0.5), // kg
+              2: FlexColumnWidth(0.5), // x
+              3: FlexColumnWidth(1), // 8
+              4: FlexColumnWidth(0.25), // s
+              5: FlexColumnWidth(2), // *****
+              6: FlexColumnWidth(1), // RPE
+              7: FlexColumnWidth(0.75) // 4
+            },
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            children: _setLogs
+                .map((final setLog) => TableRow(
+                      key: ValueKey(setLog.id),
+                      children: _buildSetLogChildren(uiStrings, setLog),
+                    ))
+                .toList(),
+          );
   }
 
   static Map<String, int> _createPositionsMap(final List<SetLog> setLogs) {

@@ -1,18 +1,10 @@
 import 'dart:convert';
 
-import 'package:client/models/exercises/exercise.dart';
-import 'package:client/models/exercises/logging_type.dart';
-import 'package:client/models/exercises/muscle_group.dart';
-import 'package:client/models/workouts/exercise_log.dart';
-import 'package:client/models/workouts/reps_set_log.dart';
-import 'package:client/models/workouts/resistance_band.dart';
-import 'package:client/models/workouts/set_log.dart';
-import 'package:client/models/workouts/time_set_log.dart';
-import 'package:client/models/workouts/workout_log.dart';
 import 'package:client/services/exercise_service.dart';
 import 'package:client/services/server_response.dart';
 import 'package:client/services/workout_log_service.dart';
 import 'package:client/widgets/common/image_provider_facade.dart';
+import 'package:client/widgets/exercises/details/exercise_history_card.dart';
 import 'package:client/widgets/exercises/exercises_by_muscle_group_screen.dart';
 import 'package:client/widgets/exercises/exercises_screen.dart';
 import 'package:client/widgets/workouts/exercise_log_item.dart';
@@ -27,13 +19,13 @@ import 'package:injector/injector.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:timezone/timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../common/test_helpers.dart';
 import 'integration_test.mocks.dart';
 import 'integration_test_utils.dart';
 import 'mock_data/exercises.dart' as mock_exercises;
+import 'mock_data/workout_logs.dart' as mock_workout_logs;
 
 const _sutName = 'integration_test';
 
@@ -182,6 +174,37 @@ void main() {
 
       expectWidgetByType(ExerciseByMuscleGroupItem, matchers.findsWidgets);
     });
+
+    testWidgets('displayed history of exercise based on mocked workout log', (final WidgetTester tester) async {
+      final mockExerciseService = MockExerciseService();
+      when(mockExerciseService.getExercisesByMuscleGroup(any, any)).thenAnswer((final _) async => const ServerResponse.success(mock_exercises.data));
+      when(mockExerciseService.getExerciseHistory(any, any)).thenAnswer(
+        (final _) async => ServerResponse.success(mock_exercises.exerciseHistoryForExercise(_localTimezone)),
+      );
+
+      await initTest(tester, login: true, additionalDependencyOverrides: (final Injector injector) {
+        registerSingleton<ExerciseService, MockExerciseService>(injector, () => mockExerciseService);
+      });
+
+      // focus exercise screen
+      await navigateToScreen('app_drawer.exercises', tester);
+      expectWidgetByKey('exercises_screen', matchers.findsOneWidget);
+
+      // there should be exercise overview items corresponding to the domain model's muscle groups
+      expectWidgetByType(ExerciseOverviewItem, matchers.findsWidgets);
+
+      // tap first muscle group item in order to go to concrete exercise
+      final firstOverviewItem = findByType(ExerciseOverviewItem).first;
+      await tap(firstOverviewItem, tester);
+
+      // open the detail view of the first exercise
+      final firstExerciseItem = findByType(ExerciseByMuscleGroupItem).first;
+      await tap(firstExerciseItem, tester);
+
+      // after navigating to the history tab page, at least one exercise history card should have been rendered
+      await tapByKey('exercise_detail_screen.history', tester);
+      expectWidgetByType(ExerciseHistoryCard, matchers.findsWidgets);
+    });
   });
 
   group(getPrefixedGroupName(_sutName, 'workout logs:'), () {
@@ -189,10 +212,7 @@ void main() {
       // override default empty mock server response to return some workout logs
       final mockWorkoutLogService = MockWorkoutLogService();
       when(mockWorkoutLogService.getWorkoutLogsByDate(any, any)).thenAnswer(
-        (final _) async => ServerResponse.success([
-          WorkoutLog(exerciseLogs: [], id: 1, loggedOn: TZDateTime.now(_localTimezone), durationMinutes: 60),
-          WorkoutLog(exerciseLogs: [], id: 2, loggedOn: TZDateTime.now(_localTimezone), durationMinutes: 60),
-        ]),
+        (final _) async => ServerResponse.success(mock_workout_logs.emptyWorkoutLogs(_localTimezone)),
       );
 
       await initTest(tester, login: true, additionalDependencyOverrides: (final Injector injector) {
@@ -209,41 +229,7 @@ void main() {
       // override default empty mock server response to return some workout logs
       final mockWorkoutLogService = MockWorkoutLogService();
       when(mockWorkoutLogService.getWorkoutLogsByDate(any, any)).thenAnswer(
-        (final _) async => ServerResponse.success(
-          [
-            WorkoutLog(
-              id: 1,
-              loggedOn: TZDateTime.now(_localTimezone),
-              exerciseLogs: [
-                ExerciseLog(
-                    id: 1,
-                    position: 2,
-                    exercise: const Exercise(
-                      id: 3,
-                      name: 'Barbell Curl',
-                      description: 'Another nice exercise!',
-                      muscleGroups: [MuscleGroup.arms],
-                      loggingTypes: [LoggingType.reps],
-                    ),
-                    setLogs: List.from(<SetLog>[])),
-                ExerciseLog(
-                    id: 2,
-                    position: 1,
-                    exercise: const Exercise(
-                      id: 1,
-                      name: 'Overhead Press',
-                      description: 'A very nice exercise',
-                      muscleGroups: [MuscleGroup.shoulders],
-                      loggingTypes: [
-                        LoggingType.reps,
-                      ],
-                    ),
-                    setLogs: List.from(<SetLog>[]))
-              ],
-              durationMinutes: 60,
-            ),
-          ],
-        ),
+        (final _) async => ServerResponse.success([mock_workout_logs.workoutLogWithExerciseLogs(_localTimezone)]),
       );
 
       await initTest(tester, login: true, additionalDependencyOverrides: (final Injector injector) {
@@ -267,40 +253,7 @@ void main() {
       // override default empty mock server response to return some workout logs
       final mockWorkoutLogService = MockWorkoutLogService();
       when(mockWorkoutLogService.getWorkoutLogsByDate(any, any)).thenAnswer(
-        (final _) async => ServerResponse.success(
-          [
-            WorkoutLog(
-              id: 3,
-              loggedOn: TZDateTime.now(_localTimezone),
-              exerciseLogs: [
-                ExerciseLog(
-                  id: 1,
-                  position: 2,
-                  exercise: const Exercise(
-                    id: 3,
-                    name: 'Barbell Curl',
-                    description: 'Another nice exercise!',
-                    muscleGroups: [MuscleGroup.arms],
-                    loggingTypes: [LoggingType.reps],
-                  ),
-                  setLogs: <SetLog>[
-                    RepsSetLog(id: 1, exerciseLogId: 1, position: 2, weightG: 1000, resistanceBands: [ResistanceBand.heavy], reps: 23),
-                    TimeSetLog(
-                      id: 2,
-                      exerciseLogId: 1,
-                      position: 1,
-                      weightG: 1234,
-                      resistanceBands: [ResistanceBand.light, ResistanceBand.medium],
-                      seconds: 23,
-                      rpe: 8,
-                    )
-                  ],
-                ),
-              ],
-              durationMinutes: 60,
-            ),
-          ],
-        ),
+        (final _) async => ServerResponse.success([mock_workout_logs.workoutLogWithExerciseAndSetLogs(_localTimezone)]),
       );
 
       await initTest(tester, login: true, additionalDependencyOverrides: (final Injector injector) {

@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import javax.persistence.Entity;
 import org.hibernate.collection.internal.PersistentBag;
 import org.springframework.util.ReflectionUtils;
 
@@ -81,14 +82,13 @@ public final class Comparators {
 
   /**
    * Replaces field instances with static type {@link List} and dynamic type {@link PersistentBag} in a given instance by {@link ArrayList}
-   * instances with the same elements.
+   * instances with the same elements. Recursively does the same for fields which are annotated with {@link Entity}.
    *
    * @param instance the instance that should be inspected and potentially altered
    * @param clazz    the class of {@code instance}
-   * @param <T>      the type of {@code instance}
    */
   @SuppressWarnings({"unchecked", "rawtypes"}) // due to Java's type erasure, there is no better way (generics information is gone at runtime)
-  private static <T> void replacePersistentBags(T instance, Class<T> clazz) {
+  private static void replacePersistentBags(Object instance, Class<?> clazz) {
     if (instance == null) {
       return;
     }
@@ -98,6 +98,8 @@ public final class Comparators {
       var value = field.get(instance);
       if (field.getType().equals(List.class) && value instanceof PersistentBag) {
         field.set(instance, new ArrayList<>((PersistentBag) value));
+      } else if (field.getType().getAnnotation(Entity.class) != null) {
+        replacePersistentBags(value, field.getType());
       }
     });
   }

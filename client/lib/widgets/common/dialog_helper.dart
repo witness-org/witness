@@ -36,4 +36,27 @@ abstract class DialogHelper {
       ),
     );
   }
+
+  static Future<void> showText(
+    final BuildContext context, {
+    final String? title,
+    required final String content,
+    required final String closeText,
+  }) {
+    return showDialog<void>(
+      context: context,
+      builder: (final ctx) => AlertDialog(
+        title: title != null ? Text(title) : null,
+        content: Text(content),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              closeText,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

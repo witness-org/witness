@@ -118,7 +118,6 @@ class ExerciseRepositoryTest extends BaseRepositoryTest {
   })
   void findInitialExerciseById(FindByIdTestSpecification specification) {
     genericFindByIdTest(specification, () -> exerciseRepository.findInitialExerciseById(specification.id));
-
   }
 
   private <T extends Exercise> void genericFindByIdTest(FindByIdTestSpecification specification, Supplier<Optional<T>> lookup) {
