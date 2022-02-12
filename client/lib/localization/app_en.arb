@@ -134,9 +134,27 @@
   "@exerciseDetailScreen_tab_statistics": {
     "description": "Text of `Statistics` tab in `ExerciseDetailScreen`."
   },
-  "exerciseHistory_placeholder_suffix": "history",
-  "@exerciseHistory_placeholder_suffix": {
-    "description": "Text to display after exercise name in `ExerciseHistory` (just a temporary placeholder)."
+  "exerciseHistoryPage_historyEntries_errorMessage": "Could not fetch exercise history:\n{error}",
+  "@exerciseHistoryPage_historyEntries_errorMessage": {
+    "description": "Formatted error message that describes why the exercise history could not be fetched in `ExerciseHistoryPage`.",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "An internal error occurred."
+      }
+    }
+  },
+  "exerciseHistoryPage_emptyHistory": "There are no logs for this exercise yet.",
+  "@exerciseDetailScreen_emptyHistory": {
+    "description": "Text to be displayed in `ExerciseHistoryPage` if no history entries were found for the given exercise."
+  },
+  "exerciseHistoryCard_logCommentDialog_title": "Exercise Log Comment",
+  "@exerciseHistoryCard_logCommentDialog_title": {
+    "description": "Title of the dialog displaying the comment of an exercise log in `ExerciseHistoryCard`."
+  },
+  "exerciseHistoryCard_logCommentDialog_closeText": "OK",
+  "@exerciseHistoryCard_logCommentDialog_closeText": {
+    "description": "Text of button to close the dialog displaying the comment of an exercise log in `ExerciseHistoryCard`."
   },
   "exerciseInformation_body_heading_loggingTypes": "Logging",
   "@exerciseInformation_body_heading_loggingTypes": {

@@ -1,0 +1,130 @@
+[
+  {
+    "id": 1,
+    "user": {
+      "id": 1,
+      "firebaseId": "firebaseRegular",
+      "username": "regularUser",
+      "email": "regular@test.com",
+      "role": null,
+      "sex": "MALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 183
+    },
+    "loggedOn": "2021-11-04T13:31:22.300+02:00",
+    "durationMinutes": 183,
+    "exerciseLogs": [
+      {
+        "position": 2,
+        "exercise": {
+          "id": 1,
+          "name": "Exercise 1",
+          "description": "Description of Exercise 1",
+          "muscleGroups": [
+            "CHEST"
+          ],
+          "loggingTypes": [
+            "TIME"
+          ]
+        },
+        "id": 1,
+        "comment": "logComment",
+        "workoutLog": {
+          "id": 1
+        },
+        "setLogs": [
+          {
+            "position": 3,
+            "rpe": 7,
+            "id": 13,
+            "weightG": 23000,
+            "resistanceBands": [
+              "LIGHT",
+              "HEAVY"
+            ],
+            "exerciseLog": {
+              "id": 1
+            },
+            "reps": 20
+          },
+          {
+            "position": 3,
+            "rpe": 7,
+            "id": 11,
+            "weightG": 23000,
+            "resistanceBands": [],
+            "exerciseLog": {
+              "id": 1
+            },
+            "seconds": 25
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "user": {
+      "id": 2,
+      "firebaseId": "firebaseRegular2",
+      "username": "regularUser2",
+      "email": "regular2@test.com",
+      "role": null,
+      "sex": "FEMALE",
+      "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+      "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+      "height": 163
+    },
+    "loggedOn": "2021-11-04T13:31:22.300+02:00",
+    "durationMinutes": 183,
+    "exerciseLogs": [
+      {
+        "position": 2,
+        "exercise": {
+          "id": 1,
+          "name": "Exercise 1",
+          "description": "Description of Exercise 1",
+          "muscleGroups": [
+            "CHEST"
+          ],
+          "loggingTypes": [
+            "TIME"
+          ]
+        },
+        "id": 2,
+        "comment": "second logComment",
+        "workoutLog": {
+          "id": 2
+        },
+        "setLogs": [
+          {
+            "position": 3,
+            "rpe": 7,
+            "id": 14,
+            "weightG": 23000,
+            "resistanceBands": [
+              "LIGHT",
+              "HEAVY"
+            ],
+            "exerciseLog": {
+              "id": 2
+            },
+            "reps": 20
+          },
+          {
+            "position": 3,
+            "rpe": 7,
+            "id": 15,
+            "weightG": 23000,
+            "resistanceBands": [],
+            "exerciseLog": {
+              "id": 2
+            },
+            "seconds": 25
+          }
+        ]
+      }
+    ]
+  }
+]

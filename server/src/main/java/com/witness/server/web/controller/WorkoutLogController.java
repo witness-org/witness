@@ -326,7 +326,10 @@ public class WorkoutLogController {
       @ApiResponse(responseCode = "500", description = "An error occurred while looking up the current user or the specified set log could not be "
                                                        + "removed from the specified exercise log.")
   })
-  public WorkoutLogDto deleteSetLog(@PathVariable Long workoutLogId, @PathVariable Long exerciseLogId, @PathVariable Long setLogId)
+  public WorkoutLogDto deleteSetLog(
+      @PathVariable @Parameter(description = "ID of the workout log the set log should be deleted from.", example = "7") Long workoutLogId,
+      @PathVariable @Parameter(description = "ID of the exercise log the set log should be deleted from.", example = "3") Long exerciseLogId,
+      @PathVariable @Parameter(description = "ID of the set log to delete.", example = "1") Long setLogId)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
     var modifiedWorkoutLog = workoutLogService.deleteSetLog(currentUser.getUid(), workoutLogId, exerciseLogId, setLogId);
