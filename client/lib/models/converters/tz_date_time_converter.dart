@@ -11,6 +11,7 @@ import 'package:timezone/timezone.dart' as tz;
 ///
 /// To use the converter, simply add an annotation to the class containing a [TZDateTime] class variable that should be serializable:
 /// ```dart
+/// @JsonSerializable()
 /// @TZDateTimeConverter()
 /// class TZDateTimeContainer {
 ///   const TZDateTimeContainer({

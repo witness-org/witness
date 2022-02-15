@@ -1,4 +1,4 @@
-import 'package:client/models/common/tz_date_time_converter.dart';
+import 'package:client/models/converters/tz_date_time_converter.dart';
 import 'package:client/models/user/role.dart';
 import 'package:client/models/user/sex.dart';
 import 'package:json_annotation/json_annotation.dart';

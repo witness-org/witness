@@ -509,7 +509,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody())
-        .usingElementComparatorIgnoringFields("id")
+        .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
         .containsExactlyInAnyOrder(expected);
   }
 
@@ -547,7 +547,7 @@ class ExerciseControllerTest extends BaseControllerIntegrationTest {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody())
-        .usingElementComparatorIgnoringFields("id")
+        .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
         .containsExactlyInAnyOrder(expected);
   }
 

@@ -13,6 +13,8 @@ class TimeSetLogCreate extends SetLogCreate {
     required final this.seconds,
   }) : super(rpe: rpe, weightG: weightG, resistanceBands: resistanceBands);
 
+  factory TimeSetLogCreate.fromJson(final Map<String, dynamic> json) => _$TimeSetLogCreateFromJson(json);
+
   final int seconds;
 
   Map<String, dynamic> toJson() => _$TimeSetLogCreateToJson(this)..addEntries([const MapEntry<String, dynamic>('type', 'timeCreate')]);

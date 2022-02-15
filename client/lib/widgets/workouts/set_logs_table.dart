@@ -28,8 +28,6 @@ class SetLogsTable extends StatefulWidget {
 }
 
 class _SetLogsTableState extends State<SetLogsTable> with StringLocalizer, LogMessagePreparer {
-  late List<SetLog> _setLogs = widget._exerciseLog.setLogs;
-
   void _reorderSetLogs(
     final int oldIndex,
     final int newIndex,
@@ -38,17 +36,11 @@ class _SetLogsTableState extends State<SetLogsTable> with StringLocalizer, LogMe
     setState(() {
       // this `setState()` call prevents the set log rows from "jumping around" due to them returning to their original positions before going to
       // their new positions when the server request is successfully completed
-      final item = _setLogs.removeAt(oldIndex);
-      _setLogs.insert(newIndex, item);
+      final item = widget._exerciseLog.setLogs.removeAt(oldIndex);
+      widget._exerciseLog.setLogs.insert(newIndex, item);
     });
 
-    positionUpdateAction(context, _createPositionsMap(_setLogs));
-  }
-
-  Widget _buildErrorIndicator(final StringLocalizations uiStrings) {
-    return Center(
-      child: Text(uiStrings.setLogsTable_unknownSetLogsError),
-    );
+    positionUpdateAction(context, _createPositionsMap(widget._exerciseLog.setLogs));
   }
 
   Widget _buildSeparator(final String separator, {final TextStyle? styling}) {
@@ -146,29 +138,16 @@ class _SetLogsTableState extends State<SetLogsTable> with StringLocalizer, LogMe
     ];
   }
 
-  // override needed because otherwise, changes in the set logs would not be passed on from the widget to the state and hence, not displayed in the UI
-  @override
-  void didUpdateWidget(final SetLogsTable oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget._exerciseLog.setLogs != oldWidget._exerciseLog.setLogs) {
-      _setLogs = widget._exerciseLog.setLogs;
-    }
-  }
-
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
     final uiStrings = getLocalizedStrings(context);
-    final allSetLogsValid = _setLogs.every((final log) => (log is RepsSetLog) || (log is TimeSetLog));
-    if (!allSetLogsValid) {
-      return _buildErrorIndicator(uiStrings);
-    }
-
-    return widget._updateSetLogPositions != null
+    final allValidSetLogs = widget._exerciseLog.setLogs.every((final log) => (log is RepsSetLog) || (log is TimeSetLog));
+    return allValidSetLogs
         ? ReorderableTable(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             onReorder: (final int oldIndex, final int newIndex) => _reorderSetLogs(oldIndex, newIndex, widget._updateSetLogPositions!),
-            children: _setLogs
+            children: widget._exerciseLog.setLogs
                 .map((final setLog) => ReorderableTableRow(
                       key: ValueKey(setLog.id),
                       mainAxisSize: MainAxisSize.max,
@@ -189,7 +168,7 @@ class _SetLogsTableState extends State<SetLogsTable> with StringLocalizer, LogMe
               7: FlexColumnWidth(0.75) // 4
             },
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            children: _setLogs
+            children: widget._exerciseLog.setLogs
                 .map((final setLog) => TableRow(
                       key: ValueKey(setLog.id),
                       children: _buildSetLogChildren(uiStrings, setLog),

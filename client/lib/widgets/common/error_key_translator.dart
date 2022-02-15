@@ -46,6 +46,7 @@ final _errorKeys = <String, String Function(StringLocalizations uiStrings)>{
   'INVALID_LOGGING_TYPE': (final uiStrings) => uiStrings.errorTranslation_invalidLoggingType,
   'POSITION_MAP_INVALID': (final uiStrings) => uiStrings.errorTranslation_positionMapInvalid,
   'POSITION_MAP_NOT_UNIQUE': (final uiStrings) => uiStrings.errorTranslation_positionMapNotUnique,
+  'WORKOUT_LOGGING_START_DATE_AFTER_END_DATE': (final uiStrings) => uiStrings.errorTranslation_workoutLoggingStartDateAfterEndDate,
   'UNDEFINED_ERROR': (final uiStrings) => uiStrings.errorTranslation_undefinedError,
   'invalid-email': (final uiStrings) => uiStrings.errorTranslation_invalidEmail,
   'invalid-operation-not-allowed': (final uiStrings) => uiStrings.errorTranslation_operationNotAllowed,

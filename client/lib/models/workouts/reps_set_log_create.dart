@@ -13,6 +13,8 @@ class RepsSetLogCreate extends SetLogCreate {
     required final this.reps,
   }) : super(rpe: rpe, weightG: weightG, resistanceBands: resistanceBands);
 
+  factory RepsSetLogCreate.fromJson(final Map<String, dynamic> json) => _$RepsSetLogCreateFromJson(json);
+
   final int reps;
 
   Map<String, dynamic> toJson() => _$RepsSetLogCreateToJson(this)..addEntries([const MapEntry<String, dynamic>('type', 'repsCreate')]);

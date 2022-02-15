@@ -43,7 +43,7 @@ void defaultDependencyOverrides(final Injector injector) {
   fakeUser = MockUser(isAnonymous: false, uid: 'bobsFakeUid', email: 'bob@example.com', displayName: 'bob.example');
   fakeAuthentication = MockFirebaseAuth(signedIn: false, mockUser: fakeUser);
   final mockWorkoutLogService = MockWorkoutLogService();
-  when(mockWorkoutLogService.getWorkoutLogsByDate(any, any)).thenAnswer((final _) async => const ServerResponse.success([]));
+  when(mockWorkoutLogService.getWorkoutLogsByDay(any, any)).thenAnswer((final _) async => const ServerResponse.success([]));
 
   registerSingleton<Future<FirebaseAuth>, Future<MockFirebaseAuth>>(injector, () async => fakeAuthentication);
   registerSingleton<ImageProviderFacade, MockImageProviderFacade>(injector, () => MockImageProviderFacade());

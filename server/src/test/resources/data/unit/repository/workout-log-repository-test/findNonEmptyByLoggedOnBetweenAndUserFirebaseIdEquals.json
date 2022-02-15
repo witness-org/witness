@@ -1,0 +1,230 @@
+[
+  {
+    "users": [
+      {
+        "id": 1,
+        "firebaseId": "firebase1",
+        "username": "user1",
+        "email": "user1@test.com",
+        "role": null,
+        "sex": "MALE",
+        "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+        "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+        "height": 183
+      }
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "name": "Exercise 1",
+        "description": "Description of Exercise 1",
+        "muscleGroups": [
+          "LEGS"
+        ],
+        "loggingTypes": [
+          "TIME",
+          "REPS"
+        ]
+      }
+    ],
+    "workoutLogs": [
+      {
+        "id": 1,
+        "user": {
+          "id": 1,
+          "firebaseId": "firebase1",
+          "username": "user1",
+          "email": "user1@test.com",
+          "role": null,
+          "sex": "MALE",
+          "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+          "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+          "height": 183
+        },
+        "loggedOn": "2021-10-08T04:14:16.3515671+02:00",
+        "durationMinutes": 183,
+        "exerciseLogs": [
+          {
+            "exercise": {
+              "id": 1,
+              "name": "Exercise 1",
+              "description": "Description of Exercise 1",
+              "muscleGroups": [
+                "LEGS"
+              ],
+              "loggingTypes": [
+                "TIME",
+                "REPS"
+              ]
+            },
+            "comment": "logComment",
+            "id": 1,
+            "position": 1,
+            "workoutLog": {
+              "id": 1,
+              "user": {
+                "id": 1,
+                "firebaseId": "firebase1",
+                "username": "user1",
+                "email": "user1@test.com",
+                "role": null,
+                "sex": "MALE",
+                "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+                "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+                "height": 183
+              },
+              "loggedOn": "2021-10-08T04:14:16.3515671+02:00",
+              "durationMinutes": 183,
+              "exerciseLogs": []
+            },
+            "setLogs": []
+          }
+        ]
+      }
+    ],
+    "firebaseId": "firebase1",
+    "startDate": "2021-10-07T14:15:55.3007597+02:00",
+    "endDate": "2021-10-08T14:15:55.3007597+02:00",
+    "expectedWorkoutLogIds": [1]
+  },
+  {
+    "users": [
+      {
+        "id": 1,
+        "firebaseId": "firebase1",
+        "username": "user1",
+        "email": "user1@test.com",
+        "role": null,
+        "sex": "MALE",
+        "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+        "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+        "height": 183
+      }
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "name": "Exercise 1",
+        "description": "Description of Exercise 1",
+        "muscleGroups": [
+          "LEGS"
+        ],
+        "loggingTypes": [
+          "TIME",
+          "REPS"
+        ]
+      }
+    ],
+    "workoutLogs": [
+      {
+        "id": 1,
+        "user": {
+          "id": 1,
+          "firebaseId": "firebase1",
+          "username": "user1",
+          "email": "user1@test.com",
+          "role": null,
+          "sex": "MALE",
+          "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+          "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+          "height": 183
+        },
+        "loggedOn": "2021-10-08T04:14:16.3515671+02:00",
+        "durationMinutes": 183,
+        "exerciseLogs": [
+          {
+            "exercise": {
+              "id": 1,
+              "name": "Exercise 1",
+              "description": "Description of Exercise 1",
+              "muscleGroups": [
+                "LEGS"
+              ],
+              "loggingTypes": [
+                "TIME",
+                "REPS"
+              ]
+            },
+            "comment": "logComment",
+            "id": 1,
+            "position": 1,
+            "workoutLog": {
+              "id": 1,
+              "user": {
+                "id": 1,
+                "firebaseId": "firebase1",
+                "username": "user1",
+                "email": "user1@test.com",
+                "role": null,
+                "sex": "MALE",
+                "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+                "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+                "height": 183
+              },
+              "loggedOn": "2021-10-08T04:14:16.3515671+02:00",
+              "durationMinutes": 183,
+              "exerciseLogs": []
+            },
+            "setLogs": []
+          }
+        ]
+      }
+    ],
+    "firebaseId": "firebase1",
+    "startDate": "2021-10-09T14:15:55.3007597+02:00",
+    "endDate": "2021-10-10T14:15:55.3007597+02:00",
+    "expectedWorkoutLogIds": []
+  },
+  {
+    "users": [
+      {
+        "id": 1,
+        "firebaseId": "firebase1",
+        "username": "user1",
+        "email": "user1@test.com",
+        "role": null,
+        "sex": "MALE",
+        "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+        "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+        "height": 183
+      }
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "name": "Exercise 1",
+        "description": "Description of Exercise 1",
+        "muscleGroups": [
+          "LEGS"
+        ],
+        "loggingTypes": [
+          "TIME",
+          "REPS"
+        ]
+      }
+    ],
+    "workoutLogs": [
+      {
+        "id": 1,
+        "user": {
+          "id": 1,
+          "firebaseId": "firebase1",
+          "username": "user1",
+          "email": "user1@test.com",
+          "role": null,
+          "sex": "MALE",
+          "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+          "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+          "height": 183
+        },
+        "loggedOn": "2021-10-08T04:14:16.3515671+02:00",
+        "durationMinutes": 183,
+        "exerciseLogs": []
+      }
+    ],
+    "firebaseId": "firebase1",
+    "startDate": "2021-10-07T14:15:55.3007597+02:00",
+    "endDate": "2021-10-08T14:15:55.3007597+02:00",
+    "expectedWorkoutLogIds": []
+  }
+]

@@ -8,9 +8,11 @@ import com.witness.server.entity.workout.SetLog;
 import com.witness.server.util.converter.ArgumentConverter;
 import com.witness.server.util.converter.NoOpArgumentConverter;
 import com.witness.server.util.deserializer.SetLogDeserializer;
+import com.witness.server.util.deserializer.ZonedDateTimeKeyDeserializer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,7 +32,8 @@ public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationC
   private static final ObjectMapper objectMapper = new ObjectMapper()
       .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
       .registerModule(new SimpleModule("CUSTOM_DESERIALIZERS")
-          .addDeserializer(SetLog.class, new SetLogDeserializer()))
+          .addDeserializer(SetLog.class, new SetLogDeserializer())
+          .addKeyDeserializer(ZonedDateTime.class, new ZonedDateTimeKeyDeserializer()))
       .registerModule(new JavaTimeModule());
 
   private JsonFileSource[] files;
@@ -92,7 +95,7 @@ public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationC
 
     if (!targetType.equals(file.type())) {
       log.error("The specified test argument converter is not NoOpArgumentConverter, but its target class differs from the class specified by the "
-          + "\"type\" argument of the @JsonFileSource annotation. Supplying arguments to the test will likely fail due to incompatible types.");
+                + "\"type\" argument of the @JsonFileSource annotation. Supplying arguments to the test will likely fail due to incompatible types.");
     }
 
     var intermediateObject = objectMapper.readValue(jsonStream, sourceType);
@@ -109,7 +112,7 @@ public class JsonFileArgumentsProvider implements ArgumentsProvider, AnnotationC
 
     var testMethod = context.getTestMethod().isPresent() ? context.getTestMethod().get().getName() : "<unknown>";
     var errorMessage = "Test \"" + testMethod + "\" is annotated with @JsonFileSources and \"unwrapArrays=true\", but {}. Will not unwrap, test "
-        + "will fail. Please examine your data sources and @JsonFileSource annotations.";
+                       + "will fail. Please examine your data sources and @JsonFileSource annotations.";
 
     // 2) all arguments must be arrays
     var allArrays = Arrays.stream(parameters).allMatch(param -> param.getClass().isArray());

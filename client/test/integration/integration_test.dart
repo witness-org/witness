@@ -211,7 +211,7 @@ void main() {
     testWidgets('displays mocked workout logs', (final WidgetTester tester) async {
       // override default empty mock server response to return some workout logs
       final mockWorkoutLogService = MockWorkoutLogService();
-      when(mockWorkoutLogService.getWorkoutLogsByDate(any, any)).thenAnswer(
+      when(mockWorkoutLogService.getWorkoutLogsByDay(any, any)).thenAnswer(
         (final _) async => ServerResponse.success(mock_workout_logs.emptyWorkoutLogs(_localTimezone)),
       );
 
@@ -228,7 +228,7 @@ void main() {
     testWidgets('displays exercise logs of mocked workout log', (final WidgetTester tester) async {
       // override default empty mock server response to return some workout logs
       final mockWorkoutLogService = MockWorkoutLogService();
-      when(mockWorkoutLogService.getWorkoutLogsByDate(any, any)).thenAnswer(
+      when(mockWorkoutLogService.getWorkoutLogsByDay(any, any)).thenAnswer(
         (final _) async => ServerResponse.success([mock_workout_logs.workoutLogWithExerciseLogs(_localTimezone)]),
       );
 
@@ -252,7 +252,7 @@ void main() {
     testWidgets('displays set logs of mocked workout log', (final WidgetTester tester) async {
       // override default empty mock server response to return some workout logs
       final mockWorkoutLogService = MockWorkoutLogService();
-      when(mockWorkoutLogService.getWorkoutLogsByDate(any, any)).thenAnswer(
+      when(mockWorkoutLogService.getWorkoutLogsByDay(any, any)).thenAnswer(
         (final _) async => ServerResponse.success([mock_workout_logs.workoutLogWithExerciseAndSetLogs(_localTimezone)]),
       );
 

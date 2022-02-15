@@ -30,13 +30,12 @@ class ExerciseLogItem extends StatefulWidget {
 }
 
 class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> with StringLocalizer, LogMessagePreparer {
-  late ExerciseLog _exerciseLog = widget._exerciseLog;
   bool _showSetLogs = false;
 
   Future<void> _deleteExerciseLog(final BuildContext context, final WorkoutLogProvider provider) async {
     final uiStrings = getLocalizedStrings(context);
     submitRequestWithResponse(
-      () => provider.deleteExerciseLog(widget._workoutLog, _exerciseLog),
+      () => provider.deleteExerciseLog(widget._workoutLog, widget._exerciseLog),
       defaultErrorMessage: uiStrings.exerciseLogItem_deleteExerciseLogDefaultError,
       showProgressLoader: false,
     );
@@ -47,7 +46,7 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
     final setLogCreate = _getSetLogCreateFromFormInput(formInput);
     if (setLogCreate != null) {
       submitRequestWithResponse(
-        () => provider.postNewSetLog(widget._workoutLog, _exerciseLog, setLogCreate),
+        () => provider.postNewSetLog(widget._workoutLog, widget._exerciseLog, setLogCreate),
         defaultErrorMessage: uiStrings.exerciseLogItem_addNewSetLogDefaultError,
         showProgressLoader: false,
       );
@@ -57,7 +56,7 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
   Future<void> _updateExerciseLogComment(final BuildContext context, final WorkoutLogProvider provider, final String? comment) async {
     final uiStrings = getLocalizedStrings(context);
     submitRequestWithResponse(
-      () => provider.patchExerciseLogComment(widget._workoutLog, _exerciseLog, comment),
+      () => provider.patchExerciseLogComment(widget._workoutLog, widget._exerciseLog, comment),
       defaultErrorMessage: uiStrings.exerciseLogItem_setCommentDefaultError,
       showProgressLoader: false,
     );
@@ -66,7 +65,11 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
   void _openSetLogDialog(final BuildContext context, final WorkoutLogProvider provider, {final SetLog? setLog}) {
     _showDialog(
       context,
-      SetLogDialog(_exerciseLog, setLog, (final _context, final _setLogFormInput) => _addSetLog(_context, provider, _setLogFormInput)),
+      SetLogDialog(
+        widget._exerciseLog,
+        setLog,
+        (final _context, final _setLogFormInput) => _addSetLog(_context, provider, _setLogFormInput),
+      ),
     );
   }
 
@@ -74,7 +77,7 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
     _showDialog(
       context,
       ExerciseLogCommentDialog(
-        _exerciseLog.comment,
+        widget._exerciseLog.comment,
         (final _context, final _updatedComment) => _updateExerciseLogComment(_context, provider, _updatedComment),
       ),
     );
@@ -142,16 +145,6 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
     );
   }
 
-  // override needed because otherwise, changes in the exercise log (e.g. due to setting a new exercise log comment) would not be passed on from the
-  // widget to the state and hence, not displayed in the UI
-  @override
-  void didUpdateWidget(final ExerciseLogItem oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget._exerciseLog != oldWidget._exerciseLog) {
-      _exerciseLog = widget._exerciseLog;
-    }
-  }
-
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
@@ -159,11 +152,11 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
     final provider = Provider.of<WorkoutLogProvider>(context, listen: false);
     return Card(
       child: ExpansionTile(
-        title: Text(_exerciseLog.exercise.name),
-        subtitle: _buildExerciseCardSubtitle(_exerciseLog, () => _openCommentDialog(context, provider)),
+        title: Text(widget._exerciseLog.exercise.name),
+        subtitle: _buildExerciseCardSubtitle(widget._exerciseLog, () => _openCommentDialog(context, provider)),
         children: [
-          ExerciseLogItemContent(widget._workoutLog, _exerciseLog),
-          _buildButtonRow(context, provider, _exerciseLog.comment == null, uiStrings),
+          ExerciseLogItemContent(widget._workoutLog, widget._exerciseLog),
+          _buildButtonRow(context, provider, widget._exerciseLog.comment == null, uiStrings),
         ],
         initiallyExpanded: _showSetLogs,
         onExpansionChanged: (final _expanded) => setState(() => _showSetLogs = _expanded),

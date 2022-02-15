@@ -3,7 +3,7 @@ import 'package:timezone/timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Encapsulates commonly used operations on [TZDateTime] objects.
-extension DateTimeExtensions on TZDateTime {
+extension TZDateTimeExtensions on TZDateTime {
   /// Returns a [TZDateTime] object containing only information about date
   TZDateTime onlyDate() {
     return TZDateTime(tz.local, year, month, day);
@@ -36,5 +36,13 @@ extension DateTimeExtensions on TZDateTime {
 
     final format = difference > -365 ? DateFormat.MMMMd('en') : DateFormat.yMMMMd('en'); // TODO(leabrugger-raffaelfoidl): localize date format
     return format.format(this);
+  }
+}
+
+/// Encapsulates commonly used operations on [DateTime] objects.
+extension DateTimeExtensions on DateTime {
+  /// Constructs a [TZDateTime] object from a [DateTime] instance containing only information about date.
+  TZDateTime onlyTZDate() {
+    return TZDateTime.local(year, month, day);
   }
 }

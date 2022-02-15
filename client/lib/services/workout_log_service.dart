@@ -11,6 +11,7 @@ import 'package:client/services/base_service.dart';
 import 'package:client/services/server_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:timezone/timezone.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 final _logger = getLogger('workout_log_service');
 
@@ -18,7 +19,7 @@ class WorkoutLogService extends BaseService {
   @override
   String get targetResource => 'workout-logs';
 
-  Future<ServerResponse<List<WorkoutLog>, String?>> getWorkoutLogsByDate(final TZDateTime date, final String? token) async {
+  Future<ServerResponse<List<WorkoutLog>, String?>> getWorkoutLogsByDay(final TZDateTime date, final String? token) async {
     final requestUri = getUri('', queryParameters: {'date': date.toIso8601String()});
     _logger
       ..i('Delegating fetching of workout logs to server')
@@ -32,6 +33,24 @@ class WorkoutLogService extends BaseService {
     } else {
       final responseMap = decodeResponse<Map<String, dynamic>>(response);
       _logger.e('Could not fetch workout logs: ${responseMap['message']}');
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
+    }
+  }
+
+  Future<ServerResponse<Map<TZDateTime, int>, String?>> getLoggingDaysInPeriod(
+      final TZDateTime startDate, final TZDateTime endDate, final String? token) async {
+    final requestUri = getUri('logging-days', queryParameters: {'startDate': startDate.toIso8601String(), 'endDate': endDate.toIso8601String()});
+    _logger
+      ..i('Delegating fetching of logging days to server')
+      ..i('GET $requestUri');
+
+    final response = await http.get(requestUri, headers: getHttpHeaders(authorization: token));
+    final responseMap = decodeResponse<Map<String, dynamic>>(response);
+
+    if (response.statusCode == 200) {
+      return ServerResponse.success(responseMap.map((final key, final dynamic value) => MapEntry(TZDateTime.parse(tz.local, key), value as int)));
+    } else {
+      _logger.e('Could not fetch logging days: ${responseMap['message']}');
       return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
@@ -109,14 +128,14 @@ class WorkoutLogService extends BaseService {
     }
   }
 
-  Future<ServerResponse<WorkoutLog, String?>> postNewExerciseLog(
-      final WorkoutLog workoutLog, final ExerciseLogCreate logCreate, final String? token) async {
+  Future<ServerResponse<WorkoutLog, String?>> postNewExerciseLogs(
+      final WorkoutLog workoutLog, final List<ExerciseLogCreate> logsCreate, final String? token) async {
     final requestUri = getUri('${workoutLog.id}/exercise-logs');
     _logger
-      ..i('Delegating creating new exercise log to server')
+      ..i('Delegating creating new exercise logs to server')
       ..i('POST $requestUri');
 
-    final payload = json.encode(logCreate);
+    final payload = json.encode(logsCreate);
     final response = await http.post(requestUri, headers: getHttpHeaders(authorization: token, jsonContent: true), body: payload);
     final responseMap = decodeResponse<Map<String, dynamic>>(response);
 

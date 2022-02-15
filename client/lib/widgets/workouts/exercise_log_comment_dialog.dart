@@ -1,7 +1,7 @@
 import 'package:client/extensions/string_extensions.dart';
 import 'package:client/logging/log_message_preparer.dart';
-import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/logging/logger_factory.dart';
+import 'package:client/widgets/common/string_localizer.dart';
 import 'package:flutter/material.dart';
 
 final _logger = getLogger('exercise_log_comment_dialog');
@@ -63,7 +63,7 @@ class _ExerciseLogCommentDialogState extends State<ExerciseLogCommentDialog> wit
   }
 
   List<Widget> _buildActionButtons(final BuildContext context, final StringLocalizations uiStrings) {
-    return <Widget>[
+    return [
       TextButton(
         onPressed: () => Navigator.pop(context),
         child: Text(uiStrings.exerciseLogItem_exerciseLogCommentDialog_cancel),
@@ -100,8 +100,8 @@ class _ExerciseLogCommentDialogState extends State<ExerciseLogCommentDialog> wit
 
   @override
   void dispose() {
-    _textController.dispose();
     super.dispose();
+    _textController.dispose();
   }
 
   @override

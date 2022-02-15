@@ -24,13 +24,17 @@
   "@appDrawer_tile_statistics": {
     "description": "Label of tile in `AppDrawer` that represents a link to the statistics screen."
   },
-  "appDrawer_tile_workoutLog": "Workout Log",
+  "appDrawer_tile_workoutLog": "Workouts",
   "@appDrawer_tile_workoutLog": {
     "description": "Label of tile in `AppDrawer` that represents a link to the workout log screen."
   },
   "appTitle": "witness",
   "@appTitle": {
     "description": "The title of the application."
+  },
+  "dialogHelper_datePickerDialog_defaultTitle": "Select Date",
+  "@dialogHelper_datePickerDialog_defaultTitle": {
+    "description": "The title of date picker dialog."
   },
   "editExerciseScreen_appBar_title_create": "Create Exercise",
   "@editExerciseScreen_appBar_title_create": {
@@ -372,8 +376,8 @@
   "@workoutLogScreen_placeholder": {
     "description": "Text to display in `WorkoutLogScreen` if no workout has been logged for the given day."
   },
-  "workoutLogScreen_speedDial_copyWorkout": "Copy Previous Workout",
-  "@workoutLogScreen_speedDial_copyWorkout": {
+  "workoutLogScreen_speedDial_copyFromWorkout": "Copy From Previous Workout",
+  "@workoutLogScreen_speedDial_copyFromWorkout": {
     "description": "Label of `SpeedDialChild` in `WorkoutLogScreen` that is used to create a workout log from a previously logged workout."
   },
   "workoutLogScreen_speedDial_logWorkoutFromProgram": "Log Workout From Program",
@@ -393,6 +397,60 @@
         "example": "An internal error occurred."
       }
     }
+  },
+  "workoutLogScreen_copyExerciseLogsDialog_title": "Copy Exercises",
+  "@workoutLogScreen_copyExerciseLogsDialog_title": {
+    "description": "Title for the copy exercise logs dialog."
+  },
+  "workoutLogScreen_copyExerciseLogsDialog_workoutLogHeading": "Workout {number}",
+  "@workoutLogScreen_copyExerciseLogsDialog_workoutLogHeading": {
+    "description": "Heading for a workout log with a given number.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "workoutLogScreen_copyExerciseLogsDialog_setNumberIndicator": "{number} sets",
+  "@workoutLogScreen_copyExerciseLogsDialog_setNumberIndicator": {
+    "description": "Indicator for number of set logs in an exercise log.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "workoutLogScreen_copyExerciseLogsDialog_cancel": "CANCEL",
+  "@workoutLogScreen_copyExerciseLogsDialog_cancel": {
+    "description": "Text for the button for cancelling copying exercise logs."
+  },
+  "workoutLogScreen_copyExerciseLogsDialog_addToExistingWorkout": "ADD TO EXISTING",
+  "@workoutLogScreen_copyExerciseLogsDialog_addToExistingWorkout": {
+    "description": "Text for the button for adding the copied exercise logs to an existing workout log."
+  },
+  "workoutLogScreen_copyExerciseLogsDialog_createNewWorkout": "CREATE NEW",
+  "@workoutLogScreen_copyExerciseLogsDialog_createNewWorkout": {
+    "description": "Text for the button for creating a new workout log with the copied exercise logs."
+  },
+  "workoutLogScreen_selectWorkoutLogDialog_title": "Select Workout Log",
+  "@workoutLogScreen_selectWorkoutLogDialog_title": {
+    "description": "Title for the select workout log dialog."
+  },
+  "workoutLogScreen_selectWorkoutLogDialog_workoutLogHeading": "Workout {number}",
+  "@workoutLogScreen_selectWorkoutLogDialog_workoutLogHeading": {
+    "description": "Heading for a workout log with a given number.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "workoutLogScreen_selectWorkoutLogDialog_cancel": "CANCEL",
+  "@workoutLogScreen_selectWorkoutLogDialog_cancel": {
+    "description": "Text for the button for cancelling selecting a workout log."
   },
   "workoutLogItem_workoutLog_heading": "Workout {number}",
   "@workoutLogItem_workoutLog_heading": {
@@ -901,6 +959,10 @@
   "errorTranslation_positionMapNotUnique": "The new assignment of positions to log entries contains duplicates.",
   "@errorTranslation_positionMapNotUnique": {
     "description": "Textual representation of error key `POSITION_MAP_NOT_UNIQUE` returned by server."
+  },
+  "errorTranslation_workoutLoggingStartDateAfterEndDate": "The start date of a workout logging period must not lie after the end date.",
+  "@errorTranslation_workoutLoggingStartDateAfterEndDate": {
+    "description": "Textual representation of error key `WORKOUT_LOGGING_START_DATE_AFTER_END_DATE` returned by server."
   },
   "errorTranslation_undefinedError": "An unexpected error occurred.",
   "@errorTranslation_undefinedError": {

@@ -11,12 +11,24 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('day_detail_screen');
 
-class TrainingWeekDetailScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
+class TrainingWeekDetailScreen extends StatefulWidget with LogMessagePreparer, StringLocalizer {
   const TrainingWeekDetailScreen(this._trainingWeek, this._trainingProgramName, {final Key? key}) : super(key: key);
 
   static const routeName = '/training-week-details';
   final TrainingWeekOverview? _trainingWeek;
   final String? _trainingProgramName;
+
+  @override
+  State<StatefulWidget> createState() => _TrainingWeekDetailScreenState();
+}
+
+class _TrainingWeekDetailScreenState extends State<TrainingWeekDetailScreen> with LogMessagePreparer, StringLocalizer {
+  Future<void>? _fetchTrainingDaysResult;
+
+  Future<void> _fetchTrainingDays(final BuildContext context, final int weekId) async {
+    _logger.v(prepare('_fetchTrainingDays()'));
+    await Provider.of<TrainingProgramProvider>(context, listen: false).fetchTrainingDays(weekId);
+  }
 
   Widget _buildFallbackScreen(final StringLocalizations uiStrings) {
     _logger.v(prepare('_buildFallbackScreen()'));
@@ -27,16 +39,11 @@ class TrainingWeekDetailScreen extends StatelessWidget with LogMessagePreparer, 
     );
   }
 
-  Future<void> _fetchTrainingDays(final BuildContext context, final int weekId) async {
-    _logger.v(prepare('_fetchTrainingDays()'));
-    await Provider.of<TrainingProgramProvider>(context, listen: false).fetchTrainingDays(weekId);
-  }
-
-  Widget _buildWeekView(final BuildContext context, final TrainingWeekOverview week) {
+  Widget _buildWeekView(final TrainingWeekOverview week) {
     _logger.v(prepare('_buildWeekView()'));
     return Expanded(
       child: FutureBuilder(
-        future: _fetchTrainingDays(context, week.id),
+        future: _fetchTrainingDaysResult,
         builder: (final _, final snapshot) => snapshot.waitSwitch(
           Consumer<TrainingProgramProvider>(
             builder: (final _, final providerData, final __) => Scrollbar(
@@ -56,7 +63,7 @@ class TrainingWeekDetailScreen extends StatelessWidget with LogMessagePreparer, 
     );
   }
 
-  Widget _buildScreen(final BuildContext context, final StringLocalizations uiStrings, final TrainingWeekOverview week, final String programName) {
+  Widget _buildScreen(final StringLocalizations uiStrings, final TrainingWeekOverview week, final String programName) {
     _logger.v(prepare('_buildScreen()'));
     return Scaffold(
       appBar: AppBar(
@@ -77,18 +84,27 @@ class TrainingWeekDetailScreen extends StatelessWidget with LogMessagePreparer, 
             padding: const EdgeInsets.only(left: 16, top: 10, right: 16),
             child: TrainingWeekHeader(week, programName),
           ),
-          _buildWeekView(context, week),
+          _buildWeekView(week),
         ],
       ),
     );
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    if (widget._trainingWeek != null) {
+      _fetchTrainingDaysResult = _fetchTrainingDays(context, widget._trainingWeek!.id);
+    }
+  }
+
+  @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
     final uiStrings = getLocalizedStrings(context);
-    return _trainingWeek == null || _trainingProgramName == null
+    return widget._trainingWeek == null || widget._trainingProgramName == null
         ? _buildFallbackScreen(uiStrings)
-        : _buildScreen(context, uiStrings, _trainingWeek!, _trainingProgramName!);
+        : _buildScreen(uiStrings, widget._trainingWeek!, widget._trainingProgramName!);
   }
 }

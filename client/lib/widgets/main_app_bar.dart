@@ -2,6 +2,7 @@ import 'package:client/extensions/date_time_extensions.dart';
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/providers/auth_provider.dart';
+import 'package:client/widgets/common/dialog_helper.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/settings/settings_screen.dart';
 import 'package:client/widgets/workouts/workout_log_screen.dart';
@@ -9,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/timezone.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 final _logger = getLogger('main_app_bar');
 
@@ -48,20 +48,21 @@ class MainAppBar extends StatelessWidget with LogMessagePreparer, StringLocalize
     });
   }
 
-  void _selectDate(final BuildContext context, final TZDateTime currentlyViewedDate) {
-    final referenceDate = currentlyViewedDate;
-    showDatePicker(
+  void _selectDate(final BuildContext context, final String dialogTitle, final TZDateTime currentlyViewedDate) {
+    showDialog<void>(
       context: context,
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-      initialDate: referenceDate,
-      firstDate: referenceDate.subtractYears(1),
-      lastDate: referenceDate.addYears(1),
-    ).then((final pickedDate) {
-      if (pickedDate != null) {
-        final date = tz.TZDateTime.local(pickedDate.year, pickedDate.month, pickedDate.day);
-        Navigator.of(context).pushReplacementNamed(WorkoutLogScreen.routeName, arguments: date);
-      }
-    });
+      builder: (final BuildContext context) {
+        return DialogHelper.getDatePicker(
+          context,
+          dialogTitle,
+          currentlyViewedDate,
+          (final pickedDate) {
+            final date = pickedDate.onlyTZDate();
+            Navigator.of(context).pushReplacementNamed(WorkoutLogScreen.routeName, arguments: date);
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -74,7 +75,7 @@ class MainAppBar extends StatelessWidget with LogMessagePreparer, StringLocalize
       actions: [
         if (currentlyViewedDate != null)
           IconButton(
-            onPressed: () => _selectDate(context, currentlyViewedDate!),
+            onPressed: () => _selectDate(context, uiStrings.dialogHelper_datePickerDialog_defaultTitle, currentlyViewedDate!),
             icon: const Icon(Icons.calendar_today),
             tooltip: uiStrings.mainAppBar_action_selectDay,
           ),
