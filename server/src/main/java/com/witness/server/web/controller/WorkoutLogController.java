@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.PositiveOrZero;
 import org.hibernate.validator.constraints.Length;
@@ -76,13 +77,36 @@ public class WorkoutLogController {
     return workoutLogMapper.entitiesToDtos(workoutLogs);
   }
 
+  @GetMapping("logging-days")
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Gets the workout logs that contain at least one exercise log of the current user which were logged in a given month.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "The workout logs were fetched successfully."),
+      @ApiResponse(responseCode = "400", description = "The start date of the requested period lies after the end date.")
+  })
+  public Map<ZonedDateTime, Integer> getLoggingDays(
+      @Parameter(description = "Start date of the period to fetch workout logs from. (ISO-8601 date-time)",
+          example = "2021-10-08T14:15:55.3007597+02:00")
+      @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME,
+          fallbackPatterns = "yyyy-MM-dd'T'HH:mm:ss[.SSSSSSSSS][.SSSSSSSS][.SSSSSSS][.SSSSSS][.SSSSS][.SSSS][.SSS][.SS][.S]XX")
+          ZonedDateTime startDate,
+      @Parameter(description = "End date of the period to fetch workout logs from. (ISO-8601 date-time)",
+          example = "2021-10-08T14:15:55.3007597+02:00")
+      @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME,
+          fallbackPatterns = "yyyy-MM-dd'T'HH:mm:ss[.SSSSSSSSS][.SSSSSSSS][.SSSSSSS][.SSSSSS][.SSSSS][.SSSS][.SSS][.SS][.S]XX")
+          ZonedDateTime endDate) throws InvalidRequestException {
+    var currentUser = securityService.getCurrentUser();
+    var workoutLogsPerDay = workoutLogService.getNonEmptyWorkoutLogsInPeriod(currentUser.getUid(), startDate, endDate);
+    return workoutLogsPerDay.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().size()));
+  }
+
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   @Operation(summary = "Creates a new workout log.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "The new workout log has been created successfully."),
       @ApiResponse(responseCode = "400", description = "A logging type that is invalid for the referenced exercise was requested or managing "
-                                                       + "exercise/set log positions failed"),
+          + "exercise/set log positions failed"),
       @ApiResponse(responseCode = "404", description = "Current user or exercise referenced by new workout were not found."),
       @ApiResponse(responseCode = "500", description = "An error occurred while looking up the current user.")
   })
@@ -130,23 +154,23 @@ public class WorkoutLogController {
 
   @PostMapping("{workoutLogId}/exercise-logs")
   @ResponseStatus(HttpStatus.CREATED)
-  @Operation(summary = "Adds an exercise log to an existing workout log.")
+  @Operation(summary = "Adds exercise logs to an existing workout log.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "The exercise log has successfully been created and added to the workout log."),
-      @ApiResponse(responseCode = "400", description = "The current user is not the owner of the workout log the new exercise log should be "
-                                                       + "added to, the exercise log contains a set log with logging type that is invalid for the "
-                                                       + "referenced exercise or managing set log positions failed."),
-      @ApiResponse(responseCode = "404", description = "The workout log containing the new exercise log, the exercise referenced by the new "
-                                                       + "exercise log or the current user does not exist."),
+      @ApiResponse(responseCode = "201", description = "The exercise logs have successfully been created and added to the workout log."),
+      @ApiResponse(responseCode = "400", description = "The current user is not the owner of the workout log the new exercise logs should be "
+          + "added to, one of the exercise logs contains a set log with logging type that is invalid for the "
+          + "referenced exercise or managing the set log positions failed."),
+      @ApiResponse(responseCode = "404", description = "The workout log containing the new exercise logs, the exercise referenced by one of the new "
+          + "exercise log or the current user does not exist."),
       @ApiResponse(responseCode = "500", description = "An error occurred while looking up the current user.")
   })
-  public WorkoutLogDto addExerciseLog(
-      @PathVariable @Parameter(description = "ID of the workout the new exercise log should be added to.", example = "3") Long workoutLogId,
-      @Valid @RequestBody @Parameter(description = "New exercise log to add to the workout log.") ExerciseLogCreateDto exerciseLog)
+  public WorkoutLogDto addExerciseLogs(
+      @PathVariable @Parameter(description = "ID of the workout the new exercise logs should be added to.", example = "3") Long workoutLogId,
+      @Valid @RequestBody @Parameter(description = "New exercise logs to add to the workout log.") List<ExerciseLogCreateDto> exerciseLogs)
       throws DataAccessException, InvalidRequestException {
     var currentUser = securityService.getCurrentUser();
-    var exerciseLogToCreate = exerciseLogMapper.createDtoToEntity(exerciseLog);
-    var modifiedWorkoutLog = workoutLogService.addExerciseLog(currentUser.getUid(), workoutLogId, exerciseLogToCreate);
+    var exerciseLogsToCreate = exerciseLogMapper.createDtosToEntities(exerciseLogs);
+    var modifiedWorkoutLog = workoutLogService.addExerciseLogs(currentUser.getUid(), workoutLogId, exerciseLogsToCreate);
     return workoutLogMapper.entityToDto(modifiedWorkoutLog);
   }
 
@@ -156,10 +180,10 @@ public class WorkoutLogController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The exercise log positions have been updated successfully."),
       @ApiResponse(responseCode = "400", description = "The current user is not the owner of the workout log whose exercise log positions should "
-                                                       + "be updated, the new positions do not cover all exercise logs or the requested new "
-                                                       + "positions contain duplicates."),
+          + "be updated, the new positions do not cover all exercise logs or the requested new "
+          + "positions contain duplicates."),
       @ApiResponse(responseCode = "404", description = "The workout log whose exercise log positions should be updated or the current user does "
-                                                       + "not exist."),
+          + "not exist."),
       @ApiResponse(responseCode = "500", description = "An error occurred while looking up the current user.")
   })
   public WorkoutLogDto updateExerciseLogPositions(
@@ -175,8 +199,8 @@ public class WorkoutLogController {
               @ExampleObject(
                   name = "Exercise Log Position Specification With Gaps",
                   description = "Maps exercise log with ID 11 to position 37, ID 22 to position 4 and ID 33 to position 15. Server internally "
-                                + "simplifies this before persisting such that ID 11 is mapped to position 3, ID 22 to position 1 and ID 33 to "
-                                + "position 2.",
+                      + "simplifies this before persisting such that ID 11 is mapped to position 3, ID 22 to position 1 and ID 33 to "
+                      + "position 2.",
                   value = "{\"11\": 37,\"22\": 4,\"33\": 15}")
           })) Map<Long, Integer> positions) throws InvalidRequestException, DataAccessException {
     var currentUser = securityService.getCurrentUser();
@@ -190,12 +214,12 @@ public class WorkoutLogController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The exercise log has been successfully removed from the workout log."),
       @ApiResponse(responseCode = "400", description = "The current user is not the owner of the workout log the exercise log should be deleted "
-                                                       + "from, managing exercise log positions failed or the exercise log to delete is not part of "
-                                                       + "the workout log to delete from."),
+          + "from, managing exercise log positions failed or the exercise log to delete is not part of "
+          + "the workout log to delete from."),
       @ApiResponse(responseCode = "404", description = "The current user, the workout log to delete the exercise log from or the exercise log to "
-                                                       + "to delete does not exist."),
+          + "to delete does not exist."),
       @ApiResponse(responseCode = "500", description = "An error occurred while looking up the current user or the specified exercise log could not "
-                                                       + "be removed from the specified workout log.")
+          + "be removed from the specified workout log.")
   })
   public WorkoutLogDto deleteExerciseLog(
       @PathVariable @Parameter(description = "ID of the workout log the exercise log should be deleted from.", example = "7") Long workoutLogId,
@@ -212,10 +236,10 @@ public class WorkoutLogController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The comment has been successfully set for the exercise log."),
       @ApiResponse(responseCode = "400", description = "The current user is not the owner of the workout log the exercise log whose comment should "
-                                                       + "be set belongs to or the exercise log whose comment should be set does not belong to the "
-                                                       + "specified workout log."),
+          + "be set belongs to or the exercise log whose comment should be set does not belong to the "
+          + "specified workout log."),
       @ApiResponse(responseCode = "404", description = "The current user, the workout log the exercise log whose comment should be set belongs to, "
-                                                       + "or the exercise log whose comment should be set does not exist."),
+          + "or the exercise log whose comment should be set does not exist."),
       @ApiResponse(responseCode = "500", description = "An error occurred while looking up the current user.")
   })
   public WorkoutLogDto setExerciseLogComment(
@@ -235,9 +259,9 @@ public class WorkoutLogController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "The new set log has been successfully created."),
       @ApiResponse(responseCode = "400", description = "The current user is not the owner of the workout log the new set log should be added to, "
-                                                       + "the specified exercise log does not belong to the specified workout log or a set log "
-                                                       + "associated with a logging type that is invalid for the corresponding exercise was "
-                                                       + "requested."),
+          + "the specified exercise log does not belong to the specified workout log or a set log "
+          + "associated with a logging type that is invalid for the corresponding exercise was "
+          + "requested."),
       @ApiResponse(responseCode = "404", description = "The current user, the specified workout log or specified exercise log does not exist."),
       @ApiResponse(responseCode = "500", description = "An error occurred while looking up the current user.")
   })
@@ -258,12 +282,12 @@ public class WorkoutLogController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The old set log has been successfully replaced with the new set log."),
       @ApiResponse(responseCode = "400", description = "The current user is not the owner of the workout log containing the set log to be updated, "
-                                                       + "the specified exercise log containing the set log to update is not part of the specified "
-                                                       + "workout log, the updated set log is not part of the specified exercise log, the updated "
-                                                       + "set log has an updated position property or the updated set log has an associated logging "
-                                                       + "type that is invalid for the containing exercise log."),
+          + "the specified exercise log containing the set log to update is not part of the specified "
+          + "workout log, the updated set log is not part of the specified exercise log, the updated "
+          + "set log has an updated position property or the updated set log has an associated logging "
+          + "type that is invalid for the containing exercise log."),
       @ApiResponse(responseCode = "404", description = "The current user, the specified workout log, the specified exercise log or the set log "
-                                                       + "to update does not exist."),
+          + "to update does not exist."),
       @ApiResponse(responseCode = "500", description = "An error occurred while looking up the current user.")
   })
   public WorkoutLogDto updateSetLog(
@@ -283,11 +307,11 @@ public class WorkoutLogController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The set log positions have been updated successfully."),
       @ApiResponse(responseCode = "400", description = "The current user is not the owner of the workout log containing the set logs whose positions "
-                                                       + "should be updated, the specified exercise log is not part of the specified workout log, "
-                                                       + "the new positions do not cover all exercise logs or the requested new positions contain "
-                                                       + "duplicates."),
+          + "should be updated, the specified exercise log is not part of the specified workout log, "
+          + "the new positions do not cover all exercise logs or the requested new positions contain "
+          + "duplicates."),
       @ApiResponse(responseCode = "404", description = "The workout log whose exercise log positions should be updated or the current user does "
-                                                       + "not exist."),
+          + "not exist."),
       @ApiResponse(responseCode = "500", description = "An error occurred while looking up the current user.")
   })
   public WorkoutLogDto updateSetLogPositions(
@@ -304,8 +328,8 @@ public class WorkoutLogController {
               @ExampleObject(
                   name = "Set Log Position Specification With Gaps",
                   description = "Maps set log with ID 11 to position 37, ID 22 to position 4 and ID 33 to position 15. Server internally "
-                                + "simplifies this before persisting such that ID 11 is mapped to position 3, ID 22 to position 1 and ID 33 to "
-                                + "position 2.",
+                      + "simplifies this before persisting such that ID 11 is mapped to position 3, ID 22 to position 1 and ID 33 to "
+                      + "position 2.",
                   value = "{\"11\": 37,\"22\": 4,\"33\": 15}")
           })) Map<Long, Integer> positions) throws InvalidRequestException, DataAccessException {
     var currentUser = securityService.getCurrentUser();
@@ -319,12 +343,12 @@ public class WorkoutLogController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The set log has been successfully deleted."),
       @ApiResponse(responseCode = "400", description = "The current user is not owner of the workout log containing the set log to be deleted, "
-                                                       + "managing set log positions failed, the specified exercise log is not part of the specified "
-                                                       + "workout log or the set log to delete is not part of the specified exercise log."),
+          + "managing set log positions failed, the specified exercise log is not part of the specified "
+          + "workout log or the set log to delete is not part of the specified exercise log."),
       @ApiResponse(responseCode = "404", description = "The current user, the specified workout log, the specified exercise log or set log to delete "
-                                                       + "does not exist."),
+          + "does not exist."),
       @ApiResponse(responseCode = "500", description = "An error occurred while looking up the current user or the specified set log could not be "
-                                                       + "removed from the specified exercise log.")
+          + "removed from the specified exercise log.")
   })
   public WorkoutLogDto deleteSetLog(
       @PathVariable @Parameter(description = "ID of the workout log the set log should be deleted from.", example = "7") Long workoutLogId,

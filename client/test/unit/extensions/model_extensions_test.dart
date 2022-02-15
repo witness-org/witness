@@ -12,7 +12,7 @@ import 'package:timezone/timezone.dart';
 
 import '../../common/test_helpers.dart';
 
-const _sutName = 'model_extensions_test';
+const _sutName = 'model_extensions';
 
 void main() {
   group(getPrefixedGroupName(_sutName, 'WorkoutLogExtensions'), () {

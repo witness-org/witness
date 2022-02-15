@@ -27,12 +27,10 @@ class WorkoutLogItem extends StatefulWidget {
 }
 
 class _WorkoutLogItemState extends RequesterState<WorkoutLogItem, WorkoutLog> with StringLocalizer, LogMessagePreparer {
-  late WorkoutLog _workoutLog = widget._workoutLog;
-
   Future<void> _deleteWorkoutLog(final BuildContext context, final WorkoutLogProvider provider) async {
     final uiStrings = getLocalizedStrings(context);
     submitRequestWithoutResponse(
-      () => provider.deleteWorkoutLog(_workoutLog),
+      () => provider.deleteWorkoutLog(widget._workoutLog),
       defaultErrorMessage: uiStrings.workoutLogItem_deleteWorkoutLogDefaultError,
       showProgressLoader: false,
     );
@@ -41,7 +39,7 @@ class _WorkoutLogItemState extends RequesterState<WorkoutLogItem, WorkoutLog> wi
   Future<void> _addExerciseLog(final BuildContext context, final WorkoutLogProvider provider, final Exercise exercise) async {
     final uiStrings = getLocalizedStrings(context);
     submitRequestWithResponse(
-      () => provider.postNewExerciseLog(_workoutLog, ExerciseLogCreate.empty(exercise.id)),
+      () => provider.postNewExerciseLogs(widget._workoutLog, [ExerciseLogCreate.empty(exercise.id)]),
       defaultErrorMessage: uiStrings.workoutLogItem_addExerciseDefaultError,
       showProgressLoader: false,
     );
@@ -56,7 +54,7 @@ class _WorkoutLogItemState extends RequesterState<WorkoutLogItem, WorkoutLog> wi
   Future<void> _updateWorkoutDuration(final BuildContext context, final WorkoutLogProvider provider, final int? durationMinutes) async {
     final uiStrings = getLocalizedStrings(context);
     submitRequestWithResponse(
-      () => provider.patchWorkoutLogDuration(_workoutLog, durationMinutes),
+      () => provider.patchWorkoutLogDuration(widget._workoutLog, durationMinutes),
       defaultErrorMessage: uiStrings.workoutLogItem_workoutDurationDialog_durationDefaultError,
       showProgressLoader: false,
     );
@@ -65,7 +63,7 @@ class _WorkoutLogItemState extends RequesterState<WorkoutLogItem, WorkoutLog> wi
   Future<void> _updateExerciseLogPositions(final BuildContext context, final WorkoutLogProvider provider, final Map<String, int> positions) async {
     final uiStrings = getLocalizedStrings(context);
     submitRequestWithResponse(
-      () => provider.putExerciseLogPositions(_workoutLog, positions),
+      () => provider.putExerciseLogPositions(widget._workoutLog, positions),
       defaultErrorMessage: uiStrings.workoutLogItem_updateExerciseLogPositionsDefaultError,
       showProgressLoader: false,
     );
@@ -76,11 +74,11 @@ class _WorkoutLogItemState extends RequesterState<WorkoutLogItem, WorkoutLog> wi
       // this `setState()` call prevents the exercise log cards from "jumping around" due to them returning to their original positions before going
       // to their new positions when the server request is successfully completed
       final index = newIndex > oldIndex ? newIndex - 1 : newIndex;
-      final item = _workoutLog.exerciseLogs.removeAt(oldIndex);
-      _workoutLog.exerciseLogs.insert(index, item);
+      final item = widget._workoutLog.exerciseLogs.removeAt(oldIndex);
+      widget._workoutLog.exerciseLogs.insert(index, item);
     });
 
-    _updateExerciseLogPositions(context, provider, _createPositionsMap(_workoutLog.exerciseLogs));
+    _updateExerciseLogPositions(context, provider, _createPositionsMap(widget._workoutLog.exerciseLogs));
   }
 
   Widget _buildWorkoutHeader(final String heading) {
@@ -113,7 +111,7 @@ class _WorkoutLogItemState extends RequesterState<WorkoutLogItem, WorkoutLog> wi
       onReorder: (final _oldIndex, final _newIndex) => _reorderExerciseLogs(provider, _oldIndex, _newIndex),
       children: exerciseLogs.map((final exerciseLog) {
         return ExerciseLogItem(
-          _workoutLog,
+          widget._workoutLog,
           exerciseLog,
           key: ValueKey(exerciseLog.id),
         );
@@ -144,16 +142,6 @@ class _WorkoutLogItemState extends RequesterState<WorkoutLogItem, WorkoutLog> wi
     );
   }
 
-  // override needed because otherwise, changes in the workout log (e.g. due to setting a new value for the workout duration) would not be passed on
-  // from the widget to the state and hence, not displayed in the UI
-  @override
-  void didUpdateWidget(final WorkoutLogItem oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget._workoutLog != oldWidget._workoutLog) {
-      _workoutLog = widget._workoutLog;
-    }
-  }
-
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
@@ -169,18 +157,18 @@ class _WorkoutLogItemState extends RequesterState<WorkoutLogItem, WorkoutLog> wi
               uiStrings.workoutLogItem_workoutLog_heading(widget._index + 1),
             ),
             _buildWorkoutDurationButton(
-              uiStrings.workoutLogItem_workoutLog_duration(_workoutLog.durationMinutes),
+              uiStrings.workoutLogItem_workoutLog_duration(widget._workoutLog.durationMinutes),
               () => showDialog<String>(
                 context: context,
                 builder: (final BuildContext context) => WorkoutLogDurationDialog(
-                  _workoutLog.durationMinutes,
+                  widget._workoutLog.durationMinutes,
                   (final _context, final _updatedDuration) => _updateWorkoutDuration(_context, provider, _updatedDuration),
                 ),
               ),
             ),
           ],
         ),
-        _buildExerciseLogList(provider, _workoutLog.exerciseLogs),
+        _buildExerciseLogList(provider, widget._workoutLog.exerciseLogs),
         _buildWorkoutLogButtonRow(context, provider)
       ],
     );

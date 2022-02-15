@@ -44,7 +44,7 @@ class _WorkoutLogDurationDialogState extends State<WorkoutLogDurationDialog> wit
   }
 
   List<Widget> _buildActionButtons(final BuildContext context, final StringLocalizations uiStrings) {
-    return <Widget>[
+    return [
       TextButton(
         onPressed: () => Navigator.pop(context),
         child: Text(uiStrings.workoutLogItem_workoutDurationDialog_cancel),

@@ -5,6 +5,7 @@ import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/models/workouts/resistance_band.dart';
 import 'package:flutter/material.dart';
 
+/// Provides methods that facilitate handling of [LoggingType]s.
 extension LoggingTypeExtensions on LoggingType {
   // TODO(raffaelfoidl-leabrugger): also localize enum representations
 
@@ -46,6 +47,7 @@ extension LoggingTypeExtensions on LoggingType {
   }
 }
 
+/// Provides methods that facilitate handling of [MuscleGroup]s.
 extension MuscleGroupExtensions on MuscleGroup {
   /// This method is used to get a string representation of the respective muscle group to be displayed in the UI.
   String toUiString() {

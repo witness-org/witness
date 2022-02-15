@@ -1,7 +1,7 @@
-import 'package:client/models/common/tz_date_time_converter.dart';
-import 'package:client/models/workouts/exercise_log.dart';
+import 'package:client/models/converters/tz_date_time_converter.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:timezone/timezone.dart';
+import 'package:client/models/workouts/exercise_log_create.dart';
 
 part 'workout_log_create.g.dart';
 
@@ -16,7 +16,7 @@ class WorkoutLogCreate {
 
   final TZDateTime loggedOn;
   final int durationMinutes;
-  final List<ExerciseLog> exerciseLogs;
+  final List<ExerciseLogCreate> exerciseLogs;
 
   Map<String, dynamic> toJson() => _$WorkoutLogCreateToJson(this);
 }

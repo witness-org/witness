@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('exercises_by_muscle_group_screen');
 
-class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer, ErrorKeyTranslator {
+class ExercisesByMuscleGroupScreen extends StatefulWidget {
   const ExercisesByMuscleGroupScreen(
     this._muscleGroup, {
     final Future<void> Function(BuildContext context, Exercise selectedExercise)? selectExerciseAction,
@@ -26,6 +26,13 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
   static const routeName = '/exercises-by-muscle-group';
   final MuscleGroup? _muscleGroup;
   final Future<void> Function(BuildContext context, Exercise selectedExercise)? _selectExerciseAction;
+
+  @override
+  State<StatefulWidget> createState() => _ExercisesByMuscleGroupScreenState();
+}
+
+class _ExercisesByMuscleGroupScreenState extends State<ExercisesByMuscleGroupScreen> with StringLocalizer, LogMessagePreparer, ErrorKeyTranslator {
+  Future<void>? _fetchExercisesByMuscleGroupResult;
 
   Future<void> _fetchExercisesByMuscleGroup(final BuildContext context, final MuscleGroup group) async {
     _logger.v(prepare('_fetchExercisesByMuscleGroup()'));
@@ -67,7 +74,7 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
     _logger.v(prepare('_buildExerciseList()'));
     return Expanded(
       child: FutureBuilder<void>(
-        future: _fetchExercisesByMuscleGroup(context, group),
+        future: _fetchExercisesByMuscleGroupResult,
         builder: (final _, final snapshot) {
           return snapshot.waitSwitch(
             RefreshIndicator(
@@ -83,7 +90,7 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
                         final exercise = exerciseData.getExercisesByMuscleGroup(group)[index];
                         return Column(
                           children: [
-                            ExerciseByMuscleGroupItem(exercise, selectExercise: _selectExerciseAction),
+                            ExerciseByMuscleGroupItem(exercise, selectExercise: widget._selectExerciseAction),
                             const Divider(),
                           ],
                         );
@@ -122,9 +129,18 @@ class ExercisesByMuscleGroupScreen extends StatelessWidget with LogMessagePrepar
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    if (widget._muscleGroup != null) {
+      _fetchExercisesByMuscleGroupResult = _fetchExercisesByMuscleGroup(context, widget._muscleGroup!);
+    }
+  }
+
+  @override
   Widget build(final BuildContext context) {
     final uiStrings = getLocalizedStrings(context);
-    return _muscleGroup == null ? _buildFallbackScreen(uiStrings) : _buildScreen(context, uiStrings, _muscleGroup!);
+    return widget._muscleGroup == null ? _buildFallbackScreen(uiStrings) : _buildScreen(context, uiStrings, widget._muscleGroup!);
   }
 }
 
