@@ -25,12 +25,12 @@ Future<void> bootstrap([final AppArguments arguments = const AppArguments.empty(
 
   final injector = Injector.appInstance
     ..clearAll()
-    ..registerSingleton<ExerciseService>(() => ExerciseService())
-    ..registerSingleton<WorkoutLogService>(() => WorkoutLogService())
-    ..registerSingleton<FirebaseService>(() => FirebaseService())
+    ..registerSingleton<ExerciseService>(() => const ExerciseService())
+    ..registerSingleton<WorkoutLogService>(() => const WorkoutLogService())
+    ..registerSingleton<FirebaseService>(() => const FirebaseService())
     ..registerSingleton<TrainingProgramService>(() => TrainingProgramService())
-    ..registerSingleton<UserService>(() => UserService())
-    ..registerSingleton<ImageProviderFacade>(() => ImageProviderFacade())
+    ..registerSingleton<UserService>(() => const UserService())
+    ..registerSingleton<ImageProviderFacade>(() => const ImageProviderFacade())
     ..registerSingleton<Future<FirebaseAuth>>(() async {
       await Firebase.initializeApp();
       return FirebaseAuth.instance;

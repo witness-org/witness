@@ -11,7 +11,7 @@ environment:
 
 dependencies:
   collection: ^1.15.0
-  firebase_auth: ^3.3.6
+  firebase_auth: ^3.3.7
   firebase_core: ^1.12.0
   flex_color_scheme: ^4.2.0
   flutter:
@@ -42,7 +42,7 @@ dev_dependencies:
     sdk: flutter
   json_serializable: ^6.1.4
   matcher: ^0.12.11
-  mockito: ^5.0.17
+  mockito: ^5.1.0
 
 
 flutter:

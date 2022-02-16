@@ -7,8 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 final _logger = getLogger('firebase_service');
 
 class FirebaseService extends BaseService {
-  @override
-  String get targetResource => ''; // required by contract, but its value is not used since this service does not utilize `getUri` from base
+  /// The [super] call is required by contract, but the passed value is not used since this service does not utilize [BaseService.getUri].
+  const FirebaseService() : super('');
 
   Future<ServerResponse<FirebaseUser, String?>> loginEmailPassword(final FirebaseAuth auth, final String email, final String password) async {
     _logger.i('Authenticating user "$email" via "email/password" method...');

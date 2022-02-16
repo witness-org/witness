@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../common/test_helpers.dart';
 
 const _sutName = 'base_service';
-final _stubService = StubService();
+const _stubService = StubService();
 
 void main() {
   void expectUri(final Uri generatedUri, final String expectedPath) {
@@ -71,6 +71,5 @@ void main() {
 /// no additional methods besides the implementation of members required by the contract. It has no state, therefore reusing a single instance
 /// of [StubService] across all [BaseService] tests is allowed and safe.
 class StubService extends BaseService {
-  @override
-  String get targetResource => 'stubs';
+  const StubService() : super('stubs');
 }

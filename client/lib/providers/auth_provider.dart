@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:client/logging/logger_factory.dart';
+import 'package:client/providers/base_provider.dart';
 import 'package:client/services/firebase_service.dart';
 import 'package:client/services/server_response.dart';
 import 'package:client/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 
 final _logger = getLogger('auth_provider');
@@ -14,7 +14,9 @@ final _logger = getLogger('auth_provider');
 /// `User`, we want to refer to Firebase users only via this `FirebaseUser` type alias.
 typedef FirebaseUser = User;
 
-class AuthProvider with ChangeNotifier {
+class AuthProvider extends BaseProvider {
+  AuthProvider() : super(_logger);
+
   static final Injector _injector = Injector.appInstance;
   late final FirebaseService _firebaseService = _injector.get<FirebaseService>();
   late final UserService _userService = _injector.get<UserService>();

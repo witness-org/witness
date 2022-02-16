@@ -6,15 +6,15 @@ import 'package:client/models/training_programs/overview/training_program_overvi
 import 'package:client/models/training_programs/overview/training_week_overview.dart';
 import 'package:client/models/training_programs/workout.dart';
 import 'package:client/providers/auth_provider.dart';
+import 'package:client/providers/base_provider.dart';
 import 'package:client/services/training_program_service.dart';
 import 'package:collection/collection.dart' as collection;
-import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 
 final _logger = getLogger('training_program_provider');
 
-class TrainingProgramProvider with ChangeNotifier {
-  TrainingProgramProvider._(this._auth, this._trainingPrograms, this._trainingWeeks, this._trainingDays, this._workouts);
+class TrainingProgramProvider extends BaseProvider {
+  TrainingProgramProvider._(this._auth, this._trainingPrograms, this._trainingWeeks, this._trainingDays, this._workouts) : super(_logger);
 
   TrainingProgramProvider.empty()
       : this._(
