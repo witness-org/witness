@@ -9,8 +9,7 @@ import 'package:http/http.dart' as http;
 final _logger = getLogger('user_service');
 
 class UserService extends BaseService {
-  @override
-  String get targetResource => "users";
+  const UserService() : super('users');
 
   Future<ServerResponse<User, String?>> createUser(final String email, final String password) async {
     final requestUri = getUri('');

@@ -13,8 +13,7 @@ import 'package:http/http.dart' as http;
 final _logger = getLogger('exercise_service');
 
 class ExerciseService extends BaseService {
-  @override
-  String get targetResource => 'exercises';
+  const ExerciseService() : super('exercises');
 
   Future<ServerResponse<List<Exercise>, String?>> getExercisesByMuscleGroup(final MuscleGroup group, final String? token) async {
     final requestUri = getUri('', queryParameters: {'muscle-group': group.toDtoString()});
