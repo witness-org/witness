@@ -10,17 +10,17 @@ import 'package:client/models/workouts/set_log_create.dart';
 import 'package:client/models/workouts/workout_log.dart';
 import 'package:client/models/workouts/workout_log_create.dart';
 import 'package:client/providers/auth_provider.dart';
+import 'package:client/providers/base_provider.dart';
 import 'package:client/services/server_response.dart';
 import 'package:client/services/workout_log_service.dart';
 import 'package:collection/collection.dart' as collection;
-import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 import 'package:timezone/timezone.dart';
 
 final _logger = getLogger('workout_log_provider');
 
-class WorkoutLogProvider with ChangeNotifier {
-  WorkoutLogProvider._(this._auth, this._workoutLogs, this._workoutLogsCount);
+class WorkoutLogProvider extends BaseProvider {
+  WorkoutLogProvider._(this._auth, this._workoutLogs, this._workoutLogsCount) : super(_logger);
 
   WorkoutLogProvider.empty() : this._(null, <TZDateTime, List<WorkoutLog>>{}, <TZDateTime, int>{});
 

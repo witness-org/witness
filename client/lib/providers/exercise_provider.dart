@@ -7,16 +7,16 @@ import 'package:client/models/exercises/exercise_create.dart';
 import 'package:client/models/exercises/exercise_history.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/providers/auth_provider.dart';
+import 'package:client/providers/base_provider.dart';
 import 'package:client/services/exercise_service.dart';
 import 'package:client/services/server_response.dart';
 import 'package:collection/collection.dart' as collection;
-import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 
 final _logger = getLogger('exercise_provider');
 
-class ExerciseProvider with ChangeNotifier {
-  ExerciseProvider._(this._auth, this._exercises, this._exerciseHistories);
+class ExerciseProvider extends BaseProvider {
+  ExerciseProvider._(this._auth, this._exercises, this._exerciseHistories) : super(_logger);
 
   ExerciseProvider.empty() : this._(null, <MuscleGroup, List<Exercise>>{}, <int, ExerciseHistory>{});
 
