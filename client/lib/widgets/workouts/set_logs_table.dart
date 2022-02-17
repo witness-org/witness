@@ -43,6 +43,12 @@ class _SetLogsTableState extends State<SetLogsTable> with StringLocalizer, LogMe
     positionUpdateAction(context, _createPositionsMap(widget._exerciseLog.setLogs));
   }
 
+  Widget _buildErrorIndicator(final StringLocalizations uiStrings) {
+    return Center(
+      child: Text(uiStrings.setLogsTable_unknownSetLogsError),
+    );
+  }
+
   Widget _buildSeparator(final String separator, {final TextStyle? styling}) {
     return Padding(
       padding: const EdgeInsets.only(left: 5, right: 5),
@@ -143,7 +149,12 @@ class _SetLogsTableState extends State<SetLogsTable> with StringLocalizer, LogMe
     _logger.v(prepare('build()'));
     final uiStrings = getLocalizedStrings(context);
     final allValidSetLogs = widget._exerciseLog.setLogs.every((final log) => (log is RepsSetLog) || (log is TimeSetLog));
-    return allValidSetLogs
+
+    if (!allValidSetLogs) {
+      return _buildErrorIndicator(uiStrings);
+    }
+
+    return widget._updateSetLogPositions != null
         ? ReorderableTable(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             onReorder: (final int oldIndex, final int newIndex) => _reorderSetLogs(oldIndex, newIndex, widget._updateSetLogPositions!),
