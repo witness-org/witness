@@ -1,0 +1,17 @@
+[
+  {
+    "weightG": 10000,
+    "reps": 5,
+    "expectedEstimatedOneRepMax": 11667
+  },
+  {
+    "weightG": 160000,
+    "reps": 7,
+    "expectedEstimatedOneRepMax": 197333
+  },
+  {
+    "weightG": 0,
+    "reps": 9,
+    "expectedEstimatedOneRepMax": 0
+  }
+]

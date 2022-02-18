@@ -7,6 +7,7 @@ import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;
 import com.witness.server.exception.InvalidRequestException;
+import com.witness.server.model.ExerciseStatistics;
 import java.util.List;
 
 /**
@@ -134,7 +135,7 @@ public interface ExerciseService {
   /**
    * Fetches exercise logs with at least one set log that were logged for a given exercise by a given user.
    *
-   * @param firebaseId the ID of the user whose exercise logs should be fetched
+   * @param firebaseId the Firebase ID of the user whose exercise logs should be fetched
    * @param exerciseId the ID of the exercise whose exercise logs should be fetched
    * @return a list of non-empty {@link ExerciseLog} instances of the exercise with ID {@code exerciseID} which were logged by the user with ID
    *     {@code firebaseId}
@@ -143,4 +144,16 @@ public interface ExerciseService {
    * @throws DataAccessException   if the user lookup fails
    */
   List<ExerciseLog> getExerciseLogs(String firebaseId, Long exerciseId) throws DataAccessException;
+
+  /**
+   * Fetches the exercise statistics based on the exercise logs by a given user.
+   *
+   * @param firebaseId the Firebase ID of the user whose exercise statistics should be fetched
+   * @param exerciseId the ID of the exercise whose statistics should be fetched
+   * @return an {@link ExerciseStatistics} instance encapsulating the relevant parameters
+   * @throws DataNotFoundException if the user specified by {@code firebaseId} is not found or the exercise specified by {@code exerciseId} is not
+   *                               found
+   * @throws DataAccessException   if the user lookup fails
+   */
+  ExerciseStatistics getExerciseStatistics(String firebaseId, Long exerciseId) throws DataAccessException;
 }
