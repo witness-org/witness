@@ -2,10 +2,12 @@ import 'package:client/app_arguments.dart';
 import 'package:client/providers/auth_provider.dart';
 import 'package:client/providers/exercise_provider.dart';
 import 'package:client/providers/training_program_provider.dart';
+import 'package:client/providers/workout_log_provider.dart';
 import 'package:client/services/exercise_service.dart';
 import 'package:client/services/firebase_service.dart';
 import 'package:client/services/training_program_service.dart';
 import 'package:client/services/user_service.dart';
+import 'package:client/services/workout_log_service.dart';
 import 'package:client/widgets/app.dart';
 import 'package:client/widgets/common/image_provider_facade.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,17 +16,21 @@ import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 import 'package:progress_loader_overlay/progress_loader_overlay.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/data/latest.dart';
 
 Future<void> main() async => bootstrap();
 
 Future<void> bootstrap([final AppArguments arguments = const AppArguments.empty()]) async {
+  initializeTimeZones();
+
   final injector = Injector.appInstance
     ..clearAll()
-    ..registerSingleton<ExerciseService>(() => ExerciseService())
-    ..registerSingleton<FirebaseService>(() => FirebaseService())
+    ..registerSingleton<ExerciseService>(() => const ExerciseService())
+    ..registerSingleton<WorkoutLogService>(() => const WorkoutLogService())
+    ..registerSingleton<FirebaseService>(() => const FirebaseService())
     ..registerSingleton<TrainingProgramService>(() => TrainingProgramService())
-    ..registerSingleton<UserService>(() => UserService())
-    ..registerSingleton<ImageProviderFacade>(() => ImageProviderFacade())
+    ..registerSingleton<UserService>(() => const UserService())
+    ..registerSingleton<ImageProviderFacade>(() => const ImageProviderFacade())
     ..registerSingleton<Future<FirebaseAuth>>(() async {
       await Firebase.initializeApp();
       return FirebaseAuth.instance;
@@ -43,14 +49,16 @@ Future<void> bootstrap([final AppArguments arguments = const AppArguments.empty(
           create: (final _) => ExerciseProvider.empty(),
           update: (final _, final auth, final previousExercises) => ExerciseProvider.fromProviders(auth, previousExercises),
         ),
+        ChangeNotifierProxyProvider<AuthProvider, WorkoutLogProvider>(
+          create: (final _) => WorkoutLogProvider.empty(),
+          update: (final _, final auth, final previousWorkoutLogs) => WorkoutLogProvider.fromProviders(auth, previousWorkoutLogs),
+        ),
         ChangeNotifierProxyProvider<AuthProvider, TrainingProgramProvider>(
           create: (final _) => TrainingProgramProvider.empty(),
           update: (final _, final auth, final previousTrainingPrograms) => TrainingProgramProvider.fromProviders(auth, previousTrainingPrograms),
         ),
       ],
-      child: const WitnessClient(
-        key: Key("root"),
-      ),
+      child: const WitnessClient(),
     ),
   );
 }

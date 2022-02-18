@@ -14,6 +14,8 @@ import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -94,6 +96,43 @@ class ExerciseRepositoryTest extends BaseRepositoryTest {
     assertThat(exerciseRepository.existsByName(specification.queryName)).isEqualTo(specification.expectedResult);
   }
 
+  @ParameterizedTest
+  @JsonFileSources(unwrapArrays = true, parameters = {
+      @JsonFileSource(value = DATA_ROOT + "findById_exerciseRepository.json", type = FindByIdTestSpecification[].class)
+  })
+  void findById_exerciseRepository(FindByIdTestSpecification specification) {
+    genericFindByIdTest(specification, () -> exerciseRepository.findById(specification.id));
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(unwrapArrays = true, parameters = {
+      @JsonFileSource(value = DATA_ROOT + "findById_userExerciseRepository.json", type = FindByIdTestSpecification[].class)
+  })
+  void findById_userExerciseRepository(FindByIdTestSpecification specification) {
+    genericFindByIdTest(specification, () -> userExerciseRepository.findById(specification.id));
+  }
+
+  @ParameterizedTest
+  @JsonFileSources(unwrapArrays = true, parameters = {
+      @JsonFileSource(value = DATA_ROOT + "findInitialExerciseById.json", type = FindByIdTestSpecification[].class)
+  })
+  void findInitialExerciseById(FindByIdTestSpecification specification) {
+    genericFindByIdTest(specification, () -> exerciseRepository.findInitialExerciseById(specification.id));
+  }
+
+  private <T extends Exercise> void genericFindByIdTest(FindByIdTestSpecification specification, Supplier<Optional<T>> lookup) {
+    userRepository.saveAndFlush(specification.user);
+    exerciseRepository.saveAllAndFlush(specification.exercises);
+    userExerciseRepository.saveAllAndFlush(specification.userExercises);
+
+    var findResult = lookup.get();
+    if (specification.expectsResult) {
+      assertThat(findResult).isNotEmpty();
+    } else {
+      assertThat(findResult).isEmpty();
+    }
+  }
+
   @Data
   @NoArgsConstructor
   static class ExistsByNameTestSpecification {
@@ -122,6 +161,16 @@ class ExerciseRepositoryTest extends BaseRepositoryTest {
     private List<UserExercise> userExercises;
     private User queryUser;
     private List<UserExercise> expectedUserExercises;
+  }
+
+  @Data
+  @NoArgsConstructor
+  static class FindByIdTestSpecification {
+    private User user;
+    private List<Exercise> exercises;
+    private List<UserExercise> userExercises;
+    private Long id;
+    private Boolean expectsResult;
   }
 }
 

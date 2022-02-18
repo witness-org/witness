@@ -24,6 +24,7 @@ import com.witness.server.service.SecurityService;
 import com.witness.server.service.UserService;
 import com.witness.server.util.isolation.DatabaseResetService;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -36,6 +37,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
+import org.assertj.core.util.TriFunction;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Answers;
 import org.mockito.invocation.InvocationOnMock;
@@ -45,6 +47,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -117,6 +120,11 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
     return exchange(authMode, url, HttpMethod.GET, queryParams, clazz);
   }
 
+  protected <T> ResponseEntity<T> get(TestAuthentication authMode, String url, MultiValueMap<String, String> queryParams,
+                                      ParameterizedTypeReference<T> responseType) {
+    return exchange(authMode, url, HttpMethod.GET, queryParams, null, responseType);
+  }
+
   protected <T> ResponseEntity<T> exchange(TestAuthentication authMode, String url, HttpMethod method, Class<T> responseType) {
     return exchange(authMode, url, method, null, null, responseType);
   }
@@ -131,9 +139,22 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
     return exchange(authMode, url, method, null, requestBody, responseType);
   }
 
+  protected <T, U> ResponseEntity<T> exchange(TestAuthentication authMode, String url, HttpMethod method, MultiValueMap<String, String> queryParams,
+                                              U requestBody, Class<T> responseType) {
+    return exchange(authMode, url, method, queryParams, requestBody,
+        (requestUri, httpMethod, requestEntity) -> restTemplate.exchange(requestUri, httpMethod, requestEntity, responseType));
+  }
+
+  protected <T, U> ResponseEntity<T> exchange(TestAuthentication authMode, String url, HttpMethod method, MultiValueMap<String, String> queryParams,
+                                              U requestBody, ParameterizedTypeReference<T> responseType) {
+    return exchange(authMode, url, method, queryParams, requestBody,
+        (requestUri, httpMethod, requestEntity) -> restTemplate.exchange(requestUri, httpMethod, requestEntity, responseType));
+  }
+
   @SneakyThrows({AuthenticationException.class, IOException.class})
-  protected <T, U> ResponseEntity<T> exchange(TestAuthentication authMode, String url, HttpMethod method,
-                                              MultiValueMap<String, String> queryParams, U requestBody, Class<T> responseType) {
+  private <T, U> ResponseEntity<T> exchange(TestAuthentication authMode, String url, HttpMethod method,
+                                            MultiValueMap<String, String> queryParams, U requestBody,
+                                            TriFunction<URI, HttpMethod, HttpEntity<U>, ResponseEntity<T>> exchangeFunction) {
     doAnswer(this::stubAuthenticationError)
         .when(securityService)
         .replyAuthenticationError(any(HttpServletResponse.class), any(AuthenticationException.class));
@@ -152,6 +173,7 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
     //   - "application/vnd.oai.openapi+json" (JSON only variant), not yet registered with IANA
     var headers = new HttpHeaders();
     headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+    headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
     headers.setAccept(List.of(MediaType.APPLICATION_JSON,
         new MediaType("application", "vnd.oai.openapi", StandardCharsets.UTF_8),
         new MediaType("application", "vnd.oai.openapi+json", StandardCharsets.UTF_8)));
@@ -164,7 +186,7 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
         .toUri();
     var requestEntity = new HttpEntity<>(requestBody, headers);
 
-    return restTemplate.exchange(requestUri, method, requestEntity, responseType);
+    return exchangeFunction.apply(requestUri, method, requestEntity);
   }
 
   protected static <K, V> MultiValueMap<K, V> toMultiValueMap(Map<K, V> map) {

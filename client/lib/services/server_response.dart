@@ -12,6 +12,8 @@ class ServerResponse<TSuccess, TError> {
   final TError? error;
 
   /// Returns `true` if [error] is not `null`.
+  /// Note that the compiler is not able to promote [error] to a non-nullable [TError] even if this getter returns `true`.
+  /// Hence, it is acceptable to use the null-check operator (`!`) on [error] in a non-nullable context if [isError] returns `true`.
   bool get isError => error != null;
 
   /// Returns `true` if [error] is not `null` and [success] is `null`.
@@ -20,7 +22,8 @@ class ServerResponse<TSuccess, TError> {
   bool get isSuccessNoResponse => error == null && success == null;
 
   /// Returns `true` if neither [error] nor [success] is `null`.
-  /// Note that when accessing the [success] field after this check in a context where it must not be null, type promotion does not succeed.
-  /// Nevertheless, if this getter returns `true`, it is acceptable to use the bang operator (`!`) on [success] in a non-nullable context.
+  /// Note that the compiler is not able to promote [success] to a non-nullable [TSuccess] even if this getter returns `true`.
+  /// Therefore, it is acceptable to use the null-check operator (`!`) on [success] in a non-nullable context if [isSuccessAndResponse] returns
+  /// `true`.
   bool get isSuccessAndResponse => error == null && success != null;
 }

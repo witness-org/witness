@@ -11,21 +11,28 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('training_programs_overview_screen');
 
-class TrainingProgramsOverviewScreen extends StatelessWidget with LogMessagePreparer, StringLocalizer {
+class TrainingProgramsOverviewScreen extends StatefulWidget {
   const TrainingProgramsOverviewScreen({final Key? key}) : super(key: key);
 
   static const routeName = '/training-programs-overview';
+
+  @override
+  State<StatefulWidget> createState() => _TrainingProgramsOverviewScreenState();
+}
+
+class _TrainingProgramsOverviewScreenState extends State<TrainingProgramsOverviewScreen> with LogMessagePreparer, StringLocalizer {
+  Future<void>? _fetchTrainingProgramsResult;
 
   Future<void> _fetchTrainingPrograms(final BuildContext context) async {
     _logger.v(prepare('_fetchTrainingPrograms'));
     await Provider.of<TrainingProgramProvider>(context, listen: false).fetchTrainingPrograms();
   }
 
-  Widget _buildTrainingProgramView(final BuildContext context) {
+  Widget _buildTrainingProgramView() {
     _logger.v(prepare('_buildTrainingProgramView()'));
     return Expanded(
       child: FutureBuilder<void>(
-        future: _fetchTrainingPrograms(context),
+        future: _fetchTrainingProgramsResult,
         builder: (final _, final snapshot) => snapshot.waitSwitch(
           RefreshIndicator(
             onRefresh: () => _fetchTrainingPrograms(context),
@@ -48,6 +55,12 @@ class TrainingProgramsOverviewScreen extends StatelessWidget with LogMessagePrep
   }
 
   @override
+  void initState() {
+    super.initState();
+    _fetchTrainingProgramsResult = _fetchTrainingPrograms(context);
+  }
+
+  @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
     final uiStrings = getLocalizedStrings(context);
@@ -65,7 +78,7 @@ class TrainingProgramsOverviewScreen extends StatelessWidget with LogMessagePrep
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTrainingProgramView(context),
+          _buildTrainingProgramView(),
         ],
       ),
     );

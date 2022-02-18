@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @SecuredValidatedRestController
-@RequestMapping("user")
+@RequestMapping("users")
 @Tag(name = "Users", description = "Provides endpoint methods for operations regarding the user management.")
 public class UserController {
   private final SecurityService securityService;
@@ -52,10 +52,10 @@ public class UserController {
     this.userMapper = userMapper;
   }
 
-  @PostMapping("register")
+  @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   @PublicApi
-  @Operation(summary = "Registers a new user. Setting a role for the user is only possible for administrators.")
+  @Operation(summary = "Registers a new user. Setting a role for the user is only possible for admins.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "The user was successfully created."),
       @ApiResponse(responseCode = "400", description = "The user could not be created because the request body is invalid."),
@@ -79,7 +79,7 @@ public class UserController {
     return userMapper.entityToDto(createdEntity);
   }
 
-  @GetMapping("findById/{id}")
+  @GetMapping("{id}")
   @RequiresAdmin
   @Operation(summary = "Fetches the user with the given ID. Only possible for admins.")
   @ApiResponses(value = {
@@ -95,7 +95,7 @@ public class UserController {
     return userMapper.entityToDto(user);
   }
 
-  @GetMapping("byEmail/{email}")
+  @GetMapping
   @RequiresAdmin
   @Operation(summary = "Fetches the user with the given email address. Only possible for admins.")
   @ApiResponses(value = {
@@ -106,14 +106,14 @@ public class UserController {
       @ApiResponse(responseCode = "500", description = "The user could not be fetched because an error occurred.")
   })
   public UserDto findByEmail(
-      @PathVariable(name = "email") @EmailStrict
+      @RequestParam(name = "email") @EmailStrict
       @Parameter(description = "The email address of the user to fetch.", example = "user123@example.com") String email)
       throws DataAccessException {
     var user = userService.findByEmail(email);
     return userMapper.entityToDto(user);
   }
 
-  @PatchMapping("{id}/setRole")
+  @PatchMapping("{id}/set-role")
   @RequiresAdmin
   @Operation(summary = "Updates the role for the user with the given Firebase ID. Only possible for admins.")
   @ApiResponses(value = {
@@ -126,13 +126,13 @@ public class UserController {
   public UserDto setRole(
       @PathVariable(name = "id") @NotBlank
       @Parameter(description = "The Firebase ID of the user whose role should be updated.", example = "aXusKTIbLYSKc8wnQJeOz8c3JsT2") String id,
-      @RequestParam(name = "role") @NotNull
+      @RequestBody @NotNull
       @Parameter(description = "The role that should be set.", example = "ADMIN") Role role) throws DataAccessException {
     var modifiedUser = userService.setRole(id, role);
     return userMapper.entityToDto(modifiedUser);
   }
 
-  @PatchMapping("{id}/removeRole")
+  @PatchMapping("{id}/remove-role")
   @RequiresAdmin
   @Operation(summary = "Removes the role for the user with the given Firebase ID. Only possible for admins.")
   @ApiResponses(value = {

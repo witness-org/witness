@@ -1,3 +1,4 @@
+import 'package:client/extensions/string_extensions.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/logging_type.dart';
 import 'package:client/models/exercises/muscle_group.dart';
@@ -28,9 +29,7 @@ class ExerciseFormInput {
   Map<MuscleGroup, bool> muscleGroups = {for (final group in MuscleGroup.values) group: false};
   Map<LoggingType, bool> loggingTypes = {for (final type in LoggingType.values) type: false};
 
-  String? get descriptionNullOrNotEmpty {
-    return description != null && description!.isEmpty ? null : description;
-  }
+  String? get descriptionNullOrNotBlank => description != null && description!.isBlank ? null : description;
 
   List<MuscleGroup> get muscleGroupList {
     return muscleGroups.whereKeys((final element) => element.value).toList();

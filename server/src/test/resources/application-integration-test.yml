@@ -13,7 +13,7 @@ security:
     - /swagger-ui*
     - /swagger-ui*/**
     - /security-infrastructure/public
-    - /user/register
+    - /users
 
 spring:
   datasource:
@@ -21,6 +21,8 @@ spring:
     username: user
     password: password
   jpa:
+    hibernate:
+      ddl-auto: create-drop
     show-sql: true
 
 springdoc:

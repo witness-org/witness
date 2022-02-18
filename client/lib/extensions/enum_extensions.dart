@@ -2,10 +2,26 @@ import 'package:client/extensions/cast_extensions.dart';
 import 'package:client/extensions/number_extensions.dart';
 import 'package:client/models/exercises/logging_type.dart';
 import 'package:client/models/exercises/muscle_group.dart';
+import 'package:client/models/workouts/resistance_band.dart';
+import 'package:flutter/material.dart';
 
+/// Provides methods that facilitate handling of [LoggingType]s.
 extension LoggingTypeExtensions on LoggingType {
   // TODO(raffaelfoidl-leabrugger): also localize enum representations
 
+  /// This method is used to display the unit in the UI which is used in logs depending on the respective logging type.
+  String toUiUnitString() {
+    switch (this) {
+      case LoggingType.reps:
+        return 'reps';
+      case LoggingType.time:
+        return 'seconds';
+      default:
+        throw Exception('No UI string representation for the unit of enum member "${this}" available.');
+    }
+  }
+
+  /// This method is used to get a string representation of the respective logging type to be displayed in the UI.
   String toUiString() {
     switch (this) {
       case LoggingType.reps:
@@ -31,7 +47,9 @@ extension LoggingTypeExtensions on LoggingType {
   }
 }
 
-extension MuscleGroupExtension on MuscleGroup {
+/// Provides methods that facilitate handling of [MuscleGroup]s.
+extension MuscleGroupExtensions on MuscleGroup {
+  /// This method is used to get a string representation of the respective muscle group to be displayed in the UI.
   String toUiString() {
     switch (this) {
       case MuscleGroup.chest:
@@ -77,6 +95,45 @@ extension MuscleGroupExtension on MuscleGroup {
         return 'OTHER';
       default:
         throw Exception('No string representation for enum member "${this}" available.');
+    }
+  }
+}
+
+extension ResistanceBandExtensions on ResistanceBand {
+  /// This method is used to get a string representation of the respective resistance band to be displayed in the UI.
+  String toUiString() {
+    switch (this) {
+      case ResistanceBand.light:
+        return 'light';
+      case ResistanceBand.medium:
+        return 'medium';
+      case ResistanceBand.heavy:
+        return 'heavy';
+      case ResistanceBand.xHeavy:
+        return 'X-heavy';
+      case ResistanceBand.xxHeavy:
+        return 'XX-heavy';
+      default:
+        throw Exception('No UI string representation for enum member "${this}" available.');
+    }
+  }
+
+  /// This method is used for [Widget] representations of different resistance bands. The bands are distinguished in the UI by a color. The mapping
+  /// of the band "value" to the color is done here.
+  Color mapToColor() {
+    switch (this) {
+      case ResistanceBand.light:
+        return Colors.green;
+      case ResistanceBand.medium:
+        return Colors.blue;
+      case ResistanceBand.heavy:
+        return Colors.yellow;
+      case ResistanceBand.xHeavy:
+        return Colors.red;
+      case ResistanceBand.xxHeavy:
+        return Colors.black;
+      default:
+        throw Exception('No color mapping for enum member "${this}" available.');
     }
   }
 }

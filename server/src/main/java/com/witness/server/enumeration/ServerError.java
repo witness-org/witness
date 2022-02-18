@@ -100,6 +100,11 @@ public enum ServerError {
   USER_DISABLED,
 
   /**
+   * The persisted Firebase ID of a user does not point to an actually existing user at the Firebase Auth server or the email addresses do not match.
+   */
+  USER_INCONSISTENCY,
+
+  /**
    * Request not authorized or another authorization-related operation failed, e.g. due to missing token.
    */
   AUTHORIZATION_NOT_GRANTED,
@@ -110,7 +115,7 @@ public enum ServerError {
   INSUFFICIENT_PRIVILEGES,
 
   /**
-   * New User Entry could not be created for undefined reasons.
+   * New user entry could not be created for undefined reasons.
    */
   COULD_NOT_CREATE_USER,
 
@@ -120,7 +125,7 @@ public enum ServerError {
   VALIDATION_ERROR,
 
   /**
-   * The requested role does is not valid in the application context.
+   * The requested role is not valid in the application context.
    */
   INVALID_ROLE,
 
@@ -128,6 +133,82 @@ public enum ServerError {
    * An undefined error during the lookup of a data record occurred.
    */
   LOOKUP_FAILURE,
+
+  /**
+   * No exercise record found for the given identifier.
+   */
+  EXERCISE_NOT_FOUND,
+
+  /**
+   * There already exists an initial exercise with the given name.
+   */
+  INITIAL_EXERCISE_EXISTS,
+
+  /**
+   * There already exists a user exercise for the given user with the given name.
+   */
+  USER_EXERCISE_EXISTS,
+
+  /**
+   * The user exercise with the given identifier was not created by the requesting user.
+   */
+  USER_EXERCISE_NOT_CREATED_BY_USER,
+
+  /**
+   * The position of a set log must not be changed with the current request.
+   */
+  SET_LOG_POSITION_CHANGE_FORBIDDEN,
+
+  /**
+   * No workout log record found for the given identifier.
+   */
+  WORKOUT_LOG_NOT_FOUND,
+
+  /**
+   * No exercise log record found for the given identifier.
+   */
+  EXERCISE_LOG_NOT_FOUND,
+
+  /**
+   * No set log record found for the given identifier.
+   */
+  SET_LOG_NOT_FOUND,
+
+  /**
+   * Request cannot be processed because given workout log was created by another user.
+   */
+  WORKOUT_LOG_NOT_BY_USER,
+
+  /**
+   * The specified exercise log is not part of the given workout log.
+   */
+  EXERCISE_LOG_NOT_IN_WORKOUT_LOG,
+
+  /**
+   * The specified set log is not part of the given exercise log.
+   */
+  SET_LOG_NOT_IN_EXERCISE_LOG,
+
+  /**
+   * Logging type is not applicable to given exercise.
+   */
+  INVALID_LOGGING_TYPE,
+
+  /**
+   * The new assignment of positions to log entries contains too few or too many entries.
+   */
+  POSITION_MAP_INVALID,
+
+  /**
+   * The new assignment of positions to log entries contains duplicates.
+   */
+  POSITION_MAP_NOT_UNIQUE,
+
+
+  /**
+   * The start date of a workout logging period lies after its end date.
+   */
+  WORKOUT_LOGGING_START_DATE_AFTER_END_DATE,
 
   /**
    * Not further defined error.

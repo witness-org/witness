@@ -6,7 +6,7 @@ import 'package:logger/logger.dart';
 /// logger is created as [loggerName]. The returned [Logger] instance prefixes messages with the log level and the its
 /// own name. The messages are in a color appropriate for the log level. For example, the snippet
 ///
-/// ```
+/// ```dart
 /// final _logger = getLogger('MyService');
 /// _logger.e('No network connection.');
 /// ```

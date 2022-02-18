@@ -1,8 +1,18 @@
 [
   {
     "position": 2,
-    "exerciseId": 12,
-    "exerciseName": "Exercise 1",
+    "exercise": {
+      "id": 12,
+      "name": "Exercise 1",
+      "description": "Description of Exercise 1",
+      "muscleGroups": [
+        "LEGS"
+      ],
+      "loggingTypes": [
+        "TIME",
+        "REPS"
+      ]
+    },
     "id": 1,
     "comment": "logComment",
     "workoutLogId": 234,
@@ -12,7 +22,7 @@
         "position": 3,
         "rpe": 7,
         "id": 13,
-        "weightKg": 23,
+        "weightG": 23000,
         "resistanceBands": [
           "LIGHT",
           "HEAVY"
@@ -25,7 +35,7 @@
         "position": 3,
         "rpe": 7,
         "id": 11,
-        "weightKg": 23,
+        "weightG": 23000,
         "resistanceBands": [],
         "exerciseLogId": 1,
         "seconds": 25
@@ -34,8 +44,18 @@
   },
   {
     "position": 2,
-    "exerciseId": 12,
-    "exerciseName": "Exercise 1",
+    "exercise": {
+      "id": 12,
+      "name": "Exercise 1",
+      "description": "Description of Exercise 1",
+      "muscleGroups": [
+        "LEGS"
+      ],
+      "loggingTypes": [
+        "TIME",
+        "REPS"
+      ]
+    },
     "id": 1,
     "comment": null,
     "workoutLogId": 234,

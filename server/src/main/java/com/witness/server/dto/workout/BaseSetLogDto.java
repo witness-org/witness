@@ -17,8 +17,8 @@ public abstract class BaseSetLogDto {
   protected Integer rpe;
 
   @NotNull
-  @Schema(description = "The weight that was used during this set in kilograms.", example = "65")
-  protected Long weightKg;
+  @Schema(description = "The weight that was used during this set in grams.", example = "65000")
+  protected Long weightG;
 
   @NotNull
   @ArraySchema(schema = @Schema(description = "The resistance bands that have been used during this set.", example = "HEAVY"))

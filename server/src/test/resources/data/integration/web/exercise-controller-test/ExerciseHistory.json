@@ -1,0 +1,49 @@
+{
+  "entries": [
+    {
+      "loggedOn": "2021-11-04T13:31:22.300+0200",
+      "exerciseLog": {
+        "workoutLogId": 1,
+        "position": 2,
+        "exercise": {
+          "id": 1,
+          "name": "Exercise 1",
+          "description": "Description of Exercise 1",
+          "muscleGroups": [
+            "CHEST"
+          ],
+          "loggingTypes": [
+            "TIME", "REPS"
+          ]
+        },
+        "id": 1,
+        "comment": "logComment",
+        "setLogs": [
+          {
+            "exerciseLogId": 1,
+            "position": 3,
+            "rpe": 7,
+            "id": 1,
+            "weightG": 23000,
+            "resistanceBands": [
+              "LIGHT",
+              "HEAVY"
+            ],
+            "type": "reps",
+            "reps": 20
+          },
+          {
+            "exerciseLogId": 1,
+            "position": 3,
+            "rpe": 7,
+            "id": 2,
+            "weightG": 23000,
+            "resistanceBands": [],
+            "type": "time",
+            "seconds": 25
+          }
+        ]
+      }
+    }
+  ]
+}

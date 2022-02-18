@@ -2,9 +2,9 @@ import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/widgets/common/string_localizer.dart';
-import 'package:client/widgets/exercises/details/exercise_history.dart';
-import 'package:client/widgets/exercises/details/exercise_information.dart';
-import 'package:client/widgets/exercises/details/exercise_statistics.dart';
+import 'package:client/widgets/exercises/details/exercise_history_page.dart';
+import 'package:client/widgets/exercises/details/exercise_information_page.dart';
+import 'package:client/widgets/exercises/details/exercise_statistics_page.dart';
 import 'package:flutter/material.dart';
 
 final _logger = getLogger('exercise_detail_screen');
@@ -40,10 +40,12 @@ class ExerciseDetailScreen extends StatelessWidget with LogMessagePreparer, Stri
                 icon: const Icon(Icons.info),
               ),
               Tab(
+                key: const Key('exercise_detail_screen.history'),
                 text: uiStrings.exerciseDetailScreen_tab_history,
                 icon: const Icon(Icons.history),
               ),
               Tab(
+                key: const Key('exercise_detail_screen.statistics'),
                 text: uiStrings.exerciseDetailScreen_tab_statistics,
                 icon: const Icon(Icons.insights),
               ),
@@ -53,9 +55,9 @@ class ExerciseDetailScreen extends StatelessWidget with LogMessagePreparer, Stri
         ),
         body: TabBarView(
           children: [
-            ExerciseInformation(exercise),
-            ExerciseHistory(exercise),
-            ExerciseStatistics(exercise),
+            ExerciseInformationPage(exercise),
+            ExerciseHistoryPage(exercise),
+            ExerciseStatisticsPage(exercise),
           ],
         ),
       ),

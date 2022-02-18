@@ -23,9 +23,23 @@ public interface WorkoutLogService {
    * @param firebaseId the Firebase ID of the user whose workout logs from {@code date} should be fetched
    * @param date       the day for which logged workouts should be fetched. The time part is only relevant for timezone offsets.
    * @return a list of {@link WorkoutLog} instances that were logged on the day represented by {@code date} and by the user with Firebase ID
-   *     {@code firebaseId}.
+   *      {@code firebaseId}.
    */
   List<WorkoutLog> getWorkoutLogsOfDay(String firebaseId, ZonedDateTime date);
+
+  /**
+   * Fetches non-empty workout logs (i.e. workout logs that contain at least one exercise log) that were logged in a specific time period by the user
+   * with the provided Firebase ID.
+   *
+   * @param firebaseId the Firebase ID of the user whose workout logs from {@code month} should be fetched
+   * @param startDate  the start date of the period for which logged workouts should be fetched. The time part is only relevant for timezone offsets.
+   * @param endDate    the end date of the period for which logged workouts should be fetched. The time part is only relevant for timezone offsets.
+   * @return a map of dates (given as {@link ZonedDateTime} instances) to the number of workout logs that were logged on the day represented by the
+   *      {@link ZonedDateTime} key and by the user with Firebase ID {@code firebaseId}.
+   * @throws InvalidRequestException if the provided {@code startDate} lies after the provided {@code endDate}
+   */
+  Map<ZonedDateTime, List<WorkoutLog>> getNonEmptyWorkoutLogsInPeriod(String firebaseId, ZonedDateTime startDate, ZonedDateTime endDate)
+      throws InvalidRequestException;
 
   /**
    * Creates a new workout log in the name of the user with the provided Firebase ID.
@@ -78,12 +92,12 @@ public interface WorkoutLogService {
   void deleteWorkoutLog(String firebaseId, Long workoutLogId) throws DataAccessException, InvalidRequestException;
 
   /**
-   * Adds an exercise log to an existing workout log. The {@link ExerciseLog#getPosition()} property is set to be one higher than the current highest
-   * position.
+   * Adds exercise logs to an existing workout log. The {@link ExerciseLog#getPosition()} property is set to be one higher than the current highest
+   * position for the first added exercise log and incremented for each following exercise log, respectively.
    *
    * @param firebaseId   the Firebase ID of the user executing the operation
    * @param workoutLogId the ID of the {@link WorkoutLog} the new exercise log should be added to
-   * @param exerciseLog  the {@link ExerciseLog} to be added to the workout log represented by {@code workoutLogId}
+   * @param exerciseLogs the list of {@link ExerciseLog}s to be added to the workout log represented by {@code workoutLogId}
    * @return the modified {@link WorkoutLog}
    * @throws DataNotFoundException   if the workout log identified by {@code workoutLogId}, the exercise referenced by {@code exerciseLog} or the user
    *                                 represented by {@code firebaseId} does not exist
@@ -102,7 +116,8 @@ public interface WorkoutLogService {
    *                                   </li>
    *                                 </ul>
    */
-  WorkoutLog addExerciseLog(String firebaseId, Long workoutLogId, ExerciseLog exerciseLog) throws DataAccessException, InvalidRequestException;
+  WorkoutLog addExerciseLogs(String firebaseId, Long workoutLogId, List<ExerciseLog> exerciseLogs)
+      throws DataAccessException, InvalidRequestException;
 
   /**
    * Updates the {@link ExerciseLog#getPosition()} properties of the exercise logs of a workout log.
@@ -176,7 +191,7 @@ public interface WorkoutLogService {
    * @param exerciseLogId the ID of the {@link ExerciseLog} whose {@link ExerciseLog#getComment()} property should be set
    * @param comment       the comment to set for the {@link ExerciseLog} represented by {@code comment}
    * @return the {@link WorkoutLog} containing the modified {@link ExerciseLog} represented by {@code exerciseLogId} with the
-   *     {@link ExerciseLog#getComment()} equal to {@code comment}
+   *      {@link ExerciseLog#getComment()} equal to {@code comment}
    * @throws DataNotFoundException   if the workout represented by {@code workoutLogId}, the user represented by {@code firebaseId} or the exercise
    *                                 log represented by {@code exerciseLogId} does not exist
    * @throws DataAccessException     if the user lookup fails

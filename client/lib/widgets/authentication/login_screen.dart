@@ -18,7 +18,7 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: const [
-              LoginCard(key: Key('login_card')),
+              LoginCard(),
             ],
           ),
         ),

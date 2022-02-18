@@ -18,7 +18,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     open-in-view: true
 
 security:
@@ -58,7 +58,7 @@ security:
     - /api-docs*/**
     - /h2-console*
     - /h2-console/**
-    - /user/register
+    - /users
   valid-roles:
     - ROLE_ADMIN
     - ROLE_PREMIUM
