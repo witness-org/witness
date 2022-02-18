@@ -28,12 +28,12 @@ class _ExerciseHistoryPageState extends State<ExerciseHistoryPage>
   @override
   bool get wantKeepAlive => true;
 
-  Future<void> _fetchExerciseHistory(final BuildContext context) async {
+  Future<void> _fetchExerciseHistory() async {
     _logger.v(prepare('_fetchExerciseHistory'));
     await Provider.of<ExerciseProvider>(context, listen: false).fetchExerciseHistory(widget._exercise.id);
   }
 
-  Widget _buildExerciseHistory(final BuildContext context, final StringLocalizations uiStrings) {
+  Widget _buildExerciseHistory(final StringLocalizations uiStrings) {
     _logger.v(prepare('_buildExerciseHistory()'));
     return Expanded(
       child: FutureBuilder<void>(
@@ -41,7 +41,7 @@ class _ExerciseHistoryPageState extends State<ExerciseHistoryPage>
         builder: (final _, final snapshot) {
           return snapshot.waitSwitch(
             RefreshIndicator(
-              onRefresh: () => _fetchExerciseHistory(context),
+              onRefresh: _fetchExerciseHistory,
               child: Consumer<ExerciseProvider>(
                 builder: (final _, final exerciseData, final __) {
                   _logger.v(prepare('_buildExerciseHistory.Consumer.builder()'));
@@ -93,7 +93,7 @@ class _ExerciseHistoryPageState extends State<ExerciseHistoryPage>
   @override
   void initState() {
     super.initState();
-    _fetchExerciseHistoryResult = _fetchExerciseHistory(context);
+    _fetchExerciseHistoryResult = _fetchExerciseHistory();
   }
 
   @override
@@ -104,7 +104,7 @@ class _ExerciseHistoryPageState extends State<ExerciseHistoryPage>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildExerciseHistory(context, uiStrings),
+        _buildExerciseHistory(uiStrings),
       ],
     );
   }
