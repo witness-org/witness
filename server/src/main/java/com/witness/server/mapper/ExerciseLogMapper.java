@@ -10,8 +10,6 @@ import org.mapstruct.Mapping;
 @Mapper(uses = {SetLogMapper.class})
 public abstract class ExerciseLogMapper {
 
-  @Mapping(source = "exercise.id", target = "exerciseId")
-  @Mapping(source = "exercise.name", target = "exerciseName")
   @Mapping(source = "workoutLog.id", target = "workoutLogId")
   public abstract ExerciseLogDto entityToDto(ExerciseLog exerciseLog);
 

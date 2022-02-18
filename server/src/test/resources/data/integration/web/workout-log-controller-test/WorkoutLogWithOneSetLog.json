@@ -36,7 +36,7 @@
       "setLogs": [
         {
           "rpe": 7,
-          "weightKg": 23,
+          "weightG": 23000,
           "resistanceBands": [
             "LIGHT",
             "HEAVY"

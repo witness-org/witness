@@ -1,5 +1,9 @@
 {
   "@@locale": "en",
+  "all_defaultErrorMessage": "An error occurred.",
+  "@all_defaultErrorMessage": {
+    "description": "Default error message to display if no further error message is specified."
+  },
   "appDrawer_tile_exercises": "Exercises",
   "@appDrawer_tile_exercises": {
     "description": "Label of tile in `AppDrawer` that represents a link to the exercises screen."
@@ -20,13 +24,17 @@
   "@appDrawer_tile_statistics": {
     "description": "Label of tile in `AppDrawer` that represents a link to the statistics screen."
   },
-  "appDrawer_tile_trainingLog": "Training Log",
-  "@appDrawer_tile_trainingLog": {
-    "description": "Label of tile in `AppDrawer` that represents a link to the training log screen."
+  "appDrawer_tile_workoutLog": "Workouts",
+  "@appDrawer_tile_workoutLog": {
+    "description": "Label of tile in `AppDrawer` that represents a link to the workout log screen."
   },
   "appTitle": "witness",
   "@appTitle": {
     "description": "The title of the application."
+  },
+  "dialogHelper_datePickerDialog_defaultTitle": "Select Date",
+  "@dialogHelper_datePickerDialog_defaultTitle": {
+    "description": "The title of date picker dialog."
   },
   "editExerciseScreen_appBar_title_create": "Create Exercise",
   "@editExerciseScreen_appBar_title_create": {
@@ -48,9 +56,9 @@
   "@createExerciseForm_body_nameInput_placeholder": {
     "description": "Placeholder for input field for exercise name."
   },
-  "createExerciseForm_body_nameInput_emptyErrorMessage": "Please enter a name.",
-  "@createExerciseForm_body_nameInput_emptyErrorMessage": {
-    "description": "Error message that is displayed if the provided exercise name string is empty."
+  "createExerciseForm_body_nameInput_blankErrorMessage": "Please enter a name.",
+  "@createExerciseForm_body_nameInput_blankErrorMessage": {
+    "description": "Error message that is displayed if the provided exercise name string is blank."
   },
   "createExerciseForm_body_heading_description": "Description",
   "@createExerciseForm_body_heading_description": {
@@ -72,7 +80,7 @@
   "@createExerciseForm_body_heading_loggingTypes": {
     "description": "Text for heading above choice chips for logging types for exercise."
   },
-  "createExerciseForm_body_save_buttonText": "Save",
+  "createExerciseForm_body_save_buttonText": "SAVE",
   "@createExerciseForm_body_save_buttonText": {
     "description": "Text for button that submits form for creating new exercise."
   },
@@ -100,6 +108,16 @@
   "@exerciseByMuscleGroupScreen_search_tooltip": {
     "description": "Tooltip of icon that allows to search exercises in `ExercisesByMuscleGroupScreen`."
   },
+  "exerciseByMuscleGroupScreen_exerciseList_snapshotError": "Could not fetch exercises: {error}",
+  "@exerciseByMuscleGroupScreen_exerciseList_snapshotError": {
+    "description": "Text in `ExercisesByMuscleGroupScreen` for when the request for retrieving exercises by muscle group did not succeed.",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Could not connect."
+      }
+    }
+  },
   "exerciseDetailScreen_fallback_appBar_title": "Exercise Details",
   "@exerciseDetailScreen_fallback_appBar_title": {
     "description": "Title of `AppBar` in `ExerciseDetailScreen` if no exercise was provided."
@@ -120,10 +138,6 @@
   "@exerciseDetailScreen_tab_statistics": {
     "description": "Text of `Statistics` tab in `ExerciseDetailScreen`."
   },
-  "exerciseHistory_placeholder_suffix": "history",
-  "@exerciseHistory_placeholder_suffix": {
-    "description": "Text to display after exercise name in `ExerciseHistory` (just a temporary placeholder)."
-  },
   "exerciseInformation_body_heading_loggingTypes": "Logging",
   "@exerciseInformation_body_heading_loggingTypes": {
     "description": "Text of the heading related to the logging types in `ExerciseInformation`."
@@ -140,13 +154,137 @@
   "@exerciseInformation_body_heading_muscleGroups": {
     "description": "Text of the heading related to the muscle groups in `ExerciseInformation`."
   },
-  "exerciseInformation_footer_editButton_text": "Edit",
+  "exerciseInformation_footer_editButton_text": "EDIT",
   "@exerciseInformation_footer_editButton_text": {
     "description": "Text of the button that allows editing an exercise in `ExerciseInformation`."
   },
-  "exerciseStatistics_placeholder_suffix": "statistics",
-  "@exerciseStatistics_placeholder_suffix": {
-    "description": "Text to display after exercise name in `ExerciseStatistics` (just a temporary placeholder)."
+  "exerciseInformation_footer_deleteButton_text": "DELETE",
+  "@exerciseInformation_footer_deleteButton_text": {
+    "description": "Text of the button that allows deleting an exercise in `ExerciseInformation`."
+  },
+  "exerciseInformation_deleteDialog_title": "Delete Exercise",
+  "@exerciseInformation_deleteDialog_title": {
+    "description": "Title of the dialog in `ExerciseInformation` that asks the user to confirm the deletion of the respective exercise."
+  },
+  "exerciseInformation_deleteDialog_delete": "DELETE",
+  "@exerciseInformation_deleteDialog_delete": {
+    "description": "Text of the delete (confirm) button in the dialog in `ExerciseInformation` that asks the user to confirm the deletion of the respective exercise."
+  },
+  "exerciseInformation_deleteDialog_cancel": "CANCEL",
+  "@exerciseInformation_deleteDialog_cancel": {
+    "description": "Text of the cancel button in the dialog in `ExerciseInformation` that asks the user to confirm the deletion of the respective exercise."
+  },
+  "exerciseInformation_deleteDialog_content": "Are you sure you want to delete \"{exerciseName}\"?",
+  "@exerciseInformation_deleteDialog_content": {
+    "description": "Content of the dialog in `ExerciseInformation` that asks the user to confirm the deletion of the respective exercise.",
+    "placeholders": {
+      "exerciseName": {
+        "type": "String",
+        "example": "Barbell Curl"
+      }
+    }
+  },
+  "exerciseInformation_deleteSuccess": "The exercise was deleted successfully.",
+  "@exerciseInformation_deleteSuccess": {
+    "description": "Text displayed after an exercise has been successfully deleted in `ExerciseInformation`."
+  },
+  "exerciseInformation_deleteFailure": "Could not delete exercise: {error}",
+  "@exerciseInformation_deleteFailure": {
+    "description": "Text displayed after an exercise could not be deleted in `ExerciseInformation`.",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "The requested exercise does not exist."
+      }
+    }
+  },
+  "exerciseHistoryPage_historyEntries_errorMessage": "Could not fetch exercise history:\n{error}",
+  "@exerciseHistoryPage_historyEntries_errorMessage": {
+    "description": "Formatted error message that describes why the exercise history could not be fetched in `ExerciseHistoryPage`.",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "An internal error occurred."
+      }
+    }
+  },
+  "exerciseHistoryPage_emptyHistory": "There are no logs for this exercise yet.",
+  "@exerciseDetailScreen_emptyHistory": {
+    "description": "Text to be displayed in `ExerciseHistoryPage` if no history entries were found for the given exercise."
+  },
+  "exerciseHistoryCard_logCommentDialog_title": "Exercise Log Comment",
+  "@exerciseHistoryCard_logCommentDialog_title": {
+    "description": "Title of the dialog displaying the comment of an exercise log in `ExerciseHistoryCard`."
+  },
+  "exerciseHistoryCard_logCommentDialog_closeText": "OK",
+  "@exerciseHistoryCard_logCommentDialog_closeText": {
+    "description": "Text of button to close the dialog displaying the comment of an exercise log in `ExerciseHistoryCard`."
+  },
+  "exerciseStatisticsPage_statistics_maximumWeightHeading": "maximum weight:",
+  "@exerciseStatisticsPage_statistics_maximumWeightHeading": {
+    "description": "Heading for displaying the maximum weight logged for an exercise."
+  },
+  "exerciseStatisticsPage_statistics_maximumRepsHeading": "maximum reps:",
+  "@exerciseStatisticsPage_statistics_maximumRepsHeading": {
+    "description": "Heading for displaying the maximum reps logged for an exercise."
+  },
+  "exerciseStatisticsPage_statistics_maximumTimeHeading": "maximum time:",
+  "@exerciseStatisticsPage_statistics_maximumTimeHeading": {
+    "description": "Heading for displaying the maximum time logged for an exercise."
+  },
+  "exerciseStatisticsPage_statistics_estimatedOneRepMaxHeading": "estimated 1RM:",
+  "@exerciseStatisticsPage_statistics_estimatedOneRepMaxHeading": {
+    "description": "Heading for displaying the estimated one-repetition maximum for an exercise."
+  },
+  "exerciseStatisticsPage_statisticsEstimatedOneRepMaxDialog_heading": "Estimated 1RM",
+  "@exerciseStatisticsPage_statisticsEstimatedOneRepMaxDialog_heading": {
+    "description": "Heading for the dialog explaining the estimated one-repetition maximum."
+  },
+  "exerciseStatisticsPage_statisticsEstimatedOneRepMaxDialog_content": "The one-repetition maximum (1RM) is the maximum amount of weight a person can lift for one repetition. It can either be tested directly or (like in this case) estimated. Based on your logs for this exercise, the estimated 1RM is calculated by applying the so-called Epley formula to all logs with less than 10 logged repetitions. Your estimated 1RM is the maximum calculated value.\n\nNote:\nThe estimated 1RM is NOT a recommendation or guarantee that you can lift a certain amount of weight, it is merely an estimation. Please always take appropriate safety precautions when lifting heavy weights (e.g. proper warm-up, spotter) in order to avoid injury.",
+  "@exerciseStatisticsPage_statisticsEstimatedOneRepMaxDialog_content": {
+    "description": "Content of the dialog explaining the estimated one-repetition maximum."
+  },
+  "exerciseStatisticsPage_statisticsEstimatedOneRepMaxDialog_closeText": "OK",
+  "@exerciseStatisticsPage_statisticsEstimatedOneRepMaxDialog_closeText": {
+    "description": "Text of button to close the dialog explaining the estimated one-repetition maximum."
+  },
+  "exerciseStatisticsPage_statistics_weightInKg": "{weightKg} kg",
+  "@exerciseStatisticsPage_statistics_weightInKg": {
+    "description": "Formatted string displaying weight in kilograms.",
+    "placeholders": {
+      "weightKg": {
+        "type": "String",
+        "example": "100.5"
+      }
+    }
+  },
+  "exerciseStatisticsPage_statistics_timeInS": "{timeSeconds} s",
+  "@exerciseStatisticsPage_statistics_timeInS": {
+    "description": "Formatted string displaying time in seconds.",
+    "placeholders": {
+      "timeSeconds": {
+        "type": "int",
+        "example": "60"
+      }
+    }
+  },
+  "exerciseStatisticsPage_statistics_estimatedOneRepMaxNotCalculatedHint": "There is not enough data available to estimate your 1RM.",
+  "@exerciseStatisticsPage_statistics_estimatedOneRepMaxNotCalculatedHint": {
+    "description": "Hint to be displayed when there is not enough data to calculate the estimated one-repetition maximum."
+  },
+  "exerciseStatisticsPage_statistics_errorMessage": "Could not fetch exercise statistics:\n{error}",
+  "@exerciseStatisticsPage_statistics_errorMessage": {
+    "description": "Formatted error message that describes why the exercise statistics could not be fetched in `ExerciseStatisticsPage`.",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "An internal error occurred."
+      }
+    }
+  },
+  "exerciseStatisticsPage_noStatistics": "There are no statistics for this exercise yet.\nLog a few sets to see how you perform!",
+  "@exerciseStatisticsPage_noStatistics": {
+    "description": "Text to be displayed in `ExerciseStatisticsPage` if no statistics were found for the given exercise."
   },
   "exercisesByMuscleGroupScreen_fallback_appBar_title": "No muscle group selected",
   "@exercisesByMuscleGroupScreen_fallback_appBar_title": {
@@ -163,6 +301,10 @@
   "exercisesScreen_search_tooltip": "Search Muscle Groups",
   "@exercisesScreen_search_tooltip": {
     "description": "Tooltip of icon that allows to search muscle groups in `ExercisesScreen`."
+  },
+  "exercisesScreen_selectExercise_appBarText": "Select Exercise",
+  "@exercisesScreen_selectExercise_appBarText": {
+    "description": "Text that is displayed in the app bar if an exercise should be selected from the exercise lists."
   },
   "loginCard_action_login": "LOGIN",
   "@loginCard_action_login": {
@@ -204,6 +346,10 @@
   "@loginCard_form_error_passwordTooShort": {
     "description": "Error message indicating that the password entered to create new account with is too short."
   },
+  "mainAppBar_action_selectDay": "Go to Day",
+  "@mainAppBar_action_selectDay": {
+    "description": "Tooltip of floating action button in `WorkoutLogScreen` that allows to select a specific day to view workouts of."
+  },
   "mainAppBar_generateToken": "Get Token",
   "@mainAppBar_generateToken": {
     "description": "Textual description of the `Generate Token` icon in `MainAppBar`."
@@ -244,7 +390,7 @@
   "@trainingDayCard_dayNumber_prefix": {
     "description": "Text before the day number and name in a `TrainingDayCard`."
   },
-  "trainingDayCard_deleteDialog_cancel": "Cancel",
+  "trainingDayCard_deleteDialog_cancel": "CANCEL",
   "@trainingDayCard_deleteDialog_cancel": {
     "description": "The text of the cancel button in the dialog in `TrainingDayCard` that asks the user to confirm the deletion of the respective day from the respective training week."
   },
@@ -252,7 +398,7 @@
   "@trainingDayCard_deleteDialog_content_prefix": {
     "description": "The content to be displayed before the day number in the dialog in `TrainingDayCard` that asks the user to confirm the deletion of the respective day from the respective training week."
   },
-  "trainingDayCard_deleteDialog_delete": "Delete",
+  "trainingDayCard_deleteDialog_delete": "DELETE",
   "@trainingDayCard_deleteDialog_delete": {
     "description": "The text of the delete (confirm) button in the dialog in `TrainingDayCard` that asks the user to confirm the deletion of the respective day from the respective training week."
   },
@@ -284,25 +430,313 @@
   "@trainingDayHeader_dayNumber_prefix": {
     "description": "Text to be displayed before the day number in `TrainingDayHeader`, making up the header of `TrainingDayDetailScreen`."
   },
-  "trainingLogScreen_action_selectDay": "Go to Day",
-  "@trainingLogScreen_action_selectDay": {
-    "description": "Tooltip of floating action button in `TrainingLogScreen` that allows to select a specific day to view workouts of."
+  "workoutLogScreen_error_noDaySelected": "You have not selected a date to display.",
+  "@workoutLogScreen_error_noDaySelected": {
+    "description": "Text to display in `WorkoutLogScreen` if no date was selected."
   },
-  "trainingLogScreen_placeholder_prefix": "Workout Overview for",
-  "@trainingLogScreen_placeholder_prefix": {
-    "description": "Text to display before formatted date of selected day in `TrainingLogScreen` (just a temporary placeholder)."
+  "workoutLogScreen_placeholder": "You have not logged a workout on this day.",
+  "@workoutLogScreen_placeholder": {
+    "description": "Text to display in `WorkoutLogScreen` if no workout has been logged for the given day."
   },
-  "trainingLogScreen_speedDial_copyWorkout": "Copy Workout",
-  "@trainingLogScreen_speedDial_copyWorkout": {
-    "description": "Label of `SpeedDialChild` in `TrainingLogScreen` that is used to create a workout log from a previously logged workout."
+  "workoutLogScreen_speedDial_copyFromWorkout": "Copy From Previous Workout",
+  "@workoutLogScreen_speedDial_copyFromWorkout": {
+    "description": "Label of `SpeedDialChild` in `WorkoutLogScreen` that is used to create a workout log from a previously logged workout."
   },
-  "trainingLogScreen_speedDial_logExercise": "Log Exercise",
-  "@trainingLogScreen_speedDial_logExercise": {
-    "description": "Label of `SpeedDialChild` in `TrainingLogScreen` that is used to create an exercise log."
+  "workoutLogScreen_speedDial_logWorkoutFromProgram": "Log Workout From Program",
+  "@workoutLogScreen_speedDial_logWorkoutFromProgram": {
+    "description": "Label of `SpeedDialChild` in `WorkoutLogScreen` that is used to log a workout from a training program."
   },
-  "trainingLogScreen_speedDial_logWorkout": "Log Workout",
-  "@trainingLogScreen_speedDial_logWorkout": {
-    "description": "Label of `SpeedDialChild` in `TrainingLogScreen` that is used to create a new workout (from scratch)."
+  "workoutLogScreen_speedDial_logNewWorkout": "Log New Workout",
+  "@workoutLogScreen_speedDial_logNewWorkout": {
+    "description": "Label of `SpeedDialChild` in `WorkoutLogScreen` that is used to create a new workout from scratch."
+  },
+  "workoutLogScreen_workoutLogList_errorMessage": "Could not fetch workout logs:\n{error}",
+  "@workoutLogScreen_workoutLogList_errorMessage": {
+    "description": "Formatted error message that describes why the workout logs could not be fetched.",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "An internal error occurred."
+      }
+    }
+  },
+  "workoutLogScreen_copyExerciseLogsDialog_title": "Copy Exercises",
+  "@workoutLogScreen_copyExerciseLogsDialog_title": {
+    "description": "Title for the copy exercise logs dialog."
+  },
+  "workoutLogScreen_copyExerciseLogsDialog_workoutLogHeading": "Workout {number}",
+  "@workoutLogScreen_copyExerciseLogsDialog_workoutLogHeading": {
+    "description": "Heading for a workout log with a given number.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "workoutLogScreen_copyExerciseLogsDialog_setNumberIndicator": "{number} sets",
+  "@workoutLogScreen_copyExerciseLogsDialog_setNumberIndicator": {
+    "description": "Indicator for number of set logs in an exercise log.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "workoutLogScreen_copyExerciseLogsDialog_cancel": "CANCEL",
+  "@workoutLogScreen_copyExerciseLogsDialog_cancel": {
+    "description": "Text for the button for cancelling copying exercise logs."
+  },
+  "workoutLogScreen_copyExerciseLogsDialog_addToExistingWorkout": "ADD TO EXISTING",
+  "@workoutLogScreen_copyExerciseLogsDialog_addToExistingWorkout": {
+    "description": "Text for the button for adding the copied exercise logs to an existing workout log."
+  },
+  "workoutLogScreen_copyExerciseLogsDialog_createNewWorkout": "CREATE NEW",
+  "@workoutLogScreen_copyExerciseLogsDialog_createNewWorkout": {
+    "description": "Text for the button for creating a new workout log with the copied exercise logs."
+  },
+  "workoutLogScreen_selectWorkoutLogDialog_title": "Select Workout Log",
+  "@workoutLogScreen_selectWorkoutLogDialog_title": {
+    "description": "Title for the select workout log dialog."
+  },
+  "workoutLogScreen_selectWorkoutLogDialog_workoutLogHeading": "Workout {number}",
+  "@workoutLogScreen_selectWorkoutLogDialog_workoutLogHeading": {
+    "description": "Heading for a workout log with a given number.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "workoutLogScreen_selectWorkoutLogDialog_cancel": "CANCEL",
+  "@workoutLogScreen_selectWorkoutLogDialog_cancel": {
+    "description": "Text for the button for cancelling selecting a workout log."
+  },
+  "workoutLogItem_workoutLog_heading": "Workout {number}",
+  "@workoutLogItem_workoutLog_heading": {
+    "description": "Heading for a workout log with a given number.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "workoutLogItem_workoutLog_duration": "{duration} min",
+  "@workoutLogItem_workoutLog_duration": {
+    "description": "Formatted text for button describing workout duration in minutes.",
+    "placeholders": {
+      "duration": {
+        "type": "int",
+        "example": "30"
+      }
+    }
+  },
+  "workoutLogItem_workoutDurationDialog_title": "Workout Duration",
+  "@workoutLogItem_workoutDurationDialog_title": {
+    "description": "Title for the workout duration dialog."
+  },
+  "workoutLogItem_workoutDurationDialog_durationHint": "60",
+  "@workoutLogItem_workoutDurationDialog_durationHint": {
+    "description": "Hint text for field for setting workout duration."
+  },
+  "workoutLogItem_workoutDurationDialog_durationLabel": "duration",
+  "@workoutLogItem_workoutDurationDialog_durationLabel": {
+    "description": "Label text for field for setting workout duration."
+  },
+  "workoutLogItem_workoutDurationDialog_durationSuffix": "min",
+  "@workoutLogItem_workoutDurationDialog_durationSuffix": {
+    "description": "Suffix text for field for setting workout duration."
+  },
+  "workoutLogItem_workoutDurationDialog_durationInvalidError": "Invalid workout duration.",
+  "@workoutLogItem_workoutDurationDialog_durationInvalidError": {
+    "description": "Error message when provided duration is not valid."
+  },
+  "workoutLogItem_workoutDurationDialog_durationDefaultError": "Setting the workout duration failed.",
+  "@workoutLogItem_workoutDurationDialog_durationDefaultError": {
+    "description": "Default error message for when the request to set the workout duration fails."
+  },
+  "workoutLogItem_workoutDurationDialog_cancel": "CANCEL",
+  "@workoutLogItem_workoutDurationDialog_cancel": {
+    "description": "Text for the button for cancelling setting the workout duration."
+  },
+  "workoutLogItem_workoutDurationDialog_confirm": "OK",
+  "@workoutLogItem_workoutDurationDialog_confirm": {
+    "description": "Text for the button for confirming setting the workout duration."
+  },
+  "workoutLogItem_addExercise": "ADD EXERCISE",
+  "@workoutLogItem_addExercise": {
+    "description": "Text for the button for adding an exercise log to a workout log."
+  },
+  "workoutLogItem_delete": "DELETE",
+  "@workoutLogItem_delete": {
+    "description": "Text for the button for deleting a workout log."
+  },
+  "workoutLogItem_addExerciseDefaultError": "Adding an exercise failed.",
+  "@workoutLogItem_addExerciseDefaultError": {
+    "description": "Default error message for when the request to add an exercise log fails."
+  },
+  "workoutLogItem_deleteWorkoutLogDefaultError": "Deleting the workout failed.",
+  "@workoutLogItem_deleteWorkoutLogDefaultError": {
+    "description": "Default error message for when the request to delete a workout log fails."
+  },
+  "workoutLogItem_updateExerciseLogPositionsDefaultError": "Updating the order of the exercise logs failed.",
+  "@workoutLogItem_updateExerciseLogPositionsDefaultError": {
+    "description": "Default error message for when the request to update the order of the exercise logs in a workout log fails."
+  },
+  "exerciseLogItem_delete": "DELETE",
+  "@exerciseLogItem_delete": {
+    "description": "Text for the button for deleting an exercise log."
+  },
+  "exerciseLogItem_addSet": "ADD SET",
+  "@exerciseLogItem_addSet": {
+    "description": "Text for the button for adding a set log to an exercise log."
+  },
+  "exerciseLogItem_addComment": "ADD COMMENT",
+  "@exerciseLogItem_addComment": {
+    "description": "Text for the button for adding a comment to an exercise log."
+  },
+  "exerciseLogItem_setCommentDefaultError": "Setting the comment failed.",
+  "@exerciseLogItem_setCommentDefaultError": {
+    "description": "Default error message for when the request to set an exercise log comment fails."
+  },
+  "exerciseLogItem_deleteExerciseLogDefaultError": "Deleting the exercise log failed.",
+  "@exerciseLogItem_deleteExerciseLogDefaultError": {
+    "description": "Default error message for when the request to delete an exercise log fails."
+  },
+  "exerciseLogItem_addNewSetLogDefaultError": "Adding a set log failed.",
+  "@exerciseLogItem_addNewSetLogDefaultError": {
+    "description": "Default error message for when the request to add a set log fails."
+  },
+  "exerciseLogItem_updateSetLogDefaultError": "Updating the set log failed.",
+  "@exerciseLogItem_updateSetLogDefaultError": {
+    "description": "Default error message for when the request to update a set log fails."
+  },
+  "exerciseLogItem_deleteSetLogDefaultError": "Deleting the set log failed.",
+  "@exerciseLogItem_deleteSetLogDefaultError": {
+    "description": "Default error message for when the request to delete a set log fails."
+  },
+  "exerciseLogItem_updateSetLogPositionsDefaultError": "Updating the order of the set logs failed.",
+  "@exerciseLogItem_updateSetLogPositionsDefaultError": {
+    "description": "Default error message for when the request to update the order of the set logs in an exercise log in a workout log fails."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_title": "Exercise Comment",
+  "@exerciseLogItem_exerciseLogCommentDialog_title": {
+    "description": "Title for the exercise comment dialog."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_commentBlankError": "Please enter a comment.",
+  "@exerciseLogItem_exerciseLogCommentDialog_commentBlankError": {
+    "description": "Error message when provided comment is blank string."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_commentTooLongError": "The comment must not be longer than 256 characters.",
+  "@exerciseLogItem_exerciseLogCommentDialog_commentTooLongError": {
+    "description": "Error message when provided comment is too long."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_commentLabel": "comment",
+  "@exerciseLogItem_exerciseLogCommentDialog_commentLabel": {
+    "description": "Label text for field for setting exercise log comment."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_cancel": "CANCEL",
+  "@exerciseLogItem_exerciseLogCommentDialog_cancel": {
+    "description": "Text for the button for cancelling setting the exercise log comment."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_delete": "DELETE",
+  "@exerciseLogItem_exerciseLogCommentDialog_delete": {
+    "description": "Text for the button for deleting an exercise log comment."
+  },
+  "exerciseLogItem_exerciseLogCommentDialog_confirm": "OK",
+  "@exerciseLogItem_exerciseLogCommentDialog_confirm": {
+    "description": "Text for the button for confirming setting the exercise log comment."
+  },
+  "exerciseLogItem_setLogDialog_error": "An unexpected error occurred.",
+  "@exerciseLogItem_setLogDialog_error": {
+    "description": "Text to display if the set log dialog could not be built properly."
+  },
+  "exerciseLogItem_setLogDialog_weightHint": "100",
+  "@exerciseLogItem_setLogDialog_weightHint": {
+    "description": "Hint text for field for setting set log weight."
+  },
+  "exerciseLogItem_setLogDialog_weightLabel": "weight",
+  "@exerciseLogItem_setLogDialog_weightLabel": {
+    "description": "Label text for field for setting set log weight."
+  },
+  "exerciseLogItem_setLogDialog_weightSuffixKg": "kg",
+  "@exerciseLogItem_setLogDialog_weightSuffixKg": {
+    "description": "Suffix text for field for setting set log weight in kg."
+  },
+  "exerciseLogItem_setLogDialog_weightNotSetError": "The weight must be set.",
+  "@exerciseLogItem_setLogDialog_weightNotSetError": {
+    "description": "Error message when no weight is provided in set log."
+  },
+  "exerciseLogItem_setLogDialog_weightInvalidError": "Invalid weight input.",
+  "@exerciseLogItem_setLogDialog_weightInvalidError": {
+    "description": "Error message when provided weight is not valid."
+  },
+  "exerciseLogItem_setLogDialog_repsTimeHint": "0",
+  "@exerciseLogItem_setLogDialog_repsTimeHint": {
+    "description": "Hint text for field for setting set log reps/seconds."
+  },
+  "exerciseLogItem_setLogDialog_repsTimeNotSetError": "The reps/seconds must be set.",
+  "@exerciseLogItem_setLogDialog_repsTimeNotSetError": {
+    "description": "Error message when no reps/time is provided in set log."
+  },
+  "exerciseLogItem_setLogDialog_repsTimeInvalidError": "Invalid input.",
+  "@exerciseLogItem_setLogDialog_repsTimeInvalidError": {
+    "description": "Error message when provided reps/time value is not valid."
+  },
+  "exerciseLogItem_setLogDialog_rpeLabel": "RPE:",
+  "@exerciseLogItem_setLogDialog_rpeLabel": {
+    "description": "Label text for field for setting set log RPE."
+  },
+  "exerciseLogItem_setLogDialog_resistanceBandsHeading": "Resistance Bands:",
+  "@exerciseLogItem_setLogDialog_resistanceBandsHeading": {
+    "description": "Heading for field for setting resistance bands used in set for set log."
+  },
+  "exerciseLogItem_setLogDialog_cancel": "CANCEL",
+  "@exerciseLogItem_setLogDialog_cancel": {
+    "description": "Text for the button for cancelling adding/updating a set log."
+  },
+  "exerciseLogItem_setLogDialog_delete": "DELETE",
+  "@exerciseLogItem_setLogDialog_delete": {
+    "description": "Text for the button for deleting a set log."
+  },
+  "exerciseLogItem_setLogDialog_confirm": "OK",
+  "@exerciseLogItem_setLogDialog_confirm": {
+    "description": "Text for the button for confirming adding/updating a set log."
+  },
+  "setLogsTable_unknownSetLogsError": "At least one logged set is unknown.",
+  "@setLogsTable_unknownSetLogsError": {
+    "description": "Text to display if unknown set log was found."
+  },
+  "setLogsTable_crossSeparator": "\u00D7",
+  "@setLogsTable_crossSeparator": {
+    "description": "Multiplication sign (cross) separator."
+  },
+  "setLogsTable_dotSeparator": "\u2022",
+  "@setLogsTable_dotSeparator": {
+    "description": "Multiplication sign (dot) separator."
+  },
+  "setLogsTable_kgSuffix": "kg",
+  "@setLogsTable_kgSuffix": {
+    "description": "Suffix for display of weight in kg."
+  },
+  "setLogsTable_secondsSuffix": "s",
+  "@setLogsTable_secondsSuffix": {
+    "description": "Suffix for display of seconds."
+  },
+  "setLogsTable_rpePrefix": "RPE: ",
+  "@setLogsTable_rpePrefix": {
+    "description": "Prefix for display of RPE."
+  },
+  "setLogsTable_noRpePlaceholder": "\u2014",
+  "@setLogsTable_noRpePlaceholder": {
+    "description": "Placeholder for when no RPE is provided in a set log."
+  },
+  "setLogsTable_noResistanceBandsPlaceholder": "\u2014",
+  "@setLogsTable_noResistanceBandsPlaceholder": {
+    "description": "Placeholder for when no resistance bands are provided in a set log."
   },
   "trainingProgramCard_deleteDialog_cancel": "Cancel",
   "@trainingProgramCard_deleteDialog_cancel": {
@@ -423,5 +857,189 @@
   "workoutExpanderItemHeader_workoutNumber_prefix": "Workout",
   "@workoutExpanderItemHeader_workoutNumber_prefix": {
     "description": "Text to be displayed before the workout number in `WorkoutExpanderItemHeader`, representing part of the header line in a workout representation within `TrainingDayDetailScreen`."
+  },
+  "dateFormat_today": "Today",
+  "@dateFormat_today": {
+    "description": "Text to be displayed instead of a date if the given date is today."
+  },
+  "dateFormat_yesterday": "Yesterday",
+  "@dateFormat_yesterday": {
+    "description": "Text to be displayed instead of a date if the given date is yesterday."
+  },
+  "errorTranslation_certificateFetchFailed": "Failed to retrieve public key certificates required to verify JWTs.",
+  "@errorTranslation_certificateFetchFailed": {
+    "description": "Textual representation of error key `CERTIFICATE_FETCH_FAILED` returned by server."
+  },
+  "errorTranslation_configurationNotFound": "No IdP configuration found for the given identifier.",
+  "@errorTranslation_configurationNotFound": {
+    "description": "Textual representation of error key `CONFIGURATION_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_emailAlreadyExists": "A user already exists with the provided email.",
+  "@errorTranslation_emailAlreadyExists": {
+    "description": "Textual representation of error key `EMAIL_ALREADY_EXISTS` returned by server."
+  },
+  "errorTranslation_emailNotFound": "No user record found for the provided email. This typically happens when generating a password reset link using an email for a user that is not already registered.",
+  "@errorTranslation_emailNotFound": {
+    "description": "Textual representation of error key `EMAIL_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_expiredIdToken": "User authentication failed: The specified ID token has expired.",
+  "@errorTranslation_expiredIdToken": {
+    "description": "Textual representation of error key `EXPIRED_ID_TOKEN` returned by server."
+  },
+  "errorTranslation_expiredSessionCookie": "The specified session cookie is expired.",
+  "@errorTranslation_expiredSessionCookie": {
+    "description": "Textual representation of error key `EXPIRED_SESSION_COOKIE` returned by server."
+  },
+  "errorTranslation_invalidDynamicLinkDomain": "The provided dynamic link domain is not configured or authorized for the current project.",
+  "@errorTranslation_invalidDynamicLinkDomain": {
+    "description": "Textual representation of error key `INVALID_DYNAMIC_LINK_DOMAIN` returned by server."
+  },
+  "errorTranslation_invalidIdToken": "User authentication failed: The specified ID token is invalid.",
+  "@errorTranslation_invalidIdToken": {
+    "description": "Textual representation of error key `INVALID_ID_TOKEN` returned by server."
+  },
+  "errorTranslation_invalidSessionCookie": "The specified session cookie is invalid.",
+  "@errorTranslation_invalidSessionCookie": {
+    "description": "Textual representation of error key `INVALID_SESSION_COOKIE` returned by server."
+  },
+  "errorTranslation_phoneNumberAlreadyExists": "A user already exists with the provided phone number.",
+  "@errorTranslation_phoneNumberAlreadyExists": {
+    "description": "Textual representation of error key `PHONE_NUMBER_ALREADY_EXISTS` returned by server."
+  },
+  "errorTranslation_revokedIdToken": "User authentication failed: The specified ID token has been revoked.",
+  "@errorTranslation_revokedIdToken": {
+    "description": "Textual representation of error key `REVOKED_ID_TOKEN` returned by server."
+  },
+  "errorTranslation_revokedSessionCookie": "The specified session cookie has been revoked.",
+  "@errorTranslation_revokedSessionCookie": {
+    "description": "Textual representation of error key `REVOKED_SESSION_COOKIE` returned by server."
+  },
+  "errorTranslation_tenantIdMismatch": "Tenant ID in the JWT does not match.",
+  "@errorTranslation_tenantIdMismatch": {
+    "description": "Textual representation of error key `TENANT_ID_MISMATCH` returned by server."
+  },
+  "errorTranslation_tenantNotFound": "No tenant found for the given identifier.",
+  "@errorTranslation_tenantNotFound": {
+    "description": "Textual representation of error key `TENANT_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_uidAlreadyExists": "A user already exists with the provided UID.",
+  "@errorTranslation_uidAlreadyExists": {
+    "description": "Textual representation of error key `UID_ALREADY_EXISTS` returned by server."
+  },
+  "errorTranslation_unauthorizedContinueUrl": "The domain of the continue URL is not whitelisted. Whitelist the domain in the Firebase console.",
+  "@errorTranslation_unauthorizedContinueUrl": {
+    "description": "Textual representation of error key `UNAUTHORIZED_CONTINUE_URL` returned by server."
+  },
+  "errorTranslation_userNotFound": "No user found for given email address.",
+  "@errorTranslation_userNotFound": {
+    "description": "Textual representation of error key `USER_NOT_FOUND` returned by server or Firebase Auth server."
+  },
+  "errorTranslation_userDisabled": "User with given email address has been disabled.",
+  "@errorTranslation_userDisabled": {
+    "description": "Textual representation of error key `USER_DISABLED` returned by server or Firebase Auth server."
+  },
+  "errorTranslation_userInconsistency": "The persisted Firebase ID of a user does not point to an actually existing user at the Firebase Auth server or the email addresses do not match.",
+  "@errorTranslation_userInconsistency": {
+    "description": "Textual representation of error key `USER_INCONSISTENCY` returned by server."
+  },
+  "errorTranslation_authorizationNotGranted": "Request not authorized or another authorization-related operation failed, e.g. due to missing token.",
+  "@errorTranslation_authorizationNotGranted": {
+    "description": "Textual representation of error key `AUTHORIZATION_NOT_GRANTED` returned by server."
+  },
+  "errorTranslation_insufficientPrivileges": "Request was valid and operation exists, but user does not have required rights.",
+  "@errorTranslation_insufficientPrivileges": {
+    "description": "Textual representation of error key `INSUFFICIENT_PRIVILEGES` returned by server."
+  },
+  "errorTranslation_couldNotCreateUser": "New user entry could not be created.",
+  "@errorTranslation_couldNotCreateUser": {
+    "description": "Textual representation of error key `COULD_NOT_CREATE_USER` returned by server."
+  },
+  "errorTranslation_validationError": "Request was not handled because the request parameters were invalid.",
+  "@errorTranslation_validationError": {
+    "description": "Textual representation of error key `VALIDATION_ERROR` returned by server."
+  },
+  "errorTranslation_invalidRole": "The requested role is not valid in the application context.",
+  "@errorTranslation_invalidRole": {
+    "description": "Textual representation of error key `INVALID_ROLE` returned by server."
+  },
+  "errorTranslation_lookupFailure": "An undefined error during the lookup of a data record occurred.",
+  "@errorTranslation_lookupFailure": {
+    "description": "Textual representation of error key `LOOKUP_FAILURE` returned by server."
+  },
+  "errorTranslation_exerciseNotFound": "The requested exercise could not be found.",
+  "@errorTranslation_exerciseNotFound": {
+    "description": "Textual representation of error key `EXERCISE_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_initialExerciseExists": "There already exists an initial exercise with the given name.",
+  "@errorTranslation_initialExerciseExists": {
+    "description": "Textual representation of error key `INITIAL_EXERCISE_EXISTS` returned by server."
+  },
+  "errorTranslation_userExerciseExists": "There already exists a user exercise with the given name.",
+  "@errorTranslation_userExerciseExists": {
+    "description": "Textual representation of error key `USER_EXERCISE_EXISTS` returned by server."
+  },
+  "errorTranslation_userExerciseNotCreatedByUser": "You are not the creator of the given exercise. Therefore, you are not allowed the modify or delete it.",
+  "@errorTranslation_userExerciseNotCreatedByUser": {
+    "description": "Textual representation of error key `USER_EXERCISE_NOT_CREATED_BY_USER` returned by server."
+  },
+  "errorTranslation_setLogPositionChangeForbidden": "The position of a set log must not be changed with the current request.",
+  "@errorTranslation_setLogPositionChangeForbidden": {
+    "description": "Textual representation of error key `SET_LOG_POSITION_CHANGE_FORBIDDEN` returned by server."
+  },
+  "errorTranslation_workoutLogNotFound": "The requested workout log could not be found.",
+  "@errorTranslation_workoutLogNotFound": {
+    "description": "Textual representation of error key `WORKOUT_LOG_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_exerciseLogNotFound": "The requested exercise log could not be found.",
+  "@errorTranslation_exerciseLogNotFound": {
+    "description": "Textual representation of error key `EXERCISE_LOG_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_setLogNotFound": "The requested set log could not be found.",
+  "@errorTranslation_setLogNotFound": {
+    "description": "Textual representation of error key `SET_LOG_NOT_FOUND` returned by server."
+  },
+  "errorTranslation_workoutLogNotByUser": "You cannot not access or modify workout logs created by other users.",
+  "@errorTranslation_workoutLogNotByUser": {
+    "description": "Textual representation of error key `WORKOUT_LOG_NOT_BY_USER` returned by server."
+  },
+  "errorTranslation_exerciseLogNotInWorkoutLog": "The specified exercise log is not part of the given workout log.",
+  "@errorTranslation_exerciseLogNotInWorkoutLog": {
+    "description": "Textual representation of error key `EXERCISE_LOG_NOT_IN_WORKOUT_LOG` returned by server."
+  },
+  "errorTranslation_setLogNotInExerciseLog": "The specified set log is not part of the given exercise log.",
+  "@errorTranslation_setLogNotInExerciseLog": {
+    "description": "Textual representation of error key `SET_LOG_NOT_IN_EXERCISE_LOG` returned by server."
+  },
+  "errorTranslation_invalidLoggingType": "The logging type is not applicable to the given exercise.",
+  "@errorTranslation_invalidLoggingType": {
+    "description": "Textual representation of error key `INVALID_LOGGING_TYPE` returned by server."
+  },
+  "errorTranslation_positionMapInvalid": "The new assignment of positions to log entries contains too few or too many entries.",
+  "@errorTranslation_positionMapInvalid": {
+    "description": "Textual representation of error key `POSITION_MAP_INVALID` returned by server."
+  },
+  "errorTranslation_positionMapNotUnique": "The new assignment of positions to log entries contains duplicates.",
+  "@errorTranslation_positionMapNotUnique": {
+    "description": "Textual representation of error key `POSITION_MAP_NOT_UNIQUE` returned by server."
+  },
+  "errorTranslation_workoutLoggingStartDateAfterEndDate": "The start date of a workout logging period must not lie after the end date.",
+  "@errorTranslation_workoutLoggingStartDateAfterEndDate": {
+    "description": "Textual representation of error key `WORKOUT_LOGGING_START_DATE_AFTER_END_DATE` returned by server."
+  },
+  "errorTranslation_undefinedError": "An unexpected error occurred.",
+  "@errorTranslation_undefinedError": {
+    "description": "Textual representation of error key `UNDEFINED_ERROR` returned by server."
+  },
+  "errorTranslation_invalidEmail": "The provided email address is not valid.",
+  "@errorTranslation_invalidEmail": {
+    "description": "Textual representation of error key `invalid-email` returned by the Firebase Auth server."
+  },
+  "errorTranslation_operationNotAllowed": "The requested login method is not allowed. Enable it in the Firebase Console.",
+  "@errorTranslation_operationNotAllowed": {
+    "description": "Textual representation of error key `operation-not-allowed` returned by the Firebase Auth server."
+  },
+  "errorTranslation_wrongPassword": "The provided password is invalid for the given user.",
+  "@errorTranslation_wrongPassword": {
+    "description": "Textual representation of error key `wrong-password` returned by the Firebase Auth server."
   }
 }

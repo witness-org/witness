@@ -1,20 +1,22 @@
 import 'package:client/providers/auth_provider.dart';
+import 'package:client/widgets/common/error_key_translator.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LoginCard extends StatefulWidget {
-  const LoginCard({final Key? key}) : super(key: key);
+  const LoginCard({final Key? key = const Key('login_card')}) : super(key: key);
 
   @override
   _LoginCardState createState() => _LoginCardState(); // ignore: library_private_types_in_public_api
 }
 
-class _LoginCardState extends State<LoginCard> with StringLocalizer {
+class _LoginCardState extends State<LoginCard> with StringLocalizer, ErrorKeyTranslator {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final _LoginData _loginData = _LoginData();
   var _isLoading = false;
   final _passwordController = TextEditingController();
+  final _emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]{2,}$');
 
   void _showErrorDialog(final String message) {
     showDialog<void>(
@@ -32,15 +34,13 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
     );
   }
 
-  Future<void> _submit() async {
+  Future<void> _submit(final StringLocalizations uiStrings) async {
     if (_formKey.currentState == null || !_formKey.currentState!.validate()) {
       return;
     }
 
     _formKey.currentState!.save();
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     final auth = Provider.of<AuthProvider>(context, listen: false);
     final authenticationResult = _loginData.mode == _AuthMode.login
@@ -48,29 +48,29 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
         : await auth.signUp(_loginData.user, _loginData.password);
 
     if (authenticationResult.isError) {
-      _showErrorDialog(authenticationResult.error!);
+      _showErrorDialog(translate(uiStrings, authenticationResult.error!));
     }
 
     if (!mounted) {
       return;
     }
 
-    setState(() {
-      _isLoading = false;
-    });
+    setState(() => _isLoading = false);
   }
 
   void _switchAuthMode() {
     _formKey.currentState?.reset();
     if (_loginData.mode == _AuthMode.login) {
-      setState(() {
-        _loginData.mode = _AuthMode.signUp;
-      });
+      setState(() => _loginData.mode = _AuthMode.signUp);
     } else {
-      setState(() {
-        _loginData.mode = _AuthMode.login;
-      });
+      setState(() => _loginData.mode = _AuthMode.login);
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _passwordController.dispose();
   }
 
   @override
@@ -101,14 +101,14 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
                   decoration: InputDecoration(labelText: uiStrings.loginCard_form_email_label),
                   keyboardType: TextInputType.emailAddress,
                   validator: (final value) {
-                    if (value == null || value.isEmpty || !value.contains('@')) {
+                    if (value == null || !_emailRegex.hasMatch(value)) {
                       return uiStrings.loginCard_form_error_invalidEmail;
                     }
+                    return null;
                   },
-                  onSaved: (final value) {
-                    _loginData.user = value;
-                  },
+                  onSaved: (final value) => _loginData.user = value,
                 ),
+                const SizedBox(height: 7.0),
                 TextFormField(
                   key: const Key('login_card.password'),
                   decoration: InputDecoration(labelText: uiStrings.loginCard_form_password_label),
@@ -118,10 +118,9 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
                     if (value == null || value.isEmpty || value.length < 6) {
                       return uiStrings.loginCard_form_error_passwordTooShort;
                     }
+                    return null;
                   },
-                  onSaved: (final value) {
-                    _loginData.password = value;
-                  },
+                  onSaved: (final value) => _loginData.password = value,
                 ),
                 if (signingUp)
                   AnimatedContainer(
@@ -141,6 +140,7 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
                               if (value != _passwordController.text) {
                                 return uiStrings.loginCard_form_error_passwordMismatch;
                               }
+                              return null;
                             }
                           : null,
                     ),
@@ -152,7 +152,7 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer {
                   ElevatedButton(
                     key: const Key('login_card.submit'),
                     child: Text(signingUp ? uiStrings.loginCard_action_signUp : uiStrings.loginCard_action_login),
-                    onPressed: _submit,
+                    onPressed: () => _submit(uiStrings),
                   ),
                 TextButton(
                   key: const Key('login_card.switchAuthMode'),

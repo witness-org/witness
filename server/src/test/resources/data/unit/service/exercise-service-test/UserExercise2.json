@@ -1,0 +1,22 @@
+{
+  "id": 2,
+  "name": "UserExercise 2",
+  "description": "Description of UserExercise 2",
+  "muscleGroups": [
+    "CHEST"
+  ],
+  "loggingTypes": [
+    "REPS"
+  ],
+  "createdBy": {
+    "id": 1,
+    "firebaseId": "firebase1",
+    "username": "user1",
+    "email": "user1@test.com",
+    "role": null,
+    "sex": "MALE",
+    "createdAt": "2021-10-08T14:15:55.3007597+02:00",
+    "modifiedAt": "2021-10-08T14:15:55.3007597+02:00",
+    "height": 183
+  }
+}

@@ -4,7 +4,6 @@
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.witness.server.ServerApplication" />
     <option name="ACTIVE_PROFILES" value="development" />
     <option name="ALTERNATIVE_JRE_PATH" />
-    <option name="SHORTEN_COMMAND_LINE" value="NONE" />
     <envs>
       <env name="GOOGLE_APPLICATION_CREDENTIALS" value="classpath:auth/private-key-dev.json" />
       <env name="CHECK_TOKEN_REVOKED" value="true" />

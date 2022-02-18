@@ -1,16 +1,16 @@
+import 'package:client/extensions/enum_extensions.dart';
+import 'package:client/extensions/string_extensions.dart';
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
-import 'package:client/providers/exercise_provider.dart';
-import 'package:client/services/server_response.dart';
-import 'package:flutter/material.dart';
-import 'package:client/extensions/enum_extensions.dart';
 import 'package:client/models/exercises/logging_type.dart';
 import 'package:client/models/exercises/muscle_group.dart';
+import 'package:client/providers/exercise_provider.dart';
+import 'package:client/services/server_response.dart';
+import 'package:client/widgets/common/requester_state.dart';
 import 'package:client/widgets/common/string_localizer.dart';
-import 'package:progress_loader_overlay/progress_loader_overlay.dart';
-
 import 'package:client/widgets/exercises/editing/exercise_form_input.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 final _logger = getLogger('abstract_exercise_form');
@@ -21,11 +21,12 @@ abstract class AbstractExerciseForm extends StatefulWidget {
   final Exercise? exercise;
 }
 
-abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends State<T> with StringLocalizer, LogMessagePreparer {
+abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends RequesterState<T, Exercise>
+    with StringLocalizer, LogMessagePreparer {
   final _formKey = GlobalKey<FormState>();
   var _formInput = ExerciseFormInput.createForm();
 
-  Future<ServerResponse<Exercise, String>> sendRequest(final ExerciseProvider provider, final ExerciseFormInput formInput);
+  Future<ServerResponse<Exercise, String?>> sendRequest(final ExerciseProvider provider, final ExerciseFormInput formInput);
 
   void navigateAfterFormSubmit(final BuildContext context, final Exercise exercise);
 
@@ -68,7 +69,8 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
     );
   }
 
-  Widget _buildNameFormField(final String heading, final String placeholder, final String emptyErrorText) {
+  Widget _buildNameFormField(final String heading, final String placeholder, final String blankErrorText) {
+    // TODO(leabrugger): disable save button if name blank (see ExerciseLogCommentDialog)
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -77,10 +79,9 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
             initialValue: _formInput.name,
             decoration: InputDecoration(hintText: placeholder),
             validator: (final value) {
-              if (value == null || value.isEmpty) {
-                return emptyErrorText;
+              if (value.isNullOrBlank) {
+                return blankErrorText;
               }
-
               return null;
             },
             onSaved: (final value) => value != null ? _formInput.name = value : _formInput.name = ''),
@@ -95,6 +96,7 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
         children: [
           _buildHeading(heading),
           TextFormField(
+            maxLength: 1024,
             initialValue: _formInput.description ?? '',
             decoration: InputDecoration(hintText: placeholder),
             maxLines: null,
@@ -102,7 +104,6 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
               if (value != null && value.length > 1024) {
                 return tooLongErrorText;
               }
-
               return null;
             },
             onSaved: (final value) => _formInput.description = value,
@@ -119,15 +120,13 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
         children: [
           _buildHeading(heading),
           _buildChipList(
-            MuscleGroup.values.map<Widget>(
+            MuscleGroup.values.map(
               (final group) {
                 return ChoiceChip(
                   label: Text(group.toUiString()),
                   selected: _formInput.muscleGroups[group]!,
                   onSelected: (final selected) {
-                    setState(() {
-                      _formInput.muscleGroups[group] = selected;
-                    });
+                    setState(() => _formInput.muscleGroups[group] = selected);
                   },
                 );
               },
@@ -145,16 +144,15 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
         children: [
           _buildHeading(heading),
           _buildChipList(
-            LoggingType.values.map<Widget>(
+            LoggingType.values.map(
               (final type) {
                 return ChoiceChip(
-                    label: Text(type.toUiString()),
-                    selected: _formInput.loggingTypes[type]!,
-                    onSelected: (final selected) {
-                      setState(() {
-                        _formInput.loggingTypes[type] = selected;
-                      });
-                    });
+                  label: Text(type.toUiString()),
+                  selected: _formInput.loggingTypes[type]!,
+                  onSelected: (final selected) {
+                    setState(() => _formInput.loggingTypes[type] = selected);
+                  },
+                );
               },
             ).toList(),
           ),
@@ -168,7 +166,7 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
 
     final error = _validateMuscleGroupsAndLoggingTypes(uiStrings);
     if (error != null) {
-      _showError(error);
+      showError(error);
       return;
     }
 
@@ -178,19 +176,11 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
 
     _formKey.currentState!.save();
 
-    await ProgressLoader().show(context);
-    final response = await sendRequest(provider, _formInput);
-    await ProgressLoader().dismiss();
-
-    if (response.isSuccessAndResponse) {
-      if (!mounted) {
-        return;
-      }
-
-      navigateAfterFormSubmit(context, response.success!);
-    } else {
-      _showError(response.error != null ? response.error! : uiStrings.createExerciseForm_body_errorMessage_requestFailedDefault);
-    }
+    submitRequestWithResponse(
+      () => sendRequest(provider, _formInput),
+      successAction: (final success) => navigateAfterFormSubmit(context, success),
+      defaultErrorMessage: uiStrings.createExerciseForm_body_errorMessage_requestFailedDefault,
+    );
   }
 
   String? _validateMuscleGroupsAndLoggingTypes(final StringLocalizations uiStrings) {
@@ -210,12 +200,6 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
     }
 
     return null;
-  }
-
-  void _showError(final String text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(text)),
-    );
   }
 
   @override
@@ -247,7 +231,7 @@ abstract class AbstractExerciseFormState<T extends AbstractExerciseForm> extends
                     _buildNameFormField(
                       uiStrings.createExerciseForm_body_heading_name,
                       uiStrings.createExerciseForm_body_nameInput_placeholder,
-                      uiStrings.createExerciseForm_body_nameInput_emptyErrorMessage,
+                      uiStrings.createExerciseForm_body_nameInput_blankErrorMessage,
                     ),
                     _buildDescriptionFormField(
                         uiStrings.createExerciseForm_body_heading_description,

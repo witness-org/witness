@@ -1,11 +1,15 @@
+import 'package:client/extensions/date_time_extensions.dart';
 import 'package:client/logging/log_message_preparer.dart';
 import 'package:client/logging/logger_factory.dart';
 import 'package:client/providers/auth_provider.dart';
+import 'package:client/widgets/common/dialog_helper.dart';
 import 'package:client/widgets/common/string_localizer.dart';
 import 'package:client/widgets/settings/settings_screen.dart';
+import 'package:client/widgets/workouts/workout_log_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/timezone.dart';
 
 final _logger = getLogger('main_app_bar');
 
@@ -15,7 +19,7 @@ class MainAppBar extends StatelessWidget with LogMessagePreparer, StringLocalize
 
   final double preferredHeight;
   final String? preferredTitle;
-  final DateTime? currentlyViewedDate;
+  final TZDateTime? currentlyViewedDate;
 
   @override
   Size get preferredSize {
@@ -44,6 +48,23 @@ class MainAppBar extends StatelessWidget with LogMessagePreparer, StringLocalize
     });
   }
 
+  void _selectDate(final BuildContext context, final String dialogTitle, final TZDateTime currentlyViewedDate) {
+    showDialog<void>(
+      context: context,
+      builder: (final BuildContext context) {
+        return DialogHelper.getDatePicker(
+          context,
+          dialogTitle,
+          currentlyViewedDate,
+          (final pickedDate) {
+            final date = pickedDate.onlyTZDate();
+            Navigator.of(context).pushReplacementNamed(WorkoutLogScreen.routeName, arguments: date);
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(final BuildContext context) {
     _logger.v(prepare('build()'));
@@ -52,6 +73,12 @@ class MainAppBar extends StatelessWidget with LogMessagePreparer, StringLocalize
     return AppBar(
       title: Text(preferredTitle ?? uiStrings.appTitle),
       actions: [
+        if (currentlyViewedDate != null)
+          IconButton(
+            onPressed: () => _selectDate(context, uiStrings.dialogHelper_datePickerDialog_defaultTitle, currentlyViewedDate!),
+            icon: const Icon(Icons.calendar_today),
+            tooltip: uiStrings.mainAppBar_action_selectDay,
+          ),
         IconButton(
           onPressed: () => _showTokenDialog(auth, context, uiStrings),
           icon: const Icon(Icons.vpn_key),

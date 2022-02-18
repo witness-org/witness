@@ -1,6 +1,6 @@
 {
   "rpe": 2,
-  "weightKg": 12,
+  "weightG": 12000,
   "resistanceBands": [
     "MEDIUM"
   ],

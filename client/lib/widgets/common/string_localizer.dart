@@ -6,18 +6,19 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // ignore: depend_
 typedef StringLocalizations = AppLocalizations;
 
 /// A mixin for widgets that provides a method to access localized strings.
-abstract class StringLocalizer {
+mixin StringLocalizer {
   /// Returns a [StringLocalizations] instance that may be used to look up localized strings, e.g. for the user interface. If, e.g. because no
   /// localization delegated were declared for the app, no [StringLocalizations] instance can be found, an [Exception] is thrown. This operation is
   /// relatively expensive, so the return value of this method should be cached as per [BuildContext] instance.
   /// Example:
-  /// ```
+  /// ```dart
   /// class ExampleWidget with StringLocalizer {
   ///   void build(BuildContext context) {
   ///     final uiStrings = getLocalizedStrings();
   ///     return Center(child: Text(uiStrings.title));
   ///   }
   /// }
+  /// ```
   StringLocalizations getLocalizedStrings(final BuildContext context) {
     return AppLocalizations.of(context) ?? (throw Exception('Could not retrieve AppLocalizations instance to look up localized strings.'));
   }

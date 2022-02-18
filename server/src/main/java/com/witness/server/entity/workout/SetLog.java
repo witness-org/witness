@@ -43,9 +43,9 @@ public abstract class SetLog extends Set {
   @NotNull
   protected Long id;
 
-  @Column(name = "weight_kg", nullable = false)
+  @Column(name = "weight_g", nullable = false)
   @NotNull
-  protected Long weightKg;
+  protected Long weightG;
 
   @Enumerated(EnumType.STRING)
   @ElementCollection(targetClass = ResistanceBand.class)
@@ -72,12 +72,12 @@ public abstract class SetLog extends Set {
       return false;
     }
     var setLog = (SetLog) o;
-    return Objects.equals(id, setLog.id) && Objects.equals(weightKg, setLog.weightKg) && Objects.equals(resistanceBands, setLog.resistanceBands)
+    return Objects.equals(id, setLog.id) && Objects.equals(weightG, setLog.weightG) && Objects.equals(resistanceBands, setLog.resistanceBands)
         && Objects.equals(exerciseLog, setLog.exerciseLog);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), id, weightKg, resistanceBands, exerciseLog);
+    return Objects.hash(super.hashCode(), id, weightG, resistanceBands, exerciseLog);
   }
 }

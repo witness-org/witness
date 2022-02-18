@@ -1,0 +1,70 @@
+[
+  {
+    "loggedOn": "2021-10-08T14:15:55.300+0200",
+    "exerciseLog": {
+      "position": 2,
+      "workoutLogId": 234,
+      "exercise": {
+        "id": 12,
+        "name": "Exercise 1",
+        "description": "Description of Exercise 1",
+        "muscleGroups": [
+          "LEGS"
+        ],
+        "loggingTypes": [
+          "TIME",
+          "REPS"
+        ]
+      },
+      "id": 1,
+      "comment": "logComment",
+      "setLogs": [
+        {
+          "position": 3,
+          "exerciseLogId": 1,
+          "rpe": 7,
+          "id": 13,
+          "weightG": 23000,
+          "resistanceBands": [
+            "LIGHT",
+            "HEAVY"
+          ],
+          "type": "reps",
+          "reps": 20
+        },
+        {
+          "position": 3,
+          "exerciseLogId": 1,
+          "rpe": 7,
+          "id": 11,
+          "weightG": 23000,
+          "resistanceBands": [],
+          "type": "time",
+          "seconds": 25
+        }
+      ]
+    }
+  },
+  {
+    "loggedOn": "2021-10-08T14:15:55.300+0200",
+    "exerciseLog": {
+      "position": 2,
+      "workoutLogId": 234,
+      "exercise": {
+        "id": 12,
+        "name": "Exercise 1",
+        "description": "Description of Exercise 1",
+        "muscleGroups": [
+          "LEGS"
+        ],
+        "loggingTypes": [
+          "TIME",
+          "REPS"
+        ]
+      },
+      "id": 1,
+      "comment": null,
+      "setLogs": []
+    }
+  }
+]

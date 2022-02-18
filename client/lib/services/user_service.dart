@@ -9,13 +9,13 @@ import 'package:http/http.dart' as http;
 final _logger = getLogger('user_service');
 
 class UserService extends BaseService {
-  Future<ServerResponse<User, String>> createUser(final String email, final String password) async {
-    final requestUri = getUri('user/register');
+  const UserService() : super('users');
+
+  Future<ServerResponse<User, String?>> createUser(final String email, final String password) async {
+    final requestUri = getUri('');
     _logger
       ..i('Delegating creation of user "email" to server')
       ..i('POST $requestUri');
-
-    await Future<void>.delayed(const Duration(seconds: 1));
 
     final httpHeaders = getHttpHeaders(jsonContent: true);
     final payload = {
@@ -33,7 +33,7 @@ class UserService extends BaseService {
       return ServerResponse.success(User.fromJson(responseMap));
     } else {
       _logger.e('Could not register new user: ${responseMap['message']}');
-      return ServerResponse.failure(responseMap['message'].toString());
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }
 }

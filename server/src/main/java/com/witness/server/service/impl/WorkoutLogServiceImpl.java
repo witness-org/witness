@@ -9,6 +9,7 @@ import com.witness.server.entity.workout.SetLog;
 import com.witness.server.entity.workout.WorkoutLog;
 import com.witness.server.enumeration.LoggingType;
 import com.witness.server.enumeration.Role;
+import com.witness.server.enumeration.ServerError;
 import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;
 import com.witness.server.exception.InvalidRequestException;
@@ -17,16 +18,17 @@ import com.witness.server.repository.SetLogRepository;
 import com.witness.server.repository.WorkoutLogRepository;
 import com.witness.server.service.EntityAccessor;
 import com.witness.server.service.ExerciseService;
-import com.witness.server.service.TimeService;
 import com.witness.server.service.UserService;
 import com.witness.server.service.WorkoutLogService;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -45,26 +47,38 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
   private final ExerciseLogRepository exerciseLogRepository;
   private final SetLogRepository setLogRepository;
   private final UserService userService;
-  private final TimeService timeService;
 
   @Autowired
-  public WorkoutLogServiceImpl(ExerciseService exerciseService, WorkoutLogRepository workoutLogRepository, TimeService timeService,
+  public WorkoutLogServiceImpl(ExerciseService exerciseService, WorkoutLogRepository workoutLogRepository,
                                ExerciseLogRepository exerciseLogRepository, SetLogRepository setLogRepository, UserService userService) {
     this.exerciseService = exerciseService;
     this.workoutLogRepository = workoutLogRepository;
     this.exerciseLogRepository = exerciseLogRepository;
     this.setLogRepository = setLogRepository;
     this.userService = userService;
-    this.timeService = timeService;
   }
 
   @Override
   public List<WorkoutLog> getWorkoutLogsOfDay(String firebaseId, ZonedDateTime date) {
     log.info("Getting workout logs of user with Firebase ID {} from day {}", firebaseId, date);
 
-    var startOfDay = date.with(LocalTime.MIN);
-    var endOfDay = date.with(LocalTime.MAX);
-    return workoutLogRepository.findByLoggedOnBetweenAndUserFirebaseIdEquals(startOfDay, endOfDay, firebaseId);
+    return getWorkoutLogsLoggedByInPeriod(date, date,
+        (start, end) -> workoutLogRepository.findByLoggedOnBetweenAndUserFirebaseIdEquals(start, end, firebaseId));
+  }
+
+  @Override
+  public Map<ZonedDateTime, List<WorkoutLog>> getNonEmptyWorkoutLogsInPeriod(String firebaseId, ZonedDateTime startDate, ZonedDateTime endDate)
+      throws InvalidRequestException {
+    log.info("Getting workout logs of user with Firebase ID {} from {} {}", firebaseId, startDate.getMonth(), startDate.getYear());
+
+    if (startDate.isAfter(endDate)) {
+      throw new InvalidRequestException("The start date of the logging period must lie before the end date.",
+          ServerError.WORKOUT_LOGGING_START_DATE_AFTER_END_DATE);
+    }
+
+    var workoutLogs = getWorkoutLogsLoggedByInPeriod(startDate, endDate,
+        (start, end) -> workoutLogRepository.findNonEmptyByLoggedOnBetweenAndUserFirebaseIdEquals(start, end, firebaseId));
+    return workoutLogs.stream().collect(Collectors.groupingBy(log -> log.getLoggedOn().truncatedTo(ChronoUnit.DAYS)));
   }
 
   @Override
@@ -76,7 +90,6 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
         .toBuilder()
         .exerciseLogs(new ArrayList<>()) // persist with empty list, add ExerciseLogs only later on to establish bidirectional relationships
         .user(user)
-        .loggedOn(timeService.getCurrentTime())
         .build();
 
     var persistedWorkoutLog = workoutLogRepository.save(workoutLogToPersist);
@@ -110,16 +123,19 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
   }
 
   @Override
-  public WorkoutLog addExerciseLog(String firebaseId, Long workoutLogId, ExerciseLog exerciseLog) throws DataAccessException,
+  public WorkoutLog addExerciseLogs(String firebaseId, Long workoutLogId, List<ExerciseLog> exerciseLogs) throws DataAccessException,
       InvalidRequestException {
     log.info("Adding exercise log to workout log with ID {}", workoutLogId);
 
     var workoutLog = getWorkoutLogOrThrow(workoutLogId);
     throwIfWorkoutLogNotByUser(firebaseId, workoutLog);
 
-    workoutLog = addExerciseLogToWorkoutLog(workoutLog, exerciseLog);
+    for (var exerciseLog : exerciseLogs) {
+      workoutLog = addExerciseLogToWorkoutLog(workoutLog, exerciseLog);
+    }
 
-    return workoutLogRepository.save(workoutLog);
+    var currentPositions = getExerciseLogPositions(workoutLog.getExerciseLogs());
+    return updateAndSimplifyExerciseLogPositions(workoutLog, currentPositions);
   }
 
   @Override
@@ -145,7 +161,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
 
     if (!workoutLog.removeExerciseLog(exerciseLog)) {
       log.error("Failed to remove exercise log with ID {} from workout log with ID {}", exerciseLogId, workoutLogId);
-      throw new DataAccessException("An error occurred while removing the requested exercise log.");
+      throw new DataAccessException("An error occurred while removing the requested exercise log.", ServerError.UNDEFINED_ERROR);
     }
 
     // after removal of exercise log, fill gaps in positions (from {a->1, b->2, c->3, d->4} to {a->1, c->3, d->4} to {a->1, c->2, d->3})
@@ -203,7 +219,8 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
 
     if (!Objects.equals(setLogToUpdate.getPosition(), setLog.getPosition())) {
       log.error("Position of set log must not be changed during update.");
-      throw new InvalidRequestException("Position of set log may only be changed via the designated endpoint operation.");
+      throw new InvalidRequestException("Position of set log may only be changed via the designated endpoint operation.",
+          ServerError.SET_LOG_POSITION_CHANGE_FORBIDDEN);
     }
 
     validateLoggingType(exerciseLog.getExercise(), setLog);
@@ -245,7 +262,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
 
     if (!exerciseLog.removeSetLog(setLog)) {
       log.error("Failed to remove set log with ID {} from exercise log with ID {}", setLogId, exerciseLogId);
-      throw new DataAccessException("An error occurred while removing the requested set log.");
+      throw new DataAccessException("An error occurred while removing the requested set log.", ServerError.UNDEFINED_ERROR);
     }
 
     // after removal of set log, fill gaps in positions (from {a->1, b->2, c->3, d->4} to {a->1, c->3, d->4} to {a->1, c->2, d->3})
@@ -256,22 +273,29 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     return workoutLog;
   }
 
+  private List<WorkoutLog> getWorkoutLogsLoggedByInPeriod(ZonedDateTime startDate, ZonedDateTime endDate,
+                                                          BiFunction<ZonedDateTime, ZonedDateTime, List<WorkoutLog>> workoutLogsGetter) {
+    var startOfStartDay = startDate.with(LocalTime.MIN);
+    var endOfEndDay = endDate.with(LocalTime.MAX);
+    return workoutLogsGetter.apply(startOfStartDay, endOfEndDay);
+  }
+
   private WorkoutLog getWorkoutLogOrThrow(Long id) throws DataNotFoundException {
     return workoutLogRepository
         .findById(id)
-        .orElseThrow(() -> new DataNotFoundException("Requested workout log does not exist."));
+        .orElseThrow(() -> new DataNotFoundException("Requested workout log does not exist.", ServerError.WORKOUT_LOG_NOT_FOUND));
   }
 
   private ExerciseLog getExerciseLogOrThrow(Long id) throws DataNotFoundException {
     return exerciseLogRepository
         .findById(id)
-        .orElseThrow(() -> new DataNotFoundException("Requested exercise log does not exist."));
+        .orElseThrow(() -> new DataNotFoundException("Requested exercise log does not exist.", ServerError.EXERCISE_LOG_NOT_FOUND));
   }
 
   private SetLog getSetLogOrThrow(Long id) throws DataNotFoundException {
     return setLogRepository
         .findById(id)
-        .orElseThrow(() -> new DataNotFoundException("Requested set log does not exist."));
+        .orElseThrow(() -> new DataNotFoundException("Requested set log does not exist.", ServerError.SET_LOG_NOT_FOUND));
   }
 
   private void throwIfWorkoutLogNotByUser(String firebaseId, WorkoutLog workoutLog) throws InvalidRequestException, DataAccessException {
@@ -279,7 +303,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
 
     if (!Role.ADMIN.equals(user.getRole()) && !workoutLog.getUser().equals(user)) {
       log.error("Requested workout was not logged by user with provided Firebase ID {}.", firebaseId);
-      throw new InvalidRequestException("The requested workout was not logged by the provided user.");
+      throw new InvalidRequestException("The requested workout was not logged by the provided user.", ServerError.WORKOUT_LOG_NOT_BY_USER);
     }
   }
 
@@ -287,24 +311,24 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
       throws InvalidRequestException, DataAccessException {
     if (!workoutLog.getExerciseLogs().contains(exerciseLog)) {
       log.error("Requested exercise log with ID {} is not part of requested workout log with ID {}.", exerciseLog.getId(), workoutLog.getId());
-      throw new InvalidRequestException("The requested exercise is not part of the requested workout.");
+      throw new InvalidRequestException("The requested exercise is not part of the requested workout.", ServerError.EXERCISE_LOG_NOT_IN_WORKOUT_LOG);
     }
 
     if (!exerciseLog.getWorkoutLog().equals(workoutLog)) {
       log.error("Requested exercise log with ID {} not consistent with requested workout log with ID {}.", exerciseLog.getId(), workoutLog.getId());
-      throw new DataAccessException("There are some data inconsistencies.");
+      throw new DataAccessException("There are some data inconsistencies.", ServerError.UNDEFINED_ERROR);
     }
   }
 
   private void throwIfSetLogNotInExerciseLog(SetLog setLog, ExerciseLog exerciseLog) throws InvalidRequestException, DataAccessException {
     if (!exerciseLog.getSetLogs().contains(setLog)) {
       log.error("Requested set log with ID {} is not part of requested exercise log with ID {}.", setLog.getId(), exerciseLog.getId());
-      throw new InvalidRequestException("The requested set is not part of the requested exercise.");
+      throw new InvalidRequestException("The requested set is not part of the requested exercise.", ServerError.SET_LOG_NOT_IN_EXERCISE_LOG);
     }
 
     if (!setLog.getExerciseLog().equals(exerciseLog)) {
       log.error("Requested set log with ID {} not consistent with requested exercise log with ID {}.", setLog.getId(), exerciseLog.getId());
-      throw new DataAccessException("There are some data inconsistencies.");
+      throw new DataAccessException("There are some data inconsistencies.", ServerError.UNDEFINED_ERROR);
     }
   }
 
@@ -342,7 +366,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
     var setLogType = LoggingType.fromSetLog(setLog);
     if (!loggingTypes.contains(setLogType)) {
       log.error("Logging type {} is not valid for exercise with ID {}.", setLog.getClass().getSimpleName(), exercise.getId());
-      throw new InvalidRequestException("Requested logging type is not valid for the specified exercise.");
+      throw new InvalidRequestException("Requested logging type is not valid for the specified exercise.", ServerError.INVALID_LOGGING_TYPE);
     }
   }
 
@@ -353,12 +377,12 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
 
     if (!newPositions.keySet().equals(currentPositions.keySet())) {
       log.error(invalidSpecificationErrorMessage);
-      throw new InvalidRequestException(invalidSpecificationErrorMessage);
+      throw new InvalidRequestException(invalidSpecificationErrorMessage, ServerError.POSITION_MAP_INVALID);
     }
 
     if (!newPositions.values().stream().allMatch(new HashSet<>()::add)) {
       log.error(duplicateSpecificationErrorMessage);
-      throw new InvalidRequestException(duplicateSpecificationErrorMessage);
+      throw new InvalidRequestException(duplicateSpecificationErrorMessage, ServerError.POSITION_MAP_NOT_UNIQUE);
     }
 
     var newPositionsWithoutGaps = simplifyPositionSpecification(newPositions);

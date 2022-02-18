@@ -128,7 +128,8 @@ public class UserServiceImpl implements UserService {
     // comparison must be case-insensitive since Firebase stores email addresses in lowercase
     if (!databaseUser.getEmail().equalsIgnoreCase(firebaseUser.getEmail())) {
       log.error("An error occurred while checking if the data are consistent.");
-      throw new DataAccessException("Email for user with id \"%s\" deposited in the database does not match Firebase server".formatted(firebaseId));
+      throw new DataAccessException("Email for user with id \"%s\" deposited in the database does not match Firebase server".formatted(firebaseId),
+          ServerError.USER_INCONSISTENCY);
     }
   }
 }

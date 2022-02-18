@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:client/logging/logger_factory.dart';
+import 'package:client/providers/base_provider.dart';
 import 'package:client/services/firebase_service.dart';
 import 'package:client/services/server_response.dart';
 import 'package:client/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 
 final _logger = getLogger('auth_provider');
@@ -14,7 +14,9 @@ final _logger = getLogger('auth_provider');
 /// `User`, we want to refer to Firebase users only via this `FirebaseUser` type alias.
 typedef FirebaseUser = User;
 
-class AuthProvider with ChangeNotifier {
+class AuthProvider extends BaseProvider {
+  AuthProvider() : super(_logger);
+
   static final Injector _injector = Injector.appInstance;
   late final FirebaseService _firebaseService = _injector.get<FirebaseService>();
   late final UserService _userService = _injector.get<UserService>();
@@ -36,7 +38,7 @@ class AuthProvider with ChangeNotifier {
     return _loggedInUser?.getIdToken();
   }
 
-  Future<ServerResponse<void, String>> signUp(final String email, final String password) async {
+  Future<ServerResponse<void, String?>> signUp(final String email, final String password) async {
     // signing up is a two-step process:
     //   - create the user via the server (which, in turn, creates a user at Firebase
     //   - sign in and receive authentication token via FlutterFire
@@ -54,7 +56,7 @@ class AuthProvider with ChangeNotifier {
     );
   }
 
-  Future<ServerResponse<FirebaseUser, String>> login(final String email, final String password) async {
+  Future<ServerResponse<FirebaseUser, String?>> login(final String email, final String password) async {
     return _firebaseAuthAction(
       (final firebaseAuth) async {
         _logger.i('Trying to login user "$email"');
@@ -70,16 +72,12 @@ class AuthProvider with ChangeNotifier {
         return;
       }
 
-      _logger.i('Logging out user with id "${_loggedInUser!.uid}"');
+      _logger.i('Logging out user with ID "${_loggedInUser!.uid}"');
       await _firebaseService.logout(firebaseAuth);
     });
   }
 
   Future<void> reloadAuthentication() async {
-    await Future<void>.delayed(
-      const Duration(seconds: 1),
-    );
-
     await _initializeFlutterFire();
     _listenToUserChangeStream();
   }
@@ -120,7 +118,7 @@ class AuthProvider with ChangeNotifier {
     );
   }
 
-  Future<ServerResponse<FirebaseUser, String>> _performLogin(final Future<ServerResponse<FirebaseUser, String>> Function() loginDelegate) async {
+  Future<ServerResponse<FirebaseUser, String?>> _performLogin(final Future<ServerResponse<FirebaseUser, String?>> Function() loginDelegate) async {
     final loginResult = await loginDelegate();
     if (loginResult.isSuccessAndResponse) {
       _loggedInUser = loginResult.success;
