@@ -13,8 +13,8 @@ import 'package:provider/provider.dart';
 
 final _logger = getLogger('exercise_information');
 
-class ExerciseInformation extends StatelessWidget with LogMessagePreparer, StringLocalizer, ErrorKeyTranslator {
-  const ExerciseInformation(this._exercise, {final Key? key}) : super(key: key);
+class ExerciseInformationPage extends StatelessWidget with LogMessagePreparer, StringLocalizer, ErrorKeyTranslator {
+  const ExerciseInformationPage(this._exercise, {final Key? key}) : super(key: key);
 
   final Exercise _exercise;
 

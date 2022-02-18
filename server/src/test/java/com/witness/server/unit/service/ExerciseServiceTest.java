@@ -20,8 +20,10 @@ import com.witness.server.exception.InvalidRequestException;
 import com.witness.server.mapper.ExerciseMapperImpl;
 import com.witness.server.repository.ExerciseLogRepository;
 import com.witness.server.repository.ExerciseRepository;
+import com.witness.server.repository.SetLogRepository;
 import com.witness.server.repository.UserExerciseRepository;
 import com.witness.server.service.ExerciseService;
+import com.witness.server.service.ExerciseStatisticsCalculationService;
 import com.witness.server.service.UserService;
 import com.witness.server.service.impl.ExerciseServiceImpl;
 import com.witness.server.unit.BaseUnitTest;
@@ -53,7 +55,13 @@ class ExerciseServiceTest extends BaseUnitTest {
   private ExerciseLogRepository exerciseLogRepository;
 
   @MockBean
+  private SetLogRepository setLogRepository;
+
+  @MockBean
   private UserService userService;
+
+  @MockBean
+  private ExerciseStatisticsCalculationService exerciseStatisticsCalculationService;
 
   @ParameterizedTest
   @JsonFileSources(parameters = {

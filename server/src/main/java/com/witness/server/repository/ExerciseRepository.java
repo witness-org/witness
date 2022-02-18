@@ -67,7 +67,7 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
   List<Exercise> findAllByUser(User user);
 
   /**
-   * Checks whether there exists a initial exercise (i.e. Exercise object) with the given name.
+   * Checks whether there exists an initial exercise (i.e. Exercise object) with the given name.
    *
    * @param name name of the exercise
    * @return true if an initial exercise with the given {@code name} exists, otherwise false

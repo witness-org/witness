@@ -5,6 +5,7 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/exercise_create.dart';
 import 'package:client/models/exercises/exercise_history.dart';
+import 'package:client/models/exercises/exercise_statistics.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/services/base_service.dart';
 import 'package:client/services/server_response.dart';
@@ -101,6 +102,25 @@ class ExerciseService extends BaseService {
       return ServerResponse.success(exerciseHistory);
     } else {
       _logger.e('Could not fetch exercise history: ${responseMap['message']}');
+      return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
+    }
+  }
+
+  Future<ServerResponse<ExerciseStatistics, String?>> getExerciseStatistics(final int exerciseId, final String? token) async {
+    final requestUri = getUri('statistics/$exerciseId');
+    _logger
+      ..i('Delegating retrieval of exercise statistics to server')
+      ..i('GET $requestUri');
+
+    final response = await http.get(requestUri, headers: getHttpHeaders(authorization: token));
+    final responseMap = decodeResponse<Map<String, dynamic>>(response);
+
+    if (response.statusCode == 200) {
+      final exerciseStatistics = ExerciseStatistics.fromJson(responseMap);
+
+      return ServerResponse.success(exerciseStatistics);
+    } else {
+      _logger.e('Could not fetch exercise statistics: ${responseMap['message']}');
       return ServerResponse.failure(getFailureStringFromResponseMap(responseMap));
     }
   }

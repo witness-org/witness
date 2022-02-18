@@ -3,6 +3,7 @@ package com.witness.server.web.controller;
 import com.witness.server.dto.exercise.ExerciseCreateDto;
 import com.witness.server.dto.exercise.ExerciseDto;
 import com.witness.server.dto.exercise.ExerciseHistoryDto;
+import com.witness.server.dto.exercise.ExerciseStatisticsDto;
 import com.witness.server.dto.exercise.UserExerciseDto;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.exception.DataAccessException;
@@ -10,6 +11,7 @@ import com.witness.server.exception.DataNotFoundException;
 import com.witness.server.exception.InvalidRequestException;
 import com.witness.server.mapper.ExerciseHistoryMapper;
 import com.witness.server.mapper.ExerciseMapper;
+import com.witness.server.mapper.ExerciseStatisticsMapper;
 import com.witness.server.service.ExerciseService;
 import com.witness.server.service.SecurityService;
 import com.witness.server.web.meta.RequiresAdmin;
@@ -43,14 +45,16 @@ public class ExerciseController {
   private final SecurityService securityService;
   private final ExerciseMapper exerciseMapper;
   private final ExerciseHistoryMapper exerciseHistoryMapper;
+  private final ExerciseStatisticsMapper exerciseStatisticsMapper;
 
   @Autowired
   public ExerciseController(ExerciseService exerciseService, SecurityService securityService, ExerciseMapper exerciseMapper,
-                            ExerciseHistoryMapper exerciseHistoryMapper) {
+                            ExerciseHistoryMapper exerciseHistoryMapper, ExerciseStatisticsMapper exerciseStatisticsMapper) {
     this.exerciseService = exerciseService;
     this.securityService = securityService;
     this.exerciseMapper = exerciseMapper;
     this.exerciseHistoryMapper = exerciseHistoryMapper;
+    this.exerciseStatisticsMapper = exerciseStatisticsMapper;
   }
 
   @PostMapping("initial-exercises")
@@ -209,5 +213,22 @@ public class ExerciseController {
     var currentUser = securityService.getCurrentUser();
     var exerciseLogs = exerciseService.getExerciseLogs(currentUser.getUid(), exerciseId);
     return exerciseHistoryMapper.exerciseLogsToHistoryDto(exerciseLogs);
+  }
+
+  @GetMapping("statistics/{exerciseId}")
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Gets the statistics of the specified exercise which were logged by the current user.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "The statistics for the specified exercise were fetched successfully."),
+      @ApiResponse(responseCode = "404", description = "The statistics could not be fetched because the provided exercise ID or the Firebase ID "
+          + " of the logged-in user cannot be found in the database."),
+      @ApiResponse(responseCode = "500", description = "The statistics could not be fetched because the logged-in user could not be found in "
+          + "the database.")
+  })
+  public ExerciseStatisticsDto getExerciseStatistics(
+      @PathVariable @Parameter(description = "ID of the exercise whose statistics should be retrieved.") Long exerciseId) throws DataAccessException {
+    var currentUser = securityService.getCurrentUser();
+    var exerciseStatistics = exerciseService.getExerciseStatistics(currentUser.getUid(), exerciseId);
+    return exerciseStatisticsMapper.modelToDto(exerciseStatistics);
   }
 }

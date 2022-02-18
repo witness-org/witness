@@ -5,6 +5,7 @@ import 'package:client/logging/logger_factory.dart';
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/exercise_create.dart';
 import 'package:client/models/exercises/exercise_history.dart';
+import 'package:client/models/exercises/exercise_statistics.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/providers/auth_provider.dart';
 import 'package:client/providers/base_provider.dart';
@@ -16,18 +17,19 @@ import 'package:injector/injector.dart';
 final _logger = getLogger('exercise_provider');
 
 class ExerciseProvider extends BaseProvider {
-  ExerciseProvider._(this._auth, this._exercises, this._exerciseHistories) : super(_logger);
+  ExerciseProvider._(this._auth, this._exercises, this._exerciseHistories, this._exerciseStatistics) : super(_logger);
 
-  ExerciseProvider.empty() : this._(null, <MuscleGroup, List<Exercise>>{}, <int, ExerciseHistory>{});
+  ExerciseProvider.empty() : this._(null, <MuscleGroup, List<Exercise>>{}, <int, ExerciseHistory>{}, <int, ExerciseStatistics>{});
 
   ExerciseProvider.fromProviders(final AuthProvider auth, final ExerciseProvider? instance)
-      : this._(auth, (instance?._exercises).orEmpty(), (instance?._exerciseHistories).orEmpty());
+      : this._(auth, (instance?._exercises).orEmpty(), (instance?._exerciseHistories).orEmpty(), (instance?._exerciseStatistics).orEmpty());
 
   static final Injector _injector = Injector.appInstance;
   late final ExerciseService _exerciseService = _injector.get<ExerciseService>();
 
   final Map<MuscleGroup, List<Exercise>> _exercises;
   final Map<int, ExerciseHistory> _exerciseHistories;
+  final Map<int, ExerciseStatistics> _exerciseStatistics;
   final AuthProvider? _auth;
 
   Map<MuscleGroup, List<Exercise>> get exercises {
@@ -36,6 +38,10 @@ class ExerciseProvider extends BaseProvider {
 
   ExerciseHistory? getExercisesHistory(final int exerciseId) {
     return _exerciseHistories[exerciseId];
+  }
+
+  ExerciseStatistics? getExercisesStatistics(final int exerciseId) {
+    return _exerciseStatistics[exerciseId];
   }
 
   List<Exercise> getExercisesByMuscleGroup(final MuscleGroup group) {
@@ -65,6 +71,7 @@ class ExerciseProvider extends BaseProvider {
     _logger.i('Creating new user exercise');
 
     final response = await _exerciseService.postUserExercise(newExercise, await _auth?.getToken());
+
     if (response.isSuccessAndResponse) {
       _logger.i('Creation of exercise succeeded');
 
@@ -78,6 +85,7 @@ class ExerciseProvider extends BaseProvider {
     } else {
       _logger.e('Creation of exercise failed: ${response.error}');
     }
+
     return response;
   }
 
@@ -85,6 +93,7 @@ class ExerciseProvider extends BaseProvider {
     _logger.i('Updating user exercise with ID "${data.id}"');
 
     final response = await _exerciseService.putUserExercise(data, await _auth?.getToken());
+
     if (response.isSuccessAndResponse) {
       _logger.i('Update of exercise succeeded');
 
@@ -123,6 +132,7 @@ class ExerciseProvider extends BaseProvider {
     } else {
       _logger.e('Update of exercise failed: ${response.error}');
     }
+
     return response;
   }
 
@@ -130,6 +140,7 @@ class ExerciseProvider extends BaseProvider {
     _logger.i('Deleting user exercise with ID "$exerciseId"');
 
     final response = await _exerciseService.deleteUserExercise(exerciseId, await _auth?.getToken());
+
     if (response.isSuccessNoResponse) {
       _logger.i('Deletion of user exercise succeeded');
       for (final muscleGroup in MuscleGroup.values) {
@@ -139,6 +150,7 @@ class ExerciseProvider extends BaseProvider {
     } else if (response.isError) {
       _logger.e('Deletion of user exercise failed: ${response.error}');
     }
+
     return response;
   }
 
@@ -149,16 +161,35 @@ class ExerciseProvider extends BaseProvider {
     final exerciseHistory = response.success;
 
     if (response.isSuccessAndResponse) {
-      if (exerciseHistory!.entries.isNotEmpty) {
+      _logger.i('Received ${exerciseHistory!.entries.length} exercise history entries');
+
+      if (exerciseHistory.entries.isNotEmpty) {
         _exerciseHistories[exerciseId] = exerciseHistory;
       }
       notifyListeners();
-    }
-
-    if (exerciseHistory != null) {
-      _logger.i('Received ${exerciseHistory.entries.length} exercise history entries');
     } else {
       _logger.e('Fetching exercise history failed');
+      return Future.error(response.error ?? '');
+    }
+  }
+
+  Future<void> fetchExerciseStatistics(final int exerciseId) async {
+    _logger.i('Fetching exercise statistics for exercise with ID $exerciseId');
+
+    final response = await _exerciseService.getExerciseStatistics(exerciseId, await _auth?.getToken());
+    final exerciseStatistics = response.success;
+
+    if (response.isSuccessAndResponse) {
+      _logger.i('Fetching exercise statistics succeeded');
+
+      if ((exerciseStatistics!.maxReps != null && exerciseStatistics.maxReps! > 0) ||
+          (exerciseStatistics.maxSeconds != null && exerciseStatistics.maxSeconds! > 0)) {
+        _exerciseStatistics[exerciseId] = exerciseStatistics;
+      }
+
+      notifyListeners();
+    } else {
+      _logger.e('Fetching exercise statistics failed');
       return Future.error(response.error ?? '');
     }
   }
