@@ -16,8 +16,7 @@ import 'package:timezone/timezone.dart' as tz;
 final _logger = getLogger('workout_log_service');
 
 class WorkoutLogService extends BaseService {
-  @override
-  String get targetResource => 'workout-logs';
+  const WorkoutLogService() : super('workout-logs');
 
   Future<ServerResponse<List<WorkoutLog>, String?>> getWorkoutLogsByDay(final TZDateTime date, final String? token) async {
     final requestUri = getUri('', queryParameters: {'date': date.toIso8601String()});

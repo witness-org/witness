@@ -5,9 +5,11 @@ import 'package:client/configuration/client_configuration.dart';
 import 'package:http/http.dart';
 
 abstract class BaseService {
+  const BaseService(this.targetResource);
+
   /// Determines the base URL of the current service instance. Calls to [getUri] are automatically prefixed with [targetResource] as "root" resource,
   /// unless explicitly disabled. See usage examples of [getUri] for more information.
-  String get targetResource;
+  final String targetResource;
 
   /// Decodes a [Response] `httpResponse` which represents a JSON object into an object of type [T] using UTF-8 encoding.
   T decodeResponse<T>(final Response httpResponse) {
