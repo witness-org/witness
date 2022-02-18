@@ -1,6 +1,7 @@
 import 'package:client/models/exercises/exercise.dart';
 import 'package:client/models/exercises/exercise_history.dart';
 import 'package:client/models/exercises/exercise_history_entry.dart';
+import 'package:client/models/exercises/exercise_statistics.dart';
 import 'package:client/models/exercises/logging_type.dart';
 import 'package:client/models/exercises/muscle_group.dart';
 import 'package:client/models/workouts/exercise_log.dart';
@@ -46,6 +47,14 @@ ExerciseHistory exerciseHistoryForExercise(final Location timezone) => ExerciseH
           ),
         )
       ],
+    );
+
+ExerciseStatistics exerciseStatisticsForExercise() => const ExerciseStatistics(
+      1,
+      100000,
+      maxReps: 5,
+      maxSeconds: 60,
+      estimatedOneRepMaxG: 117000,
     );
 
 const data = [

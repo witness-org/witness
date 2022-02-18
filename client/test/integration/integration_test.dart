@@ -175,7 +175,7 @@ void main() {
       expectWidgetByType(ExerciseByMuscleGroupItem, matchers.findsWidgets);
     });
 
-    testWidgets('displayed history of exercise based on mocked workout log', (final WidgetTester tester) async {
+    testWidgets('displays history of exercise based on mocked workout log', (final WidgetTester tester) async {
       final mockExerciseService = MockExerciseService();
       when(mockExerciseService.getExercisesByMuscleGroup(any, any)).thenAnswer((final _) async => const ServerResponse.success(mock_exercises.data));
       when(mockExerciseService.getExerciseHistory(any, any)).thenAnswer(
@@ -204,6 +204,37 @@ void main() {
       // after navigating to the history tab page, at least one exercise history card should have been rendered
       await tapByKey('exercise_detail_screen.history', tester);
       expectWidgetByType(ExerciseHistoryCard, matchers.findsWidgets);
+    });
+
+    testWidgets('displays statistics of exercise based on mocked workout log', (final WidgetTester tester) async {
+      final mockExerciseService = MockExerciseService();
+      when(mockExerciseService.getExercisesByMuscleGroup(any, any)).thenAnswer((final _) async => const ServerResponse.success(mock_exercises.data));
+      when(mockExerciseService.getExerciseStatistics(any, any)).thenAnswer(
+        (final _) async => ServerResponse.success(mock_exercises.exerciseStatisticsForExercise()),
+      );
+
+      await initTest(tester, login: true, additionalDependencyOverrides: (final Injector injector) {
+        registerSingleton<ExerciseService, MockExerciseService>(injector, () => mockExerciseService);
+      });
+
+      // focus exercise screen
+      await navigateToScreen('app_drawer.exercises', tester);
+      expectWidgetByKey('exercises_screen', matchers.findsOneWidget);
+
+      // there should be exercise overview items corresponding to the domain model's muscle groups
+      expectWidgetByType(ExerciseOverviewItem, matchers.findsWidgets);
+
+      // tap first muscle group item in order to go to concrete exercise
+      final firstOverviewItem = findByType(ExerciseOverviewItem).first;
+      await tap(firstOverviewItem, tester);
+
+      // open the detail view of the first exercise
+      final firstExerciseItem = findByType(ExerciseByMuscleGroupItem).first;
+      await tap(firstExerciseItem, tester);
+
+      // after navigating to the statistics tab page, the table with the statistics parameters should be displayed
+      await tapByKey('exercise_detail_screen.statistics', tester);
+      expectWidgetByType(Table, matchers.findsOneWidget);
     });
   });
 

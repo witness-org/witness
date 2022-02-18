@@ -45,6 +45,7 @@ class ExerciseDetailScreen extends StatelessWidget with LogMessagePreparer, Stri
                 icon: const Icon(Icons.history),
               ),
               Tab(
+                key: const Key('exercise_detail_screen.statistics'),
                 text: uiStrings.exerciseDetailScreen_tab_statistics,
                 icon: const Icon(Icons.insights),
               ),
@@ -54,9 +55,9 @@ class ExerciseDetailScreen extends StatelessWidget with LogMessagePreparer, Stri
         ),
         body: TabBarView(
           children: [
-            ExerciseInformation(exercise),
+            ExerciseInformationPage(exercise),
             ExerciseHistoryPage(exercise),
-            ExerciseStatistics(exercise),
+            ExerciseStatisticsPage(exercise),
           ],
         ),
       ),

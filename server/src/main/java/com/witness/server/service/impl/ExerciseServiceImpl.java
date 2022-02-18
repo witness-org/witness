@@ -4,6 +4,10 @@ import com.witness.server.entity.exercise.Exercise;
 import com.witness.server.entity.exercise.UserExercise;
 import com.witness.server.entity.user.User;
 import com.witness.server.entity.workout.ExerciseLog;
+import com.witness.server.entity.workout.RepsSetLog;
+import com.witness.server.entity.workout.SetLog;
+import com.witness.server.entity.workout.TimeSetLog;
+import com.witness.server.enumeration.LoggingType;
 import com.witness.server.enumeration.MuscleGroup;
 import com.witness.server.enumeration.Role;
 import com.witness.server.enumeration.ServerError;
@@ -11,15 +15,22 @@ import com.witness.server.exception.DataAccessException;
 import com.witness.server.exception.DataNotFoundException;
 import com.witness.server.exception.InvalidRequestException;
 import com.witness.server.mapper.ExerciseMapper;
+import com.witness.server.model.ExerciseStatistics;
 import com.witness.server.repository.ExerciseLogRepository;
 import com.witness.server.repository.ExerciseRepository;
+import com.witness.server.repository.SetLogRepository;
 import com.witness.server.repository.UserExerciseRepository;
 import com.witness.server.service.EntityAccessor;
 import com.witness.server.service.ExerciseService;
+import com.witness.server.service.ExerciseStatisticsCalculationService;
 import com.witness.server.service.UserService;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,16 +40,21 @@ public class ExerciseServiceImpl implements ExerciseService, EntityAccessor {
   private final ExerciseRepository exerciseRepository;
   private final UserExerciseRepository userExerciseRepository;
   private final ExerciseLogRepository exerciseLogRepository;
+  private final SetLogRepository setLogRepository;
   private final UserService userService;
+  private final ExerciseStatisticsCalculationService exerciseStatisticsCalculationService;
   private final ExerciseMapper exerciseMapper;
 
   @Autowired
   public ExerciseServiceImpl(ExerciseRepository exerciseRepository, UserExerciseRepository userExerciseRepository,
-                             ExerciseLogRepository exerciseLogRepository, UserService userService, ExerciseMapper exerciseMapper) {
+                             ExerciseLogRepository exerciseLogRepository, SetLogRepository setLogRepository, UserService userService,
+                             ExerciseStatisticsCalculationService exerciseStatisticsCalculationService, ExerciseMapper exerciseMapper) {
     this.exerciseRepository = exerciseRepository;
     this.exerciseLogRepository = exerciseLogRepository;
     this.userExerciseRepository = userExerciseRepository;
+    this.setLogRepository = setLogRepository;
     this.userService = userService;
+    this.exerciseStatisticsCalculationService = exerciseStatisticsCalculationService;
     this.exerciseMapper = exerciseMapper;
   }
 
@@ -179,11 +195,59 @@ public class ExerciseServiceImpl implements ExerciseService, EntityAccessor {
     return exerciseLogRepository.findExerciseLogsByExerciseIdAndUserId(exercise.getId(), user.getId());
   }
 
+  @Override
+  public ExerciseStatistics getExerciseStatistics(String firebaseId, Long exerciseId) throws DataAccessException {
+    var user = getUser(userService, firebaseId);
+    var exercise = getExerciseById(exerciseId);
+
+    var setLogs = setLogRepository.findSetLogsByExerciseLogExerciseIdEqualsAndExerciseLogWorkoutLogUserIdEquals(exercise.getId(), user.getId());
+    var subClassLists = getSubClassSetLogStreams(setLogs);
+    var repsSetLogs = subClassLists.getFirst();
+    var timeSetLogs = subClassLists.getSecond();
+
+    var maxWeightG = setLogs.stream().map(SetLog::getWeightG).max(Comparator.naturalOrder()).orElse(0L);
+    var statisticsBuilder = ExerciseStatistics.builder().exercise(exercise).maxWeightG(maxWeightG);
+
+    var loggingTypes = exercise.getLoggingTypes();
+    if (loggingTypes.contains(LoggingType.REPS)) {
+      var maxReps = repsSetLogs.stream().map(RepsSetLog::getReps).max(Comparator.naturalOrder()).orElse(0);
+      var estimatedOneRepMaxG =
+          repsSetLogs.stream().map(log -> exerciseStatisticsCalculationService.getEstimatedOneRepMax(log.getWeightG(), log.getReps()))
+              .filter(Optional::isPresent)
+              .map(Optional::get)
+              .max(Comparator.naturalOrder())
+              .orElse(null);
+      statisticsBuilder.maxReps(maxReps).estimatedOneRepMaxG(estimatedOneRepMaxG);
+    }
+
+    if (loggingTypes.contains(LoggingType.TIME)) {
+      var maxSeconds = timeSetLogs.stream().map(TimeSetLog::getSeconds).max(Comparator.naturalOrder()).orElse(0);
+      statisticsBuilder.maxSeconds(maxSeconds);
+    }
+
+    return statisticsBuilder.build();
+  }
+
   private void throwIfUserExerciseNotCreatedByUserAndNotAdmin(UserExercise affectedUserExercise, User user) throws InvalidRequestException {
     if (!Role.ADMIN.equals(user.getRole()) && !affectedUserExercise.getCreatedBy().equals(user)) {
       log.error("Requested exercise was not created by user with provided Firebase ID {}.", user.getFirebaseId());
       throw new InvalidRequestException("The requested exercise was not created by the provided user.",
           ServerError.USER_EXERCISE_NOT_CREATED_BY_USER);
     }
+  }
+
+  private Pair<List<RepsSetLog>, List<TimeSetLog>> getSubClassSetLogStreams(List<SetLog> setLogs) {
+    var repsSetLogs = new ArrayList<RepsSetLog>();
+    var timeSetLogs = new ArrayList<TimeSetLog>();
+
+    for (var setLog : setLogs) {
+      if (setLog instanceof RepsSetLog) {
+        repsSetLogs.add((RepsSetLog) setLog);
+      } else if (setLog instanceof TimeSetLog) {
+        timeSetLogs.add((TimeSetLog) setLog);
+      }
+    }
+
+    return Pair.of(repsSetLogs, timeSetLogs);
   }
 }
