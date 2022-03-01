@@ -1,0 +1,40 @@
+# see https://github.com/robvanderleek/create-issue-branch
+
+# The default mode is "auto", meaning a new issue branch is created after an issue is assigned.
+# The mode "chatops" means a new issue branch is created after commenting on an issue with /create-issue-branch or /cib.
+mode: chatops
+
+# by default, the repository's default branch is used to fork issue branches off of (i.e. main), property 'defaultBranch' overrides this
+defaultBranch: 'develop'
+
+# tiny (i15), short (issue-15), full (issue-15-fix-nasty-bug) or custom
+# see also https://github.com/robvanderleek/create-issue-branch/blob/master/tests/test-fixtures/issues.assigned.json
+# for available fields
+#
+# Substitutions for ${...} placeholders can be lowercased by putting a , before the closing curly brace.
+# Likewise, substitutions can be uppercased by putting a ^ before the closing curly brace.
+branchName: '${issue.number}-${issue.title,}'
+#branchName: '${issue.number}-${issue.title^}'
+
+# true: comments on the issue after creating a branch
+# false: does not comment on the issue after creating a branch
+silent: false
+
+# characters that are not allowed in Git branch names are replaced by this character
+gitSafeReplacementChar: '-'
+
+# uncomment lines below if branches with the task, feature, bug and documentation labels should have corresponding prefixes
+# create branch from development as source branch
+#branches:
+#  - label: task
+#    name: develop
+#    prefix: task/
+#  - label: feature
+#    name: develop
+#    prefix: feature/
+#  - label: bug
+#    name: develop
+#    prefix: bugfix/
+
+# Automatically close issue after pull request is merged.
+autoCloseIssue: true
