@@ -29,7 +29,8 @@ check:server:
   stage: check
   script:
     - 'cd server'
-    - 'mvn $MAVEN_CLI_OPTS checkstyle:check'
+    - 'chmod +x mvnw'
+    - './mvnw $MAVEN_CLI_OPTS checkstyle:check'
 
 # Check codestyle, linting and static analysis of client code with dartfmt
 check:client:
@@ -37,16 +38,30 @@ check:client:
   stage: check
   script:
     - 'cd client'
+    - 'flutter doctor --verbose'
     - 'flutter clean'
     - 'flutter pub get'
     - 'flutter pub run build_runner build'
 
     # Applies code formatting to project using dartfmt. Redirect stderr (2) to stdout (1) and send it to a file. If
     # this output (i.e. the formatted files) contains at least one line that ends with .dart, but NOT with .g.dart or .mocks.dart
-    # (generated files may be formatted differently), the command on the last line returns 1, making the job fail.
+    # (generated files may be formatted differently), exit with code 1, making the job fail.
     - 'dart format ./ --line-length 150 > formatResult.txt 2>&1 || true'
     - 'cat formatResult.txt'
-    - if [ $(grep --perl-regexp 'Formatted[[:space:]].*(?<!\.(g|mocks))\.dart' formatResult.txt -c) != 0 ]; then exit 1; fi
+    - while IFS="" read -r line || [ -n "$line" ]
+      do
+        if echo "$line" | grep --quiet ".dart"
+        then
+          if ! echo "$line" | grep --quiet ".g.dart"
+          then
+            if ! echo "$line" | grep --quiet ".mocks.dart"
+            then
+              echo "INCORRECTLY FORMATTED FILE: $line"
+              exit 1
+            fi
+          fi
+        fi
+      done < formatResult.txt
 
     # The 'flutter analyze' may print parts of its output to stderr. Therefore, redirect stderr (2) to
     # stdout (1) and send it to a file. Finally, grep it for a positive outcome ("No issues found"). If this string
@@ -65,7 +80,8 @@ test:server:
   when: always
   script:
     - 'cd server'
-    - 'mvn $MAVEN_CLI_OPTS clean verify'
+    - 'chmod +x mvnw'
+    - './mvnw $MAVEN_CLI_OPTS clean verify'
   artifacts:
     when: always
     paths:

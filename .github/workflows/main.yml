@@ -1,0 +1,177 @@
+name: CI (Ubuntu)
+
+env:
+  # This will suppress any download for dependencies and plugins or upload messages which would clutter the console log.
+  # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
+  MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+  # As of Maven 3.3.0 instead of this you may define these options in `.mvn/maven.config` so the same config is used
+  # when running from the command line.
+  # `installAtEnd` and `deployAtEnd` are only effective with recent version of the corresponding plugins.
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+
+# run CI builds for main and develop branches, as well as pull requests targeting the main or development branch
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  # allow triggering CI runs manually via GitHub UI
+  workflow_dispatch:
+
+jobs:
+  check-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 15
+        uses: actions/setup-java@v2
+        with:
+          java-version: 15
+          distribution: 'adopt'
+          cache: 'maven' # see also https://github.com/actions/setup-java#caching-packages-dependencies
+
+      # Even though setup-java already offers the ability to run maven builds, using the included
+      # Maven wrapper with fixed version ensures a uniform build process across multiple tools
+      - name: Make Maven Wrapper Executable
+        run: |
+          cd server
+          chmod +x mvnw
+
+      - name: Execute Maven checkstyle Plugin
+        run: |
+          cd server
+          ./mvnw $MAVEN_CLI_OPTS checkstyle:check
+
+  check-client:
+    runs-on: ubuntu-latest
+    container: "cirrusci/flutter:2.10.0"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get Client Dependencies and Run Code Generation
+        run: |
+          cd client
+          flutter doctor --verbose
+          flutter clean
+          flutter pub get
+          flutter pub run build_runner build
+
+      # Applies code formatting to project using dartfmt. Redirect stderr (2) to stdout (1) and send it to a file. If
+      # this output (i.e. the formatted files) contains at least one line that ends with .dart, but NOT with .g.dart or .mocks.dart
+      # (generated files may be formatted differently), exit with code 1, making the job fail.
+      - name: Check Code Formatting
+        run: |
+          cd client
+          dart format ./ --line-length 150 > formatResult.txt 2>&1 || true
+          cat formatResult.txt
+          while IFS="" read -r line || [ -n "$line" ]
+          do
+            if echo "$line" | grep --quiet ".dart"
+            then
+              if ! echo "$line" | grep --quiet ".g.dart"
+              then
+                if ! echo "$line" | grep --quiet ".mocks.dart"
+                then
+                  echo "INCORRECTLY FORMATTED FILE: $line"
+                  exit 1
+                fi
+              fi
+            fi
+          done < formatResult.txt
+
+      # The 'flutter analyze' may print parts of its output to stderr. Therefore, redirect stderr (2) to
+      # stdout (1) and send it to a file. Finally, grep it for a positive outcome ("No issues found"). If this string
+      # is not found (i.e. there are issues), grep exits with code 1, making the job fail. The " || true" part makes
+      # that a potential non-zero exit code produced by the flutter analyze command does not make the job fail prematurely.
+      - name: Check Linter Rules
+        run: |
+          cd client
+          flutter analyze > analysisResult.txt 2>&1 || true
+          cat analysisResult.txt
+          grep "No issues found" analysisResult.txt
+
+
+  test-server:
+    if: ${{ always() }}
+    needs: [check-server]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 15
+        uses: actions/setup-java@v2
+        with:
+          java-version: 15
+          distribution: 'adopt'
+          cache: 'maven' # see also https://github.com/actions/setup-java#caching-packages-dependencies
+
+      # Even though setup-java already offers the ability to run maven builds, using the included
+      # Maven wrapper with fixed version ensures a uniform build process across multiple tools
+      - name: Make Maven Wrapper Executable
+        run: |
+          cd server
+          chmod +x mvnw
+
+      - name: Run Java Unit and Integration Tests
+        run: |
+          cd server
+          ./mvnw $MAVEN_CLI_OPTS clean verify
+
+      - name: Upload Build Artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-server-artifacts
+          # Filename of server_api.(json|yaml) of API artifacts has to be kept in sync with the value of the LOCAL_FILE_NAME
+          # constant in the server/src/test/java/com/witness/server/integration/web/ApiGenerationTest.java file.
+          path: |
+            ./server/logs
+            ./server/target/surefire-reports/
+            ./server/server_api.json
+            ./server/server_api.yaml
+
+  test-client:
+    if: ${{ always() }}
+    needs: [check-client]
+    runs-on: ubuntu-latest
+    container: "cirrusci/flutter:2.10.0"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get Client Dependencies and Run Code Generation
+        run: |
+          cd client
+          flutter doctor --verbose
+          flutter clean
+          flutter pub get
+          flutter pub run build_runner build
+
+      - name: Activate Reporter Pub Packages
+        run: |
+          export PATH="$PATH":"$HOME/.pub-cache/bin"
+          cd client
+          flutter pub global activate dart_dot_reporter
+          flutter pub global activate junitreport
+
+      # Execute tests, save JSON output to file. junitreport converts the very verbose, raw JSON output into a more readable XML format
+      # for further examinations. dart_dot_reporter creates a nice summary of the test execution from the JSON output for the CI logs.
+      - name: Run Flutter Unit and Integration Tests
+        run: |
+          cd client
+          flutter test --machine > flutter-test-report-raw.json || echo "[ERROR] Flutter Tests failed! See build artifacts for more details."
+          flutter pub global run junitreport:tojunit --input flutter-test-report-raw.json --output flutter-test-report.xml
+          flutter pub global run dart_dot_reporter flutter-test-report-raw.json --show-message --show-success --show-id
+
+      - name: Upload Build Artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-client-artifacts
+          path: |
+            ./client/flutter-test-report-raw.json
+            ./client/flutter-test-report.xml
