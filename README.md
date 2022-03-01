@@ -1,3 +1,9 @@
+| [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) | `main`                                                                                                               | `develop`                                                                                                               |
+|-----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| CI Status                                                                                                 | ![example branch parameter](https://github.com/witness-org/witness/actions/workflows/main.yml/badge.svg?branch=main) | ![example branch parameter](https://github.com/witness-org/witness/actions/workflows/main.yml/badge.svg?branch=develop) |
+| Test Coverage (server)                                                                                    | TBD                                                                                                                  | TBD                                                                                                                     |
+| Test Coverage (client)                                                                                    | TBD                                                                                                                  | TBD                                                                                                                     |
+
 # witness
 
 This project aims to provide an application to be used by weightlifters to log their workouts, monitor their progress
