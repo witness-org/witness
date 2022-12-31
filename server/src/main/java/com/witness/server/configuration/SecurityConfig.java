@@ -11,21 +11,22 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
- * Exposes beans that are related to security (CORS, authentication) and also represents derived type of {@link WebSecurityConfigurerAdapter}.
+ * Exposes beans that are related to security (CORS, authentication) and, in particular, achieves HTTP endpoint
+ * protection by creating a {@link SecurityFilterChain} bean.
  */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
   private final SecurityProperties restSecProps;
   private final SecurityFilter tokenAuthenticationFilter;
   private final SecurityService securityService;
@@ -67,8 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     return corsConfigSource;
   }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  @Bean
+  protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
     http.cors()
         .configurationSource(corsConfigurationSource()).and()
         .csrf().disable()
@@ -84,5 +85,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    return http.build();
   }
 }
