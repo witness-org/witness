@@ -4,7 +4,7 @@ import com.witness.server.service.TimeService;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import org.hibernate.collection.internal.PersistentBag;
+
+import org.hibernate.collection.spi.PersistentBag;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -72,7 +73,7 @@ public final class Comparators {
 
   /**
    * <p>
-   * Hibernate's {@link org.hibernate.collection.internal.PersistentBag} breaks the {@link List} contract in its {@code equals} implementation.
+   * Hibernate's {@link PersistentBag} breaks the {@link List} contract in its {@code equals} implementation.
    * Therefore, assertions that verify equality of database objects with manually created objects fail if they have {@link List} members.
    * This problem is avoided by replacing the value of {@link List} members with {@link ArrayList} instances.
    * </p>

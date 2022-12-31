@@ -34,7 +34,7 @@ public interface WorkoutLogRepository extends JpaRepository<WorkoutLog, Long> {
         FROM
           WorkoutLog w
         WHERE
-          w.exerciseLogs.size > 0 AND w.loggedOn >= :loggedOnStart AND w.loggedOn <= :loggedOnEnd AND w.user.firebaseId = :firebaseId
+          size(w.exerciseLogs) > 0 AND w.loggedOn >= :loggedOnStart AND w.loggedOn <= :loggedOnEnd AND w.user.firebaseId = :firebaseId
       """)
   List<WorkoutLog> findNonEmptyByLoggedOnBetweenAndUserFirebaseIdEquals(ZonedDateTime loggedOnStart, ZonedDateTime loggedOnEnd, String firebaseId);
 }

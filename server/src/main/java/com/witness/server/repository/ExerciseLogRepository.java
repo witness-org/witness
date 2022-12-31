@@ -26,7 +26,7 @@ public interface ExerciseLogRepository extends JpaRepository<ExerciseLog, Long> 
         FROM
           ExerciseLog e
         WHERE
-          e.exercise.id = :exerciseId AND e.workoutLog.user.id = :userId AND e.setLogs.size > 0
+          e.exercise.id = :exerciseId AND e.workoutLog.user.id = :userId AND size(e.setLogs) > 0
         ORDER BY
           e.workoutLog.loggedOn DESC
       """)

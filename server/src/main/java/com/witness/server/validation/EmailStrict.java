@@ -4,9 +4,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import javax.validation.Constraint;
-import javax.validation.Payload;
-import javax.validation.constraints.Email;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.Email;
 
 /**
  * <p>
@@ -30,7 +30,7 @@ import javax.validation.constraints.Email;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {})
 @Email(regexp = "^[^@]+@[^@]+\\.[^@]{2,}$",
-    message = "{javax.validation.constraints.Email.message}: contain '@' and at least one other character before and after it")
+    message = "{jakarta.validation.constraints.Email.message}: contain '@' and at least one other character before and after it")
 public @interface EmailStrict {
   /**
    * Message in case of a validation error. The value of this member is ignored since it is defined purely to fulfill the contract of

@@ -23,6 +23,7 @@ import com.witness.server.service.FirebaseService;
 import com.witness.server.service.SecurityService;
 import com.witness.server.service.UserService;
 import com.witness.server.util.isolation.DatabaseResetService;
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -35,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import org.assertj.core.util.TriFunction;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,9 +56,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.UriUtils;
 
@@ -108,7 +111,7 @@ public abstract class BaseControllerIntegrationTest extends BaseIntegrationTest 
   }
 
   protected String requestUrl(String suffix, Object... args) {
-    return requestUrl() + "/" + String.format(suffix, args);
+    return StringUtils.trimTrailingCharacter(requestUrl() + "/" + String.format(suffix, args), '/');
   }
 
 

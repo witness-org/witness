@@ -5,9 +5,9 @@ import com.witness.server.enumeration.Sex;
 import com.witness.server.validation.EmailStrict;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.ZonedDateTime;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 

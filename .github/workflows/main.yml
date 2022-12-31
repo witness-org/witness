@@ -14,10 +14,12 @@ on:
   push:
     branches:
       - '**'
-  pull_request:
-    branches:
-      - main
-      - develop
+  # If we run the CI on every branch ("**" in "on.push.branches" property), we do not need additional CI executions for pull requests
+  # If, on the other hand, workflow executions were more selective, we could explicitly start jobs for pull requests.
+  #pull_request:
+  #  branches:
+  #    - main
+  #    - develop
   # allow triggering CI runs manually via GitHub UI
   workflow_dispatch:
 

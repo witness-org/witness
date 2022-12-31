@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class ExerciseLogRepositoryTest extends BaseRepositoryTest {
   private static final String DATA_ROOT = "data/unit/repository/exercise-log-repository-test/";
-  private static final Comparator<ExerciseLog> EXERCISE_LOG_COMPARATOR = Comparators.getEntityComparator(ExerciseLog.class);
 
   @Autowired
   private UserRepository userRepository;

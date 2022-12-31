@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Function;
-import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -101,7 +101,7 @@ public class OpenApiConfig {
    *     ordering.
    */
   @Bean
-  public OpenApiCustomiser getApiCustomiser() {
+  public OpenApiCustomizer getApiCustomizer() {
     return openApi -> {
       openApi.getPaths().forEach(OpenApiConfig::clearSecuritySchemeOfPublicMethods);
       openApi.getPaths().forEach(OpenApiConfig::addDefaultUnauthorizedResponseForNonPublicMethods);
