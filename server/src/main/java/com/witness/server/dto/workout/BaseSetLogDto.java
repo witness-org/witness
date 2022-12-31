@@ -3,10 +3,10 @@ package com.witness.server.dto.workout;
 import com.witness.server.enumeration.ResistanceBand;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.Data;
 
 @Data

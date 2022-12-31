@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-
 import org.hibernate.collection.spi.PersistentBag;
 import org.springframework.util.ReflectionUtils;
 
@@ -43,7 +42,7 @@ public final class Comparators {
    * that stem from lower precision provided by the persistence layer.
    * </p>
    */
-  public static Comparator<? super ZonedDateTime> ZONED_DATE_TIME_COMPARATOR =
+  public static final Comparator<? super ZonedDateTime> ZONED_DATE_TIME_COMPARATOR =
       Comparator.comparing(o -> o.toInstant().truncatedTo(ChronoUnit.MILLIS));
 
   /**
@@ -66,7 +65,7 @@ public final class Comparators {
    * values of the {@link Map.Entry} is returned.
    * </p>
    */
-  public static Comparator<Map.Entry<ZonedDateTime, Integer>> LOGGING_DAY_COMPARATOR = (o1, o2) -> {
+  public static final Comparator<Map.Entry<ZonedDateTime, Integer>> LOGGING_DAY_COMPARATOR = (o1, o2) -> {
     var keysComparison = Comparator.comparing(ZonedDateTime::toLocalDate).compare(o1.getKey(), o2.getKey());
     return keysComparison != 0 ? keysComparison : Integer.compare(o1.getValue(), o2.getValue());
   };

@@ -4,10 +4,10 @@ import com.witness.server.enumeration.Role;
 import com.witness.server.enumeration.Sex;
 import com.witness.server.validation.EmailStrict;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.ZonedDateTime;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import java.time.ZonedDateTime;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 

@@ -2,8 +2,6 @@ package com.witness.server.entity.exercise;
 
 import com.witness.server.enumeration.LoggingType;
 import com.witness.server.enumeration.MuscleGroup;
-import java.util.List;
-import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -19,6 +17,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
