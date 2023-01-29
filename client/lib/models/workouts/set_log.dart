@@ -2,12 +2,12 @@ import 'package:client/models/workouts/resistance_band.dart';
 
 abstract class SetLog {
   const SetLog({
-    required final this.id,
-    required final this.exerciseLogId,
-    required final this.position,
-    final this.rpe,
-    required final this.weightG,
-    required final this.resistanceBands,
+    required this.id,
+    required this.exerciseLogId,
+    required this.position,
+    this.rpe,
+    required this.weightG,
+    required this.resistanceBands,
   });
 
   final int id;

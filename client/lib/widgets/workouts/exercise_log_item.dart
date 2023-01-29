@@ -106,7 +106,7 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
               ],
             ),
             style: TextButton.styleFrom(
-              primary: Colors.grey,
+              foregroundColor: Colors.grey,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             onPressed: onCommentPressed,
@@ -137,7 +137,7 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
         ..._buildButton(
           uiStrings.exerciseLogItem_delete,
           () => _deleteExerciseLog(context, provider),
-          buttonStyle: TextButton.styleFrom(primary: Theme.of(context).errorColor),
+          buttonStyle: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error),
         ),
         ..._buildButton(uiStrings.exerciseLogItem_addSet, () => _openSetLogDialog(context, provider)),
         if (addCommentButton) ..._buildButton(uiStrings.exerciseLogItem_addComment, () => _openCommentDialog(context, provider)),

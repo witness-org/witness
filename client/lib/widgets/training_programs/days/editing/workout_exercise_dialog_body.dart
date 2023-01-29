@@ -11,7 +11,7 @@ class WorkoutExerciseDialogBody extends StatelessWidget {
   Widget build(final BuildContext context) {
     return Expanded(
       child: Scrollbar(
-        isAlwaysShown: true,
+        thumbVisibility: true,
         child: ListView.builder(
             itemCount: _exercise.sets.length,
             itemBuilder: (final _, final index) {

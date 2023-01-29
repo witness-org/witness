@@ -6,14 +6,14 @@ import 'package:client/extensions/map_extensions.dart';
 
 class ExerciseFormInput {
   ExerciseFormInput({
-    final this.id,
-    final this.name = '',
-    final this.description,
-    required final this.muscleGroups,
-    required final this.loggingTypes,
+    this.id,
+    this.name = '',
+    this.description,
+    required this.muscleGroups,
+    required this.loggingTypes,
   });
 
-  ExerciseFormInput.createForm({final this.name = ''});
+  ExerciseFormInput.createForm({this.name = ''});
 
   ExerciseFormInput.editForm(final Exercise exercise)
       : this(

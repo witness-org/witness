@@ -20,7 +20,7 @@ class TrainingDayHeader extends StatelessWidget with LogMessagePreparer, StringL
     return TrainingProgramComponentHeader(
       [
         SegmentedText(
-          baseStyle: Theme.of(context).textTheme.bodyText2?.merge(const TextStyle(fontSize: 16)),
+          baseStyle: Theme.of(context).textTheme.bodyMedium?.merge(const TextStyle(fontSize: 16)),
           segments: [
             TextSegment(
               '${uiStrings.trainingDayHeader_dayNumber_prefix} ${_day.number}',

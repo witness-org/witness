@@ -129,7 +129,7 @@ abstract class DialogHelper {
             top: 20,
             start: 24,
           ),
-          child: Text(title, style: textTheme.headline5?.copyWith(color: onPrimarySurface)),
+          child: Text(title, style: textTheme.headlineSmall?.copyWith(color: onPrimarySurface)),
         ),
       ),
     );

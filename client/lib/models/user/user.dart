@@ -10,15 +10,15 @@ part 'user.g.dart';
 @TZDateTimeConverter()
 class User {
   const User({
-    required final this.id,
-    required final this.firebaseId,
-    required final this.username,
-    required final this.email,
-    required final this.role,
-    required final this.sex,
-    required final this.createdAt,
-    required final this.modifiedAt,
-    required final this.height,
+    required this.id,
+    required this.firebaseId,
+    required this.username,
+    required this.email,
+    required this.role,
+    required this.sex,
+    required this.createdAt,
+    required this.modifiedAt,
+    required this.height,
   });
 
   factory User.fromJson(final Map<String, dynamic> json) => _$UserFromJson(json);

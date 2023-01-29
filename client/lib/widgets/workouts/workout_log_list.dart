@@ -13,8 +13,7 @@ import 'package:timezone/timezone.dart';
 final _logger = getLogger('workout_log_list');
 
 class WorkoutLogList extends StatefulWidget {
-  const WorkoutLogList(final this._date, final this._error, final this._resetErrorAction, final this._handleErrorAction, {final Key? key})
-      : super(key: key);
+  const WorkoutLogList(this._date, this._error, this._resetErrorAction, this._handleErrorAction, {final Key? key}) : super(key: key);
 
   final TZDateTime _date;
   final String? _error;

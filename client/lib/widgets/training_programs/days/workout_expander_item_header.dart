@@ -13,7 +13,7 @@ class WorkoutExpanderItemHeader extends StatelessWidget with StringLocalizer {
     final uiStrings = getLocalizedStrings(context);
     return ListTile(
       title: SegmentedText(
-        baseStyle: Theme.of(context).textTheme.subtitle1,
+        baseStyle: Theme.of(context).textTheme.titleMedium,
         segments: [
           TextSegment(
             '${uiStrings.workoutExpanderItemHeader_workoutNumber_prefix} ${_workout.number}',

@@ -2,11 +2,11 @@ import 'package:client/models/training_programs/detail/training_week.dart';
 
 class TrainingProgram {
   const TrainingProgram({
-    required final this.id,
-    required final this.name,
-    required final this.isPublished,
-    final this.description,
-    final this.weeks = const <TrainingWeek>[],
+    required this.id,
+    required this.name,
+    required this.isPublished,
+    this.description,
+    this.weeks = const <TrainingWeek>[],
   });
 
   final int id;

@@ -8,7 +8,7 @@ part 'exercise_log_create.g.dart';
 @JsonSerializable()
 @SetLogCreateConverter()
 class ExerciseLogCreate {
-  const ExerciseLogCreate({required final this.exerciseId, final this.comment, required final this.setLogs});
+  const ExerciseLogCreate({required this.exerciseId, this.comment, required this.setLogs});
 
   ExerciseLogCreate.empty(final int exerciseId) : this(exerciseId: exerciseId, setLogs: []);
 

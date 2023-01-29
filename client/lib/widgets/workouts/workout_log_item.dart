@@ -125,7 +125,7 @@ class _WorkoutLogItemState extends RequesterState<WorkoutLogItem, WorkoutLog> wi
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         TextButton(
-          style: TextButton.styleFrom(primary: Theme.of(context).errorColor),
+          style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error),
           child: Text(uiStrings.workoutLogItem_delete),
           onPressed: () {
             _deleteWorkoutLog(context, provider);

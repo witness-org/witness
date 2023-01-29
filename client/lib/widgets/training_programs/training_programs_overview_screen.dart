@@ -40,7 +40,7 @@ class _TrainingProgramsOverviewScreenState extends State<TrainingProgramsOvervie
               builder: (final _, final providerData, final __) {
                 _logger.v(prepare('_buildTrainingProgramView.Consumer.builder()'));
                 return Scrollbar(
-                  isAlwaysShown: true,
+                  thumbVisibility: true,
                   child: ListView.builder(
                     itemCount: providerData.trainingPrograms.length,
                     itemBuilder: (final _, final index) => TrainingProgramCard(providerData.trainingPrograms[index]),

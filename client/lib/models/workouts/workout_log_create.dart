@@ -8,7 +8,7 @@ part 'workout_log_create.g.dart';
 @JsonSerializable()
 @TZDateTimeConverter()
 class WorkoutLogCreate {
-  const WorkoutLogCreate({required final this.loggedOn, final this.durationMinutes = 0, required final this.exerciseLogs});
+  const WorkoutLogCreate({required this.loggedOn, this.durationMinutes = 0, required this.exerciseLogs});
 
   WorkoutLogCreate.empty(final TZDateTime loggedOn) : this(loggedOn: loggedOn, exerciseLogs: []);
 

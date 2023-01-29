@@ -6,7 +6,7 @@ import 'package:client/models/workouts/time_set_log.dart';
 import 'package:client/models/workouts/time_set_log_create.dart';
 
 abstract class SetLogCreate {
-  const SetLogCreate({final this.rpe, required final this.weightG, required final this.resistanceBands});
+  const SetLogCreate({this.rpe, required this.weightG, required this.resistanceBands});
 
   factory SetLogCreate.fromSetLog(final SetLog setLog) {
     if (setLog is RepsSetLog) {

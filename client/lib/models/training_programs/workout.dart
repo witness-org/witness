@@ -2,11 +2,11 @@ import 'package:client/models/training_programs/workout_exercise.dart';
 
 class Workout {
   const Workout({
-    required final this.id,
-    required final this.number,
-    final this.name,
-    final this.description,
-    final this.exercises = const <WorkoutExercise>[],
+    required this.id,
+    required this.number,
+    this.name,
+    this.description,
+    this.exercises = const <WorkoutExercise>[],
   });
 
   final int id;

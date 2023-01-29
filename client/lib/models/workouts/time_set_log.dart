@@ -13,7 +13,7 @@ class TimeSetLog extends SetLog {
     final int? rpe,
     required final int weightG,
     required final List<ResistanceBand> resistanceBands,
-    required final this.seconds,
+    required this.seconds,
   }) : super(id: id, exerciseLogId: exerciseLogId, position: position, rpe: rpe, weightG: weightG, resistanceBands: resistanceBands);
 
   factory TimeSetLog.fromJson(final Map<String, dynamic> json) => _$TimeSetLogFromJson(json);

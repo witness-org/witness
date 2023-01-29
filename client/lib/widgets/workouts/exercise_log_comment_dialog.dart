@@ -70,7 +70,7 @@ class _ExerciseLogCommentDialogState extends State<ExerciseLogCommentDialog> wit
       ),
       if (widget._comment != null)
         TextButton(
-          style: TextButton.styleFrom(primary: Theme.of(context).errorColor),
+          style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error),
           onPressed: () {
             Navigator.pop(context);
             widget._updateExerciseLogComment(context, null);

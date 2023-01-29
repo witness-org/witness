@@ -6,7 +6,7 @@ import 'package:client/widgets/workouts/exercise_log_item_content.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseHistoryCard extends StatelessWidget with StringLocalizer {
-  const ExerciseHistoryCard(final this._historyEntry, {final Key? key}) : super(key: key);
+  const ExerciseHistoryCard(this._historyEntry, {final Key? key}) : super(key: key);
 
   final ExerciseHistoryEntry _historyEntry;
 

@@ -218,7 +218,7 @@ class _SetLogDialogState extends RequesterState<SetLogDialog, WorkoutLog> with S
       ),
       if (widget._setLog != null && widget._deleteSetLog != null)
         TextButton(
-          style: TextButton.styleFrom(primary: Theme.of(context).errorColor),
+          style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error),
           onPressed: () {
             Navigator.pop(context);
             widget._deleteSetLog!(context, widget._setLog!);

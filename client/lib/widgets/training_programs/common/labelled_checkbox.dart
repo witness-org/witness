@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class LabelledCheckbox extends StatefulWidget {
   const LabelledCheckbox({
-    required final this.label,
-    required final this.value,
-    required final this.onCheckedChanged,
+    required this.label,
+    required this.value,
+    required this.onCheckedChanged,
     final Key? key,
   }) : super(key: key);
 
