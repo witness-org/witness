@@ -99,10 +99,10 @@ abstract class DialogHelper {
                     onDateChanged: selectDateAction,
                     onDisplayedMonthChanged: onDisplayedMonthChangedAction,
                     selectableDayPredicate: selectableDayPredicate != null
-                        ? (final _date) =>
+                        ? (final date) =>
                             // predicate must be fulfilled for [initialDate] -> either provided function returns `true` or [_date] is equivalent to
                             // [initialDate] (which is [referenceDate]), not taking time components into consideration
-                            selectableDayPredicate(_date) || _date.onlyTZDate().isAtSameMomentAs(referenceDate.onlyDate())
+                            selectableDayPredicate(date) || date.onlyTZDate().isAtSameMomentAs(referenceDate.onlyDate())
                         : null,
                   ),
                 ),

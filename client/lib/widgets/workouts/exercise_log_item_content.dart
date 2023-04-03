@@ -87,9 +87,9 @@ class _ExerciseLogItemContentState extends RequesterState<ExerciseLogItemContent
       child: widget._workoutLog != null
           ? SetLogsTable(
               _exerciseLog,
-              (final _context, final _setLogFormInput) => _updateSetLog(_context, widget._workoutLog!, provider, _setLogFormInput),
-              (final _context, final _setLog) => _deleteSetLog(_context, widget._workoutLog!, provider, _setLog),
-              (final _context, final _positions) => _updateSetLogPositions(_context, widget._workoutLog!, provider, _positions),
+              (final context, final setLogFormInput) => _updateSetLog(context, widget._workoutLog!, provider, setLogFormInput),
+              (final context, final setLog) => _deleteSetLog(context, widget._workoutLog!, provider, setLog),
+              (final context, final positions) => _updateSetLogPositions(context, widget._workoutLog!, provider, positions),
             )
           : SetLogsTable(_exerciseLog, null, null, null),
     );

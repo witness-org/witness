@@ -227,9 +227,9 @@ class _WorkoutFloatingActionButtonState extends State<_WorkoutFloatingActionButt
                   context,
                   title,
                   widget._date,
-                  (final _date) => widget._selectDateAction(workoutLogData, _date),
+                  (final date) => widget._selectDateAction(workoutLogData, date),
                   onDisplayedMonthChangedAction: widget._onDisplayedMonthChangedAction,
-                  selectableDayPredicate: (final _date) => widget._selectableDayPredicate(workoutLogData, _date),
+                  selectableDayPredicate: (final date) => widget._selectableDayPredicate(workoutLogData, date),
                 );
               },
             );

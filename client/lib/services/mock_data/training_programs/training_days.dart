@@ -5,7 +5,7 @@ final data = [
   TrainingDay(
     id: 1,
     number: 1,
-    name: 'Light Day: ' + ('Long Text ' * 15),
+    name: 'Light Day: ${'Long Text ' * 15}',
     // description: 'Day Description ' * 2, // => no empty line should be rendered in UI
     workouts: [
       workouts.byId(1),

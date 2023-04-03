@@ -14,18 +14,6 @@ class ExerciseHistoryCard extends StatelessWidget with StringLocalizer {
     return Padding(
       padding: const EdgeInsets.only(left: 5, right: 5),
       child: TextButton(
-        child: Row(
-          children: [
-            const Icon(Icons.notes_outlined, size: 15),
-            const SizedBox(width: 5),
-            Flexible(
-              child: Text(
-                comment,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
         style: TextButton.styleFrom(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           textStyle: const TextStyle(fontWeight: FontWeight.normal),
@@ -38,6 +26,18 @@ class ExerciseHistoryCard extends StatelessWidget with StringLocalizer {
             closeText: uiStrings.exerciseHistoryCard_logCommentDialog_closeText,
           );
         },
+        child: Row(
+          children: [
+            const Icon(Icons.notes_outlined, size: 15),
+            const SizedBox(width: 5),
+            Flexible(
+              child: Text(
+                comment,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

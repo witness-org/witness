@@ -156,8 +156,8 @@ class _LoginCardState extends State<LoginCard> with StringLocalizer, ErrorKeyTra
                   ),
                 TextButton(
                   key: const Key('login_card.switchAuthMode'),
-                  child: Text(signingUp ? uiStrings.loginCard_action_loginInstead : uiStrings.loginCard_action_signUpInstead),
                   onPressed: _switchAuthMode,
+                  child: Text(signingUp ? uiStrings.loginCard_action_loginInstead : uiStrings.loginCard_action_signUpInstead),
                 ),
               ],
             ),

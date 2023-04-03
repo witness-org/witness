@@ -12,48 +12,48 @@ void main() {
   group(getPrefixedGroupName(_sutName, 'castOrNull<int>'), () {
     test('should return int on int', () {
       const Object? obj = 1;
-      final int? _int = obj.castOrNull<int>();
-      expect(_int, 1);
+      final int? integer = obj.castOrNull<int>();
+      expect(integer, 1);
     });
 
     test('should return null on string', () {
       const Object? obj = 'a';
-      final int? _int = obj.castOrNull<int>();
-      expect(_int, null);
+      final int? integer = obj.castOrNull<int>();
+      expect(integer, null);
     });
 
     test('should return null on null', () {
       const Object? obj = null;
-      final int? _int = obj.castOrNull<int>();
-      expect(_int, null);
+      final int? integer = obj.castOrNull<int>();
+      expect(integer, null);
     });
   });
 
   group(getPrefixedGroupName(_sutName, 'castOrFallback<int>'), () {
     test('should return int on int', () {
       const Object? obj = 1;
-      final int _int = obj.castOrFallback<int>(2);
-      expect(_int, 1);
+      final int integer = obj.castOrFallback<int>(2);
+      expect(integer, 1);
     });
 
     test('should return fallback on string', () {
       const Object? obj = 'a';
-      final int? _int = obj.castOrFallback<int>(2);
-      expect(_int, 2);
+      final int? integer = obj.castOrFallback<int>(2);
+      expect(integer, 2);
     });
 
     test('should return fallback on null', () {
       const Object? obj = null;
-      final _int = obj.castOrFallback<int>(2);
-      expect(_int, 2);
+      final integer = obj.castOrFallback<int>(2);
+      expect(integer, 2);
     });
   });
 
   group(getPrefixedGroupName(_sutName, 'castOrThrow<int>'), () {
     test('should return int on int', () {
       const Object? obj = 1;
-      final int _int = obj.castOrThrow<int>();
-      expect(_int, 1);
+      final int integer = obj.castOrThrow<int>();
+      expect(integer, 1);
     });
 
     test('should throw on string', () {

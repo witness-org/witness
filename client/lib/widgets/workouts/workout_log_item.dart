@@ -108,7 +108,7 @@ class _WorkoutLogItemState extends RequesterState<WorkoutLogItem, WorkoutLog> wi
     return ReorderableListView(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      onReorder: (final _oldIndex, final _newIndex) => _reorderExerciseLogs(provider, _oldIndex, _newIndex),
+      onReorder: (final oldIndex, final newIndex) => _reorderExerciseLogs(provider, oldIndex, newIndex),
       children: exerciseLogs.map((final exerciseLog) {
         return ExerciseLogItem(
           widget._workoutLog,
@@ -135,7 +135,7 @@ class _WorkoutLogItemState extends RequesterState<WorkoutLogItem, WorkoutLog> wi
           child: Text(uiStrings.workoutLogItem_addExercise),
           onPressed: () => Navigator.of(context).pushNamed(
             ExercisesScreen.routeName,
-            arguments: (final BuildContext _context, final Exercise _selectedExercise) => _addExerciseLog(_context, provider, _selectedExercise),
+            arguments: (final BuildContext context, final Exercise selectedExercise) => _addExerciseLog(context, provider, selectedExercise),
           ),
         ),
       ],
@@ -162,7 +162,7 @@ class _WorkoutLogItemState extends RequesterState<WorkoutLogItem, WorkoutLog> wi
                 context: context,
                 builder: (final BuildContext context) => WorkoutLogDurationDialog(
                   widget._workoutLog.durationMinutes,
-                  (final _context, final _updatedDuration) => _updateWorkoutDuration(_context, provider, _updatedDuration),
+                  (final context, final updatedDuration) => _updateWorkoutDuration(context, provider, updatedDuration),
                 ),
               ),
             ),
