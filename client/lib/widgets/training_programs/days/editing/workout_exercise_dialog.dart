@@ -14,7 +14,7 @@ final _logger = getLogger('workout_exercise_dialog');
 
 // TODO(raffaelfoidl-leabrugger): Add new attributes, remove attributes (currently, only attribute values are displayed to edit)
 class WorkoutExerciseDialog extends StatelessWidget with LogMessagePreparer, StringLocalizer {
-  const WorkoutExerciseDialog(final this._exercise, {final Key? key}) : super(key: key);
+  const WorkoutExerciseDialog(this._exercise, {final Key? key}) : super(key: key);
 
   final WorkoutExercise _exercise;
 
@@ -42,7 +42,7 @@ class WorkoutExerciseDialog extends StatelessWidget with LogMessagePreparer, Str
             child: TrainingProgramComponentHeader(
               [
                 SegmentedText(
-                  baseStyle: theme.textTheme.bodyText2?.merge(const TextStyle(fontSize: 16)),
+                  baseStyle: theme.textTheme.bodyMedium?.merge(const TextStyle(fontSize: 16)),
                   segments: [
                     TextSegment(
                       '${uiStrings.workoutExerciseDialog_header_numberPrefix} ${_exercise.number}',

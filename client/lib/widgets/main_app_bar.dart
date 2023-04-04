@@ -14,8 +14,7 @@ import 'package:timezone/timezone.dart';
 final _logger = getLogger('main_app_bar');
 
 class MainAppBar extends StatelessWidget with LogMessagePreparer, StringLocalizer implements PreferredSizeWidget {
-  const MainAppBar({final Key? key, final this.preferredHeight = kToolbarHeight, final this.preferredTitle, final this.currentlyViewedDate})
-      : super(key: key);
+  const MainAppBar({this.preferredHeight = kToolbarHeight, this.preferredTitle, this.currentlyViewedDate, final Key? key}) : super(key: key);
 
   final double preferredHeight;
   final String? preferredTitle;

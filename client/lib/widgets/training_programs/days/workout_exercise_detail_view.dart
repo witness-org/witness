@@ -23,7 +23,7 @@ class WorkoutExerciseDetailView extends StatelessWidget with StringLocalizer {
 
     return Expanded(
       child: SegmentedText(
-        baseStyle: Theme.of(context).textTheme.bodyText2,
+        baseStyle: Theme.of(context).textTheme.bodyMedium,
         segments: segments,
       ),
     );

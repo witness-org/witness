@@ -28,7 +28,7 @@ class ExercisesScreen extends StatelessWidget with LogMessagePreparer, StringLoc
     _logger.v(prepare('_buildMuscleGroupList()'));
     return Expanded(
       child: Scrollbar(
-        isAlwaysShown: true,
+        thumbVisibility: true,
         child: ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,

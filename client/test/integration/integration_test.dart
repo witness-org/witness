@@ -56,8 +56,8 @@ T mockDecodeResponse<T>(final Response? httpResponse) {
 
 @GenerateMocks([], customMocks: [
   MockSpec<ExerciseService>(fallbackGenerators: {#decodeResponse: mockDecodeResponse}),
-  MockSpec<WorkoutLogService>(returnNullOnMissingStub: true, fallbackGenerators: {#decodeResponse: mockDecodeResponse}),
-  MockSpec<ImageProviderFacade>(returnNullOnMissingStub: true),
+  MockSpec<WorkoutLogService>(onMissingStub: OnMissingStub.returnDefault, fallbackGenerators: {#decodeResponse: mockDecodeResponse}),
+  MockSpec<ImageProviderFacade>(onMissingStub: OnMissingStub.returnDefault),
 ])
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -245,6 +245,7 @@ void main() {
       when(mockWorkoutLogService.getWorkoutLogsByDay(any, any)).thenAnswer(
         (final _) async => ServerResponse.success(mock_workout_logs.emptyWorkoutLogs(_localTimezone)),
       );
+      when(mockWorkoutLogService.getLoggingDaysInPeriod(any, any, any)).thenAnswer((final _) async => const ServerResponse.success({}));
 
       await initTest(tester, login: true, additionalDependencyOverrides: (final Injector injector) {
         registerSingleton<WorkoutLogService, MockWorkoutLogService>(injector, () => mockWorkoutLogService);
@@ -262,6 +263,7 @@ void main() {
       when(mockWorkoutLogService.getWorkoutLogsByDay(any, any)).thenAnswer(
         (final _) async => ServerResponse.success([mock_workout_logs.workoutLogWithExerciseLogs(_localTimezone)]),
       );
+      when(mockWorkoutLogService.getLoggingDaysInPeriod(any, any, any)).thenAnswer((final _) async => const ServerResponse.success({}));
 
       await initTest(tester, login: true, additionalDependencyOverrides: (final Injector injector) {
         registerSingleton<WorkoutLogService, MockWorkoutLogService>(injector, () => mockWorkoutLogService);
@@ -286,6 +288,7 @@ void main() {
       when(mockWorkoutLogService.getWorkoutLogsByDay(any, any)).thenAnswer(
         (final _) async => ServerResponse.success([mock_workout_logs.workoutLogWithExerciseAndSetLogs(_localTimezone)]),
       );
+      when(mockWorkoutLogService.getLoggingDaysInPeriod(any, any, any)).thenAnswer((final _) async => const ServerResponse.success({}));
 
       await initTest(tester, login: true, additionalDependencyOverrides: (final Injector injector) {
         registerSingleton<WorkoutLogService, MockWorkoutLogService>(injector, () => mockWorkoutLogService);

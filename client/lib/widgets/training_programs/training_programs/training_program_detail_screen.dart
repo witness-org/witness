@@ -62,7 +62,7 @@ class _TrainingProgramDetailScreenState extends State<TrainingProgramDetailScree
               builder: (final _, final snapshot) => snapshot.waitSwitch(
                 Consumer<TrainingProgramProvider>(
                   builder: (final _, final providerData, final __) => Scrollbar(
-                    isAlwaysShown: true,
+                    thumbVisibility: true,
                     child: ListView.builder(
                       itemCount: providerData.trainingWeeksOfProgram(program.id).length,
                       itemBuilder: (final _, final index) => TrainingWeekCard(providerData.trainingWeeksOfProgram(program.id)[index], program.name),

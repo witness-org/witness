@@ -68,7 +68,7 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
       SetLogDialog(
         widget._exerciseLog,
         setLog,
-        (final _context, final _setLogFormInput) => _addSetLog(_context, provider, _setLogFormInput),
+        (final context, final setLogFormInput) => _addSetLog(context, provider, setLogFormInput),
       ),
     );
   }
@@ -78,7 +78,7 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
       context,
       ExerciseLogCommentDialog(
         widget._exerciseLog.comment,
-        (final _context, final _updatedComment) => _updateExerciseLogComment(_context, provider, _updatedComment),
+        (final context, final updatedComment) => _updateExerciseLogComment(context, provider, updatedComment),
       ),
     );
   }
@@ -93,6 +93,11 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
   Widget? _buildExerciseCardSubtitle(final ExerciseLog exerciseLog, final void Function() onCommentPressed) {
     return exerciseLog.comment != null
         ? TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.grey,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            onPressed: onCommentPressed,
             child: Row(
               children: [
                 const Icon(Icons.notes_outlined, size: 15),
@@ -105,11 +110,6 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
                 ),
               ],
             ),
-            style: TextButton.styleFrom(
-              primary: Colors.grey,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            onPressed: onCommentPressed,
           )
         : null;
   }
@@ -118,8 +118,8 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
     return [
       TextButton(
         style: buttonStyle,
-        child: Text(text),
         onPressed: onPressed,
+        child: Text(text),
       ),
       const SizedBox(width: 8),
     ];
@@ -137,7 +137,7 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
         ..._buildButton(
           uiStrings.exerciseLogItem_delete,
           () => _deleteExerciseLog(context, provider),
-          buttonStyle: TextButton.styleFrom(primary: Theme.of(context).errorColor),
+          buttonStyle: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error),
         ),
         ..._buildButton(uiStrings.exerciseLogItem_addSet, () => _openSetLogDialog(context, provider)),
         if (addCommentButton) ..._buildButton(uiStrings.exerciseLogItem_addComment, () => _openCommentDialog(context, provider)),
@@ -154,13 +154,13 @@ class _ExerciseLogItemState extends RequesterState<ExerciseLogItem, WorkoutLog> 
       child: ExpansionTile(
         title: Text(widget._exerciseLog.exercise.name),
         subtitle: _buildExerciseCardSubtitle(widget._exerciseLog, () => _openCommentDialog(context, provider)),
+        initiallyExpanded: _showSetLogs,
+        onExpansionChanged: (final expanded) => setState(() => _showSetLogs = expanded),
+        maintainState: true,
         children: [
           ExerciseLogItemContent(widget._workoutLog, widget._exerciseLog),
           _buildButtonRow(context, provider, widget._exerciseLog.comment == null, uiStrings),
         ],
-        initiallyExpanded: _showSetLogs,
-        onExpansionChanged: (final _expanded) => setState(() => _showSetLogs = _expanded),
-        maintainState: true,
       ),
     );
   }

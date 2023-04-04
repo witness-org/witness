@@ -18,7 +18,7 @@ class SplashScreen extends StatelessWidget with StringLocalizer {
             children: [
               const CircularProgressIndicator(),
               const SizedBox(height: 15),
-              Text(uiStrings.splashScreen_initialization, style: theme.textTheme.subtitle1),
+              Text(uiStrings.splashScreen_initialization, style: theme.textTheme.titleMedium),
             ],
           ),
         ),

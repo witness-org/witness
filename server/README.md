@@ -4,8 +4,8 @@ This guide gives a short overview of what is necessary to successfully build and
 
 ## Prerequisites
 
-* JDK 15
-* optional: [Maven](https://maven.apache.org/)
+* JDK 17
+* optional: [Maven](https://maven.apache.org/) 3
 
 ## General
 

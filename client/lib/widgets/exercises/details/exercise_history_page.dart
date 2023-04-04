@@ -47,7 +47,7 @@ class _ExerciseHistoryPageState extends State<ExerciseHistoryPage>
                   _logger.v(prepare('_buildExerciseHistory.Consumer.builder()'));
                   final hasHistoryEntries = exerciseData.getExercisesHistory(widget._exercise.id) != null;
                   return Scrollbar(
-                    isAlwaysShown: hasHistoryEntries,
+                    thumbVisibility: hasHistoryEntries,
                     controller: _scrollController,
                     child: hasHistoryEntries
                         ? ListView.builder(

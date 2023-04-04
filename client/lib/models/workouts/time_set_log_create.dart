@@ -10,7 +10,7 @@ class TimeSetLogCreate extends SetLogCreate {
     final int? rpe,
     required final int weightG,
     required final List<ResistanceBand> resistanceBands,
-    required final this.seconds,
+    required this.seconds,
   }) : super(rpe: rpe, weightG: weightG, resistanceBands: resistanceBands);
 
   factory TimeSetLogCreate.fromJson(final Map<String, dynamic> json) => _$TimeSetLogCreateFromJson(json);

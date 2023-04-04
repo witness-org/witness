@@ -10,7 +10,7 @@ class RepsSetLogCreate extends SetLogCreate {
     final int? rpe,
     required final int weightG,
     required final List<ResistanceBand> resistanceBands,
-    required final this.reps,
+    required this.reps,
   }) : super(rpe: rpe, weightG: weightG, resistanceBands: resistanceBands);
 
   factory RepsSetLogCreate.fromJson(final Map<String, dynamic> json) => _$RepsSetLogCreateFromJson(json);

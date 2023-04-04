@@ -9,11 +9,11 @@ part 'exercise_log.g.dart';
 @SetLogConverter()
 class ExerciseLog {
   const ExerciseLog({
-    required final this.id,
-    required final this.position,
-    required final this.exercise,
-    final this.comment,
-    required final this.setLogs,
+    required this.id,
+    required this.position,
+    required this.exercise,
+    this.comment,
+    required this.setLogs,
   });
 
   factory ExerciseLog.fromJson(final Map<String, dynamic> json) => _$ExerciseLogFromJson(json);

@@ -25,7 +25,7 @@ class ExerciseInformationPage extends StatelessWidget with LogMessagePreparer, S
       content: uiStrings.exerciseInformation_deleteDialog_content(_exercise.name),
       falseOption: uiStrings.exerciseInformation_deleteDialog_cancel,
       trueOption: uiStrings.exerciseInformation_deleteDialog_delete,
-      trueOptionStyle: TextStyle(color: theme.errorColor),
+      trueOptionStyle: TextStyle(color: theme.colorScheme.error),
     ).then(
       (final deleteExercise) {
         if (deleteExercise != true) {
@@ -133,7 +133,7 @@ class ExerciseInformationPage extends StatelessWidget with LogMessagePreparer, S
                 onPressed: () => _deleteUserExercise(context, uiStrings, theme),
                 icon: const Icon(Icons.delete),
                 label: Text(uiStrings.exerciseInformation_footer_deleteButton_text),
-                style: ElevatedButton.styleFrom(primary: theme.errorColor),
+                style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.error),
               ),
             ),
           ],

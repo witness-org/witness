@@ -10,7 +10,7 @@ import 'package:progress_loader_overlay/progress_loader_overlay.dart';
 import 'package:provider/provider.dart';
 
 class TrainingProgramCard extends StatelessWidget with StringLocalizer {
-  const TrainingProgramCard(final this._trainingProgram, {final Key? key}) : super(key: key);
+  const TrainingProgramCard(this._trainingProgram, {final Key? key}) : super(key: key);
 
   final TrainingProgramOverview _trainingProgram;
 
@@ -25,7 +25,7 @@ class TrainingProgramCard extends StatelessWidget with StringLocalizer {
       content: '${uiStrings.trainingProgramCard_deleteDialog_content_prefix} "${_trainingProgram.name}"?',
       falseOption: uiStrings.trainingProgramCard_deleteDialog_cancel,
       trueOption: uiStrings.trainingProgramCard_deleteDialog_delete,
-      trueOptionStyle: TextStyle(color: Theme.of(context).errorColor),
+      trueOptionStyle: TextStyle(color: Theme.of(context).colorScheme.error),
     ).then(
       (final deleteProgram) {
         if (deleteProgram != true) {

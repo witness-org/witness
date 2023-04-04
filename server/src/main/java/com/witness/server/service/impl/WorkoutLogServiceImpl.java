@@ -439,7 +439,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService, EntityAccessor 
   private Map<Long, Integer> simplifyPositionSpecification(Map<Long, Integer> positions) {
     var sortedEntries = positions.entrySet().stream()
         .sorted(Map.Entry.comparingByValue())
-        .collect(Collectors.toList());
+        .toList();
 
     return IntStream.range(0, sortedEntries.size())
         .boxed()

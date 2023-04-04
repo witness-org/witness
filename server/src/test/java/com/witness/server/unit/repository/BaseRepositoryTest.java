@@ -1,8 +1,8 @@
 package com.witness.server.unit.repository;
 
 import com.witness.server.unit.BaseUnitTest;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest

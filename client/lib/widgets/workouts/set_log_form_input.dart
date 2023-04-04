@@ -7,16 +7,16 @@ import 'package:client/extensions/map_extensions.dart';
 
 class SetLogFormInput {
   SetLogFormInput({
-    final this.id,
-    final this.position,
-    final this.rpe,
-    final this.weightG = 0,
-    required final this.loggingType,
-    required final this.loggedValue,
-    required final this.resistanceBands,
+    this.id,
+    this.position,
+    this.rpe,
+    this.weightG = 0,
+    required this.loggingType,
+    required this.loggedValue,
+    required this.resistanceBands,
   });
 
-  SetLogFormInput.createForm(final this.loggingType);
+  SetLogFormInput.createForm(this.loggingType);
 
   factory SetLogFormInput.editForm(final SetLog setLog) {
     late LoggingType loggingType;

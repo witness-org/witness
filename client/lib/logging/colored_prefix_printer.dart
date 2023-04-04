@@ -52,7 +52,7 @@ class ColoredPrefixPrinter extends LogPrinter {
     final realLogs = _realPrinter.log(event);
     final color = _getLevelColor(event.level);
     final level = _prefixMap[event.level]!;
-    return realLogs.map((final logLine) => '${color(level)}${color(_loggerName + ':')} $logLine').toList();
+    return realLogs.map((final logLine) => '${color(level)}${color('$_loggerName:')} $logLine').toList();
   }
 
   int _longestPrefixLength() {

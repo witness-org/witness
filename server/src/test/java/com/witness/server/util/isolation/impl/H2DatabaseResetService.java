@@ -1,7 +1,7 @@
 package com.witness.server.util.isolation.impl;
 
 import com.witness.server.util.isolation.DatabaseResetService;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

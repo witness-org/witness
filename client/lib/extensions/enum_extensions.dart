@@ -17,7 +17,7 @@ extension LoggingTypeExtensions on LoggingType {
       case LoggingType.time:
         return 'seconds';
       default:
-        throw Exception('No UI string representation for the unit of enum member "${this}" available.');
+        throw Exception('No UI string representation for the unit of enum member "$this" available.');
     }
   }
 
@@ -29,7 +29,7 @@ extension LoggingTypeExtensions on LoggingType {
       case LoggingType.time:
         return 'time';
       default:
-        throw Exception('No UI string representation for enum member "${this}" available.');
+        throw Exception('No UI string representation for enum member "$this" available.');
     }
   }
 
@@ -42,7 +42,7 @@ extension LoggingTypeExtensions on LoggingType {
         final typedValue = value.castOrThrow<num>();
         return '${toUiString()}: $typedValue';
       default:
-        throw Exception('No UI representation for enum member "${this}" available.');
+        throw Exception('No UI representation for enum member "$this" available.');
     }
   }
 }
@@ -69,7 +69,7 @@ extension MuscleGroupExtensions on MuscleGroup {
       case MuscleGroup.other:
         return 'Other';
       default:
-        throw Exception('No UI string representation for enum member "${this}" available.');
+        throw Exception('No UI string representation for enum member "$this" available.');
     }
   }
 
@@ -94,7 +94,7 @@ extension MuscleGroupExtensions on MuscleGroup {
       case MuscleGroup.other:
         return 'OTHER';
       default:
-        throw Exception('No string representation for enum member "${this}" available.');
+        throw Exception('No string representation for enum member "$this" available.');
     }
   }
 }
@@ -114,7 +114,7 @@ extension ResistanceBandExtensions on ResistanceBand {
       case ResistanceBand.xxHeavy:
         return 'XX-heavy';
       default:
-        throw Exception('No UI string representation for enum member "${this}" available.');
+        throw Exception('No UI string representation for enum member "$this" available.');
     }
   }
 
@@ -133,7 +133,7 @@ extension ResistanceBandExtensions on ResistanceBand {
       case ResistanceBand.xxHeavy:
         return Colors.black;
       default:
-        throw Exception('No color mapping for enum member "${this}" available.');
+        throw Exception('No color mapping for enum member "$this" available.');
     }
   }
 }

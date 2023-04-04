@@ -4,8 +4,8 @@ This guide gives a short overview of what is necessary to successfully build and
 
 ## Prerequisites
 
-* [Flutter](https://flutter.dev/) SDK 2.8
-* [Dart](https://dart.dev/) SDK 2.15 (included in Flutter SDK)
+* [Flutter](https://flutter.dev/) SDK 3
+* [Dart](https://dart.dev/) SDK >= 2.15 with sound null-safety (included in Flutter SDK)
 * [Android Studio](https://developer.android.com/studio)
 
 ## General

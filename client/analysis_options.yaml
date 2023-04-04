@@ -44,7 +44,6 @@ linter:
     cancel_subscriptions: true
     close_sinks: true
     comment_references: true
-    invariant_booleans: true
     literal_only_boolean_expressions: true
     no_adjacent_strings_in_list: false
     test_types_in_equals: true

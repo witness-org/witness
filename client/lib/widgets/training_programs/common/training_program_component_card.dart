@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class TrainingProgramComponentCard extends StatelessWidget with StringLocalizer {
   const TrainingProgramComponentCard(
-    final this._headerText,
-    final this._bodyTextLines,
-    final this.detailsAction,
-    final this.deleteAction, {
+    this._headerText,
+    this._bodyTextLines,
+    this.detailsAction,
+    this.deleteAction, {
     final Key? key,
   }) : super(key: key);
 
@@ -58,9 +58,9 @@ class TrainingProgramComponentCard extends StatelessWidget with StringLocalizer 
         ),
         TextButton.icon(
           onPressed: () => _deleteComponent(context, uiStrings),
-          icon: Icon(Icons.delete, color: theme.errorColor),
+          icon: Icon(Icons.delete, color: theme.colorScheme.error),
           label: Text(uiStrings.trainingProgramComponentCard_footer_delete),
-          style: TextButton.styleFrom(primary: theme.errorColor),
+          style: TextButton.styleFrom(foregroundColor: theme.colorScheme.error),
         ),
       ],
     );

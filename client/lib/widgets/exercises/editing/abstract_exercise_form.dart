@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 final _logger = getLogger('abstract_exercise_form');
 
 abstract class AbstractExerciseForm extends StatefulWidget {
-  const AbstractExerciseForm({final Key? key, final this.exercise}) : super(key: key);
+  const AbstractExerciseForm({final Key? key, this.exercise}) : super(key: key);
 
   final Exercise? exercise;
 }

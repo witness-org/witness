@@ -37,7 +37,7 @@ class WorkoutExerciseSetView extends StatelessWidget with StringLocalizer {
           children: [
             Text(
               '${uiStrings.workoutExerciseSetView_header_numberPrefix} ${_set.number}: ',
-              style: Theme.of(context).textTheme.subtitle1?.merge(const TextStyle(fontWeight: FontWeight.bold)),
+              style: Theme.of(context).textTheme.titleMedium?.merge(const TextStyle(fontWeight: FontWeight.bold)),
             ),
             _buildAttributeValues(context, _set.loggingTypes),
             const Divider(),

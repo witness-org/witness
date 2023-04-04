@@ -83,7 +83,7 @@ class _ExercisesByMuscleGroupScreenState extends State<ExercisesByMuscleGroupScr
                 builder: (final _, final exerciseData, final __) {
                   _logger.v(prepare('_buildExerciseList.Consumer.builder()'));
                   return Scrollbar(
-                    isAlwaysShown: true,
+                    thumbVisibility: true,
                     child: ListView.builder(
                       itemCount: exerciseData.getExercisesByMuscleGroup(group).length,
                       itemBuilder: (final _, final index) {

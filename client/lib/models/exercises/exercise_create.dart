@@ -6,7 +6,7 @@ part 'exercise_create.g.dart';
 
 @JsonSerializable()
 class ExerciseCreate {
-  ExerciseCreate({required final this.name, final this.description, required final this.muscleGroups, required final this.loggingTypes});
+  ExerciseCreate({required this.name, this.description, required this.muscleGroups, required this.loggingTypes});
 
   factory ExerciseCreate.fromJson(final Map<String, dynamic> json) => _$ExerciseCreateFromJson(json);
 

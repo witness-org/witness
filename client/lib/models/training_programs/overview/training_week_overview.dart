@@ -1,10 +1,10 @@
 class TrainingWeekOverview {
   const TrainingWeekOverview({
-    required final this.id,
-    required final this.number,
-    final this.description,
-    required final this.numberOfDays,
-    required final this.totalNumberOfWorkouts,
+    required this.id,
+    required this.number,
+    this.description,
+    required this.numberOfDays,
+    required this.totalNumberOfWorkouts,
   });
 
   final int id;

@@ -8,24 +8,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
- * Exposes beans that are related to security (CORS, authentication) and also represents derived type of {@link WebSecurityConfigurerAdapter}.
+ * Exposes beans that are related to security (CORS, authentication) and, in particular, achieves HTTP endpoint
+ * protection by creating a {@link SecurityFilterChain} bean.
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+public class SecurityConfig {
   private final SecurityProperties restSecProps;
   private final SecurityFilter tokenAuthenticationFilter;
   private final SecurityService securityService;
@@ -67,8 +69,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     return corsConfigSource;
   }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  @Bean
+  protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
     http.cors()
         .configurationSource(corsConfigurationSource()).and()
         .csrf().disable()
@@ -77,12 +79,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .httpBasic().disable()
         .exceptionHandling()
         .authenticationEntryPoint(unauthorizedHandler()).and()
-        .authorizeRequests()
-        .antMatchers(restSecProps.getAllowedPublicApis().toArray(String[]::new)).permitAll()
-        .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-        .anyRequest().fullyAuthenticated().and()
-        .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .authorizeHttpRequests((authorize) -> authorize
+            .shouldFilterAllDispatcherTypes(false)
+            .requestMatchers(restSecProps.getAllowedPublicApis().stream().map(AntPathRequestMatcher::new).toArray(AntPathRequestMatcher[]::new))
+            .permitAll()
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            .anyRequest().fullyAuthenticated()
+            .and()
+            .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class))
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    return http.build();
   }
 }

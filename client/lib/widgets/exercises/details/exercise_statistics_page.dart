@@ -64,7 +64,7 @@ class _ExerciseStatisticsPageState extends State<ExerciseStatisticsPage>
                   _logger.v(prepare('_buildExerciseStatistics.Consumer.builder()'));
                   final exerciseStatistics = exerciseData.getExercisesStatistics(widget._exercise.id);
                   return Scrollbar(
-                    isAlwaysShown: false,
+                    thumbVisibility: false,
                     child: exerciseStatistics != null
                         ? _buildRefreshableWidget(_ExerciseStatisticsParameters(exerciseStatistics, widget._exercise.loggingTypes))
                         : _buildRefreshableWidget(

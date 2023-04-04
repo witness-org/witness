@@ -8,7 +8,7 @@ part 'workout_log.g.dart';
 @JsonSerializable()
 @TZDateTimeConverter()
 class WorkoutLog {
-  const WorkoutLog({required final this.id, required final this.loggedOn, required final this.durationMinutes, required final this.exerciseLogs});
+  const WorkoutLog({required this.id, required this.loggedOn, required this.durationMinutes, required this.exerciseLogs});
 
   factory WorkoutLog.fromJson(final Map<String, dynamic> json) => _$WorkoutLogFromJson(json);
 

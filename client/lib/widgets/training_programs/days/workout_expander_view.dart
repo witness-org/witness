@@ -15,7 +15,7 @@ class WorkoutExpanderView extends StatefulWidget {
 class _WorkoutExpanderViewState extends State<WorkoutExpanderView> {
   // The initializer of late variable that are initialized at declaration runs the first time the variable is used (lazy initialization).
   // This way, we do not need to override initState().
-  late final List<_ExpanderPanelItem> _expanderItems = widget._workouts.map((final e) => _ExpanderPanelItem(e)).toList();
+  late final List<_ExpanderPanelItem> _expanderItems = widget._workouts.map((final e) => _ExpanderPanelItem(e, isExpanded: false)).toList();
 
   @override
   Widget build(final BuildContext context) {
@@ -44,7 +44,7 @@ class _WorkoutExpanderViewState extends State<WorkoutExpanderView> {
 }
 
 class _ExpanderPanelItem {
-  _ExpanderPanelItem(final this.workout, {final this.isExpanded = false});
+  _ExpanderPanelItem(this.workout, {this.isExpanded = false});
 
   Workout workout;
   bool isExpanded;

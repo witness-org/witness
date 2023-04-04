@@ -11,10 +11,8 @@ import com.witness.server.repository.ExerciseRepository;
 import com.witness.server.repository.SetLogRepository;
 import com.witness.server.repository.UserRepository;
 import com.witness.server.repository.WorkoutLogRepository;
-import com.witness.server.util.Comparators;
 import com.witness.server.util.JsonFileSource;
 import com.witness.server.util.JsonFileSources;
-import java.util.Comparator;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class ExerciseLogRepositoryTest extends BaseRepositoryTest {
   private static final String DATA_ROOT = "data/unit/repository/exercise-log-repository-test/";
-  private static final Comparator<ExerciseLog> EXERCISE_LOG_COMPARATOR = Comparators.getEntityComparator(ExerciseLog.class);
 
   @Autowired
   private UserRepository userRepository;

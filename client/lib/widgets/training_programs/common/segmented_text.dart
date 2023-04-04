@@ -2,7 +2,7 @@ import 'package:client/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
 class SegmentedText extends StatelessWidget {
-  const SegmentedText({final this.baseStyle, required final this.segments, final this.skipEmpty = true, final Key? key}) : super(key: key);
+  const SegmentedText({this.baseStyle, required this.segments, this.skipEmpty = true, final Key? key}) : super(key: key);
 
   final TextStyle? baseStyle;
   final List<TextSegment> segments;
@@ -43,7 +43,7 @@ class SegmentedText extends StatelessWidget {
 }
 
 class TextSegment {
-  const TextSegment(final this.text, {final this.style, final this.prefix, final this.suffix});
+  const TextSegment(this.text, {this.style, this.prefix, this.suffix});
 
   final String? text;
   final TextStyle? style;

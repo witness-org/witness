@@ -21,7 +21,7 @@ final data = [
   ),
   TrainingProgram(
     id: 2,
-    name: 'Disruptor Training: ' + ('Test ' * 15),
+    name: 'Disruptor Training: ${'Test ' * 15}',
     isPublished: true,
     description:
         "You've Always Got Time For Disruptor Training. Apart from that, for UI testing, it is very important to have at least one very long description to test the wrapping capabilities.",

@@ -7,12 +7,12 @@ part 'exercise.g.dart';
 @JsonSerializable()
 class Exercise {
   const Exercise({
-    required final this.id,
-    required final this.name,
-    final this.description,
-    final this.muscleGroups = const <MuscleGroup>[],
-    final this.loggingTypes = const <LoggingType>[],
-    final this.createdBy,
+    required this.id,
+    required this.name,
+    this.description,
+    this.muscleGroups = const <MuscleGroup>[],
+    this.loggingTypes = const <LoggingType>[],
+    this.createdBy,
   });
 
   factory Exercise.fromJson(final Map<String, dynamic> json) => _$ExerciseFromJson(json);

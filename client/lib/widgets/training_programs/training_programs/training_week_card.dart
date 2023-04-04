@@ -25,7 +25,7 @@ class TrainingWeekCard extends StatelessWidget with StringLocalizer {
       content: '${uiStrings.trainingWeekCard_deleteDialog_content_prefix} ${_week.number}?',
       falseOption: uiStrings.trainingWeekCard_deleteDialog_cancel,
       trueOption: uiStrings.trainingWeekCard_deleteDialog_delete,
-      trueOptionStyle: TextStyle(color: Theme.of(context).errorColor),
+      trueOptionStyle: TextStyle(color: Theme.of(context).colorScheme.error),
     );
   }
 
