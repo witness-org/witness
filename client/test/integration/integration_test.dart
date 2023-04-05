@@ -175,6 +175,9 @@ void main() {
       expectWidgetByType(ExerciseByMuscleGroupItem, matchers.findsWidgets);
     });
 
+    /// Note that when running this test, a warning appears saying that a call to tap() does not hit the specified widget. Nevertheless, the test
+    /// (correctly) succeeds.
+    /// This is a known issue, see https://github.com/flutter/flutter/issues/100758.
     testWidgets('displays history of exercise based on mocked workout log', (final WidgetTester tester) async {
       final mockExerciseService = MockExerciseService();
       when(mockExerciseService.getExercisesByMuscleGroup(any, any)).thenAnswer((final _) async => const ServerResponse.success(mock_exercises.data));
@@ -202,10 +205,13 @@ void main() {
       await tap(firstExerciseItem, tester);
 
       // after navigating to the history tab page, at least one exercise history card should have been rendered
-      await tapByKey('exercise_detail_screen.history', tester);
+      await tapByKey('exercise_detail_screen.history', tester); // "problematic" tap -> see comment above test method
       expectWidgetByType(ExerciseHistoryCard, matchers.findsWidgets);
     });
 
+    /// Note that when running this test, a warning appears saying that a call to tap() does not hit the specified widget. Nevertheless, the test
+    /// (correctly) succeeds.
+    /// This is a known issue, see https://github.com/flutter/flutter/issues/100758.
     testWidgets('displays statistics of exercise based on mocked workout log', (final WidgetTester tester) async {
       final mockExerciseService = MockExerciseService();
       when(mockExerciseService.getExercisesByMuscleGroup(any, any)).thenAnswer((final _) async => const ServerResponse.success(mock_exercises.data));
@@ -233,7 +239,7 @@ void main() {
       await tap(firstExerciseItem, tester);
 
       // after navigating to the statistics tab page, the table with the statistics parameters should be displayed
-      await tapByKey('exercise_detail_screen.statistics', tester);
+      await tapByKey('exercise_detail_screen.statistics', tester); // "problematic" tap -> see comment above test method
       expectWidgetByType(Table, matchers.findsOneWidget);
     });
   });
